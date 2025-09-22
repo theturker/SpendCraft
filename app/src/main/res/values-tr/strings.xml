@@ -18,7 +18,7 @@
     <!-- Home Screen -->
     <string name="total_balance">Toplam Bakiye</string>
     <string name="this_month">Bu Ay</string>
-    <string name="income">Gelir</string>
+    <string name="income">💰Gelir</string>
     <string name="expenses">Gider</string>
     <string name="add_transaction">İşlem Ekle</string>
     <string name="recent_transactions">Son İşlemler</string>

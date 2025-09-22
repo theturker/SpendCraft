@@ -43,6 +43,7 @@ import com.alperen.spendcraft.CurrencyHelper
 import com.alperen.spendcraft.core.model.Category
 import androidx.compose.ui.res.stringResource
 import com.alperen.spendcraft.R
+import com.alperen.spendcraft.core.ui.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,7 +111,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "Current: $selectedLanguage",
+                        text = "${stringResource(CoreR.string.current_settings)}: $selectedLanguage",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -149,7 +150,7 @@ fun SettingsScreen(
 
             // Category Management
             Text(
-                text = "📂 Kategori Yönetimi",
+                text = "📂 ${stringResource(CoreR.string.category_management)}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -171,12 +172,12 @@ fun SettingsScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Kategorileri Yönet",
+                                text = stringResource(CoreR.string.manage_categories),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
-                                text = "${categories.size} kategori mevcut",
+                                text = "${categories.size} ${stringResource(CoreR.string.categories_available)}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -184,7 +185,7 @@ fun SettingsScreen(
                         IconButton(onClick = onNavigateToCategories) {
                             Icon(
                                 imageVector = Icons.Filled.Settings,
-                                contentDescription = "Kategori Yönetimi",
+                                contentDescription = stringResource(CoreR.string.category_management),
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
@@ -196,7 +197,7 @@ fun SettingsScreen(
 
             // Currency Selection
             Text(
-                text = "💰 Currency / Para Birimi",
+                text = "💰 ${stringResource(CoreR.string.currency_selection)}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -213,7 +214,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "Current: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}",
+                        text = "${stringResource(CoreR.string.current_settings)}: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -266,12 +267,12 @@ fun SettingsScreen(
                     Spacer(Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Dark Mode",
+                            text = stringResource(CoreR.string.dark_mode),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = "Switch to dark theme",
+                            text = stringResource(CoreR.string.switch_to_dark_theme),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -297,14 +298,14 @@ fun SettingsScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "📋 Current Settings",
+                        text = "📋 ${stringResource(CoreR.string.current_settings)}",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.height(8.dp))
                     Text("Language: $selectedLanguage")
                     Text("Currency: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}")
-                    Text("Theme: ${if (darkMode) "Dark" else "Light"}")
+                    Text("${stringResource(CoreR.string.theme)}: ${if (darkMode) stringResource(CoreR.string.dark) else stringResource(CoreR.string.light)}")
                 }
             }
         }

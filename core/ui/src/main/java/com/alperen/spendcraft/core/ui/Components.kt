@@ -22,6 +22,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.alperen.spendcraft.core.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -263,7 +265,7 @@ fun AnimatedBalanceCard(
     ) {
         Column {
             Text(
-                text = "Toplam Bakiye",
+                text = stringResource(R.string.total_balance),
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White.copy(alpha = 0.9f)
             )
@@ -281,7 +283,7 @@ fun AnimatedBalanceCard(
             ) {
                 Column {
                     Text(
-                        text = "Gelir",
+                        text = stringResource(R.string.income),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.9f)
                     )
@@ -294,7 +296,7 @@ fun AnimatedBalanceCard(
                 }
                 Column {
                     Text(
-                        text = "Gider",
+                        text = stringResource(R.string.expenses),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.9f)
                     )

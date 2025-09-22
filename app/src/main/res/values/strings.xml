@@ -18,7 +18,7 @@
     <!-- Home Screen -->
     <string name="total_balance">Total Balance</string>
     <string name="this_month">This Month</string>
-    <string name="income">Income</string>
+    <string name="income">💰Income</string>
     <string name="expenses">Expenses</string>
     <string name="add_transaction">Add Transaction</string>
     <string name="recent_transactions">Recent Transactions</string>

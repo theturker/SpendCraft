@@ -22,9 +22,11 @@ int string dark 0x0
 int string dark_mode 0x0
 int string delete 0x0
 int string delete_category 0x0
+int string euro 0x0
 int string expense 0x0
 int string expense_distribution 0x0
 int string expense_transactions 0x0
+int string expenses 0x0
 int string income 0x0
 int string income_transactions 0x0
 int string language_selection 0x0
@@ -49,6 +51,7 @@ int string switch_to_dark_theme 0x0
 int string theme 0x0
 int string this_month 0x0
 int string total 0x0
+int string total_balance 0x0
 int string total_expense 0x0
 int string total_income 0x0
 int string total_transactions 0x0
@@ -56,6 +59,8 @@ int string transaction_statistics 0x0
 int string transaction_type 0x0
 int string transactions 0x0
 int string transactions_count 0x0
+int string turkish_lira 0x0
 int string unknown_category 0x0
+int string us_dollar 0x0
 int string view_all 0x0
 int string yes 0x0

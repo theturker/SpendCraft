@@ -24,9 +24,11 @@
     <string name="dark_mode">Karanlık Mod</string>
     <string name="delete">Sil</string>
     <string name="delete_category">Kategori Sil</string>
+    <string name="euro">Euro</string>
     <string name="expense">💸 Gider</string>
     <string name="expense_distribution">Harcama Dağılımı</string>
     <string name="expense_transactions">Gider İşlemi</string>
+    <string name="expenses">Gider</string>
     <string name="income">💰 Gelir</string>
     <string name="income_transactions">Gelir İşlemi</string>
     <string name="language_selection">Dil Seçimi</string>
@@ -51,6 +53,7 @@
     <string name="theme">Tema</string>
     <string name="this_month">Bu Ay</string>
     <string name="total">Toplam</string>
+    <string name="total_balance">Toplam Bakiye</string>
     <string name="total_expense">Toplam Gider</string>
     <string name="total_income">Toplam Gelir</string>
     <string name="total_transactions">Toplam İşlem</string>
@@ -58,7 +61,9 @@
     <string name="transaction_type">İşlem Türü</string>
     <string name="transactions">işlem</string>
     <string name="transactions_count">işlem</string>
+    <string name="turkish_lira">Türk Lirası</string>
     <string name="unknown_category">Bilinmeyen</string>
+    <string name="us_dollar">Amerikan Doları</string>
     <string name="view_all">Tümünü Gör</string>
     <string name="yes">Evet</string>
 </resources>

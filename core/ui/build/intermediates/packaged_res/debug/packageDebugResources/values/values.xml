@@ -24,10 +24,12 @@
     <string name="dark_mode">Dark Mode</string>
     <string name="delete">Delete</string>
     <string name="delete_category">Delete Category</string>
+    <string name="euro">Euro</string>
     <string name="expense">Expense</string>
     <string name="expense_distribution">Expense Distribution</string>
     <string name="expense_transactions">Expense Transactions</string>
-    <string name="income">Income</string>
+    <string name="expenses">Expenses</string>
+    <string name="income">💰Income</string>
     <string name="income_transactions">Income Transactions</string>
     <string name="language_selection">Language Selection</string>
     <string name="light">Light</string>
@@ -51,6 +53,7 @@
     <string name="theme">Theme</string>
     <string name="this_month">This Month</string>
     <string name="total">Total</string>
+    <string name="total_balance">Total Balance</string>
     <string name="total_expense">Total Expense</string>
     <string name="total_income">Total Income</string>
     <string name="total_transactions">Total Transactions</string>
@@ -58,7 +61,9 @@
     <string name="transaction_type">Transaction Type</string>
     <string name="transactions">transactions</string>
     <string name="transactions_count">transactions</string>
+    <string name="turkish_lira">Turkish Lira</string>
     <string name="unknown_category">Unknown</string>
+    <string name="us_dollar">US Dollar</string>
     <string name="view_all">View All</string>
     <string name="yes">Yes</string>
 </resources>
