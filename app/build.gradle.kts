@@ -88,5 +88,9 @@ dependencies {
     implementation(libs.inapp.review)
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
+    
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

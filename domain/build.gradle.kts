@@ -12,12 +12,14 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
 
-    // testImplementation(libs.junit) // Geçici olarak devre dışı
     implementation(libs.kotlinx.coroutines.core)
-    // testImplementation(libs.kotlinx.coroutines.test) // Geçici olarak devre dışı
     
     // Dependency injection
     implementation("javax.inject:javax.inject:1")
+    
+    // Test dependencies
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 }
 
 

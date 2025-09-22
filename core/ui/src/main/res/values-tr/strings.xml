@@ -15,9 +15,6 @@
     <string name="transactions">işlem</string>
     
     <!-- Category Management -->
-    <string name="category_management">Kategori Yönetimi</string>
-    <string name="manage_categories">Kategorileri Yönet</string>
-    <string name="categories_available">kategori mevcut</string>
     <string name="add_category">Kategori Ekle</string>
     <string name="delete_category">Kategori Sil</string>
     <string name="category_name">Kategori Adı</string>
@@ -40,13 +37,6 @@
     
     <!-- Settings -->
     <string name="language_selection">Dil Seçimi</string>
-    <string name="currency_selection">Para Birimi Seçimi</string>
-    <string name="dark_mode">Karanlık Mod</string>
-    <string name="switch_to_dark_theme">Karanlık temaya geç</string>
-    <string name="current_settings">Mevcut Ayarlar</string>
-    <string name="theme">Tema</string>
-    <string name="light">Açık</string>
-    <string name="dark">Karanlık</string>
     
     <!-- Main Screen -->
     <string name="app_title">SpendCraft</string>
@@ -81,4 +71,14 @@
     <string name="turkish_lira">Türk Lirası</string>
     <string name="us_dollar">Amerikan Doları</string>
     <string name="euro">Euro</string>
+    <string name="category_management">Kategori Yönetimi</string>
+    <string name="manage_categories">Kategorileri Yönet</string>
+    <string name="categories_available">kategori mevcut</string>
+    <string name="currency_selection">Para Birimi Seçimi</string>
+    <string name="dark_mode">Karanlık Mod</string>
+    <string name="switch_to_dark_theme">Karanlık temaya geç</string>
+    <string name="current_settings">Mevcut Ayarlar</string>
+    <string name="theme">Tema</string>
+    <string name="light">Açık</string>
+    <string name="dark">Karanlık</string>
 </resources>

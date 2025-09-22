@@ -40,10 +40,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.LocaleHelper
 import com.alperen.spendcraft.CurrencyHelper
+import com.alperen.spendcraft.ThemeHelper
 import com.alperen.spendcraft.core.model.Category
 import androidx.compose.ui.res.stringResource
 import com.alperen.spendcraft.R
 import com.alperen.spendcraft.core.ui.R as CoreR
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +60,8 @@ fun SettingsScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-    var darkMode by rememberSaveable { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = false)
     var currency by rememberSaveable { mutableStateOf(CurrencyHelper.getCurrency(context)) }
     var expanded by rememberSaveable { mutableStateOf(false) }
     var languageExpanded by rememberSaveable { mutableStateOf(false) }
@@ -278,8 +284,12 @@ fun SettingsScreen(
                         )
                     }
                     Switch(
-                        checked = darkMode,
-                        onCheckedChange = { darkMode = it }
+                        checked = isDarkMode,
+                        onCheckedChange = { 
+                            coroutineScope.launch {
+                                ThemeHelper.setDarkMode(context, it)
+                            }
+                        }
                     )
                 }
             }
@@ -305,7 +315,7 @@ fun SettingsScreen(
                     Spacer(Modifier.height(8.dp))
                     Text("Language: $selectedLanguage")
                     Text("Currency: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}")
-                    Text("${stringResource(CoreR.string.theme)}: ${if (darkMode) stringResource(CoreR.string.dark) else stringResource(CoreR.string.light)}")
+                    Text("${stringResource(CoreR.string.theme)}: ${if (isDarkMode) stringResource(CoreR.string.dark) else stringResource(CoreR.string.light)}")
                 }
             }
         }
