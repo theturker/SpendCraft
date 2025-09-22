@@ -11,6 +11,9 @@ import com.alperen.spendcraft.domain.usecase.ObserveTransactionsUseCase
 import com.alperen.spendcraft.domain.usecase.UpsertTransactionUseCase
 import com.alperen.spendcraft.domain.usecase.InsertCategoryUseCase
 import com.alperen.spendcraft.domain.usecase.DeleteCategoryUseCase
+import com.alperen.spendcraft.domain.usecase.ObserveAccountsUseCase
+import com.alperen.spendcraft.domain.usecase.UpdateAccountUseCase
+import com.alperen.spendcraft.domain.usecase.ObserveTransactionsByAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,10 +25,13 @@ import javax.inject.Inject
 class TransactionsViewModel @Inject constructor(
     observeTransactions: ObserveTransactionsUseCase,
     observeCategories: ObserveCategoriesUseCase,
+    private val observeAccounts: ObserveAccountsUseCase,
+    private val observeTransactionsByAccount: ObserveTransactionsByAccountUseCase,
     private val upsert: UpsertTransactionUseCase,
     private val delete: DeleteTransactionUseCase,
     private val insertCategory: InsertCategoryUseCase,
-    private val deleteCategory: DeleteCategoryUseCase
+    private val deleteCategory: DeleteCategoryUseCase,
+    private val updateAccount: UpdateAccountUseCase
 ) : ViewModel() {
 
     val items: StateFlow<List<Transaction>> = observeTransactions()
@@ -34,10 +40,14 @@ class TransactionsViewModel @Inject constructor(
     val categories: StateFlow<List<com.alperen.spendcraft.core.model.Category>> = observeCategories()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    val accounts: StateFlow<List<com.alperen.spendcraft.core.model.Account>> = observeAccounts()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     fun saveTransaction(
         amountMinor: Long,
         note: String?,
         categoryId: Long?,
+        accountId: Long?,
         isIncome: Boolean
     ) {
         viewModelScope.launch {
@@ -47,6 +57,7 @@ class TransactionsViewModel @Inject constructor(
                 timestampUtcMillis = System.currentTimeMillis(),
                 note = note,
                 categoryId = categoryId,
+                accountId = accountId,
                 type = if (isIncome) TransactionType.INCOME else TransactionType.EXPENSE
             )
             upsert(tx)
@@ -63,6 +74,21 @@ class TransactionsViewModel @Inject constructor(
     
     fun removeCategory(id: Long) {
         viewModelScope.launch { deleteCategory(id) }
+    }
+    
+    fun updateAccountName(accountId: Long, newName: String) {
+        viewModelScope.launch {
+            val account = com.alperen.spendcraft.core.model.Account(
+                id = accountId,
+                name = newName
+            )
+            updateAccount(account)
+        }
+    }
+    
+    fun getTransactionsByAccount(accountId: Long): StateFlow<List<Transaction>> {
+        return observeTransactionsByAccount(accountId)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     }
 }
 

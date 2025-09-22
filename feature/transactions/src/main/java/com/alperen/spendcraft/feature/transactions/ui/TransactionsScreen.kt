@@ -37,6 +37,11 @@ fun TransactionsScreen(
 ) {
     val context = LocalContext.current
     val items by viewModel.items.collectAsState()
+    val accounts by viewModel.accounts.collectAsState()
+    var selectedAccountIndex by remember { mutableStateOf(0) }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var editingAccountIndex by remember { mutableStateOf(0) }
+    
     val totalAmount = items.sumOf {
         if (it.type == TransactionType.INCOME) it.amount.minorUnits else -it.amount.minorUnits
     }
@@ -45,6 +50,30 @@ fun TransactionsScreen(
         .sumOf { it.amount.minorUnits }
     val expenseAmount = items.filter { it.type == TransactionType.EXPENSE }
         .sumOf { it.amount.minorUnits }
+
+    // Create account data for cards
+    val accountsData = remember(accounts, items) {
+        if (accounts.isEmpty()) {
+            listOf(
+                AccountData(null, "💰 ${context.getString(com.alperen.spendcraft.core.ui.R.string.total_balance)}", formatMinor(totalAmount), formatMinor(incomeAmount), formatMinor(expenseAmount))
+            )
+        } else {
+            accounts.mapIndexed { index, account ->
+                val accountTransactions = if (index == 0) items else items.filter { it.accountId == account.id }
+                val accountIncome = accountTransactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
+                val accountExpense = accountTransactions.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
+                val accountBalance = accountIncome - accountExpense
+                
+                AccountData(
+                    id = account.id,
+                    name = if (index == 0) "💰 ${account.name}" else "🏠 ${account.name}",
+                    balance = formatMinor(accountBalance),
+                    income = formatMinor(accountIncome),
+                    expenses = formatMinor(accountExpense)
+                )
+            }
+        }
+    }
     
     AppScaffold(
         title = "💳 ${stringResource(R.string.app_title)}",
@@ -76,10 +105,14 @@ fun TransactionsScreen(
         ) {
             // Balance Card
             item {
-                AnimatedBalanceCard(
-                    balance = formatMinor(totalAmount),
-                    income = formatMinor(incomeAmount),
-                    expenses = formatMinor(expenseAmount)
+                MultiAccountBalanceCard(
+                    accounts = accountsData,
+                    currentAccountIndex = selectedAccountIndex,
+                    onAccountClick = { index -> selectedAccountIndex = index },
+                    onEditAccount = { index ->
+                        editingAccountIndex = index
+                        showEditDialog = true
+                    }
                 )
             }
             
@@ -188,6 +221,20 @@ fun TransactionsScreen(
                 }
             }
         }
+    }
+    
+    // Account Name Edit Dialog
+    if (showEditDialog && editingAccountIndex < accountsData.size) {
+        val editingAccount = accountsData[editingAccountIndex]
+        AccountNameEditDialog(
+            currentName = editingAccount.name.removePrefix("💰 ").removePrefix("🏠 "),
+            onDismiss = { showEditDialog = false },
+            onConfirm = { newName ->
+                editingAccount.id?.let { accountId ->
+                    viewModel.updateAccountName(accountId, newName)
+                }
+            }
+        )
     }
 }
 

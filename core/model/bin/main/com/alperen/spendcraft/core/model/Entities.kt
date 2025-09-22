@@ -19,6 +19,7 @@ data class Transaction(
     val timestampUtcMillis: Long,
     val note: String?,
     val categoryId: Long?,
+    val accountId: Long?,
     val type: TransactionType
 )
 

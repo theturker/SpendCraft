@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
     tableName = "transactions",
     indices = [
         Index(value = ["timestampUtcMillis"]),
-        Index(value = ["categoryId"])
+        Index(value = ["categoryId"]),
+        Index(value = ["accountId"])
     ]
 )
 data class TransactionEntity(
@@ -17,6 +18,7 @@ data class TransactionEntity(
     val timestampUtcMillis: Long,
     val note: String?,
     val categoryId: Long?,
+    val accountId: Long?,
     val isIncome: Boolean
 )
 

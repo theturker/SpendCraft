@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 interface TxDao {
     @Query("SELECT * FROM transactions ORDER BY timestampUtcMillis DESC")
     fun observeAll(): Flow<List<TransactionEntity>>
+    
+    @Query("SELECT * FROM transactions WHERE accountId = :accountId ORDER BY timestampUtcMillis DESC")
+    fun observeByAccount(accountId: Long): Flow<List<TransactionEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: TransactionEntity): Long

@@ -1,3 +1,4 @@
+int string account_name 0x0
 int string add 0x0
 int string add_category 0x0
 int string add_expense 0x0
@@ -22,6 +23,7 @@ int string dark 0x0
 int string dark_mode 0x0
 int string delete 0x0
 int string delete_category 0x0
+int string edit_account_name 0x0
 int string euro 0x0
 int string expense 0x0
 int string expense_distribution 0x0

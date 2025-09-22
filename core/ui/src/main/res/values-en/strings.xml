@@ -81,4 +81,8 @@
     <string name="theme">Theme</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
+    
+    <!-- Account Management -->
+    <string name="edit_account_name">Edit Account Name</string>
+    <string name="account_name">Account Name</string>
 </resources>

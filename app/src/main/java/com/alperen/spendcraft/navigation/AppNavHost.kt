@@ -45,7 +45,7 @@ fun AppNavHost(
                 categories = vm.categories,
                 initialTransactionType = null,
                 onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, isIncome)
+                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome) // null = default account
                     navController.popBackStack()
                 },
                 onBack = { navController.popBackStack() }
@@ -56,7 +56,7 @@ fun AppNavHost(
                 categories = vm.categories,
                 initialTransactionType = true,
                 onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, isIncome)
+                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome) // null = default account
                     navController.popBackStack()
                 },
                 onBack = { navController.popBackStack() }
@@ -67,7 +67,7 @@ fun AppNavHost(
                 categories = vm.categories,
                 initialTransactionType = false,
                 onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, isIncome)
+                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome) // null = default account
                     navController.popBackStack()
                 },
                 onBack = { navController.popBackStack() }

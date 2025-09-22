@@ -249,9 +249,10 @@ fun IncomeExpenseButton(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MultiAccountBalanceCard(
-    balance: String,
-    income: String,
-    expenses: String,
+    accounts: List<AccountData>,
+    currentAccountIndex: Int = 0,
+    onAccountClick: (Int) -> Unit = {},
+    onEditAccount: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var isVisible by remember { mutableStateOf(false) }
@@ -264,18 +265,11 @@ fun MultiAccountBalanceCard(
     LaunchedEffect(Unit) {
         isVisible = true
     }
-
-    // Mock accounts data
-    val totalBalanceText = stringResource(R.string.total_balance)
-    val accounts = remember(totalBalanceText, balance, income, expenses) {
-        listOf(
-            AccountData("💰 $totalBalanceText", balance, income, expenses),
-            AccountData("🏠 Ev Hesabı", "₺5.420", "₺8.500", "₺3.080"),
-            AccountData("🚗 Araba Hesabı", "₺2.150", "₺0", "₺2.150")
-        )
-    }
     
-    val pagerState = rememberPagerState(pageCount = { accounts.size })
+    val pagerState = rememberPagerState(
+        pageCount = { accounts.size },
+        initialPage = currentAccountIndex
+    )
 
     Column(modifier = modifier) {
         HorizontalPager(
@@ -300,15 +294,13 @@ fun MultiAccountBalanceCard(
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.White.copy(alpha = 0.9f)
                         )
-                        if (page > 0) { // Add button only for custom accounts
-                            IconButton(onClick = { /* TODO: Add account management */ }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = "Yönet",
-                                    tint = Color.White.copy(alpha = 0.7f),
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
+                        IconButton(onClick = { onEditAccount(page) }) {
+                            Icon(
+                                imageVector = if (page == 0) Icons.Filled.Settings else Icons.Filled.Edit,
+                                contentDescription = "Düzenle",
+                                tint = Color.White.copy(alpha = 0.7f),
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -389,14 +381,71 @@ fun AnimatedBalanceCard(
     expenses: String,
     modifier: Modifier = Modifier
 ) {
-    MultiAccountBalanceCard(balance, income, expenses, modifier)
+    val totalBalanceText = stringResource(R.string.total_balance)
+    val accounts = remember(totalBalanceText, balance, income, expenses) {
+        listOf(
+            AccountData(null, "💰 $totalBalanceText", balance, income, expenses)
+        )
+    }
+    
+    MultiAccountBalanceCard(
+        accounts = accounts,
+        modifier = modifier
+    )
 }
 
 data class AccountData(
+    val id: Long?,
     val name: String,
     val balance: String,
     val income: String,
     val expenses: String
 )
+
+@Composable
+fun AccountNameEditDialog(
+    currentName: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var newName by remember { mutableStateOf(currentName) }
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(stringResource(R.string.edit_account_name))
+        },
+        text = {
+            OutlinedTextField(
+                value = newName,
+                onValueChange = { newName = it },
+                label = { Text(stringResource(R.string.account_name)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = {
+                    Icon(Icons.Filled.AccountBox, contentDescription = null)
+                }
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (newName.isNotBlank() && newName != currentName) {
+                        onConfirm(newName.trim())
+                    }
+                    onDismiss()
+                },
+                enabled = newName.isNotBlank()
+            ) {
+                Text(stringResource(R.string.save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
 
 

@@ -1,4 +1,5 @@
 com.alperen.spendcraft.core.ui
+string account_name
 string add
 string add_category
 string add_expense
@@ -23,6 +24,7 @@ string dark
 string dark_mode
 string delete
 string delete_category
+string edit_account_name
 string euro
 string expense
 string expense_distribution

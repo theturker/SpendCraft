@@ -3,8 +3,11 @@ package com.alperen.spendcraft.feature.transactions;
 import com.alperen.spendcraft.domain.usecase.DeleteCategoryUseCase;
 import com.alperen.spendcraft.domain.usecase.DeleteTransactionUseCase;
 import com.alperen.spendcraft.domain.usecase.InsertCategoryUseCase;
+import com.alperen.spendcraft.domain.usecase.ObserveAccountsUseCase;
 import com.alperen.spendcraft.domain.usecase.ObserveCategoriesUseCase;
+import com.alperen.spendcraft.domain.usecase.ObserveTransactionsByAccountUseCase;
 import com.alperen.spendcraft.domain.usecase.ObserveTransactionsUseCase;
+import com.alperen.spendcraft.domain.usecase.UpdateAccountUseCase;
 import com.alperen.spendcraft.domain.usecase.UpsertTransactionUseCase;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -33,6 +36,10 @@ public final class TransactionsViewModel_Factory implements Factory<Transactions
 
   private final Provider<ObserveCategoriesUseCase> observeCategoriesProvider;
 
+  private final Provider<ObserveAccountsUseCase> observeAccountsProvider;
+
+  private final Provider<ObserveTransactionsByAccountUseCase> observeTransactionsByAccountProvider;
+
   private final Provider<UpsertTransactionUseCase> upsertProvider;
 
   private final Provider<DeleteTransactionUseCase> deleteProvider;
@@ -41,40 +48,53 @@ public final class TransactionsViewModel_Factory implements Factory<Transactions
 
   private final Provider<DeleteCategoryUseCase> deleteCategoryProvider;
 
+  private final Provider<UpdateAccountUseCase> updateAccountProvider;
+
   public TransactionsViewModel_Factory(
       Provider<ObserveTransactionsUseCase> observeTransactionsProvider,
       Provider<ObserveCategoriesUseCase> observeCategoriesProvider,
+      Provider<ObserveAccountsUseCase> observeAccountsProvider,
+      Provider<ObserveTransactionsByAccountUseCase> observeTransactionsByAccountProvider,
       Provider<UpsertTransactionUseCase> upsertProvider,
       Provider<DeleteTransactionUseCase> deleteProvider,
       Provider<InsertCategoryUseCase> insertCategoryProvider,
-      Provider<DeleteCategoryUseCase> deleteCategoryProvider) {
+      Provider<DeleteCategoryUseCase> deleteCategoryProvider,
+      Provider<UpdateAccountUseCase> updateAccountProvider) {
     this.observeTransactionsProvider = observeTransactionsProvider;
     this.observeCategoriesProvider = observeCategoriesProvider;
+    this.observeAccountsProvider = observeAccountsProvider;
+    this.observeTransactionsByAccountProvider = observeTransactionsByAccountProvider;
     this.upsertProvider = upsertProvider;
     this.deleteProvider = deleteProvider;
     this.insertCategoryProvider = insertCategoryProvider;
     this.deleteCategoryProvider = deleteCategoryProvider;
+    this.updateAccountProvider = updateAccountProvider;
   }
 
   @Override
   public TransactionsViewModel get() {
-    return newInstance(observeTransactionsProvider.get(), observeCategoriesProvider.get(), upsertProvider.get(), deleteProvider.get(), insertCategoryProvider.get(), deleteCategoryProvider.get());
+    return newInstance(observeTransactionsProvider.get(), observeCategoriesProvider.get(), observeAccountsProvider.get(), observeTransactionsByAccountProvider.get(), upsertProvider.get(), deleteProvider.get(), insertCategoryProvider.get(), deleteCategoryProvider.get(), updateAccountProvider.get());
   }
 
   public static TransactionsViewModel_Factory create(
       Provider<ObserveTransactionsUseCase> observeTransactionsProvider,
       Provider<ObserveCategoriesUseCase> observeCategoriesProvider,
+      Provider<ObserveAccountsUseCase> observeAccountsProvider,
+      Provider<ObserveTransactionsByAccountUseCase> observeTransactionsByAccountProvider,
       Provider<UpsertTransactionUseCase> upsertProvider,
       Provider<DeleteTransactionUseCase> deleteProvider,
       Provider<InsertCategoryUseCase> insertCategoryProvider,
-      Provider<DeleteCategoryUseCase> deleteCategoryProvider) {
-    return new TransactionsViewModel_Factory(observeTransactionsProvider, observeCategoriesProvider, upsertProvider, deleteProvider, insertCategoryProvider, deleteCategoryProvider);
+      Provider<DeleteCategoryUseCase> deleteCategoryProvider,
+      Provider<UpdateAccountUseCase> updateAccountProvider) {
+    return new TransactionsViewModel_Factory(observeTransactionsProvider, observeCategoriesProvider, observeAccountsProvider, observeTransactionsByAccountProvider, upsertProvider, deleteProvider, insertCategoryProvider, deleteCategoryProvider, updateAccountProvider);
   }
 
   public static TransactionsViewModel newInstance(ObserveTransactionsUseCase observeTransactions,
-      ObserveCategoriesUseCase observeCategories, UpsertTransactionUseCase upsert,
-      DeleteTransactionUseCase delete, InsertCategoryUseCase insertCategory,
-      DeleteCategoryUseCase deleteCategory) {
-    return new TransactionsViewModel(observeTransactions, observeCategories, upsert, delete, insertCategory, deleteCategory);
+      ObserveCategoriesUseCase observeCategories, ObserveAccountsUseCase observeAccounts,
+      ObserveTransactionsByAccountUseCase observeTransactionsByAccount,
+      UpsertTransactionUseCase upsert, DeleteTransactionUseCase delete,
+      InsertCategoryUseCase insertCategory, DeleteCategoryUseCase deleteCategory,
+      UpdateAccountUseCase updateAccount) {
+    return new TransactionsViewModel(observeTransactions, observeCategories, observeAccounts, observeTransactionsByAccount, upsert, delete, insertCategory, deleteCategory, updateAccount);
   }
 }

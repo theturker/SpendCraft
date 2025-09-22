@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.data.repository
 
+import com.alperen.spendcraft.data.db.dao.AccountDao
 import com.alperen.spendcraft.data.db.dao.CategoryDao
 import com.alperen.spendcraft.data.db.dao.TxDao
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
@@ -17,8 +18,9 @@ object RepositoryModule {
     @Singleton
     fun provideTransactionsRepository(
         txDao: TxDao,
-        categoryDao: CategoryDao
-    ): TransactionsRepository = TransactionsRepositoryImpl(txDao, categoryDao)
+        categoryDao: CategoryDao,
+        accountDao: AccountDao
+    ): TransactionsRepository = TransactionsRepositoryImpl(txDao, categoryDao, accountDao)
 }
 
 

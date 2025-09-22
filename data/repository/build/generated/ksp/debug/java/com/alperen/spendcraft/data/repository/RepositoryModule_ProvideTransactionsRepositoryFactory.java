@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.data.repository;
 
+import com.alperen.spendcraft.data.db.dao.AccountDao;
 import com.alperen.spendcraft.data.db.dao.CategoryDao;
 import com.alperen.spendcraft.data.db.dao.TxDao;
 import com.alperen.spendcraft.domain.repo.TransactionsRepository;
@@ -31,24 +32,28 @@ public final class RepositoryModule_ProvideTransactionsRepositoryFactory impleme
 
   private final Provider<CategoryDao> categoryDaoProvider;
 
+  private final Provider<AccountDao> accountDaoProvider;
+
   public RepositoryModule_ProvideTransactionsRepositoryFactory(Provider<TxDao> txDaoProvider,
-      Provider<CategoryDao> categoryDaoProvider) {
+      Provider<CategoryDao> categoryDaoProvider, Provider<AccountDao> accountDaoProvider) {
     this.txDaoProvider = txDaoProvider;
     this.categoryDaoProvider = categoryDaoProvider;
+    this.accountDaoProvider = accountDaoProvider;
   }
 
   @Override
   public TransactionsRepository get() {
-    return provideTransactionsRepository(txDaoProvider.get(), categoryDaoProvider.get());
+    return provideTransactionsRepository(txDaoProvider.get(), categoryDaoProvider.get(), accountDaoProvider.get());
   }
 
   public static RepositoryModule_ProvideTransactionsRepositoryFactory create(
-      Provider<TxDao> txDaoProvider, Provider<CategoryDao> categoryDaoProvider) {
-    return new RepositoryModule_ProvideTransactionsRepositoryFactory(txDaoProvider, categoryDaoProvider);
+      Provider<TxDao> txDaoProvider, Provider<CategoryDao> categoryDaoProvider,
+      Provider<AccountDao> accountDaoProvider) {
+    return new RepositoryModule_ProvideTransactionsRepositoryFactory(txDaoProvider, categoryDaoProvider, accountDaoProvider);
   }
 
   public static TransactionsRepository provideTransactionsRepository(TxDao txDao,
-      CategoryDao categoryDao) {
-    return Preconditions.checkNotNullFromProvides(RepositoryModule.INSTANCE.provideTransactionsRepository(txDao, categoryDao));
+      CategoryDao categoryDao, AccountDao accountDao) {
+    return Preconditions.checkNotNullFromProvides(RepositoryModule.INSTANCE.provideTransactionsRepository(txDao, categoryDao, accountDao));
   }
 }

@@ -1,9 +1,11 @@
 package com.alperen.spendcraft.data.repository
 
+import com.alperen.spendcraft.core.model.Account
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.model.Money
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
+import com.alperen.spendcraft.data.db.entities.AccountEntity
 import com.alperen.spendcraft.data.db.entities.CategoryEntity
 import com.alperen.spendcraft.data.db.entities.TransactionEntity
 
@@ -14,6 +16,7 @@ object TransactionMapper {
         timestampUtcMillis = e.timestampUtcMillis,
         note = e.note,
         categoryId = e.categoryId,
+        accountId = e.accountId,
         type = if (e.isIncome) TransactionType.INCOME else TransactionType.EXPENSE
     )
 
@@ -23,6 +26,7 @@ object TransactionMapper {
         timestampUtcMillis = m.timestampUtcMillis,
         note = m.note,
         categoryId = m.categoryId,
+        accountId = m.accountId,
         isIncome = m.type == TransactionType.INCOME
     )
 }
@@ -38,6 +42,19 @@ object CategoryMapper {
         id = c.id ?: 0,
         name = c.name,
         icon = c.icon
+    )
+}
+
+object AccountMapper {
+    fun fromEntity(e: AccountEntity): Account = Account(
+        id = e.id,
+        name = e.name
+    )
+    
+    fun toEntity(a: Account, isDefault: Boolean = false): AccountEntity = AccountEntity(
+        id = a.id ?: 0,
+        name = a.name,
+        isDefault = isDefault
     )
 }
 

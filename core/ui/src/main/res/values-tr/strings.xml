@@ -81,4 +81,8 @@
     <string name="theme">Tema</string>
     <string name="light">Açık</string>
     <string name="dark">Karanlık</string>
+    
+    <!-- Account Management -->
+    <string name="edit_account_name">Hesap Adını Düzenle</string>
+    <string name="account_name">Hesap Adı</string>
 </resources>
