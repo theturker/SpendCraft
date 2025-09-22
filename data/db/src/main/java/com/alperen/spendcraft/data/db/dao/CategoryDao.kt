@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Delete
 import com.alperen.spendcraft.data.db.entities.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -14,6 +15,12 @@ interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(categories: List<CategoryEntity>)
+    
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(category: CategoryEntity): Long
+    
+    @Query("DELETE FROM categories WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }
 
 

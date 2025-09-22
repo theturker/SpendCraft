@@ -32,6 +32,15 @@ class TransactionsRepositoryImpl(
     override suspend fun delete(transactionId: Long) {
         txDao.deleteById(transactionId)
     }
+    
+    override suspend fun insertCategory(category: Category): Long {
+        val entity = CategoryMapper.toEntity(category)
+        return categoryDao.insert(entity)
+    }
+    
+    override suspend fun deleteCategory(categoryId: Long) {
+        categoryDao.deleteById(categoryId)
+    }
 }
 
 

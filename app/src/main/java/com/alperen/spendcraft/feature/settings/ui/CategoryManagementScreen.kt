@@ -22,7 +22,7 @@ import com.alperen.spendcraft.R
 fun CategoryManagementScreen(
     categories: List<Category>,
     onAddCategory: (String) -> Unit,
-    onDeleteCategory: (Long?) -> Unit,
+    onDeleteCategory: (Long) -> Unit,
     onBack: () -> Unit
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
@@ -129,7 +129,7 @@ fun CategoryManagementScreen(
                                 modifier = Modifier.weight(1f)
                             )
                             IconButton(
-                                onClick = { onDeleteCategory(category.id?.toLong()) }
+                                onClick = { category.id?.let { onDeleteCategory(it) } }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,

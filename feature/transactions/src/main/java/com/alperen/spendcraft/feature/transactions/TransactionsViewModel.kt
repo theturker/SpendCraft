@@ -9,6 +9,8 @@ import com.alperen.spendcraft.domain.usecase.DeleteTransactionUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveCategoriesUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveTransactionsUseCase
 import com.alperen.spendcraft.domain.usecase.UpsertTransactionUseCase
+import com.alperen.spendcraft.domain.usecase.InsertCategoryUseCase
+import com.alperen.spendcraft.domain.usecase.DeleteCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +23,9 @@ class TransactionsViewModel @Inject constructor(
     observeTransactions: ObserveTransactionsUseCase,
     observeCategories: ObserveCategoriesUseCase,
     private val upsert: UpsertTransactionUseCase,
-    private val delete: DeleteTransactionUseCase
+    private val delete: DeleteTransactionUseCase,
+    private val insertCategory: InsertCategoryUseCase,
+    private val deleteCategory: DeleteCategoryUseCase
 ) : ViewModel() {
 
     val items: StateFlow<List<Transaction>> = observeTransactions()
@@ -51,6 +55,14 @@ class TransactionsViewModel @Inject constructor(
 
     fun deleteTransaction(id: Long) {
         viewModelScope.launch { delete(id) }
+    }
+    
+    fun addCategory(name: String) {
+        viewModelScope.launch { insertCategory(name) }
+    }
+    
+    fun removeCategory(id: Long) {
+        viewModelScope.launch { deleteCategory(id) }
     }
 }
 

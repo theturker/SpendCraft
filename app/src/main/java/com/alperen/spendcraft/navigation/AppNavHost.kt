@@ -83,10 +83,10 @@ fun AppNavHost(
             SettingsScreen(
                 categories = vm.categories.collectAsState().value,
                 onAddCategory = { name -> 
-                    // TODO: Implement category addition
+                    vm.addCategory(name)
                 },
                 onDeleteCategory = { id -> 
-                    // TODO: Implement category deletion
+                    vm.removeCategory(id)
                 },
                 onNavigateToCategories = { 
                     navController.navigate(Routes.CATEGORY_MANAGEMENT) 
@@ -98,10 +98,10 @@ fun AppNavHost(
             CategoryManagementScreen(
                 categories = vm.categories.collectAsState().value,
                 onAddCategory = { name -> 
-                    // TODO: Implement category addition
+                    vm.addCategory(name)
                 },
                 onDeleteCategory = { id -> 
-                    // TODO: Implement category deletion
+                    vm.removeCategory(id)
                 },
                 onBack = { navController.popBackStack() }
             )

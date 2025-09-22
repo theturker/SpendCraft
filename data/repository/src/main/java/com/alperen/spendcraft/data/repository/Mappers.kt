@@ -33,6 +33,12 @@ object CategoryMapper {
         name = e.name,
         icon = e.icon
     )
+    
+    fun toEntity(c: Category): CategoryEntity = CategoryEntity(
+        id = c.id ?: 0,
+        name = c.name,
+        icon = c.icon
+    )
 }
 
 

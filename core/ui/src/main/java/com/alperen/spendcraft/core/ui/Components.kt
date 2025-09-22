@@ -6,6 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,6 +34,7 @@ import com.alperen.spendcraft.core.ui.R
 fun AppScaffold(
     title: String,
     onBack: (() -> Unit)? = null,
+    navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable (RowScope.() -> Unit) = {},
     fab: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit
@@ -46,13 +50,16 @@ fun AppScaffold(
                     ) 
                 },
                 navigationIcon = {
-                    if (onBack != null) {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack, 
-                                contentDescription = "Back",
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
+                    when {
+                        navigationIcon != null -> navigationIcon()
+                        onBack != null -> {
+                            IconButton(onClick = onBack) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack, 
+                                    contentDescription = "Back",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         }
                     }
                 },
@@ -87,7 +94,7 @@ fun ModernFab(
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(22.dp)
         )
     }
 }
@@ -156,7 +163,7 @@ fun StatCard(
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(12.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -172,13 +179,13 @@ fun StatCard(
                     imageVector = icon,
                     contentDescription = null,
                     tint = color,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(18.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = value,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -198,21 +205,21 @@ fun ActionButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(56.dp),
+        modifier = modifier.height(48.dp),
         colors = colors,
-        shape = RoundedCornerShape(28.dp)
+        shape = RoundedCornerShape(24.dp)
     ) {
         if (icon != null) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(18.dp)
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(6.dp))
         }
         Text(
             text = text,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.SemiBold
         )
     }
@@ -239,8 +246,9 @@ fun IncomeExpenseButton(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AnimatedBalanceCard(
+fun MultiAccountBalanceCard(
     balance: String,
     income: String,
     expenses: String,
@@ -252,65 +260,143 @@ fun AnimatedBalanceCard(
         animationSpec = tween(1000),
         label = "balance_alpha"
     )
-    
+
     LaunchedEffect(Unit) {
         isVisible = true
     }
-    
-    GradientCard(
-        modifier = modifier,
-        colors = listOf(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.tertiary
+
+    // Mock accounts data
+    val totalBalanceText = stringResource(R.string.total_balance)
+    val accounts = remember(totalBalanceText, balance, income, expenses) {
+        listOf(
+            AccountData("💰 $totalBalanceText", balance, income, expenses),
+            AccountData("🏠 Ev Hesabı", "₺5.420", "₺8.500", "₺3.080"),
+            AccountData("🚗 Araba Hesabı", "₺2.150", "₺0", "₺2.150")
         )
-    ) {
-        Column {
-            Text(
-                text = stringResource(R.string.total_balance),
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White.copy(alpha = 0.9f)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = balance,
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+    }
+    
+    val pagerState = rememberPagerState(pageCount = { accounts.size })
+
+    Column(modifier = modifier) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth()
+        ) { page ->
+            val account = accounts[page]
+            GradientCard(
+                colors = listOf(
+                    MaterialTheme.colorScheme.primary,
+                    MaterialTheme.colorScheme.tertiary
+                )
             ) {
                 Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = account.name,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White.copy(alpha = 0.9f)
+                        )
+                        if (page > 0) { // Add button only for custom accounts
+                            IconButton(onClick = { /* TODO: Add account management */ }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "Yönet",
+                                    tint = Color.White.copy(alpha = 0.7f),
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(R.string.income),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.9f)
-                    )
-                    Text(
-                        text = income,
-                        style = MaterialTheme.typography.titleLarge,
+                        text = account.balance,
+                        style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF10B981)
+                        color = Color.White
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                text = stringResource(R.string.income),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White.copy(alpha = 0.9f)
+                            )
+                            Text(
+                                text = account.income,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF10B981)
+                            )
+                        }
+                        Column {
+                            Text(
+                                text = stringResource(R.string.expenses),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White.copy(alpha = 0.9f)
+                            )
+                            Text(
+                                text = account.expenses,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFEF4444)
+                            )
+                        }
+                    }
                 }
-                Column {
-                    Text(
-                        text = stringResource(R.string.expenses),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.9f)
+            }
+        }
+        
+        // Page indicator
+        if (accounts.size > 1) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(accounts.size) { index ->
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .background(
+                                if (pagerState.currentPage == index) 
+                                    MaterialTheme.colorScheme.primary 
+                                else 
+                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                                CircleShape
+                            )
                     )
-                    Text(
-                        text = expenses,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFEF4444)
-                    )
+                    if (index < accounts.size - 1) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                    }
                 }
             }
         }
     }
 }
+
+@Composable
+fun AnimatedBalanceCard(
+    balance: String,
+    income: String,
+    expenses: String,
+    modifier: Modifier = Modifier
+) {
+    MultiAccountBalanceCard(balance, income, expenses, modifier)
+}
+
+data class AccountData(
+    val name: String,
+    val balance: String,
+    val income: String,
+    val expenses: String
+)
 
 

@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Button
@@ -92,230 +94,243 @@ fun SettingsScreen(
             )
         }
     ) { innerPadding ->
-        Column(
-            Modifier
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Language Selection
-            Text(
-                text = "🌍 ${stringResource(R.string.language_selection)}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(Modifier.height(8.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
+            item {
+                Column {
                     Text(
-                        text = "${stringResource(CoreR.string.current_settings)}: $selectedLanguage",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = "🌍 ${stringResource(R.string.language_selection)}",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.height(8.dp))
-                    Row(
+
+                    Card(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
-                        languages.forEach { (displayName, languageCode) ->
-                            Button(
-                                onClick = {
-                                    selectedLanguage = displayName
-                                    LocaleHelper.setLocale(context, languageCode)
-                                    // Restart activity to apply language change
-                                    (context as? android.app.Activity)?.recreate()
-                                },
-                                modifier = Modifier.weight(1f),
-                                colors = if (selectedLanguage == displayName) {
-                                    ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                                } else {
-                                    ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceVariant
-                                    )
-                                }
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "${stringResource(CoreR.string.current_settings)}: $selectedLanguage",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Text(displayName)
+                                languages.forEach { (displayName, languageCode) ->
+                                    Button(
+                                        onClick = {
+                                            selectedLanguage = displayName
+                                            LocaleHelper.setLocale(context, languageCode)
+                                            // Restart activity to apply language change
+                                            (context as? android.app.Activity)?.recreate()
+                                        },
+                                        modifier = Modifier.weight(1f),
+                                        colors = if (selectedLanguage == displayName) {
+                                            ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.primary
+                                            )
+                                        } else {
+                                            ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                            )
+                                        }
+                                    ) {
+                                        Text(displayName)
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
 
-            Spacer(Modifier.height(24.dp))
-
             // Category Management
-            Text(
-                text = "📂 ${stringResource(CoreR.string.category_management)}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(Modifier.height(8.dp))
+            item {
+                Column {
+                    Text(
+                        text = "📂 ${stringResource(CoreR.string.category_management)}",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.height(8.dp))
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = stringResource(CoreR.string.manage_categories),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    Text(
+                                        text = "${categories.size} ${stringResource(CoreR.string.categories_available)}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                IconButton(onClick = onNavigateToCategories) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Settings,
+                                        contentDescription = stringResource(CoreR.string.category_management),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Currency Selection
+            item {
+                Column {
+                    Text(
+                        text = "💰 ${stringResource(CoreR.string.currency_selection)}",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "${stringResource(CoreR.string.current_settings)}: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                currencies.forEach { (currencyCode, symbol) ->
+                                    Button(
+                                        onClick = {
+                                            currency = currencyCode
+                                            CurrencyHelper.setCurrency(context, currencyCode)
+                                        },
+                                        modifier = Modifier.weight(1f),
+                                        colors = if (currency == currencyCode) {
+                                            ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.primary
+                                            )
+                                        } else {
+                                            ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                            )
+                                        }
+                                    ) {
+                                        Text(
+                                            text = "$symbol $currencyCode",
+                                            fontSize = 12.sp,
+                                            maxLines = 1
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Dark Mode
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Text("🌙", fontSize = 24.sp)
+                        Spacer(Modifier.width(12.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = stringResource(CoreR.string.manage_categories),
+                                text = stringResource(CoreR.string.dark_mode),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
-                                text = "${categories.size} ${stringResource(CoreR.string.categories_available)}",
-                                style = MaterialTheme.typography.bodyMedium,
+                                text = stringResource(CoreR.string.switch_to_dark_theme),
+                                style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        IconButton(onClick = onNavigateToCategories) {
-                            Icon(
-                                imageVector = Icons.Filled.Settings,
-                                contentDescription = stringResource(CoreR.string.category_management),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(24.dp))
-
-            // Currency Selection
-            Text(
-                text = "💰 ${stringResource(CoreR.string.currency_selection)}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(Modifier.height(8.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "${stringResource(CoreR.string.current_settings)}: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        currencies.forEach { (currencyCode, symbol) ->
-                            Button(
-                                onClick = {
-                                    currency = currencyCode
-                                    CurrencyHelper.setCurrency(context, currencyCode)
-                                },
-                                modifier = Modifier.weight(1f),
-                                colors = if (currency == currencyCode) {
-                                    ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                                } else {
-                                    ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceVariant
-                                    )
+                        Switch(
+                            checked = isDarkMode,
+                            onCheckedChange = { 
+                                coroutineScope.launch {
+                                    ThemeHelper.setDarkMode(context, it)
                                 }
-                            ) {
-                                Text("$symbol $currencyCode")
                             }
-                        }
+                        )
                     }
                 }
             }
-
-            Spacer(Modifier.height(24.dp))
-
-            // Dark Mode
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("🌙", fontSize = 24.sp)
-                    Spacer(Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(CoreR.string.dark_mode),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = stringResource(CoreR.string.switch_to_dark_theme),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Switch(
-                        checked = isDarkMode,
-                        onCheckedChange = { 
-                            coroutineScope.launch {
-                                ThemeHelper.setDarkMode(context, it)
-                            }
-                        }
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(16.dp))
 
             // Current Settings Info
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
-                    Text(
-                        text = "📋 ${stringResource(CoreR.string.current_settings)}",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text("Language: $selectedLanguage")
-                    Text("Currency: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}")
-                    Text("${stringResource(CoreR.string.theme)}: ${if (isDarkMode) stringResource(CoreR.string.dark) else stringResource(CoreR.string.light)}")
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "📋 ${stringResource(CoreR.string.current_settings)}",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text("Language: $selectedLanguage")
+                        Text("Currency: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}")
+                        Text("${stringResource(CoreR.string.theme)}: ${if (isDarkMode) stringResource(CoreR.string.dark) else stringResource(CoreR.string.light)}")
+                    }
                 }
             }
         }

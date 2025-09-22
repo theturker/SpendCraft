@@ -48,12 +48,22 @@ fun TransactionsScreen(
     
     AppScaffold(
         title = "💳 ${stringResource(R.string.app_title)}",
-        actions = {
+        navigationIcon = {
             IconButton(onClick = onReports) {
-                Icon(Icons.Filled.KeyboardArrowUp, contentDescription = stringResource(R.string.reports))
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = stringResource(R.string.reports),
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
+        },
+        actions = {
             IconButton(onClick = onSettings) {
-                Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.settings))
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = stringResource(R.string.settings),
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         },
         fab = { ModernFab(onClick = onAdd) }
@@ -61,8 +71,8 @@ fun TransactionsScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Balance Card
             item {
@@ -77,7 +87,7 @@ fun TransactionsScreen(
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     IncomeExpenseButton(
                         text = stringResource(R.string.add_income_button),
@@ -98,7 +108,7 @@ fun TransactionsScreen(
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     StatCard(
                         title = stringResource(R.string.this_month),

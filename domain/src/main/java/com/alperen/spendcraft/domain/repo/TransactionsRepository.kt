@@ -9,6 +9,8 @@ interface TransactionsRepository {
     fun observeCategories(): Flow<List<Category>>
     suspend fun upsert(transaction: Transaction)
     suspend fun delete(transactionId: Long)
+    suspend fun insertCategory(category: Category): Long
+    suspend fun deleteCategory(categoryId: Long)
 }
 
 
