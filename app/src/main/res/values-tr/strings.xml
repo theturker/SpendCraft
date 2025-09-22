@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SpendCraft</string>
+    
+    <!-- Splash Screen -->
+    <string name="welcome_title">SpendCraft\'a Hoş Geldiniz</string>
+    <string name="welcome_subtitle">Finanslarınızı kontrol altına alın</string>
+    <string name="get_started">Başlayın</string>
+    <string name="already_have_account">Zaten hesabınız var mı?</string>
+    <string name="sign_in">Giriş Yap</string>
+    
+    <!-- Main Navigation -->
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_transactions">İşlemler</string>
+    <string name="nav_reports">Raporlar</string>
+    <string name="nav_settings">Ayarlar</string>
+    
+    <!-- Home Screen -->
+    <string name="total_balance">Toplam Bakiye</string>
+    <string name="this_month">Bu Ay</string>
+    <string name="income">Gelir</string>
+    <string name="expenses">Gider</string>
+    <string name="add_transaction">İşlem Ekle</string>
+    <string name="recent_transactions">Son İşlemler</string>
+    <string name="view_all">Tümünü Gör</string>
+    
+    <!-- Transaction Types -->
+    <string name="income_type">Gelir</string>
+    <string name="expense_type">Gider</string>
+    <string name="amount">Tutar</string>
+    <string name="category">Kategori</string>
+    <string name="description">Açıklama</string>
+    <string name="date">Tarih</string>
+    <string name="save">Kaydet</string>
+    <string name="cancel">İptal</string>
+    
+    <!-- Categories -->
+    <string name="food">Yemek</string>
+    <string name="transportation">Ulaşım</string>
+    <string name="entertainment">Eğlence</string>
+    <string name="shopping">Alışveriş</string>
+    <string name="bills">Faturalar</string>
+    <string name="health">Sağlık</string>
+    <string name="education">Eğitim</string>
+    <string name="other">Diğer</string>
+    
+    <!-- Settings -->
+    <string name="language">Dil</string>
+    <string name="currency">Para Birimi</string>
+    <string name="notifications">Bildirimler</string>
+    <string name="privacy">Gizlilik</string>
+    <string name="about">Hakkında</string>
+    <string name="logout">Çıkış Yap</string>
+    
+    <!-- Common -->
+    <string name="ok">Tamam</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="loading">Yükleniyor...</string>
+    <string name="error">Hata</string>
+    <string name="success">Başarılı</string>
+</resources>

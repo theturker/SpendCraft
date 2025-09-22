@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml:2:13-83
+INJECTED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml:2:13-83
+	package
+		INJECTED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml
+	xmlns:android
+		ADDED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml:2:23-81
+uses-sdk
+INJECTED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml reason: use-sdk injection requested
+INJECTED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml
+INJECTED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml
+	android:targetSdkVersion
+		INJECTED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml
+	android:minSdkVersion
+		INJECTED from /Users/alperenturker/Desktop/SpendCraft/core/analytics/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest6063716921746324843.xml

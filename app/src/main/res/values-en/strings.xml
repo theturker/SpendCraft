@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SpendCraft</string>
+    
+    <!-- Splash Screen -->
+    <string name="welcome_title">Welcome to SpendCraft</string>
+    <string name="welcome_subtitle">Take control of your finances</string>
+    <string name="get_started">Get Started</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="sign_in">Sign In</string>
+    
+    <!-- Main Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_transactions">Transactions</string>
+    <string name="nav_reports">Reports</string>
+    <string name="nav_settings">Settings</string>
+    
+    <!-- Home Screen -->
+    <string name="total_balance">Total Balance</string>
+    <string name="this_month">This Month</string>
+    <string name="income">Income</string>
+    <string name="expenses">Expenses</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="recent_transactions">Recent Transactions</string>
+    <string name="view_all">View All</string>
+    
+    <!-- Transaction Types -->
+    <string name="income_type">Income</string>
+    <string name="expense_type">Expense</string>
+    <string name="amount">Amount</string>
+    <string name="category">Category</string>
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    
+    <!-- Categories -->
+    <string name="food">Food</string>
+    <string name="transportation">Transportation</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="shopping">Shopping</string>
+    <string name="bills">Bills</string>
+    <string name="health">Health</string>
+    <string name="education">Education</string>
+    <string name="other">Other</string>
+    
+    <!-- Settings -->
+    <string name="language">Language</string>
+    <string name="currency">Currency</string>
+    <string name="notifications">Notifications</string>
+    <string name="privacy">Privacy</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="loading">Loading...</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+</resources>
