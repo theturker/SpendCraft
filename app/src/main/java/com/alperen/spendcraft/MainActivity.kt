@@ -1,5 +1,6 @@
 package com.alperen.spendcraft
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, LocaleHelper.getLanguage(newBase)))
     }
 }
 

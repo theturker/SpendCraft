@@ -21,7 +21,9 @@ import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.StatCard
 import com.alperen.spendcraft.core.ui.ModernCard
+import com.alperen.spendcraft.core.ui.R
 import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun ReportsScreen(
@@ -42,7 +44,7 @@ fun ReportsScreen(
         .sortedByDescending { it.second }
     
     AppScaffold(
-        title = "📊 Raporlar",
+        title = "📊 ${stringResource(R.string.reports)}",
         onBack = onBack
     ) {
         LazyColumn(
@@ -58,16 +60,16 @@ fun ReportsScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     StatCard(
-                        title = "Toplam Gelir",
+                        title = stringResource(R.string.total_income),
                         value = formatCurrency(totalIncome),
-                        icon = Icons.Filled.AccountBox,
+                        icon = Icons.Filled.ThumbUp,
                         color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
-                        title = "Toplam Gider",
+                        title = stringResource(R.string.total_expense),
                         value = formatCurrency(totalExpense),
-                        icon = Icons.Filled.AccountBox,
+                        icon = Icons.Filled.ArrowDropDown,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.weight(1f)
                     )
@@ -82,7 +84,7 @@ fun ReportsScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Net Bakiye",
+                            text = stringResource(R.string.net_balance),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -104,7 +106,7 @@ fun ReportsScreen(
             if (expenseByCategory.isNotEmpty()) {
                 item {
                     Text(
-                        text = "📈 Harcama Dağılımı",
+                        text = "📈 ${stringResource(R.string.expense_distribution)}",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
@@ -127,7 +129,7 @@ fun ReportsScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "📊 İşlem İstatistikleri",
+                            text = "📊 ${stringResource(R.string.transaction_statistics)}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -139,7 +141,7 @@ fun ReportsScreen(
                         ) {
                             Column {
                                 Text(
-                                    text = "Toplam İşlem",
+                                    text = stringResource(R.string.total_transactions),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -151,7 +153,7 @@ fun ReportsScreen(
                             }
                             Column {
                                 Text(
-                                    text = "Gelir İşlemi",
+                                    text = stringResource(R.string.income_transactions),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -164,7 +166,7 @@ fun ReportsScreen(
                             }
                             Column {
                                 Text(
-                                    text = "Gider İşlemi",
+                                    text = stringResource(R.string.expense_transactions),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -221,7 +223,7 @@ private fun ExpenseCategoryItem(
             
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Kategori ${categoryId ?: "Bilinmeyen"}",
+                    text = "${stringResource(R.string.category)} ${categoryId ?: stringResource(R.string.unknown_category)}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )

@@ -14,6 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
+import androidx.compose.ui.res.stringResource
+import com.alperen.spendcraft.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,11 +29,11 @@ fun CategoryManagementScreen(
     var newCategoryName by remember { mutableStateOf("") }
     
     AppScaffold(
-        title = "📂 Kategori Yönetimi",
+        title = "📂 ${stringResource(R.string.category_management)}",
         onBack = onBack,
         actions = {
             IconButton(onClick = { showAddDialog = true }) {
-                Icon(Icons.Filled.Add, contentDescription = "Kategori Ekle")
+                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_category))
             }
         }
     ) {
@@ -47,7 +49,7 @@ fun CategoryManagementScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "📊 Kategori İstatistikleri",
+                            text = "📊 ${stringResource(R.string.category_statistics)}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -58,8 +60,8 @@ fun CategoryManagementScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             StatCard(
-                                title = "Toplam",
-                                value = "${categories.size} kategori",
+                                title = stringResource(R.string.total),
+                                value = "${categories.size} ${stringResource(R.string.categories)}",
                                 icon = Icons.Filled.AccountBox,
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.weight(1f)

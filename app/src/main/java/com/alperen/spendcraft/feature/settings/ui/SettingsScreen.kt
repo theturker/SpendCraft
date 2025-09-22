@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.LocaleHelper
 import com.alperen.spendcraft.CurrencyHelper
 import com.alperen.spendcraft.core.model.Category
+import androidx.compose.ui.res.stringResource
+import com.alperen.spendcraft.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,9 +78,9 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
-                    TextButton(onClick = onBack) { Text("Back") }
+                    TextButton(onClick = onBack) { Text(stringResource(R.string.back)) }
                 }
             )
         }
@@ -91,7 +93,7 @@ fun SettingsScreen(
         ) {
             // Language Selection
             Text(
-                text = "🌍 Language / Dil",
+                text = "🌍 ${stringResource(R.string.language_selection)}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
