@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -16,6 +18,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -36,10 +40,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.LocaleHelper
 import com.alperen.spendcraft.CurrencyHelper
+import com.alperen.spendcraft.core.model.Category
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBack: () -> Unit) {
+fun SettingsScreen(
+    categories: List<Category> = emptyList(),
+    onAddCategory: (String) -> Unit = {},
+    onDeleteCategory: (Long) -> Unit = {},
+    onNavigateToCategories: () -> Unit = {},
+    onBack: () -> Unit
+) {
     val context = LocalContext.current
     var darkMode by rememberSaveable { mutableStateOf(false) }
     var currency by rememberSaveable { mutableStateOf(CurrencyHelper.getCurrency(context)) }
@@ -127,6 +138,53 @@ fun SettingsScreen(onBack: () -> Unit) {
                             ) {
                                 Text(displayName)
                             }
+                        }
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            // Category Management
+            Text(
+                text = "📂 Kategori Yönetimi",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(8.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Kategorileri Yönet",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                text = "${categories.size} kategori mevcut",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        IconButton(onClick = onNavigateToCategories) {
+                            Icon(
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = "Kategori Yönetimi",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
                         }
                     }
                 }

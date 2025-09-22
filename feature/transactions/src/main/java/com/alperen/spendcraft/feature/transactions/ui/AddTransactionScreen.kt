@@ -22,6 +22,7 @@ import com.alperen.spendcraft.core.ui.*
 @Composable
 fun AddTransactionScreen(
     categories: StateFlow<List<Category>>,
+    initialTransactionType: Boolean? = null,
     onSave: (amountMinor: Long, note: String?, categoryId: Long?, isIncome: Boolean) -> Unit,
     onBack: () -> Unit
 ) {
@@ -29,7 +30,7 @@ fun AddTransactionScreen(
     var amount by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     var selectedCategoryId by remember { mutableStateOf<Long?>(cats.firstOrNull()?.id) }
-    var isIncome by remember { mutableStateOf(false) }
+    var isIncome by remember { mutableStateOf(initialTransactionType ?: false) }
     var expanded by remember { mutableStateOf(false) }
 
     AppScaffold(
@@ -169,20 +170,26 @@ fun AddTransactionScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         OutlinedTextField(
-                            value = amount,
-                            onValueChange = { if (it.all(Char::isDigit)) amount = it },
-                            label = { Text("Tutar (kuruş cinsinden)") },
+                            value = formatCurrencyInput(amount),
+                            onValueChange = { newValue ->
+                                val cleanValue = newValue.replace(Regex("[^0-9]"), "")
+                                if (cleanValue.length <= 8) { // Max 8 digits
+                                    amount = cleanValue
+                                }
+                            },
+                            label = { Text("Tutar") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.fillMaxWidth(),
                             leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Filled.ArrowDropDown,
+                                    imageVector = Icons.Filled.Call,
                                     contentDescription = null
                                 )
                             },
                             supportingText = {
                                 if (amount.isNotEmpty()) {
-                                    Text("₺${amount.toLongOrNull()?.div(100) ?: 0}")
+                                    val formattedAmount = formatCurrencyDisplay(amount.toLongOrNull() ?: 0)
+                                    Text("₺$formattedAmount")
                                 }
                             }
                         )
@@ -271,6 +278,26 @@ fun AddTransactionScreen(
                 }
             }
         }
+    }
+}
+
+// Para birimi formatlaması fonksiyonları
+private fun formatCurrencyInput(amount: String): String {
+    if (amount.isEmpty()) return ""
+    val number = amount.toLongOrNull() ?: 0
+    return formatCurrencyDisplay(number)
+}
+
+private fun formatCurrencyDisplay(amount: Long): String {
+    val major = amount / 100
+    val minor = amount % 100
+    
+    val majorFormatted = major.toString().reversed().chunked(3).joinToString(".").reversed()
+    
+    return if (minor > 0) {
+        "$majorFormatted,${minor.toString().padStart(2, '0')}"
+    } else {
+        majorFormatted
     }
 }
 

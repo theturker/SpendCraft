@@ -1,6 +1,7 @@
 package com.alperen.spendcraft.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -11,12 +12,16 @@ import com.alperen.spendcraft.feature.transactions.ui.TransactionsScreen
 import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.feature.reports.ReportsScreen
 import com.alperen.spendcraft.feature.settings.ui.SettingsScreen
+import com.alperen.spendcraft.feature.settings.ui.CategoryManagementScreen
 
 object Routes {
     const val LIST = "list"
     const val ADD = "add"
+    const val ADD_INCOME = "add_income"
+    const val ADD_EXPENSE = "add_expense"
     const val REPORTS = "reports"
     const val SETTINGS = "settings"
+    const val CATEGORY_MANAGEMENT = "category_management"
 }
 
 @Composable
@@ -29,8 +34,8 @@ fun AppNavHost(
             TransactionsScreen(
                 viewModel = vm,
                 onAdd = { navController.navigate(Routes.ADD) },
-                onAddIncome = { navController.navigate(Routes.ADD) },
-                onAddExpense = { navController.navigate(Routes.ADD) },
+                onAddIncome = { navController.navigate(Routes.ADD_INCOME) },
+                onAddExpense = { navController.navigate(Routes.ADD_EXPENSE) },
                 onReports = { navController.navigate(Routes.REPORTS) },
                 onSettings = { navController.navigate(Routes.SETTINGS) }
             )
@@ -38,6 +43,29 @@ fun AppNavHost(
         composable(Routes.ADD) {
             AddTransactionScreen(
                 categories = vm.categories,
+                initialTransactionType = null,
+                onSave = { amountMinor, note, categoryId, isIncome ->
+                    vm.saveTransaction(amountMinor, note, categoryId, isIncome)
+                    navController.popBackStack()
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.ADD_INCOME) {
+            AddTransactionScreen(
+                categories = vm.categories,
+                initialTransactionType = true,
+                onSave = { amountMinor, note, categoryId, isIncome ->
+                    vm.saveTransaction(amountMinor, note, categoryId, isIncome)
+                    navController.popBackStack()
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.ADD_EXPENSE) {
+            AddTransactionScreen(
+                categories = vm.categories,
+                initialTransactionType = false,
                 onSave = { amountMinor, note, categoryId, isIncome ->
                     vm.saveTransaction(amountMinor, note, categoryId, isIncome)
                     navController.popBackStack()
@@ -47,11 +75,36 @@ fun AppNavHost(
         }
         composable(Routes.REPORTS) {
             ReportsScreen(
-                transactionsFlow = vm.items
+                transactionsFlow = vm.items,
+                onBack = { navController.popBackStack() }
             )
         }
         composable(Routes.SETTINGS) {
-            SettingsScreen(onBack = { navController.popBackStack() })
+            SettingsScreen(
+                categories = vm.categories.collectAsState().value,
+                onAddCategory = { name -> 
+                    // TODO: Implement category addition
+                },
+                onDeleteCategory = { id -> 
+                    // TODO: Implement category deletion
+                },
+                onNavigateToCategories = { 
+                    navController.navigate(Routes.CATEGORY_MANAGEMENT) 
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.CATEGORY_MANAGEMENT) {
+            CategoryManagementScreen(
+                categories = vm.categories.collectAsState().value,
+                onAddCategory = { name -> 
+                    // TODO: Implement category addition
+                },
+                onDeleteCategory = { id -> 
+                    // TODO: Implement category deletion
+                },
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }
