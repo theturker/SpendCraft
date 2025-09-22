@@ -45,6 +45,11 @@
     <color name="card_background">#FFFFFF</color>
     <color name="card_shadow">#E2E8F0</color>
     
+    <!-- Splash Screen Colors -->
+    <color name="splash_gradient_start">#6366F1</color>
+    <color name="splash_gradient_end">#8B5CF6</color>
+    <color name="splash_accent">#EC4899</color>
+    
     <!-- Legacy Colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
