@@ -102,4 +102,10 @@
     <string name="theme">Theme</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
+    
+    <!-- Reminder Notifications -->
+    <string name="reminder_channel_name">Daily Reminders</string>
+    <string name="reminder_channel_description">Daily expense tracking reminders</string>
+    <string name="reminder_title">Add today\'s expenses</string>
+    <string name="reminder_text">Don\'t forget to track your spending today!</string>
 </resources>

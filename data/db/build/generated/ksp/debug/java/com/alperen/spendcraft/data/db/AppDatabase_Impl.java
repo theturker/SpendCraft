@@ -13,8 +13,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import com.alperen.spendcraft.data.db.dao.AccountDao;
 import com.alperen.spendcraft.data.db.dao.AccountDao_Impl;
+import com.alperen.spendcraft.data.db.dao.BudgetAlertDao;
+import com.alperen.spendcraft.data.db.dao.BudgetAlertDao_Impl;
+import com.alperen.spendcraft.data.db.dao.BudgetDao;
+import com.alperen.spendcraft.data.db.dao.BudgetDao_Impl;
 import com.alperen.spendcraft.data.db.dao.CategoryDao;
 import com.alperen.spendcraft.data.db.dao.CategoryDao_Impl;
+import com.alperen.spendcraft.data.db.dao.DailyEntryDao;
+import com.alperen.spendcraft.data.db.dao.DailyEntryDao_Impl;
 import com.alperen.spendcraft.data.db.dao.TxDao;
 import com.alperen.spendcraft.data.db.dao.TxDao_Impl;
 import java.lang.Class;
@@ -39,10 +45,16 @@ public final class AppDatabase_Impl extends AppDatabase {
 
   private volatile AccountDao _accountDao;
 
+  private volatile DailyEntryDao _dailyEntryDao;
+
+  private volatile BudgetDao _budgetDao;
+
+  private volatile BudgetAlertDao _budgetAlertDao;
+
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(4) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `transactions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amountMinor` INTEGER NOT NULL, `timestampUtcMillis` INTEGER NOT NULL, `note` TEXT, `categoryId` INTEGER, `accountId` INTEGER, `isIncome` INTEGER NOT NULL)");
@@ -51,8 +63,11 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_transactions_accountId` ON `transactions` (`accountId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `icon` TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `accounts` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `isDefault` INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `daily_entry` (`dateEpochDay` INTEGER NOT NULL, PRIMARY KEY(`dateEpochDay`))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `budget` (`categoryId` TEXT NOT NULL, `monthlyLimitMinor` INTEGER NOT NULL, PRIMARY KEY(`categoryId`))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `budget_alert` (`categoryId` TEXT NOT NULL, `level` INTEGER NOT NULL, `monthKey` TEXT NOT NULL, PRIMARY KEY(`categoryId`, `level`, `monthKey`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '95b46815844721f3fb39362046aece22')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '78518630703bd7be82193d56c07b3d77')");
       }
 
       @Override
@@ -60,6 +75,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("DROP TABLE IF EXISTS `transactions`");
         db.execSQL("DROP TABLE IF EXISTS `categories`");
         db.execSQL("DROP TABLE IF EXISTS `accounts`");
+        db.execSQL("DROP TABLE IF EXISTS `daily_entry`");
+        db.execSQL("DROP TABLE IF EXISTS `budget`");
+        db.execSQL("DROP TABLE IF EXISTS `budget_alert`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -149,9 +167,45 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoAccounts + "\n"
                   + " Found:\n" + _existingAccounts);
         }
+        final HashMap<String, TableInfo.Column> _columnsDailyEntry = new HashMap<String, TableInfo.Column>(1);
+        _columnsDailyEntry.put("dateEpochDay", new TableInfo.Column("dateEpochDay", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysDailyEntry = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesDailyEntry = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoDailyEntry = new TableInfo("daily_entry", _columnsDailyEntry, _foreignKeysDailyEntry, _indicesDailyEntry);
+        final TableInfo _existingDailyEntry = TableInfo.read(db, "daily_entry");
+        if (!_infoDailyEntry.equals(_existingDailyEntry)) {
+          return new RoomOpenHelper.ValidationResult(false, "daily_entry(com.alperen.spendcraft.data.db.entities.DailyEntryEntity).\n"
+                  + " Expected:\n" + _infoDailyEntry + "\n"
+                  + " Found:\n" + _existingDailyEntry);
+        }
+        final HashMap<String, TableInfo.Column> _columnsBudget = new HashMap<String, TableInfo.Column>(2);
+        _columnsBudget.put("categoryId", new TableInfo.Column("categoryId", "TEXT", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBudget.put("monthlyLimitMinor", new TableInfo.Column("monthlyLimitMinor", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysBudget = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesBudget = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoBudget = new TableInfo("budget", _columnsBudget, _foreignKeysBudget, _indicesBudget);
+        final TableInfo _existingBudget = TableInfo.read(db, "budget");
+        if (!_infoBudget.equals(_existingBudget)) {
+          return new RoomOpenHelper.ValidationResult(false, "budget(com.alperen.spendcraft.data.db.entities.BudgetEntity).\n"
+                  + " Expected:\n" + _infoBudget + "\n"
+                  + " Found:\n" + _existingBudget);
+        }
+        final HashMap<String, TableInfo.Column> _columnsBudgetAlert = new HashMap<String, TableInfo.Column>(3);
+        _columnsBudgetAlert.put("categoryId", new TableInfo.Column("categoryId", "TEXT", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBudgetAlert.put("level", new TableInfo.Column("level", "INTEGER", true, 2, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBudgetAlert.put("monthKey", new TableInfo.Column("monthKey", "TEXT", true, 3, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysBudgetAlert = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesBudgetAlert = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoBudgetAlert = new TableInfo("budget_alert", _columnsBudgetAlert, _foreignKeysBudgetAlert, _indicesBudgetAlert);
+        final TableInfo _existingBudgetAlert = TableInfo.read(db, "budget_alert");
+        if (!_infoBudgetAlert.equals(_existingBudgetAlert)) {
+          return new RoomOpenHelper.ValidationResult(false, "budget_alert(com.alperen.spendcraft.data.db.entities.BudgetAlertEntity).\n"
+                  + " Expected:\n" + _infoBudgetAlert + "\n"
+                  + " Found:\n" + _existingBudgetAlert);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "95b46815844721f3fb39362046aece22", "b36080fa019ce7d821f2354b2acf76b5");
+    }, "78518630703bd7be82193d56c07b3d77", "95f7a1055a65753d05bae644ad88be01");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -162,7 +216,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "transactions","categories","accounts");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "transactions","categories","accounts","daily_entry","budget","budget_alert");
   }
 
   @Override
@@ -174,6 +228,9 @@ public final class AppDatabase_Impl extends AppDatabase {
       _db.execSQL("DELETE FROM `transactions`");
       _db.execSQL("DELETE FROM `categories`");
       _db.execSQL("DELETE FROM `accounts`");
+      _db.execSQL("DELETE FROM `daily_entry`");
+      _db.execSQL("DELETE FROM `budget`");
+      _db.execSQL("DELETE FROM `budget_alert`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
@@ -191,6 +248,9 @@ public final class AppDatabase_Impl extends AppDatabase {
     _typeConvertersMap.put(TxDao.class, TxDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(CategoryDao.class, CategoryDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(AccountDao.class, AccountDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(DailyEntryDao.class, DailyEntryDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(BudgetDao.class, BudgetDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(BudgetAlertDao.class, BudgetAlertDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -247,6 +307,48 @@ public final class AppDatabase_Impl extends AppDatabase {
           _accountDao = new AccountDao_Impl(this);
         }
         return _accountDao;
+      }
+    }
+  }
+
+  @Override
+  public DailyEntryDao dailyEntryDao() {
+    if (_dailyEntryDao != null) {
+      return _dailyEntryDao;
+    } else {
+      synchronized(this) {
+        if(_dailyEntryDao == null) {
+          _dailyEntryDao = new DailyEntryDao_Impl(this);
+        }
+        return _dailyEntryDao;
+      }
+    }
+  }
+
+  @Override
+  public BudgetDao budgetDao() {
+    if (_budgetDao != null) {
+      return _budgetDao;
+    } else {
+      synchronized(this) {
+        if(_budgetDao == null) {
+          _budgetDao = new BudgetDao_Impl(this);
+        }
+        return _budgetDao;
+      }
+    }
+  }
+
+  @Override
+  public BudgetAlertDao budgetAlertDao() {
+    if (_budgetAlertDao != null) {
+      return _budgetAlertDao;
+    } else {
+      synchronized(this) {
+        if(_budgetAlertDao == null) {
+          _budgetAlertDao = new BudgetAlertDao_Impl(this);
+        }
+        return _budgetAlertDao;
       }
     }
   }

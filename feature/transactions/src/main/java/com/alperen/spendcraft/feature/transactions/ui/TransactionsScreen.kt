@@ -38,6 +38,7 @@ fun TransactionsScreen(
     val context = LocalContext.current
     val items by viewModel.items.collectAsState()
     val accounts by viewModel.accounts.collectAsState()
+    val streak by viewModel.streak.collectAsState()
     var selectedAccountIndex by remember { mutableStateOf(0) }
     var showEditDialog by remember { mutableStateOf(false) }
     var editingAccountIndex by remember { mutableStateOf(0) }
@@ -112,6 +113,51 @@ fun TransactionsScreen(
                     onEditAccount = { index ->
                         editingAccountIndex = index
                         showEditDialog = true
+                    }
+                )
+            }
+            
+            // Streak Banner
+            item {
+                StreakBanner(
+                    streak = streak,
+                    onClick = {
+                        // Focus on QuickAdd - scroll to it or expand it
+                    }
+                )
+            }
+            
+            // TEST: Notification Test Button (remove in production)
+            item {
+                ModernCard {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "🔔 Test Notification",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Button(
+                            onClick = {
+                                viewModel.testNotificationNow()
+                            }
+                        ) {
+                            Text("Test Now")
+                        }
+                    }
+                }
+            }
+            
+            // Quick Add
+            item {
+                QuickAddCard(
+                    onQuickAdd = { amountMinor ->
+                        viewModel.addQuick(amountMinor)
                     }
                 )
             }

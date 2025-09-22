@@ -11,6 +11,16 @@ data class Account(
     val name: String
 )
 
+data class Streak(
+    val current: Int,
+    val best: Int
+)
+
+data class Budget(
+    val categoryId: String,
+    val monthlyLimitMinor: Long
+)
+
 enum class TransactionType { INCOME, EXPENSE }
 
 data class Transaction(

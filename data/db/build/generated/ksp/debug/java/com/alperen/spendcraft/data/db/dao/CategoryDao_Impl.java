@@ -1,6 +1,7 @@
 package com.alperen.spendcraft.data.db.dao;
 
 import android.database.Cursor;
+import android.os.CancellationSignal;
 import androidx.annotation.NonNull;
 import androidx.room.CoroutinesRoom;
 import androidx.room.EntityInsertionAdapter;
@@ -170,6 +171,45 @@ public final class CategoryDao_Impl implements CategoryDao {
         _statement.release();
       }
     });
+  }
+
+  @Override
+  public Object getAllAscending(final Continuation<? super List<CategoryEntity>> $completion) {
+    final String _sql = "SELECT * FROM categories ORDER BY name ASC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<CategoryEntity>>() {
+      @Override
+      @NonNull
+      public List<CategoryEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfIcon = CursorUtil.getColumnIndexOrThrow(_cursor, "icon");
+          final List<CategoryEntity> _result = new ArrayList<CategoryEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final CategoryEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpIcon;
+            if (_cursor.isNull(_cursorIndexOfIcon)) {
+              _tmpIcon = null;
+            } else {
+              _tmpIcon = _cursor.getString(_cursorIndexOfIcon);
+            }
+            _item = new CategoryEntity(_tmpId,_tmpName,_tmpIcon);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
   }
 
   @NonNull

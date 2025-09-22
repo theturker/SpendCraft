@@ -1,6 +1,7 @@
 package com.alperen.spendcraft.data.db.dao;
 
 import android.database.Cursor;
+import android.os.CancellationSignal;
 import androidx.annotation.NonNull;
 import androidx.room.CoroutinesRoom;
 import androidx.room.EntityDeletionOrUpdateAdapter;
@@ -307,6 +308,67 @@ public final class TxDao_Impl implements TxDao {
         _statement.release();
       }
     });
+  }
+
+  @Override
+  public Object getAllAscending(final Continuation<? super List<TransactionEntity>> $completion) {
+    final String _sql = "SELECT * FROM transactions ORDER BY timestampUtcMillis ASC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<TransactionEntity>>() {
+      @Override
+      @NonNull
+      public List<TransactionEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfAmountMinor = CursorUtil.getColumnIndexOrThrow(_cursor, "amountMinor");
+          final int _cursorIndexOfTimestampUtcMillis = CursorUtil.getColumnIndexOrThrow(_cursor, "timestampUtcMillis");
+          final int _cursorIndexOfNote = CursorUtil.getColumnIndexOrThrow(_cursor, "note");
+          final int _cursorIndexOfCategoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "categoryId");
+          final int _cursorIndexOfAccountId = CursorUtil.getColumnIndexOrThrow(_cursor, "accountId");
+          final int _cursorIndexOfIsIncome = CursorUtil.getColumnIndexOrThrow(_cursor, "isIncome");
+          final List<TransactionEntity> _result = new ArrayList<TransactionEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final TransactionEntity _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpAmountMinor;
+            _tmpAmountMinor = _cursor.getLong(_cursorIndexOfAmountMinor);
+            final long _tmpTimestampUtcMillis;
+            _tmpTimestampUtcMillis = _cursor.getLong(_cursorIndexOfTimestampUtcMillis);
+            final String _tmpNote;
+            if (_cursor.isNull(_cursorIndexOfNote)) {
+              _tmpNote = null;
+            } else {
+              _tmpNote = _cursor.getString(_cursorIndexOfNote);
+            }
+            final Long _tmpCategoryId;
+            if (_cursor.isNull(_cursorIndexOfCategoryId)) {
+              _tmpCategoryId = null;
+            } else {
+              _tmpCategoryId = _cursor.getLong(_cursorIndexOfCategoryId);
+            }
+            final Long _tmpAccountId;
+            if (_cursor.isNull(_cursorIndexOfAccountId)) {
+              _tmpAccountId = null;
+            } else {
+              _tmpAccountId = _cursor.getLong(_cursorIndexOfAccountId);
+            }
+            final boolean _tmpIsIncome;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsIncome);
+            _tmpIsIncome = _tmp != 0;
+            _item = new TransactionEntity(_tmpId,_tmpAmountMinor,_tmpTimestampUtcMillis,_tmpNote,_tmpCategoryId,_tmpAccountId,_tmpIsIncome);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
   }
 
   @NonNull

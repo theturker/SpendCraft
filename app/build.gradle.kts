@@ -53,6 +53,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:analytics"))
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
     implementation(project(":domain"))
     implementation(project(":data:repository"))
     implementation(project(":data:db"))
@@ -91,6 +92,9 @@ dependencies {
     
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

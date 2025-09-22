@@ -1,6 +1,7 @@
 package com.alperen.spendcraft.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -26,9 +27,27 @@ object Routes {
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    deepLinkUri: android.net.Uri? = null
 ) {
     val vm: TransactionsViewModel = hiltViewModel()
+    
+    // Handle deep links
+    LaunchedEffect(deepLinkUri) {
+        deepLinkUri?.let { uri ->
+            when {
+                uri.toString().startsWith("app://add") -> {
+                    val type = uri.getQueryParameter("type")
+                    when (type) {
+                        "income" -> navController.navigate(Routes.ADD_INCOME)
+                        "expense" -> navController.navigate(Routes.ADD_EXPENSE)
+                        else -> navController.navigate(Routes.ADD)
+                    }
+                }
+            }
+        }
+    }
+    
     NavHost(navController = navController, startDestination = Routes.LIST) {
         composable(Routes.LIST) {
             TransactionsScreen(

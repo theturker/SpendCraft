@@ -6,7 +6,10 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.alperen.spendcraft.data.db.dao.AccountDao
+import com.alperen.spendcraft.data.db.dao.BudgetAlertDao
+import com.alperen.spendcraft.data.db.dao.BudgetDao
 import com.alperen.spendcraft.data.db.dao.CategoryDao
+import com.alperen.spendcraft.data.db.dao.DailyEntryDao
 import com.alperen.spendcraft.data.db.dao.TxDao
 import com.alperen.spendcraft.data.db.entities.AccountEntity
 import com.alperen.spendcraft.data.db.entities.CategoryEntity
@@ -48,12 +51,45 @@ object DbModule {
             database.execSQL("UPDATE transactions SET accountId = 1")
         }
     }
+    
+    private val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Create daily_entry table
+            database.execSQL("""
+                CREATE TABLE IF NOT EXISTS `daily_entry` (
+                    `dateEpochDay` INTEGER PRIMARY KEY NOT NULL
+                )
+            """)
+        }
+    }
+    
+    private val MIGRATION_3_4 = object : Migration(3, 4) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Create budget table
+            database.execSQL("""
+                CREATE TABLE IF NOT EXISTS `budget` (
+                    `categoryId` TEXT PRIMARY KEY NOT NULL,
+                    `monthlyLimitMinor` INTEGER NOT NULL
+                )
+            """)
+            
+            // Create budget_alert table
+            database.execSQL("""
+                CREATE TABLE IF NOT EXISTS `budget_alert` (
+                    `categoryId` TEXT NOT NULL,
+                    `level` INTEGER NOT NULL,
+                    `monthKey` TEXT NOT NULL,
+                    PRIMARY KEY(`categoryId`, `level`, `monthKey`)
+                )
+            """)
+        }
+    }
 
     @Provides
     @Singleton
     fun provideDb(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "spendcraft.db")
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                     super.onCreate(db)
@@ -92,6 +128,15 @@ object DbModule {
     
     @Provides
     fun provideAccountDao(db: AppDatabase): AccountDao = db.accountDao()
+    
+    @Provides
+    fun provideDailyEntryDao(db: AppDatabase): DailyEntryDao = db.dailyEntryDao()
+    
+    @Provides
+    fun provideBudgetDao(db: AppDatabase): BudgetDao = db.budgetDao()
+    
+    @Provides
+    fun provideBudgetAlertDao(db: AppDatabase): BudgetAlertDao = db.budgetAlertDao()
 }
 
 
