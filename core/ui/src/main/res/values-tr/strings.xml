@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common UI Strings -->
-    <string name="reports">Raporlar</string>
-    <string name="settings">Ayarlar</string>
     <string name="back">Geri</string>
     <string name="add">Ekle</string>
-    <string name="delete">Sil</string>
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
     <string name="ok">Tamam</string>
@@ -15,13 +12,6 @@
     <!-- Transaction Strings -->
     <string name="add_income">Gelir Ekle</string>
     <string name="add_expense">Gider Ekle</string>
-    <string name="transaction_type">İşlem Türü</string>
-    <string name="amount">Tutar</string>
-    <string name="note">Not</string>
-    <string name="category">Kategori</string>
-    <string name="no_transactions_yet">Henüz işlem yok</string>
-    <string name="start_adding_transactions">İlk işleminizi ekleyerek başlayın</string>
-    <string name="average">Ortalama</string>
     <string name="transactions">işlem</string>
     
     <!-- Category Management -->
@@ -57,4 +47,31 @@
     <string name="theme">Tema</string>
     <string name="light">Açık</string>
     <string name="dark">Karanlık</string>
+    
+    <!-- Main Screen -->
+    <string name="app_title">SpendCraft</string>
+    <string name="reports">Raporlar</string>
+    <string name="settings">Ayarlar</string>
+    <string name="add_income_button">💰 Gelir Ekle</string>
+    <string name="add_expense_button">💸 Gider Ekle</string>
+    <string name="this_month">Bu Ay</string>
+    <string name="transactions_count">işlem</string>
+    <string name="average">Ortalama</string>
+    <string name="recent_transactions">Son İşlemler</string>
+    <string name="view_all">Tümünü Gör</string>
+    <string name="no_transactions_yet">Henüz işlem yok</string>
+    <string name="start_adding_transactions">İlk işleminizi ekleyerek başlayın</string>
+    <string name="income">💰 Gelir</string>
+    <string name="expense">💸 Gider</string>
+    <string name="no_description">Açıklama yok</string>
+    <string name="delete">Sil</string>
+    
+    <!-- Add Transaction -->
+    <string name="add_transaction">İşlem Ekle</string>
+    <string name="transaction_type">İşlem Türü</string>
+    <string name="amount">Tutar</string>
+    <string name="note">Açıklama</string>
+    <string name="note_optional">Not (isteğe bağlı)</string>
+    <string name="category">Kategori</string>
+    <string name="select_category">Kategori Seçin</string>
 </resources>

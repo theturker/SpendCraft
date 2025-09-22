@@ -23,6 +23,8 @@ import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.alperen.spendcraft.core.ui.R
 
 @Composable
 fun TransactionsScreen(
@@ -45,13 +47,13 @@ fun TransactionsScreen(
         .sumOf { it.amount.minorUnits }
     
     AppScaffold(
-        title = "💳 SpendCraft",
+        title = "💳 ${stringResource(R.string.app_title)}",
         actions = {
             IconButton(onClick = onReports) {
-                Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Reports")
+                Icon(Icons.Filled.KeyboardArrowUp, contentDescription = stringResource(R.string.reports))
             }
             IconButton(onClick = onSettings) {
-                Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.settings))
             }
         },
         fab = { ModernFab(onClick = onAdd) }
@@ -78,13 +80,13 @@ fun TransactionsScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     IncomeExpenseButton(
-                        text = "💰 Gelir Ekle",
+                        text = stringResource(R.string.add_income_button),
                         onClick = onAddIncome,
                         isIncome = true,
                         modifier = Modifier.weight(1f)
                     )
                     IncomeExpenseButton(
-                        text = "💸 Gider Ekle",
+                        text = stringResource(R.string.add_expense_button),
                         onClick = onAddExpense,
                         isIncome = false,
                         modifier = Modifier.weight(1f)
@@ -99,14 +101,14 @@ fun TransactionsScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     StatCard(
-                        title = "Bu Ay",
-                        value = "${items.size} işlem",
+                        title = stringResource(R.string.this_month),
+                        value = "${items.size} ${stringResource(R.string.transactions_count)}",
                         icon = Icons.Filled.Call,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
-                        title = "Ortalama",
+                        title = stringResource(R.string.average),
                         value = if (items.isNotEmpty()) formatMinor(totalAmount / items.size) else "₺0",
                         icon = Icons.Filled.KeyboardArrowUp,
                         color = MaterialTheme.colorScheme.secondary,
@@ -123,13 +125,13 @@ fun TransactionsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Son İşlemler",
+                        text = stringResource(R.string.recent_transactions),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     TextButton(onClick = onReports) {
-                        Text("Tümünü Gör")
+                        Text(stringResource(R.string.view_all))
                     }
                 }
             }
@@ -154,13 +156,13 @@ fun TransactionsScreen(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "Henüz işlem yok",
+                                text = stringResource(R.string.no_transactions_yet),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "İlk işleminizi ekleyerek başlayın",
+                                text = stringResource(R.string.start_adding_transactions),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -227,13 +229,13 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                 
                 Column {
                     Text(
-                        text = if (isIncome) "💰 Gelir" else "💸 Gider",
+                        text = if (isIncome) stringResource(R.string.income) else stringResource(R.string.expense),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = tx.note ?: "Açıklama yok",
+                        text = tx.note ?: stringResource(R.string.no_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -259,7 +261,7 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete",
+                        contentDescription = stringResource(R.string.delete),
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(20.dp)
                     )

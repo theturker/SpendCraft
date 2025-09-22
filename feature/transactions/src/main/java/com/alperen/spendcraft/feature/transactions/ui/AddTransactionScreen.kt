@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.StateFlow
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
+import androidx.compose.ui.res.stringResource
+import com.alperen.spendcraft.core.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +36,7 @@ fun AddTransactionScreen(
     var expanded by remember { mutableStateOf(false) }
 
     AppScaffold(
-        title = "💳 İşlem Ekle",
+        title = "💳 ${stringResource(R.string.add_transaction)}",
         onBack = onBack,
         actions = {
             TextButton(
@@ -45,7 +47,7 @@ fun AddTransactionScreen(
                 }
             ) { 
                 Text(
-                    "Kaydet",
+                    stringResource(R.string.save),
                     fontWeight = FontWeight.SemiBold
                 ) 
             }
@@ -64,7 +66,7 @@ fun AddTransactionScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "İşlem Türü",
+                            text = stringResource(R.string.transaction_type),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -103,7 +105,7 @@ fun AddTransactionScreen(
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        text = "💰 Gelir",
+                                        text = stringResource(R.string.income),
                                         style = MaterialTheme.typography.labelLarge,
                                         fontWeight = FontWeight.SemiBold,
                                         color = if (isIncome) 
@@ -141,7 +143,7 @@ fun AddTransactionScreen(
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        text = "💸 Gider",
+                                        text = stringResource(R.string.expense),
                                         style = MaterialTheme.typography.labelLarge,
                                         fontWeight = FontWeight.SemiBold,
                                         color = if (!isIncome) 
@@ -163,7 +165,7 @@ fun AddTransactionScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Tutar",
+                            text = stringResource(R.string.amount),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -177,7 +179,7 @@ fun AddTransactionScreen(
                                     amount = cleanValue
                                 }
                             },
-                            label = { Text("Tutar") },
+                            label = { Text(stringResource(R.string.amount)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.fillMaxWidth(),
                             leadingIcon = {
@@ -204,7 +206,7 @@ fun AddTransactionScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Açıklama",
+                            text = stringResource(R.string.note),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -213,7 +215,7 @@ fun AddTransactionScreen(
                         OutlinedTextField(
                             value = note,
                             onValueChange = { note = it },
-                            label = { Text("Not (isteğe bağlı)") },
+                            label = { Text(stringResource(R.string.note_optional)) },
                             modifier = Modifier.fillMaxWidth(),
                             leadingIcon = {
                                 Icon(
@@ -234,7 +236,7 @@ fun AddTransactionScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Kategori",
+                            text = stringResource(R.string.category),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -245,10 +247,10 @@ fun AddTransactionScreen(
                             onExpandedChange = { expanded = !expanded }
                         ) {
                             OutlinedTextField(
-                                value = cats.firstOrNull { it.id == selectedCategoryId }?.name ?: "Kategori Seçin",
+                                value = cats.firstOrNull { it.id == selectedCategoryId }?.name ?: stringResource(R.string.select_category),
                                 onValueChange = {},
                                 readOnly = true,
-                                label = { Text("Kategori") },
+                                label = { Text(stringResource(R.string.category)) },
                                 modifier = Modifier
                                     .menuAnchor()
                                     .fillMaxWidth(),
