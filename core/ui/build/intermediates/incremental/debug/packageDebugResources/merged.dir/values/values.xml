@@ -19,6 +19,8 @@
     <string name="category_management">Category Management</string>
     <string name="category_name">Category Name</string>
     <string name="category_statistics">Category Statistics</string>
+    <string name="csv_format">CSV Format</string>
+    <string name="csv_format_description">Your CSV file should have the following format:</string>
     <string name="currency_selection">Currency Selection</string>
     <string name="current_settings">Current Settings</string>
     <string name="dark">Dark</string>
@@ -31,6 +33,23 @@
     <string name="expense_distribution">Expense Distribution</string>
     <string name="expense_transactions">Expense Transactions</string>
     <string name="expenses">Expenses</string>
+    <string name="export">Export</string>
+    <string name="export_description">Export all your transactions to a CSV file</string>
+    <string name="export_dialog_text">Choose where to save your exported transactions</string>
+    <string name="export_to_csv">Export to CSV</string>
+    <string name="export_transactions">Export Transactions</string>
+    <string name="feature_analytics">Detailed Analytics</string>
+    <string name="feature_analytics_desc">Get insights into your spending patterns</string>
+    <string name="feature_goals">Financial Goals</string>
+    <string name="feature_goals_desc">Set budgets and achieve your financial targets</string>
+    <string name="feature_tracking">Smart Tracking</string>
+    <string name="feature_tracking_desc">Automatically categorize and track your expenses</string>
+    <string name="get_started">Get Started</string>
+    <string name="import_description">Import transactions from a CSV file</string>
+    <string name="import_dialog_text">Choose a CSV file to import transactions from</string>
+    <string name="import_export">Import/Export</string>
+    <string name="import_export_description">Import transactions from CSV files or export your data</string>
+    <string name="import_transactions">Import Transactions</string>
     <string name="income">💰Income</string>
     <string name="income_transactions">Income Transactions</string>
     <string name="language_selection">Language Selection</string>
@@ -48,6 +67,8 @@
     <string name="reports">Reports</string>
     <string name="save">Save</string>
     <string name="select_category">Select Category</string>
+    <string name="select_csv_file">Select CSV File</string>
+    <string name="select_file">Select File</string>
     <string name="settings">Settings</string>
     <string name="start_adding_categories">Start by adding your first category</string>
     <string name="start_adding_transactions">Start by adding your first transaction</string>
@@ -67,5 +88,8 @@
     <string name="unknown_category">Unknown</string>
     <string name="us_dollar">US Dollar</string>
     <string name="view_all">View All</string>
+    <string name="welcome_subtitle">Take control of your finances with smart expense tracking</string>
+    <string name="welcome_title">Welcome to SpendCraft</string>
+    <string name="widget_description">Quick access to your financial overview and add transactions</string>
     <string name="yes">Yes</string>
 </resources>

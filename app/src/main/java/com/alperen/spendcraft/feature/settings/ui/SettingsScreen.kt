@@ -59,6 +59,7 @@ fun SettingsScreen(
     onAddCategory: (String) -> Unit = {},
     onDeleteCategory: (Long) -> Unit = {},
     onNavigateToCategories: () -> Unit = {},
+    onNavigateToBudgets: () -> Unit = {},
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -152,6 +153,55 @@ fun SettingsScreen(
                                     ) {
                                         Text(displayName)
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Budget Management
+            item {
+                Column {
+                    Text(
+                        text = "💰 ${stringResource(R.string.budget_management)}",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = stringResource(R.string.set_budget_limits),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.monthly_budget),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                IconButton(onClick = onNavigateToBudgets) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Settings,
+                                        contentDescription = stringResource(R.string.budget_management),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
                                 }
                             }
                         }

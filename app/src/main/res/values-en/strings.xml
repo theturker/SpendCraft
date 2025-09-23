@@ -102,4 +102,26 @@
     <string name="theme">Theme</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
+    
+    <!-- Budget Management -->
+    <string name="budget_management">Budget Management</string>
+    <string name="set_budget_limits">Set Budget Limits</string>
+    <string name="monthly_budget">Monthly Budget</string>
+    <string name="budget_limit">Budget Limit</string>
+    <string name="budget_warning">Budget Warning</string>
+    <string name="budget_exceeded">Budget Exceeded</string>
+    <string name="add_budget">Add Budget</string>
+    <string name="edit_budget">Edit Budget</string>
+    <string name="delete_budget">Delete Budget</string>
+    <string name="budget_for_category">Budget for %1$s</string>
+    <string name="spent_this_month">Spent this month</string>
+    <string name="remaining_budget">Remaining Budget</string>
+    <string name="budget_progress">Budget Progress</string>
+    <string name="total_budgets">Total Budgets</string>
+    <string name="monthly_limit">Monthly Limit</string>
+    <string name="no_budgets">No Budgets Set</string>
+    <string name="no_budgets_desc">Create your first budget to start tracking expenses</string>
+    <string name="all_transactions">All Transactions</string>
+    <string name="no_transactions">No Transactions</string>
+    <string name="no_transactions_desc">Start adding transactions to see them here</string>
 </resources>

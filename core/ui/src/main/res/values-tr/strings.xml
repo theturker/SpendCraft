@@ -59,7 +59,6 @@
     <string name="delete">Sil</string>
     
     <!-- Add Transaction -->
-    <string name="add_transaction">İşlem Ekle</string>
     <string name="transaction_type">İşlem Türü</string>
     <string name="amount">Tutar</string>
     <string name="note">Açıklama</string>
@@ -85,4 +84,49 @@
     <!-- Account Management -->
     <string name="edit_account_name">Hesap Adını Düzenle</string>
     <string name="account_name">Hesap Adı</string>
+    
+    <!-- Onboarding -->
+    <string name="welcome_title">SpendCraft\'a Hoş Geldiniz</string>
+    <string name="welcome_subtitle">Akıllı harcama takibi ile finanslarınızı kontrol altına alın</string>
+    <string name="feature_tracking">Akıllı Takip</string>
+    <string name="feature_tracking_desc">Harcamalarınızı otomatik olarak kategorilere ayırın ve takip edin</string>
+    <string name="feature_analytics">Detaylı Analiz</string>
+    <string name="feature_analytics_desc">Harcama alışkanlıklarınız hakkında bilgi edinin</string>
+    <string name="feature_goals">Finansal Hedefler</string>
+    <string name="feature_goals_desc">Bütçe belirleyin ve finansal hedeflerinize ulaşın</string>
+    <string name="get_started">Başlayalım</string>
+    
+    <!-- Permissions -->
+    <string name="permissions_title">Bildirimleri Etkinleştirin</string>
+    <string name="permissions_subtitle">Günlük hatırlatıcılar ve bütçe uyarıları ile takipte kalın</string>
+    <string name="notification_permission">Bildirim İzni</string>
+    <string name="notification_permission_desc">Harcamalarınızı kaydetmek için günlük hatırlatıcılar alın</string>
+    <string name="grant_permissions">İzinleri Ver</string>
+    <string name="grant">Ver</string>
+    <string name="continue_text">Devam Et</string>
+    <string name="skip_for_now">Şimdilik atla</string>
+    
+    <!-- First Transaction -->
+    <string name="first_transaction_title">İlk İşleminizi Ekleyin</string>
+    <string name="first_transaction_subtitle">İlk harcama veya gelirinizi ekleyerek başlayalım</string>
+    <string name="add_transaction">İşlem Ekle</string>
+    
+    <!-- Widget -->
+    <string name="widget_description">Finansal özetinize hızlı erişim ve işlem ekleme</string>
+    
+    <!-- Import/Export -->
+    <string name="import_export">İçe/Dışa Aktar</string>
+    <string name="import_export_description">CSV dosyalarından işlem içe aktarın veya verilerinizi dışa aktarın</string>
+    <string name="import_transactions">İşlemleri İçe Aktar</string>
+    <string name="import_description">CSV dosyasından işlemleri içe aktarın</string>
+    <string name="select_csv_file">CSV Dosyası Seç</string>
+    <string name="export_transactions">İşlemleri Dışa Aktar</string>
+    <string name="export_description">Tüm işlemlerinizi CSV dosyasına dışa aktarın</string>
+    <string name="export_to_csv">CSV\'ye Dışa Aktar</string>
+    <string name="csv_format">CSV Formatı</string>
+    <string name="csv_format_description">CSV dosyanız aşağıdaki formatta olmalıdır:</string>
+    <string name="select_file">Dosya Seç</string>
+    <string name="export">Dışa Aktar</string>
+    <string name="import_dialog_text">İçe aktarılacak işlemler için bir CSV dosyası seçin</string>
+    <string name="export_dialog_text">Dışa aktarılan işlemlerinizi nereye kaydetmek istediğinizi seçin</string>
 </resources>

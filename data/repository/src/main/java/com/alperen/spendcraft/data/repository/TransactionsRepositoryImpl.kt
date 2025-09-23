@@ -68,6 +68,13 @@ class TransactionsRepositoryImpl(
     override suspend fun getDefaultAccount(): Account? {
         return accountDao.getDefaultAccount()?.let { AccountMapper.fromEntity(it) }
     }
+    
+    
+    override suspend fun getAllAscending(): List<Transaction> {
+        return txDao.getAllAscending().map { entity ->
+            TransactionMapper.fromEntity(entity)
+        }
+    }
 }
 
 

@@ -33,7 +33,8 @@ fun TransactionsScreen(
     onAddIncome: () -> Unit,
     onAddExpense: () -> Unit,
     onReports: () -> Unit,
-    onSettings: () -> Unit
+    onSettings: () -> Unit,
+    onAllTransactions: () -> Unit
 ) {
     val context = LocalContext.current
     val items by viewModel.items.collectAsState()
@@ -153,14 +154,6 @@ fun TransactionsScreen(
                 }
             }
             
-            // Quick Add
-            item {
-                QuickAddCard(
-                    onQuickAdd = { amountMinor ->
-                        viewModel.addQuick(amountMinor)
-                    }
-                )
-            }
             
             // Quick Actions
             item {
@@ -219,7 +212,7 @@ fun TransactionsScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-                    TextButton(onClick = onReports) {
+                    TextButton(onClick = onAllTransactions) {
                         Text(stringResource(R.string.view_all))
                     }
                 }

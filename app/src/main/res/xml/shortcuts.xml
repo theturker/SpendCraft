@@ -25,5 +25,31 @@
             android:targetClass="com.alperen.spendcraft.MainActivity" />
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
+    
+    <shortcut
+        android:shortcutId="view_reports"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/reports"
+        android:shortcutLongLabel="@string/reports">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="app://reports"
+            android:targetClass="com.alperen.spendcraft.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    
+    <shortcut
+        android:shortcutId="quick_add"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/quick_add_title"
+        android:shortcutLongLabel="@string/quick_add_title">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="app://quickadd"
+            android:targetClass="com.alperen.spendcraft.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
 </shortcuts>
 

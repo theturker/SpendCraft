@@ -102,4 +102,26 @@
     <string name="theme">Tema</string>
     <string name="light">Açık</string>
     <string name="dark">Karanlık</string>
+    
+    <!-- Budget Management -->
+    <string name="budget_management">Bütçe Yönetimi</string>
+    <string name="set_budget_limits">Bütçe Limitleri Belirle</string>
+    <string name="monthly_budget">Aylık Bütçe</string>
+    <string name="budget_limit">Bütçe Limiti</string>
+    <string name="budget_warning">Bütçe Uyarısı</string>
+    <string name="budget_exceeded">Bütçe Aşıldı</string>
+    <string name="add_budget">Bütçe Ekle</string>
+    <string name="edit_budget">Bütçe Düzenle</string>
+    <string name="delete_budget">Bütçe Sil</string>
+    <string name="budget_for_category">%1$s için Bütçe</string>
+    <string name="spent_this_month">Bu ay harcanan</string>
+    <string name="remaining_budget">Kalan Bütçe</string>
+    <string name="budget_progress">Bütçe İlerlemesi</string>
+    <string name="total_budgets">Toplam Bütçe</string>
+    <string name="monthly_limit">Aylık Limiti</string>
+    <string name="no_budgets">Bütçe Belirlenmemiş</string>
+    <string name="no_budgets_desc">Harcama takibi için ilk bütçenizi oluşturun</string>
+    <string name="all_transactions">Tüm İşlemler</string>
+    <string name="no_transactions">İşlem Yok</string>
+    <string name="no_transactions_desc">İşlem eklemeye başlayın</string>
 </resources>

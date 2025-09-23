@@ -85,6 +85,7 @@ object DbModule {
         }
     }
 
+
     @Provides
     @Singleton
     fun provideDb(@ApplicationContext context: Context): AppDatabase {
@@ -137,6 +138,7 @@ object DbModule {
     
     @Provides
     fun provideBudgetAlertDao(db: AppDatabase): BudgetAlertDao = db.budgetAlertDao()
+    
 }
 
 

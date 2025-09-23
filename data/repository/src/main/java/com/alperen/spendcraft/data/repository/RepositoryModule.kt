@@ -41,6 +41,7 @@ object RepositoryModule {
         txDao: TxDao,
         categoryDao: CategoryDao
     ): BudgetRepository = BudgetRepositoryImpl(budgetDao, budgetAlertDao, txDao, categoryDao)
+
 }
 
 

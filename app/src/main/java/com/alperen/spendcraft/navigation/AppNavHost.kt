@@ -3,6 +3,7 @@ package com.alperen.spendcraft.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,6 +15,7 @@ import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.feature.reports.ReportsScreen
 import com.alperen.spendcraft.feature.settings.ui.SettingsScreen
 import com.alperen.spendcraft.feature.settings.ui.CategoryManagementScreen
+import com.alperen.spendcraft.navigation.DeepLinkHandler
 
 object Routes {
     const val LIST = "list"
@@ -23,6 +25,8 @@ object Routes {
     const val REPORTS = "reports"
     const val SETTINGS = "settings"
     const val CATEGORY_MANAGEMENT = "category_management"
+    const val BUDGET_MANAGEMENT = "budget_management"
+    const val ALL_TRANSACTIONS = "all_transactions"
 }
 
 @Composable
@@ -33,15 +37,20 @@ fun AppNavHost(
     val vm: TransactionsViewModel = hiltViewModel()
     
     // Handle deep links
+    val context = LocalContext.current
     LaunchedEffect(deepLinkUri) {
         deepLinkUri?.let { uri ->
-            when {
-                uri.toString().startsWith("app://add") -> {
-                    val type = uri.getQueryParameter("type")
-                    when (type) {
-                        "income" -> navController.navigate(Routes.ADD_INCOME)
-                        "expense" -> navController.navigate(Routes.ADD_EXPENSE)
-                        else -> navController.navigate(Routes.ADD)
+            val intent = DeepLinkHandler.handleDeepLink(context, uri)
+            intent?.let { deepLinkIntent ->
+                when (deepLinkIntent.data?.toString()) {
+                    "app://add?type=expense" -> navController.navigate(Routes.ADD_EXPENSE)
+                    "app://add?type=income" -> navController.navigate(Routes.ADD_INCOME)
+                    "app://add" -> navController.navigate(Routes.ADD)
+                    "app://reports" -> navController.navigate(Routes.REPORTS)
+                    "app://settings" -> navController.navigate(Routes.SETTINGS)
+                    "app://quickadd" -> {
+                        // Handle quick add - could show a dialog or navigate to quick add screen
+                        navController.navigate(Routes.ADD)
                     }
                 }
             }
@@ -56,7 +65,8 @@ fun AppNavHost(
                 onAddIncome = { navController.navigate(Routes.ADD_INCOME) },
                 onAddExpense = { navController.navigate(Routes.ADD_EXPENSE) },
                 onReports = { navController.navigate(Routes.REPORTS) },
-                onSettings = { navController.navigate(Routes.SETTINGS) }
+                onSettings = { navController.navigate(Routes.SETTINGS) },
+                onAllTransactions = { navController.navigate(Routes.ALL_TRANSACTIONS) }
             )
         }
         composable(Routes.ADD) {
@@ -110,6 +120,9 @@ fun AppNavHost(
                 onNavigateToCategories = { 
                     navController.navigate(Routes.CATEGORY_MANAGEMENT) 
                 },
+                onNavigateToBudgets = { 
+                    navController.navigate(Routes.BUDGET_MANAGEMENT) 
+                },
                 onBack = { navController.popBackStack() }
             )
         }
@@ -122,6 +135,30 @@ fun AppNavHost(
                 onDeleteCategory = { id -> 
                     vm.removeCategory(id)
                 },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.BUDGET_MANAGEMENT) {
+            val budgetViewModel: com.alperen.spendcraft.feature.budget.BudgetViewModel = hiltViewModel()
+            com.alperen.spendcraft.feature.budget.ui.BudgetManagementScreen(
+                budgets = budgetViewModel.budgets.collectAsState().value,
+                categories = budgetViewModel.categories.collectAsState().value,
+                spentAmounts = budgetViewModel.spentAmounts.collectAsState().value,
+                onAddBudget = { budget -> 
+                    budgetViewModel.addBudget(budget)
+                },
+                onUpdateBudget = { budget -> 
+                    budgetViewModel.updateBudget(budget)
+                },
+                onDeleteBudget = { categoryId -> 
+                    budgetViewModel.deleteBudget(categoryId)
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.ALL_TRANSACTIONS) {
+            com.alperen.spendcraft.feature.transactions.ui.AllTransactionsScreen(
+                transactions = vm.items.collectAsState().value,
                 onBack = { navController.popBackStack() }
             )
         }

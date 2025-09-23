@@ -18,6 +18,9 @@ interface TransactionsRepository {
     suspend fun updateAccount(account: Account)
     suspend fun deleteAccount(accountId: Long)
     suspend fun getDefaultAccount(): Account?
+    
+    // CSV Import/Export
+    suspend fun getAllAscending(): List<Transaction>
 }
 
 

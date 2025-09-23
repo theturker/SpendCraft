@@ -22,7 +22,8 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <!-- Deep link support -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -30,11 +31,28 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="app" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                      android:host="spendcraft.app" />
+            </intent-filter>
         </activity>
         
         <!-- App shortcuts metadata -->
         <meta-data
             android:name="android.app.shortcuts"
             android:resource="@xml/shortcuts" />
+            
+        <!-- Widget Provider -->
+        <receiver android:name=".widget.SpendCraftWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/spendcraft_widget_info" />
+        </receiver>
     </application>
 </manifest>
