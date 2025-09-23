@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
@@ -26,6 +27,7 @@ fun ForgotPasswordScreen(
     
     var email by remember { mutableStateOf("") }
     var emailSent by remember { mutableStateOf(false) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
     
     AppScaffold(
         title = "🔑 Şifremi Unuttum",
@@ -88,6 +90,7 @@ fun ForgotPasswordScreen(
                         Button(
                             onClick = {
                                 authViewModel.sendPasswordReset(email)
+                                showSuccessDialog = true
                             },
                             enabled = !isLoading && email.isNotEmpty(),
                             modifier = Modifier.fillMaxWidth()
@@ -140,6 +143,54 @@ fun ForgotPasswordScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Giriş Sayfasına Dön")
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Success Dialog
+        if (showSuccessDialog) {
+            Dialog(onDismissRequest = { showSuccessDialog = false }) {
+                ModernCard {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.CheckCircle,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        Text(
+                            text = "E-posta Gönderildi!",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        Text(
+                            text = "Şifre sıfırlama bağlantısı $email adresine gönderildi.\n\nE-posta kutunuzu kontrol edin ve bağlantıya tıklayarak yeni şifrenizi belirleyin.\n\nŞifrenizi belirledikten sonra giriş yapabilirsiniz.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        Button(
+                            onClick = {
+                                showSuccessDialog = false
+                                onNavigateToLogin()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Tamam", fontWeight = FontWeight.SemiBold)
                         }
                     }
                 }
