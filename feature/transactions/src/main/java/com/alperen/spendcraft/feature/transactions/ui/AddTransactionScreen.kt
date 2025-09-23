@@ -37,28 +37,17 @@ fun AddTransactionScreen(
 
     AppScaffold(
         title = "💳 ${stringResource(R.string.add_transaction)}",
-        onBack = onBack,
-        actions = {
-            TextButton(
-                enabled = amount.toLongOrNull() != null && amount.isNotEmpty(),
-                onClick = {
-                    val minor = amount.toLong()
-                    onSave(minor, note.ifBlank { null }, selectedCategoryId, isIncome)
-                }
-            ) { 
-                Text(
-                    stringResource(R.string.save),
-                    fontWeight = FontWeight.SemiBold
-                ) 
-            }
-        }
+        onBack = onBack
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
             // Transaction Type Selection
             item {
                 ModernCard {
@@ -67,8 +56,8 @@ fun AddTransactionScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.transaction_type),
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -106,8 +95,8 @@ fun AddTransactionScreen(
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
                                         text = stringResource(R.string.income),
-                                        style = MaterialTheme.typography.labelMedium,
-                                        fontWeight = FontWeight.SemiBold,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.Medium,
                                         color = if (isIncome) 
                                             MaterialTheme.colorScheme.secondary 
                                         else 
@@ -144,8 +133,8 @@ fun AddTransactionScreen(
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
                                         text = stringResource(R.string.expense),
-                                        style = MaterialTheme.typography.labelMedium,
-                                        fontWeight = FontWeight.SemiBold,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.Medium,
                                         color = if (!isIncome) 
                                             MaterialTheme.colorScheme.error 
                                         else 
@@ -162,38 +151,48 @@ fun AddTransactionScreen(
             item {
                 ModernCard {
                     Column(
-                        modifier = Modifier.padding(12.dp)
+                        modifier = Modifier.padding(8.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.amount),
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                         OutlinedTextField(
-                            value = formatCurrencyInput(amount),
+                            value = amount,
                             onValueChange = { newValue ->
                                 val cleanValue = newValue.replace(Regex("[^0-9]"), "")
                                 if (cleanValue.length <= 8) { // Max 8 digits
                                     amount = cleanValue
                                 }
                             },
-                            label = { Text(stringResource(R.string.amount)) },
+                            label = { 
+                                Text(
+                                    stringResource(R.string.amount),
+                                    style = MaterialTheme.typography.bodyMedium
+                                ) 
+                            },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.fillMaxWidth(),
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Filled.Call,
-                                    contentDescription = null
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
                                 )
                             },
                             supportingText = {
                                 if (amount.isNotEmpty()) {
                                     val formattedAmount = formatCurrencyDisplay(amount.toLongOrNull() ?: 0)
-                                    Text("₺$formattedAmount")
+                                    Text(
+                                        "₺$formattedAmount",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
                                 }
-                            }
+                            },
+                            textStyle = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
@@ -203,27 +202,34 @@ fun AddTransactionScreen(
             item {
                 ModernCard {
                     Column(
-                        modifier = Modifier.padding(12.dp)
+                        modifier = Modifier.padding(8.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.note),
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                         OutlinedTextField(
                             value = note,
                             onValueChange = { note = it },
-                            label = { Text(stringResource(R.string.note_optional)) },
+                            label = { 
+                                Text(
+                                    stringResource(R.string.note_optional),
+                                    style = MaterialTheme.typography.bodyMedium
+                                ) 
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Filled.MailOutline,
-                                    contentDescription = null
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
                                 )
                             },
-                            maxLines = 3
+                            maxLines = 2,
+                            textStyle = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
@@ -233,15 +239,15 @@ fun AddTransactionScreen(
             item {
                 ModernCard {
                     Column(
-                        modifier = Modifier.padding(12.dp)
+                        modifier = Modifier.padding(8.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.category),
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                         ExposedDropdownMenuBox(
                             expanded = expanded,
                             onExpandedChange = { expanded = !expanded }
@@ -250,16 +256,23 @@ fun AddTransactionScreen(
                                 value = cats.firstOrNull { it.id == selectedCategoryId }?.name ?: stringResource(R.string.select_category),
                                 onValueChange = {},
                                 readOnly = true,
-                                label = { Text(stringResource(R.string.category)) },
+                                label = { 
+                                    Text(
+                                        stringResource(R.string.category),
+                                        style = MaterialTheme.typography.bodyMedium
+                                    ) 
+                                },
                                 modifier = Modifier
                                     .menuAnchor()
                                     .fillMaxWidth(),
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Filled.Email,
-                                        contentDescription = null
+                                        contentDescription = null,
+                                        modifier = Modifier.size(24.dp)
                                     )
-                                }
+                                },
+                                textStyle = MaterialTheme.typography.bodyLarge
                             )
                             ExposedDropdownMenu(
                                 expanded = expanded,
@@ -267,7 +280,12 @@ fun AddTransactionScreen(
                             ) {
                                 cats.forEach { cat ->
                                     DropdownMenuItem(
-                                        text = { Text(cat.name) },
+                                        text = { 
+                                            Text(
+                                                cat.name,
+                                                style = MaterialTheme.typography.bodyMedium
+                                            ) 
+                                        },
                                         onClick = {
                                             selectedCategoryId = cat.id
                                             expanded = false
@@ -279,17 +297,36 @@ fun AddTransactionScreen(
                     }
                 }
             }
+            }
+            
+            // Save Button at Bottom
+            Button(
+                onClick = {
+                    val minor = amount.toLong()
+                    onSave(minor, note.ifBlank { null }, selectedCategoryId, isIncome)
+                },
+                enabled = amount.toLongOrNull() != null && amount.isNotEmpty(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(
+                    text = stringResource(R.string.save),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
         }
     }
 }
 
 // Para birimi formatlaması fonksiyonları
-private fun formatCurrencyInput(amount: String): String {
-    if (amount.isEmpty()) return ""
-    val number = amount.toLongOrNull() ?: 0
-    return formatCurrencyDisplay(number)
-}
-
 private fun formatCurrencyDisplay(amount: Long): String {
     val major = amount / 100
     val minor = amount % 100
