@@ -176,7 +176,7 @@ fun AnimatedBalanceCard(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 AnimatedStatCard(
-                    title = "Income",
+                    title = "Gelir",
                     value = "₺${formatCurrency(income)}",
                     icon = Icons.Filled.TrendingUp,
                     color = MaterialTheme.colorScheme.primary,
@@ -184,7 +184,7 @@ fun AnimatedBalanceCard(
                 )
                 
                 AnimatedStatCard(
-                    title = "Expense",
+                    title = "Gider",
                     value = "₺${formatCurrency(expense)}",
                     icon = Icons.Filled.TrendingDown,
                     color = MaterialTheme.colorScheme.error,

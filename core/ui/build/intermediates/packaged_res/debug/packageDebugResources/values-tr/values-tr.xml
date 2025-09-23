@@ -72,7 +72,12 @@
     <string name="ok">Tamam</string>
     <string name="permissions_subtitle">Günlük hatırlatıcılar ve bütçe uyarıları ile takipte kalın</string>
     <string name="permissions_title">Bildirimleri Etkinleştirin</string>
+    <string name="quick_add_title">Hızlı Ekle</string>
     <string name="recent_transactions">Son İşlemler</string>
+    <string name="reminder_channel_description">Günlük harcama takibi hatırlatmaları</string>
+    <string name="reminder_channel_name">Günlük Hatırlatmalar</string>
+    <string name="reminder_text">Bugün harcamalarınızı takip etmeyi unutmayın!</string>
+    <string name="reminder_title">Bugünün harcamalarını ekle</string>
     <string name="reports">Raporlar</string>
     <string name="save">Kaydet</string>
     <string name="select_category">Kategori Seçin</string>

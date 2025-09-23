@@ -4,7 +4,7 @@
     
     <!-- Splash Screen -->
     <string name="welcome_title">Welcome to SpendCraft</string>
-    <string name="welcome_subtitle">Take control of your finances</string>
+    <string name="welcome_subtitle_splash">Take control of your finances</string>
     <string name="get_started">Get Started</string>
     <string name="already_have_account">Already have an account?</string>
     <string name="sign_in">Sign In</string>
@@ -124,4 +124,55 @@
     <string name="all_transactions">All Transactions</string>
     <string name="no_transactions">No Transactions</string>
     <string name="no_transactions_desc">Start adding transactions to see them here</string>
+    
+    <!-- Reminder Notifications -->
+    <string name="reminder_channel_name">Daily Reminders</string>
+    <string name="reminder_channel_description">Daily expense tracking reminders</string>
+    <string name="reminder_title">Add today\'s expenses</string>
+    <string name="reminder_text">Don\'t forget to track your spending today!</string>
+    
+    <!-- Quick Add -->
+    <string name="quick_add_title">Quick Add</string>
+    
+    <!-- Onboarding -->
+    <string name="welcome_subtitle">Take control of your finances with smart expense tracking</string>
+    <string name="feature_tracking">Smart Tracking</string>
+    <string name="feature_tracking_desc">Track expenses with categories and notes</string>
+    <string name="feature_analytics">Analytics</string>
+    <string name="feature_analytics_desc">Get insights into your spending patterns</string>
+    <string name="feature_goals">Goals &amp; Budgets</string>
+    <string name="feature_goals_desc">Set budgets and achieve financial goals</string>
+    <string name="permissions_title">Permissions</string>
+    <string name="permissions_subtitle">Grant permissions to get the best experience</string>
+    <string name="notification_permission">Notifications</string>
+    <string name="notification_permission_desc">Get daily reminders to track expenses</string>
+    <string name="grant">Grant</string>
+    <string name="grant_permissions">Grant Permissions</string>
+    <string name="skip_for_now">Skip for now</string>
+    <string name="continue_text">Continue</string>
+    <string name="first_transaction_title">Add Your First Transaction</string>
+    <string name="first_transaction_subtitle">Let\'s start by adding your first expense or income</string>
+    
+    <!-- Account Management -->
+    <string name="edit_account_name">Edit Account Name</string>
+    <string name="account_name">Account Name</string>
+    
+    <!-- Widget -->
+    <string name="widget_description">Quick access to your financial overview and add transactions</string>
+    
+    <!-- Import/Export -->
+    <string name="import_export">Import/Export</string>
+    <string name="import_export_description">Import transactions from CSV files or export your data</string>
+    <string name="import_transactions">Import Transactions</string>
+    <string name="import_description">Import transactions from a CSV file</string>
+    <string name="select_csv_file">Select CSV File</string>
+    <string name="export_transactions">Export Transactions</string>
+    <string name="export_description">Export all your transactions to a CSV file</string>
+    <string name="export_to_csv">Export to CSV</string>
+    <string name="csv_format">CSV Format</string>
+    <string name="csv_format_description">Your CSV file should have the following format:</string>
+    <string name="select_file">Select File</string>
+    <string name="export">Export</string>
+    <string name="import_dialog_text">Choose a CSV file to import transactions from</string>
+    <string name="export_dialog_text">Choose where to save your exported transactions</string>
 </resources>

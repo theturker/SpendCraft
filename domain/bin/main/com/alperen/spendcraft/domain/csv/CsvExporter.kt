@@ -24,8 +24,8 @@ class CsvExporter @Inject constructor() {
         val date = formatDate(transaction.timestampUtcMillis)
         val amount = formatAmount(transaction.amount.minorUnits)
         val description = escapeCsvField(transaction.note ?: "")
-        val category = escapeCsvField(transaction.categoryId?.toString() ?: "Other")
-        val type = if (transaction.type == TransactionType.INCOME) "Income" else "Expense"
+        val category = escapeCsvField(transaction.categoryId?.toString() ?: "Diğer")
+        val type = if (transaction.type == TransactionType.INCOME) "Gelir" else "Gider"
         
         return "$date,$amount,$description,$category,$type"
     }

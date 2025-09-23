@@ -114,6 +114,15 @@
     <!-- Widget -->
     <string name="widget_description">Finansal özetinize hızlı erişim ve işlem ekleme</string>
     
+    <!-- Reminder Notifications -->
+    <string name="reminder_channel_name">Günlük Hatırlatmalar</string>
+    <string name="reminder_channel_description">Günlük harcama takibi hatırlatmaları</string>
+    <string name="reminder_title">Bugünün harcamalarını ekle</string>
+    <string name="reminder_text">Bugün harcamalarınızı takip etmeyi unutmayın!</string>
+    
+    <!-- Quick Add -->
+    <string name="quick_add_title">Hızlı Ekle</string>
+    
     <!-- Import/Export -->
     <string name="import_export">İçe/Dışa Aktar</string>
     <string name="import_export_description">CSV dosyalarından işlem içe aktarın veya verilerinizi dışa aktarın</string>

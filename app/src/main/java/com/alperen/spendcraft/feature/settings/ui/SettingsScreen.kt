@@ -377,8 +377,8 @@ fun SettingsScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(Modifier.height(8.dp))
-                        Text("Language: $selectedLanguage")
-                        Text("Currency: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}")
+                        Text("Dil: $selectedLanguage")
+                        Text("Para Birimi: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}")
                         Text("${stringResource(CoreR.string.theme)}: ${if (isDarkMode) stringResource(CoreR.string.dark) else stringResource(CoreR.string.light)}")
                     }
                 }

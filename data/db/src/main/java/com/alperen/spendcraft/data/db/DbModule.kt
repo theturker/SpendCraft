@@ -107,11 +107,11 @@ object DbModule {
                         // Insert default categories
                         database.categoryDao().insertAll(
                             listOf(
-                                CategoryEntity(name = "Food", icon = "🍔"),
-                                CategoryEntity(name = "Transport", icon = "🚌"),
-                                CategoryEntity(name = "Entertainment", icon = "🎬"),
-                                CategoryEntity(name = "Salary", icon = "💼"),
-                                CategoryEntity(name = "Shopping", icon = "🛒")
+                                CategoryEntity(name = "Yemek", icon = "🍔"),
+                                CategoryEntity(name = "Ulaşım", icon = "🚌"),
+                                CategoryEntity(name = "Eğlence", icon = "🎬"),
+                                CategoryEntity(name = "Maaş", icon = "💼"),
+                                CategoryEntity(name = "Alışveriş", icon = "🛒")
                             )
                         )
                         database.close()

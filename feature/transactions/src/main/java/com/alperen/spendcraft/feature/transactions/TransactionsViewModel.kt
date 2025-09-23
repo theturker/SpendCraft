@@ -117,8 +117,8 @@ class TransactionsViewModel @Inject constructor(
             // Use last used category or find a default "Market" category
             val categoryId = _lastUsedCategoryId.value ?: run {
                 val marketCategory = categories.value.find { it.name.contains("Market", ignoreCase = true) 
-                    || it.name.contains("Shopping", ignoreCase = true) 
-                    || it.name.contains("Food", ignoreCase = true) }
+                    || it.name.contains("Alışveriş", ignoreCase = true) 
+                    || it.name.contains("Yemek", ignoreCase = true) }
                 marketCategory?.id ?: categories.value.firstOrNull()?.id
             }
             

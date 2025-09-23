@@ -129,7 +129,7 @@ fun TransactionsScreen(
                             color = Color.White
                         )
                         Text(
-                            text = "Harcamalarınızı takip edin, hedeflerinize ulaşın!",
+                            text = stringResource(R.string.welcome_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.White.copy(alpha = 0.9f)
                         )
@@ -166,7 +166,7 @@ fun TransactionsScreen(
             item {
                 Column {
                     Text(
-                        text = "🚀 Hızlı İşlemler",
+                        text = "🚀 Hızlı Ekle",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -196,7 +196,7 @@ fun TransactionsScreen(
             item {
                 Column {
                     Text(
-                        text = "📊 İstatistikler",
+                        text = "📊 ${stringResource(R.string.transaction_statistics)}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -207,14 +207,14 @@ fun TransactionsScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         StatCard(
-                            title = "Bu Ay",
-                            value = "${items.size} işlem",
+                            title = stringResource(R.string.this_month),
+                            value = "${items.size} ${stringResource(R.string.transactions_count)}",
                             icon = Icons.Filled.Call,
                             color = Color(0xFF667EEA),
                             modifier = Modifier.weight(1f)
                         )
                         StatCard(
-                            title = "Ortalama",
+                            title = stringResource(R.string.average),
                             value = if (items.isNotEmpty()) formatMinor(totalAmount / items.size) else "₺0",
                             icon = Icons.Filled.KeyboardArrowUp,
                             color = Color(0xFFF093FB),
@@ -232,7 +232,7 @@ fun TransactionsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "💳 Son İşlemler",
+                        text = "💳 ${stringResource(R.string.recent_transactions)}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -245,7 +245,7 @@ fun TransactionsScreen(
                         ),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Text("Tümünü Gör")
+                        Text(stringResource(R.string.view_all))
                     }
                 }
             }
@@ -269,14 +269,14 @@ fun TransactionsScreen(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "Henüz işlem yok!",
+                                text = stringResource(R.string.no_transactions_yet),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "İlk işleminizi ekleyerek başlayın",
+                                text = stringResource(R.string.start_adding_transactions),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = Color.White.copy(alpha = 0.9f)
                             )

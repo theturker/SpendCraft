@@ -12,6 +12,8 @@ string amount
 string app_title
 string average
 string back
+string best_streak
+string bronze_badge
 string cancel
 string categories
 string categories_available
@@ -25,6 +27,7 @@ string currency_selection
 string current_settings
 string dark
 string dark_mode
+string day_streak
 string delete
 string delete_category
 string edit_account_name
@@ -45,6 +48,7 @@ string feature_goals_desc
 string feature_tracking
 string feature_tracking_desc
 string get_started
+string gold_badge
 string import_description
 string import_dialog_text
 string import_export
@@ -70,6 +74,7 @@ string select_category
 string select_csv_file
 string select_file
 string settings
+string silver_badge
 string start_adding_categories
 string start_adding_transactions
 string switch_to_dark_theme

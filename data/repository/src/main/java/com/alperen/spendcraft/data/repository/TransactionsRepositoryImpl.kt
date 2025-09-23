@@ -102,7 +102,7 @@ class TransactionsRepositoryImpl(
         
         monthTransactions.forEach { tx ->
             val category = categories.find { it.id == tx.categoryId }
-            val categoryName = category?.name ?: "Unknown"
+            val categoryName = category?.name ?: "Bilinmeyen"
             spentAmounts[categoryName] = (spentAmounts[categoryName] ?: 0L) + tx.amountMinor
         }
         

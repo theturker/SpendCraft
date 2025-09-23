@@ -10,6 +10,8 @@ int string amount 0x0
 int string app_title 0x0
 int string average 0x0
 int string back 0x0
+int string best_streak 0x0
+int string bronze_badge 0x0
 int string cancel 0x0
 int string categories 0x0
 int string categories_available 0x0
@@ -23,6 +25,7 @@ int string currency_selection 0x0
 int string current_settings 0x0
 int string dark 0x0
 int string dark_mode 0x0
+int string day_streak 0x0
 int string delete 0x0
 int string delete_category 0x0
 int string edit_account_name 0x0
@@ -43,6 +46,7 @@ int string feature_goals_desc 0x0
 int string feature_tracking 0x0
 int string feature_tracking_desc 0x0
 int string get_started 0x0
+int string gold_badge 0x0
 int string import_description 0x0
 int string import_dialog_text 0x0
 int string import_export 0x0
@@ -68,6 +72,7 @@ int string select_category 0x0
 int string select_csv_file 0x0
 int string select_file 0x0
 int string settings 0x0
+int string silver_badge 0x0
 int string start_adding_categories 0x0
 int string start_adding_transactions 0x0
 int string switch_to_dark_theme 0x0

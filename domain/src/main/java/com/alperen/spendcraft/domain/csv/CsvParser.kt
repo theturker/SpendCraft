@@ -37,7 +37,7 @@ class CsvParser @Inject constructor() {
 
         val amount = parseAmount(data["amount"] ?: data["Amount"] ?: return null)
         val description = data["description"] ?: data["Description"] ?: data["note"] ?: data["Note"] ?: ""
-        val category = data["category"] ?: data["Category"] ?: "Other"
+        val category = data["category"] ?: data["Category"] ?: "Diğer"
         val date = parseDate(data["date"] ?: data["Date"] ?: return null)
         val isIncome = parseBoolean(data["isIncome"] ?: data["is_income"] ?: data["type"] ?: "false")
 

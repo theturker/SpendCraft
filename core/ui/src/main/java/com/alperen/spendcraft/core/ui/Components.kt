@@ -65,7 +65,7 @@ fun AppScaffold(
                             IconButton(onClick = onBack) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack, 
-                                    contentDescription = "Back",
+                                    contentDescription = "Geri",
                                     tint = MaterialTheme.colorScheme.onSurface
                                 )
                             }
@@ -92,7 +92,7 @@ fun AppScaffold(
 fun ModernFab(
     onClick: () -> Unit,
     icon: ImageVector = Icons.Filled.Add,
-    contentDescription: String = "Add"
+    contentDescription: String = "Ekle"
 ) {
     FloatingActionButton(
         onClick = onClick,

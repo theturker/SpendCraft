@@ -38,6 +38,6 @@ object LocaleHelper {
     
     fun getLanguage(context: Context): String {
         val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        return prefs.getString(SELECTED_LANGUAGE, "en") ?: "en"
+        return prefs.getString(SELECTED_LANGUAGE, "tr") ?: "tr"
     }
 }
