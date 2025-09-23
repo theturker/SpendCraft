@@ -1,54 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Modern Primary Colors -->
-    <color name="primary">#6366F1</color>
-    <color name="primary_variant">#4F46E5</color>
-    <color name="secondary">#10B981</color>
-    <color name="secondary_variant">#059669</color>
+    <!-- Modern Primary Colors - Vibrant & Engaging -->
+    <color name="primary">#667EEA</color>
+    <color name="primary_variant">#764BA2</color>
+    <color name="secondary">#F093FB</color>
+    <color name="secondary_variant">#F5576C</color>
     
-    <!-- Background Colors -->
-    <color name="background">#F8FAFC</color>
+    <!-- Background Colors - Soft & Modern -->
+    <color name="background">#FAFBFF</color>
     <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#F1F5F9</color>
+    <color name="surface_variant">#F8FAFC</color>
     <color name="surface_bright">#FFFFFF</color>
     
-    <!-- Text Colors -->
+    <!-- Text Colors - High Contrast -->
     <color name="on_primary">#FFFFFF</color>
     <color name="on_secondary">#FFFFFF</color>
-    <color name="on_background">#1E293B</color>
-    <color name="on_surface">#1E293B</color>
-    <color name="on_surface_variant">#64748B</color>
+    <color name="on_background">#1A202C</color>
+    <color name="on_surface">#2D3748</color>
+    <color name="on_surface_variant">#718096</color>
     
-    <!-- Status Colors -->
-    <color name="success">#10B981</color>
-    <color name="warning">#F59E0B</color>
-    <color name="error">#EF4444</color>
-    <color name="info">#3B82F6</color>
+    <!-- Status Colors - Vibrant -->
+    <color name="success">#48BB78</color>
+    <color name="warning">#ED8936</color>
+    <color name="error">#F56565</color>
+    <color name="info">#4299E1</color>
     
-    <!-- Income/Expense Colors -->
-    <color name="income_color">#10B981</color>
-    <color name="expense_color">#EF4444</color>
+    <!-- Income/Expense Colors - Psychology-based -->
+    <color name="income_color">#48BB78</color>
+    <color name="expense_color">#F56565</color>
     
-    <!-- Beautiful Gradient Colors -->
-    <color name="gradient_start">#6366F1</color>
-    <color name="gradient_middle">#8B5CF6</color>
-    <color name="gradient_end">#EC4899</color>
+    <!-- Beautiful Gradient Colors - Instagram-like -->
+    <color name="gradient_start">#667EEA</color>
+    <color name="gradient_middle">#764BA2</color>
+    <color name="gradient_end">#F093FB</color>
     
-    <!-- Accent Colors -->
-    <color name="accent_blue">#3B82F6</color>
-    <color name="accent_purple">#8B5CF6</color>
-    <color name="accent_pink">#EC4899</color>
-    <color name="accent_green">#10B981</color>
-    <color name="accent_orange">#F59E0B</color>
+    <!-- Accent Colors - Vibrant Palette -->
+    <color name="accent_blue">#4299E1</color>
+    <color name="accent_purple">#9F7AEA</color>
+    <color name="accent_pink">#F093FB</color>
+    <color name="accent_green">#48BB78</color>
+    <color name="accent_orange">#ED8936</color>
+    <color name="accent_teal">#38B2AC</color>
+    <color name="accent_red">#F56565</color>
     
-    <!-- Card Colors -->
+    <!-- Card Colors - Glass Morphism -->
     <color name="card_background">#FFFFFF</color>
     <color name="card_shadow">#E2E8F0</color>
+    <color name="glass_background">#FFFFFF</color>
+    <color name="glass_border">#E2E8F0</color>
     
-    <!-- Splash Screen Colors -->
-    <color name="splash_gradient_start">#6366F1</color>
-    <color name="splash_gradient_end">#8B5CF6</color>
-    <color name="splash_accent">#EC4899</color>
+    <!-- Premium Gradient Colors -->
+    <color name="premium_gradient_start">#667EEA</color>
+    <color name="premium_gradient_end">#764BA2</color>
+    <color name="premium_accent">#F093FB</color>
+    
+    <!-- Interactive Colors -->
+    <color name="interactive_primary">#667EEA</color>
+    <color name="interactive_secondary">#F093FB</color>
+    <color name="interactive_hover">#5A67D8</color>
+    <color name="interactive_pressed">#4C51BF</color>
     
     <!-- Legacy Colors -->
     <color name="purple_200">#FFBB86FC</color>

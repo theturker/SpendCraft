@@ -1,12 +1,15 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
+import androidx.compose.animation.core.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -14,10 +17,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
@@ -102,9 +111,32 @@ fun TransactionsScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Welcome Header with Gradient
+            item {
+                GradientCard(
+                    onClick = { /* Welcome animation */ }
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "💰 SpendCraft",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = "Harcamalarınızı takip edin, hedeflerinize ulaşın!",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.9f)
+                        )
+                    }
+                }
+            }
+            
             // Balance Card
             item {
                 MultiAccountBalanceCard(
@@ -130,51 +162,69 @@ fun TransactionsScreen(
             
             
             
-            // Quick Actions
+            // Quick Actions with Beautiful Cards
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    IncomeExpenseButton(
-                        text = stringResource(R.string.add_income_button),
-                        onClick = onAddIncome,
-                        isIncome = true,
-                        modifier = Modifier.weight(1f)
+                Column {
+                    Text(
+                        text = "🚀 Hızlı İşlemler",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 12.dp)
                     )
-                    IncomeExpenseButton(
-                        text = stringResource(R.string.add_expense_button),
-                        onClick = onAddExpense,
-                        isIncome = false,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        IncomeExpenseButton(
+                            text = stringResource(R.string.add_income_button),
+                            onClick = onAddIncome,
+                            isIncome = true,
+                            modifier = Modifier.weight(1f)
+                        )
+                        IncomeExpenseButton(
+                            text = stringResource(R.string.add_expense_button),
+                            onClick = onAddExpense,
+                            isIncome = false,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
             
-            // Statistics Cards
+            // Statistics Cards with Beautiful Design
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    StatCard(
-                        title = stringResource(R.string.this_month),
-                        value = "${items.size} ${stringResource(R.string.transactions_count)}",
-                        icon = Icons.Filled.Call,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.weight(1f)
+                Column {
+                    Text(
+                        text = "📊 İstatistikler",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 12.dp)
                     )
-                    StatCard(
-                        title = stringResource(R.string.average),
-                        value = if (items.isNotEmpty()) formatMinor(totalAmount / items.size) else "₺0",
-                        icon = Icons.Filled.KeyboardArrowUp,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        StatCard(
+                            title = "Bu Ay",
+                            value = "${items.size} işlem",
+                            icon = Icons.Filled.Call,
+                            color = Color(0xFF667EEA),
+                            modifier = Modifier.weight(1f)
+                        )
+                        StatCard(
+                            title = "Ortalama",
+                            value = if (items.isNotEmpty()) formatMinor(totalAmount / items.size) else "₺0",
+                            icon = Icons.Filled.KeyboardArrowUp,
+                            color = Color(0xFFF093FB),
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
             
-            // Recent Transactions Header
+            // Recent Transactions Header with Beautiful Design
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -182,13 +232,20 @@ fun TransactionsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(R.string.recent_transactions),
-                        style = MaterialTheme.typography.headlineSmall,
+                        text = "💳 Son İşlemler",
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onSurface
                     )
-                    TextButton(onClick = onAllTransactions) {
-                        Text(stringResource(R.string.view_all))
+                    Button(
+                        onClick = onAllTransactions,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("Tümünü Gör")
                     }
                 }
             }
@@ -196,32 +253,32 @@ fun TransactionsScreen(
             // Transactions List
             if (items.isEmpty()) {
                 item {
-                    ModernCard(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
+                GradientCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = null
+                ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(32.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.Clear,
-                                contentDescription = null,
-                                modifier = Modifier.size(64.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            Text(
+                                text = "🎯",
+                                style = MaterialTheme.typography.displayLarge
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = stringResource(R.string.no_transactions_yet),
+                                text = "Henüz işlem yok!",
                                 style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = stringResource(R.string.start_adding_transactions),
+                                text = "İlk işleminizi ekleyerek başlayın",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = Color.White.copy(alpha = 0.9f)
                             )
                         }
                     }
@@ -257,14 +314,41 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
     val context = LocalContext.current
     val amount = if (tx.type == TransactionType.INCOME) tx.amount.minorUnits else -tx.amount.minorUnits
     val isIncome = tx.type == TransactionType.INCOME
+    var isHovered by remember { mutableStateOf(false) }
+    val hapticFeedback = LocalHapticFeedback.current
+    
+    val scale by animateFloatAsState(
+        targetValue = if (isHovered) 1.02f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "scale"
+    )
+    
+    val rotation by animateFloatAsState(
+        targetValue = if (isHovered) 2f else 0f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "rotation"
+    )
     
     ModernCard(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .scale(scale)
+            .rotate(rotation)
+            .clickable { 
+                isHovered = !isHovered
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+            }
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -272,27 +356,32 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                // Icon with background
+                // Beautiful Icon with Gradient Background
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp))
+                        .size(56.dp)
+                        .clip(RoundedCornerShape(16.dp))
                         .background(
                             if (isIncome) 
-                                MaterialTheme.colorScheme.secondaryContainer 
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        Color(0xFF48BB78),
+                                        Color(0xFF38A169)
+                                    )
+                                )
                             else 
-                                MaterialTheme.colorScheme.errorContainer
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        Color(0xFFF56565),
+                                        Color(0xFFE53E3E)
+                                    )
+                                )
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = if (isIncome) Icons.Filled.KeyboardArrowUp else Icons.Filled.ArrowDropDown,
-                        contentDescription = null,
-                        tint = if (isIncome) 
-                            MaterialTheme.colorScheme.onSecondaryContainer 
-                        else 
-                            MaterialTheme.colorScheme.onErrorContainer,
-                        modifier = Modifier.size(24.dp)
+                    Text(
+                        text = if (isIncome) "💰" else "💸",
+                        style = MaterialTheme.typography.titleLarge
                     )
                 }
                 
