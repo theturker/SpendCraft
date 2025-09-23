@@ -153,7 +153,8 @@ fun AppNavHost(
                 onDeleteBudget = { categoryId -> 
                     budgetViewModel.deleteBudget(categoryId)
                 },
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onCalculateSpentAmounts = { budgetViewModel.calculateSpentAmounts() }
             )
         }
         composable(Routes.ALL_TRANSACTIONS) {

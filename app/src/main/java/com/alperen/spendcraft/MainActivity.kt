@@ -13,17 +13,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
 import com.alperen.spendcraft.reminder.ReminderScheduler
+import com.alperen.spendcraft.feature.welcome.ui.WelcomeScreen
+import com.alperen.spendcraft.FirstLaunchHelper
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     
+    @Inject
+    lateinit var firstLaunchHelper: FirstLaunchHelper
     
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -54,12 +61,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = false)
+            val isFirstLaunch by firstLaunchHelper.isFirstLaunch.collectAsState(initial = true)
 
             SpendCraftTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    AppNavHost(
-                        deepLinkUri = intent.data
-                    )
+                    if (isFirstLaunch) {
+                        WelcomeScreen(
+                            onStart = { 
+                                // Mark first launch as completed
+                                // This will be handled in a coroutine
+                            }
+                        )
+                    } else {
+                        AppNavHost(
+                            deepLinkUri = intent.data
+                        )
+                    }
                 }
             }
         }

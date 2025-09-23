@@ -21,6 +21,9 @@ interface TransactionsRepository {
     
     // CSV Import/Export
     suspend fun getAllAscending(): List<Transaction>
+    
+    // Budget calculations
+    suspend fun getSpentAmountsByCategory(): Map<String, Long>
 }
 
 

@@ -9,6 +9,7 @@ import com.alperen.spendcraft.domain.usecase.UpsertBudgetUseCase
 import com.alperen.spendcraft.domain.usecase.DeleteBudgetUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveCategoriesUseCase
 import com.alperen.spendcraft.domain.usecase.CheckBudgetBreachesUseCase
+import com.alperen.spendcraft.domain.usecase.GetSpentAmountsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,7 +21,8 @@ class BudgetViewModel @Inject constructor(
     private val upsertBudgetUseCase: UpsertBudgetUseCase,
     private val deleteBudgetUseCase: DeleteBudgetUseCase,
     private val observeCategoriesUseCase: ObserveCategoriesUseCase,
-    private val checkBudgetBreachesUseCase: CheckBudgetBreachesUseCase
+    private val checkBudgetBreachesUseCase: CheckBudgetBreachesUseCase,
+    private val getSpentAmountsUseCase: GetSpentAmountsUseCase
 ) : ViewModel() {
 
     val budgets: StateFlow<List<Budget>> = observeBudgetsUseCase()
@@ -101,11 +103,11 @@ class BudgetViewModel @Inject constructor(
     fun calculateSpentAmounts() {
         viewModelScope.launch {
             try {
-                // TODO: Implement spent amounts calculation
-                // This should calculate spent amounts for each budget category for current month
-                _spentAmounts.value = emptyMap()
+                val spentAmounts = getSpentAmountsUseCase()
+                _spentAmounts.value = spentAmounts
             } catch (e: Exception) {
                 // Handle error
+                _spentAmounts.value = emptyMap()
             }
         }
     }

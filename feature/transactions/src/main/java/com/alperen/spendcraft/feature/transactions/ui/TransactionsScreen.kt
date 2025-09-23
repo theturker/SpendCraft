@@ -128,31 +128,6 @@ fun TransactionsScreen(
                 )
             }
             
-            // TEST: Notification Test Button (remove in production)
-            item {
-                ModernCard {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "🔔 Test Notification",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Button(
-                            onClick = {
-                                viewModel.testNotificationNow()
-                            }
-                        ) {
-                            Text("Test Now")
-                        }
-                    }
-                }
-            }
             
             
             // Quick Actions

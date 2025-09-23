@@ -28,10 +28,15 @@ fun BudgetManagementScreen(
     onAddBudget: (Budget) -> Unit = {},
     onUpdateBudget: (Budget) -> Unit = {},
     onDeleteBudget: (String) -> Unit = {},
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCalculateSpentAmounts: () -> Unit = {}
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var selectedBudget by remember { mutableStateOf<Budget?>(null) }
+    
+    LaunchedEffect(Unit) {
+        onCalculateSpentAmounts()
+    }
 
     Scaffold(
         topBar = {

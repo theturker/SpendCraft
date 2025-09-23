@@ -75,6 +75,39 @@ class TransactionsRepositoryImpl(
             TransactionMapper.fromEntity(entity)
         }
     }
+    
+    override suspend fun getSpentAmountsByCategory(): Map<String, Long> {
+        val transactions = txDao.getAllAscending()
+        val categories = categoryDao.getAllAscending()
+        
+        // Get current month boundaries
+        val now = java.time.Instant.now().atZone(java.time.ZoneOffset.UTC)
+        val monthStart = now.with(java.time.temporal.TemporalAdjusters.firstDayOfMonth())
+            .withHour(0).withMinute(0).withSecond(0).withNano(0)
+        val monthEnd = now.with(java.time.temporal.TemporalAdjusters.firstDayOfNextMonth())
+            .withHour(0).withMinute(0).withSecond(0).withNano(0)
+        
+        val monthStartMillis = monthStart.toInstant().toEpochMilli()
+        val monthEndMillis = monthEnd.toInstant().toEpochMilli()
+        
+        // Filter transactions for current month (expenses only)
+        val monthTransactions = transactions.filter { tx ->
+            tx.timestampUtcMillis >= monthStartMillis && 
+            tx.timestampUtcMillis < monthEndMillis && 
+            !tx.isIncome
+        }
+        
+        // Group by category and sum amounts
+        val spentAmounts = mutableMapOf<String, Long>()
+        
+        monthTransactions.forEach { tx ->
+            val category = categories.find { it.id == tx.categoryId }
+            val categoryName = category?.name ?: "Unknown"
+            spentAmounts[categoryName] = (spentAmounts[categoryName] ?: 0L) + tx.amountMinor
+        }
+        
+        return spentAmounts
+    }
 }
 
 
