@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="add_expense"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/add_expense"
+        android:shortcutLongLabel="@string/add_expense">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="app://add?type=expense"
+            android:targetClass="com.alperen.spendcraft.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    
+    <shortcut
+        android:shortcutId="add_income"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/add_income"
+        android:shortcutLongLabel="@string/add_income">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="app://add?type=income"
+            android:targetClass="com.alperen.spendcraft.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>
+
