@@ -40,14 +40,5 @@
             android:name="android.app.shortcuts"
             android:resource="@xml/shortcuts" />
             
-        <!-- Widget Provider -->
-        <receiver android:name=".widget.SpendCraftWidgetProvider"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/spendcraft_widget_info" />
-        </receiver>
     </application>
 </manifest>

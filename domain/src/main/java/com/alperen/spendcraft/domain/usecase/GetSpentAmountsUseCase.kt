@@ -11,3 +11,4 @@ class GetSpentAmountsUseCase @Inject constructor(
         return transactionsRepository.getSpentAmountsByCategory()
     }
 }
+
