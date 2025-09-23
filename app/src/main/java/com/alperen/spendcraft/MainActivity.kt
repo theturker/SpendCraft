@@ -29,6 +29,10 @@ import com.alperen.spendcraft.auth.AuthState
 import com.alperen.spendcraft.auth.ui.LoginScreen
 import com.alperen.spendcraft.auth.ui.RegisterScreen
 import com.alperen.spendcraft.auth.ui.ForgotPasswordScreen
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.api.ApiException
+import android.content.Intent
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,6 +41,24 @@ class MainActivity : ComponentActivity() {
     
     @Inject
     lateinit var firstLaunchHelper: FirstLaunchHelper
+    
+    @Inject
+    lateinit var googleAuthService: com.alperen.spendcraft.auth.GoogleAuthService
+    
+    private var googleSignInResult by mutableStateOf<GoogleSignInAccount?>(null)
+    
+    private val googleSignInLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            googleSignInResult = account
+        } catch (e: ApiException) {
+            println("Google Sign-In failed: ${e.message}")
+            googleSignInResult = null
+        }
+    }
     
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -72,6 +94,19 @@ class MainActivity : ComponentActivity() {
             val authState by authViewModel.authState.collectAsState()
             
             var currentAuthScreen by remember { mutableStateOf("login") }
+            
+            // Google Auth Service'i initialize et
+            LaunchedEffect(Unit) {
+                googleAuthService.initialize(context)
+            }
+            
+            // Google Sign-In result'u handle et
+            LaunchedEffect(googleSignInResult) {
+                googleSignInResult?.let { account ->
+                    authViewModel.signInWithGoogle(account)
+                    googleSignInResult = null
+                }
+            }
 
             SpendCraftTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
@@ -90,7 +125,20 @@ class MainActivity : ComponentActivity() {
                                     LoginScreen(
                                         onLoginSuccess = { /* Navigation will be handled by auth state change */ },
                                         onNavigateToRegister = { currentAuthScreen = "register" },
-                                        onNavigateToForgotPassword = { currentAuthScreen = "forgot" }
+                                        onNavigateToForgotPassword = { currentAuthScreen = "forgot" },
+                                        onGoogleSignInResult = { account ->
+                                            if (account != null) {
+                                                authViewModel.signInWithGoogle(account)
+                                            } else {
+                                                // Google Sign-In başlat
+                                                try {
+                                                    val signInIntent = googleAuthService.getSignInIntent()
+                                                    googleSignInLauncher.launch(signInIntent)
+                                                } catch (e: Exception) {
+                                                    println("Google Sign-In Intent failed: ${e.message}")
+                                                }
+                                            }
+                                        }
                                     )
                                 }
                                 "register" -> {

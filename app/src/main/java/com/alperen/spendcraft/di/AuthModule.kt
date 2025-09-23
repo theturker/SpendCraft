@@ -3,6 +3,7 @@ package com.alperen.spendcraft.di
 import com.alperen.spendcraft.analytics.FirebaseAnalyticsService
 import com.alperen.spendcraft.analytics.FirebaseCrashlyticsService
 import com.alperen.spendcraft.auth.FirebaseAuthService
+import com.alperen.spendcraft.auth.GoogleAuthService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,5 +33,11 @@ object AuthModule {
     @Singleton
     fun provideFirebaseCrashlyticsService(): FirebaseCrashlyticsService {
         return FirebaseCrashlyticsService()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideGoogleAuthService(): GoogleAuthService {
+        return GoogleAuthService()
     }
 }

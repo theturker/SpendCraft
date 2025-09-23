@@ -12,7 +12,20 @@
           "package_name": "com.alperen.spendcraft"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "973123190644-n4g88ccgf35000qn2ke8q3rhf6ck6385.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alperen.spendcraft",
+            "certificate_hash": "5e9b420a493196c5b959516cbad6f76289d186c8"
+          }
+        },
+        {
+          "client_id": "973123190644-c75iu4smr8dl5okbm27hglgig9v3fc8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDjIclqA-DZaaMkmEni-YUH2bEQ6i70PH4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "973123190644-c75iu4smr8dl5okbm27hglgig9v3fc8p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

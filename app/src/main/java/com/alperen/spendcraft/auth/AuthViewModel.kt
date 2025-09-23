@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.alperen.spendcraft.analytics.FirebaseAnalyticsService
 import com.alperen.spendcraft.analytics.FirebaseCrashlyticsService
 import com.google.firebase.auth.FirebaseUser
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authService: FirebaseAuthService,
+    private val googleAuthService: GoogleAuthService,
     private val analyticsService: FirebaseAnalyticsService,
     private val crashlyticsService: FirebaseCrashlyticsService
 ) : ViewModel() {
@@ -160,6 +162,40 @@ class AuthViewModel @Inject constructor(
             } catch (e: Exception) {
                 _errorMessage.value = "Beklenmeyen bir hata oluştu"
                 crashlyticsService.recordException(e)
+            }
+        }
+    }
+    
+    fun signInWithGoogle(account: GoogleSignInAccount) {
+        println("Google Sign-In started with account: ${account.email}")
+        _isLoading.value = true
+        _errorMessage.value = null
+        
+        viewModelScope.launch {
+            try {
+                println("Calling googleAuthService.signInWithGoogle...")
+                val result = googleAuthService.signInWithGoogle(account)
+                result.fold(
+                    onSuccess = { user ->
+                        println("Google Sign-In successful: ${user.uid}")
+                        _authState.value = AuthState.Authenticated(user)
+                        analyticsService.logEvent("google_signin_success")
+                        analyticsService.setUserId(user.uid)
+                        crashlyticsService.setUserId(user.uid)
+                    },
+                    onFailure = { exception ->
+                        println("Google Sign-In failed: ${exception.message}")
+                        _errorMessage.value = getErrorMessage(exception)
+                        analyticsService.logEvent("google_signin_failed")
+                        crashlyticsService.recordException(exception)
+                    }
+                )
+            } catch (e: Exception) {
+                println("Google Sign-In exception: ${e.message}")
+                _errorMessage.value = "Google ile giriş yapılamadı: ${e.message}"
+                crashlyticsService.recordException(e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }
