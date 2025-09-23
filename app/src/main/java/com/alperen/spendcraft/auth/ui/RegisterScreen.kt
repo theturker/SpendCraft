@@ -17,20 +17,24 @@ import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.alperen.spendcraft.auth.AuthViewModel
 
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
+    val authViewModel: AuthViewModel = viewModel()
+    val isLoading by authViewModel.isLoading.collectAsState()
+    val errorMessage by authViewModel.errorMessage.collectAsState()
+    
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") }
     
     AppScaffold(
         title = "📝 Hesap Oluştur",
@@ -125,9 +129,9 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                     
-                    if (errorMessage.isNotEmpty()) {
+                    if (errorMessage != null && errorMessage!!.isNotEmpty()) {
                         Text(
-                            text = errorMessage,
+                            text = errorMessage ?: "",
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -137,11 +141,9 @@ fun RegisterScreen(
                         onClick = {
                             if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
                                 if (password == confirmPassword) {
-                                    isLoading = true
-                                    errorMessage = ""
-                                    // Register logic will be handled by ViewModel
+                                    authViewModel.register(name, email, password, confirmPassword)
                                 } else {
-                                    errorMessage = "Şifreler eşleşmiyor"
+                                    // Show error for password mismatch
                                 }
                             }
                         },

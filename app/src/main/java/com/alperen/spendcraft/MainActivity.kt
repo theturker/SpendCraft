@@ -27,6 +27,8 @@ import com.alperen.spendcraft.FirstLaunchHelper
 import com.alperen.spendcraft.auth.AuthViewModel
 import com.alperen.spendcraft.auth.AuthState
 import com.alperen.spendcraft.auth.ui.LoginScreen
+import com.alperen.spendcraft.auth.ui.RegisterScreen
+import com.alperen.spendcraft.auth.ui.ForgotPasswordScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -68,6 +70,8 @@ class MainActivity : ComponentActivity() {
             val isFirstLaunch by firstLaunchHelper.isFirstLaunch.collectAsState(initial = true)
             val authViewModel: AuthViewModel = viewModel()
             val authState by authViewModel.authState.collectAsState()
+            
+            var currentAuthScreen by remember { mutableStateOf("login") }
 
             SpendCraftTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
@@ -81,11 +85,26 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         authState is AuthState.Unauthenticated -> {
-                            LoginScreen(
-                                onLoginSuccess = { /* Navigation will be handled by auth state change */ },
-                                onNavigateToRegister = { /* TODO: Navigate to register */ },
-                                onNavigateToForgotPassword = { /* TODO: Navigate to forgot password */ }
-                            )
+                            when (currentAuthScreen) {
+                                "login" -> {
+                                    LoginScreen(
+                                        onLoginSuccess = { /* Navigation will be handled by auth state change */ },
+                                        onNavigateToRegister = { currentAuthScreen = "register" },
+                                        onNavigateToForgotPassword = { currentAuthScreen = "forgot" }
+                                    )
+                                }
+                                "register" -> {
+                                    RegisterScreen(
+                                        onRegisterSuccess = { /* Navigation will be handled by auth state change */ },
+                                        onNavigateToLogin = { currentAuthScreen = "login" }
+                                    )
+                                }
+                                "forgot" -> {
+                                    ForgotPasswordScreen(
+                                        onNavigateToLogin = { currentAuthScreen = "login" }
+                                    )
+                                }
+                            }
                         }
                         authState is AuthState.Authenticated -> {
                             AppNavHost(
