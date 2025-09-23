@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "973123190644",
+    "project_id": "spendcraft-a5741",
+    "storage_bucket": "spendcraft-a5741.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973123190644:android:33e3c96ea608fe81d87621",
+        "android_client_info": {
+          "package_name": "com.alperen.spendcraft"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjIclqA-DZaaMkmEni-YUH2bEQ6i70PH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

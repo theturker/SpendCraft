@@ -155,4 +155,35 @@
     <string name="all_transactions">Tüm İşlemler</string>
     <string name="no_transactions">İşlem Yok</string>
     <string name="no_transactions_desc">Burada görmek için işlem eklemeye başlayın</string>
+    
+    <!-- Firebase Auth Strings -->
+    <string name="login_title">Giriş Yap</string>
+    <string name="register_title">Hesap Oluştur</string>
+    <string name="email">E-posta</string>
+    <string name="password">Şifre</string>
+    <string name="confirm_password">Şifre Tekrar</string>
+    <string name="name">Ad Soyad</string>
+    <string name="login_button">Giriş Yap</string>
+    <string name="register_button">Hesap Oluştur</string>
+    <string name="forgot_password">Şifremi Unuttum</string>
+    <string name="already_have_account_auth">Zaten hesabınız var mı? Giriş yapın</string>
+    <string name="dont_have_account">Hesabınız yok mu? Kayıt olun</string>
+    <string name="show_password">Şifreyi göster</string>
+    <string name="hide_password">Şifreyi gizle</string>
+    <string name="login_success">Başarıyla giriş yapıldı</string>
+    <string name="register_success">Hesap başarıyla oluşturuldu</string>
+    <string name="login_error">Giriş yapılamadı</string>
+    <string name="register_error">Hesap oluşturulamadı</string>
+    <string name="password_mismatch">Şifreler eşleşmiyor</string>
+    <string name="invalid_email">Geçersiz e-posta adresi</string>
+    <string name="weak_password">Şifre çok zayıf</string>
+    <string name="user_not_found">Kullanıcı bulunamadı</string>
+    <string name="email_already_exists">Bu e-posta adresi zaten kullanılıyor</string>
+    <string name="profile">Profil</string>
+    <string name="change_password">Şifre Değiştir</string>
+    <string name="delete_account">Hesabı Sil</string>
+    <string name="welcome_message">SpendCraft\'a Hoş Geldiniz</string>
+    <string name="welcome_subtitle_auth">Harcamalarınızı takip etmeye başlayın</string>
+    <string name="join_spendcraft">SpendCraft\'a Katılın</string>
+    <string name="join_subtitle">Finansal hedeflerinize ulaşmak için harcamalarınızı takip edin</string>
 </resources>

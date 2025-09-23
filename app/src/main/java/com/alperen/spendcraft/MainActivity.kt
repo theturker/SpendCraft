@@ -18,11 +18,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
 import com.alperen.spendcraft.reminder.ReminderScheduler
 import com.alperen.spendcraft.feature.welcome.ui.WelcomeScreen
 import com.alperen.spendcraft.FirstLaunchHelper
+import com.alperen.spendcraft.auth.AuthViewModel
+import com.alperen.spendcraft.auth.AuthState
+import com.alperen.spendcraft.auth.ui.LoginScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -62,20 +66,36 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = false)
             val isFirstLaunch by firstLaunchHelper.isFirstLaunch.collectAsState(initial = true)
+            val authViewModel: AuthViewModel = viewModel()
+            val authState by authViewModel.authState.collectAsState()
 
             SpendCraftTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    if (isFirstLaunch) {
-                        WelcomeScreen(
-                            onStart = { 
-                                // Mark first launch as completed
-                                // This will be handled in a coroutine
-                            }
-                        )
-                    } else {
-                        AppNavHost(
-                            deepLinkUri = intent.data
-                        )
+                    when {
+                        isFirstLaunch -> {
+                            WelcomeScreen(
+                                onStart = { 
+                                    // Mark first launch as completed
+                                    // This will be handled in a coroutine
+                                }
+                            )
+                        }
+                        authState is AuthState.Unauthenticated -> {
+                            LoginScreen(
+                                onLoginSuccess = { /* Navigation will be handled by auth state change */ },
+                                onNavigateToRegister = { /* TODO: Navigate to register */ },
+                                onNavigateToForgotPassword = { /* TODO: Navigate to forgot password */ }
+                            )
+                        }
+                        authState is AuthState.Authenticated -> {
+                            AppNavHost(
+                                deepLinkUri = intent.data
+                            )
+                        }
+                        else -> {
+                            // Loading state
+                            androidx.compose.material3.CircularProgressIndicator()
+                        }
                     }
                 }
             }
