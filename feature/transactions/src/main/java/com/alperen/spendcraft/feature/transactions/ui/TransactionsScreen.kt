@@ -224,6 +224,11 @@ fun TransactionsScreen(
                 }
             }
             
+            // AdMob Banner
+            item {
+                AdMobBannerWithPadding()
+            }
+            
             // Recent Transactions Header with Beautiful Design
             item {
                 Row(

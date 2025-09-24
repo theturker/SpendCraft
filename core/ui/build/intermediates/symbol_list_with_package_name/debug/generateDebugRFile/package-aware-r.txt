@@ -7,6 +7,8 @@ string add_expense_button
 string add_income
 string add_income_button
 string add_transaction
+string admob_app_id
+string admob_banner_id
 string amount
 string app_title
 string average

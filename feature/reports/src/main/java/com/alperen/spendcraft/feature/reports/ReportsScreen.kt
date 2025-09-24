@@ -102,6 +102,11 @@ fun ReportsScreen(
                 }
             }
             
+            // AdMob Banner
+            item {
+                AdMobBannerWithPadding()
+            }
+            
             // Harcama Dağılımı
             if (expenseByCategory.isNotEmpty()) {
                 item {

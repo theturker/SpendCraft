@@ -8,6 +8,8 @@
     <string name="add_income">Gelir Ekle</string>
     <string name="add_income_button">Gelir Ekle</string>
     <string name="add_transaction">İşlem Ekle</string>
+    <string name="admob_app_id">ca-app-pub-3199248450820147~9439645081</string>
+    <string name="admob_banner_id">ca-app-pub-3199248450820147/4179918859</string>
     <string name="amount">Tutar</string>
     <string name="app_title">SpendCraft</string>
     <string name="average">Ortalama</string>

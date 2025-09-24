@@ -6,6 +6,8 @@ int string add_expense_button 0x0
 int string add_income 0x0
 int string add_income_button 0x0
 int string add_transaction 0x0
+int string admob_app_id 0x0
+int string admob_banner_id 0x0
 int string amount 0x0
 int string app_title 0x0
 int string average 0x0

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ad-services-config>
+    <!-- AdMob configuration for SpendCraft -->
+    <ad-services-config>
+        <attribution>
+            <attribution-config>
+                <attribution-provider>
+                    <name>Google AdMob</name>
+                    <enabled>true</enabled>
+                </attribution-provider>
+            </attribution-config>
+        </attribution>
+    </ad-services-config>
+</ad-services-config>

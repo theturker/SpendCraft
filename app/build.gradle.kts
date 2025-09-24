@@ -97,6 +97,9 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     
+    // AdMob
+    implementation(libs.play.services.ads)
+    
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     

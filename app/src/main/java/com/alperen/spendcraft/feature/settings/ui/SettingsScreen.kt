@@ -102,6 +102,11 @@ fun SettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // AdMob Banner
+            item {
+                com.alperen.spendcraft.core.ui.AdMobBannerWithPadding()
+            }
+            
             // Language Selection
             item {
                 Column {

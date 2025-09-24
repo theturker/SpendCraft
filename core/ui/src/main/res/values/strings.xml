@@ -125,4 +125,8 @@
     <string name="cancel">İptal</string>
     <string name="import_dialog_text">İşlemleri içe aktarmak için bir CSV dosyası seçin</string>
     <string name="export_dialog_text">Dışa aktarılan işlemlerinizi kaydetmek için bir konum seçin</string>
+    
+    <!-- AdMob -->
+    <string name="admob_app_id">ca-app-pub-3199248450820147~9439645081</string>
+    <string name="admob_banner_id">ca-app-pub-3199248450820147/4179918859</string>
 </resources>

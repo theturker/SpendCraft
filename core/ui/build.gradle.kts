@@ -30,6 +30,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.material.icons.extended)
+    
+    // AdMob
+    implementation(libs.play.services.ads)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

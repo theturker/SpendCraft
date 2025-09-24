@@ -186,4 +186,8 @@
     <string name="welcome_subtitle_auth">Harcamalarınızı takip etmeye başlayın</string>
     <string name="join_spendcraft">SpendCraft\'a Katılın</string>
     <string name="join_subtitle">Finansal hedeflerinize ulaşmak için harcamalarınızı takip edin</string>
+    
+    <!-- AdMob -->
+    <string name="admob_app_id">ca-app-pub-3199248450820147~9439645081</string>
+    <string name="admob_banner_id">ca-app-pub-3199248450820147/4179918859</string>
 </resources>
