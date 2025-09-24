@@ -92,15 +92,6 @@ fun TransactionsScreen(
     
     AppScaffold(
         title = "💳 ${stringResource(R.string.app_title)}",
-        navigationIcon = {
-            IconButton(onClick = onReports) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = stringResource(R.string.reports),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        },
         actions = {
             IconButton(onClick = onSettings) {
                 Icon(
@@ -111,10 +102,11 @@ fun TransactionsScreen(
             }
         },
         fab = { 
-            ModernFab(onClick = { 
-                initialTransactionType = null
-                showAddTransactionSheet = true
-            }) 
+            ModernFab(
+                onClick = onReports,
+                icon = Icons.Filled.Menu,
+                contentDescription = stringResource(R.string.reports)
+            ) 
         }
     ) {
         LazyColumn(
