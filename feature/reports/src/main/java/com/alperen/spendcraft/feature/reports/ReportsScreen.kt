@@ -1,5 +1,11 @@
 package com.alperen.spendcraft.feature.reports
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -15,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -38,6 +45,7 @@ fun ReportsScreen(
     categoriesFlow: StateFlow<List<com.alperen.spendcraft.core.model.Category>>,
     onBack: () -> Unit = {}
 ) {
+    var selectedIndex by remember { mutableStateOf(-1) }
     val items by transactionsFlow.collectAsState()
     val categories by categoriesFlow.collectAsState()
     val totalExpense = items.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
@@ -140,16 +148,19 @@ fun ReportsScreen(
                             ExpensePieChart(
                                 expenseByCategory = expenseByCategory,
                                 totalExpense = totalExpense,
+                                selectedIndex = selectedIndex,
+                                onSelectedIndexChanged = { selectedIndex = it },
                                 modifier = Modifier.size(200.dp)
                             )
                             
                             Spacer(modifier = Modifier.height(16.dp))
                             
                             // Legend
-                            ExpenseLegend(
-                                expenseByCategory = expenseByCategory,
-                                totalExpense = totalExpense
-                            )
+                    ExpenseLegend(
+                        expenseByCategory = expenseByCategory,
+                        totalExpense = totalExpense,
+                        selectedIndex = selectedIndex
+                    )
                         }
                     }
                 }
@@ -303,6 +314,8 @@ private fun ExpenseCategoryItem(
 private fun ExpensePieChart(
     expenseByCategory: List<Triple<Long?, String, Long>>,
     totalExpense: Long,
+    selectedIndex: Int,
+    onSelectedIndexChanged: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colors = listOf(
@@ -318,16 +331,52 @@ private fun ExpensePieChart(
         Color(0xFF6366F1)  // Indigo
     )
     
-    var selectedIndex by remember { mutableStateOf(-1) }
+    // Animasyonlar
+    val infiniteTransition = rememberInfiniteTransition(label = "chart_animation")
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(20000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "rotation"
+    )
     
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                Brush.radialGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                        Color.Transparent
+                    ),
+                    radius = 200f
+                )
+            ),
         contentAlignment = Alignment.Center
     ) {
+        // Arka plan glow efekti
+        Box(
+            modifier = Modifier
+                .size(280.dp)
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                            Color.Transparent
+                        ),
+                        radius = 140f
+                    ),
+                    shape = CircleShape
+                )
+        )
+        
         androidx.compose.foundation.Canvas(
             modifier = Modifier
-                .fillMaxSize()
-                .pointerInput(Unit) {
+                .size(240.dp)
+                .pointerInput(expenseByCategory) {
                     detectTapGestures { offset ->
                         val canvasSize = minOf(size.width, size.height)
                         val radius = canvasSize / 2f * 0.8f
@@ -342,28 +391,30 @@ private fun ExpensePieChart(
                         )
                         
                         if (distance <= radius) {
+                            // Açıyı hesapla (Canvas -90 dereceden başlar, yani üstten)
                             val angle = kotlin.math.atan2(
                                 offset.y - center.y,
                                 offset.x - center.x
-                            ) * 180 / kotlin.math.PI
+                            ) * 180f / kotlin.math.PI
                             
-                            var currentAngle = -90f
+                            // Açıyı 0-360 aralığına normalize et (üstten başlayarak saat yönünde)
+                            val normalizedAngle = (angle + 90f + 360f) % 360f
+                            
+                            var currentAngle = 0f
                             var foundIndex = -1
                             
                             expenseByCategory.forEachIndexed { index, (_, _, amount) ->
                                 val sweepAngle = (amount.toFloat() / totalExpense.toFloat()) * 360f
-                                val normalizedAngle = (angle + 90f + 360f) % 360f
-                                val normalizedCurrentAngle = (currentAngle + 360f) % 360f
-                                val normalizedEndAngle = (currentAngle + sweepAngle + 360f) % 360f
                                 
-                                if (normalizedAngle >= normalizedCurrentAngle && 
-                                    normalizedAngle <= normalizedEndAngle) {
+                                // Segment'in başlangıç ve bitiş açılarını kontrol et
+                                if (normalizedAngle >= currentAngle && normalizedAngle < currentAngle + sweepAngle) {
                                     foundIndex = index
+                                    return@forEachIndexed
                                 }
                                 currentAngle += sweepAngle
                             }
                             
-                            selectedIndex = if (foundIndex == selectedIndex) -1 else foundIndex
+                            onSelectedIndexChanged(if (foundIndex == selectedIndex) -1 else foundIndex)
                         }
                     }
                 }
@@ -374,15 +425,15 @@ private fun ExpensePieChart(
                 size.width / 2f,
                 size.height / 2f
             )
-            
+
             var startAngle = -90f // Start from top
-            
+
             expenseByCategory.forEachIndexed { index, (_, _, amount) ->
                 val sweepAngle = (amount.toFloat() / totalExpense.toFloat()) * 360f
                 val color = colors[index % colors.size]
                 val isSelected = selectedIndex == index
-                val strokeWidth = if (isSelected) 8.dp.toPx() else 0f
-                val radiusOffset = if (isSelected) 10.dp.toPx() else 0f
+                val strokeWidth = if (isSelected) 6.dp.toPx() else 0f
+                val radiusOffset = if (isSelected) 15.dp.toPx() else 0f
                 
                 // Calculate offset for selected segment
                 val midAngle = startAngle + sweepAngle / 2f
@@ -393,6 +444,13 @@ private fun ExpensePieChart(
                     center.y + offsetY
                 )
                 
+                // Gradient efekti için
+                val gradientColors = listOf(
+                    color,
+                    color.copy(alpha = 0.8f)
+                )
+                
+                // Ana segment
                 drawArc(
                     color = color,
                     startAngle = startAngle,
@@ -406,58 +464,37 @@ private fun ExpensePieChart(
                     style = if (strokeWidth > 0) Stroke(width = strokeWidth) else androidx.compose.ui.graphics.drawscope.Fill
                 )
                 
+                // Seçili segment için glow efekti
+                if (isSelected) {
+                    drawArc(
+                        color = color.copy(alpha = 0.3f),
+                        startAngle = startAngle,
+                        sweepAngle = sweepAngle,
+                        useCenter = true,
+                        topLeft = androidx.compose.ui.geometry.Offset(
+                            offsetCenter.x - radius - 8.dp.toPx(),
+                            offsetCenter.y - radius - 8.dp.toPx()
+                        ),
+                        size = androidx.compose.ui.geometry.Size(
+                            (radius + 8.dp.toPx()) * 2, 
+                            (radius + 8.dp.toPx()) * 2
+                        ),
+                        style = androidx.compose.ui.graphics.drawscope.Fill
+                    )
+                }
+                
                 startAngle += sweepAngle
             }
         }
         
-        // Center text showing total
-        if (selectedIndex == -1) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Toplam",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = formatCurrency(totalExpense),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-        } else {
-            val selectedCategory = expenseByCategory[selectedIndex]
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = selectedCategory.second,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-                Text(
-                    text = formatCurrency(selectedCategory.third),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "${((selectedCategory.third.toFloat() / totalExpense.toFloat()) * 100).toInt()}%",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
     }
 }
 
 @Composable
 private fun ExpenseLegend(
     expenseByCategory: List<Triple<Long?, String, Long>>,
-    totalExpense: Long
+    totalExpense: Long,
+    selectedIndex: Int = -1
 ) {
     val colors = listOf(
         Color(0xFF4C5EE6), // Primary blue
@@ -474,65 +511,119 @@ private fun ExpenseLegend(
     
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         expenseByCategory.forEachIndexed { index, (_, categoryName, amount) ->
             val percentage = if (totalExpense > 0) (amount.toFloat() / totalExpense.toFloat() * 100) else 0f
             val color = colors[index % colors.size]
+            val isSelected = selectedIndex == index
             
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = if (isSelected) 12.dp else 8.dp,
+                        shape = RoundedCornerShape(16.dp),
+                        ambientColor = if (isSelected) color.copy(alpha = 0.3f) else color.copy(alpha = 0.1f),
+                        spotColor = if (isSelected) color.copy(alpha = 0.3f) else color.copy(alpha = 0.1f)
+                    ),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                    containerColor = if (isSelected) 
+                        color.copy(alpha = 0.1f) 
+                    else 
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(20.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Color indicator with shadow
+                        // Enhanced color indicator with gradient
                         Box(
                             modifier = Modifier
-                                .size(20.dp)
-                                .clip(CircleShape)
-                                .background(color)
+                                .size(24.dp)
+                                .background(
+                                    Brush.radialGradient(
+                                        colors = listOf(
+                                            color,
+                                            color.copy(alpha = 0.8f)
+                                        )
+                                    ),
+                                    shape = CircleShape
+                                )
                                 .shadow(
-                                    elevation = 4.dp,
+                                    elevation = 6.dp,
                                     shape = CircleShape,
-                                    ambientColor = color.copy(alpha = 0.3f),
-                                    spotColor = color.copy(alpha = 0.3f)
+                                    ambientColor = color.copy(alpha = 0.4f),
+                                    spotColor = color.copy(alpha = 0.4f)
                                 )
                         )
-                        
+
                         Column {
                             Text(
                                 text = categoryName,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.SemiBold,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
-                            Text(
-                                text = "${percentage.toInt()}%",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                // Progress bar
+                                Box(
+                                    modifier = Modifier
+                                        .width(60.dp)
+                                        .height(4.dp)
+                                        .background(
+                                            MaterialTheme.colorScheme.surfaceVariant,
+                                            shape = RoundedCornerShape(2.dp)
+                                        )
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .width((60.dp * (percentage / 100f)).coerceAtLeast(4.dp))
+                                            .background(
+                                                color,
+                                                shape = RoundedCornerShape(2.dp)
+                                            )
+                                    )
+                                }
+                                Text(
+                                    text = "${percentage.toInt()}%",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = color,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
                         }
                     }
-                    
-                    Text(
-                        text = formatCurrency(amount),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+
+                    Column(
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(
+                            text = formatCurrency(amount),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = "₺${(amount / 100).toString()}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }
