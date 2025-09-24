@@ -359,30 +359,6 @@ fun SettingsScreen(
                 }
             }
 
-            // Current Settings Info
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text = "📋 ${stringResource(CoreR.string.current_settings)}",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.height(8.dp))
-                        Text("Dil: $selectedLanguage")
-                        Text("Para Birimi: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}")
-                        Text("${stringResource(CoreR.string.theme)}: ${if (isDarkMode) stringResource(CoreR.string.dark) else stringResource(CoreR.string.light)}")
-                    }
-                }
-            }
         }
     }
 }

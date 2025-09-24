@@ -160,7 +160,11 @@ fun AppNavHost(
         composable(Routes.ALL_TRANSACTIONS) {
             com.alperen.spendcraft.feature.transactions.ui.AllTransactionsScreen(
                 transactions = vm.items.collectAsState().value,
-                onBack = { navController.popBackStack() }
+                categories = vm.categories.collectAsState().value,
+                onBack = { navController.popBackStack() },
+                onAddCategoryToTransaction = { transactionId, categoryId ->
+                    vm.updateTransactionCategory(transactionId, categoryId)
+                }
             )
         }
     }

@@ -147,6 +147,12 @@ class TransactionsViewModel @Inject constructor(
         }
     }
     
+    fun updateTransactionCategory(transactionId: Long, categoryId: Long) {
+        viewModelScope.launch {
+            updateTransactionCategory(transactionId, categoryId)
+        }
+    }
+    
     // TEST ONLY - Remove in production
     fun testNotificationNow() {
         notificationTester.testNotificationNow()

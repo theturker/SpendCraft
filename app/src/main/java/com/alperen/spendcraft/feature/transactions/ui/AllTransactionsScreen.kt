@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,7 +24,9 @@ import java.util.*
 @Composable
 fun AllTransactionsScreen(
     transactions: List<Transaction>,
-    onBack: () -> Unit
+    categories: List<com.alperen.spendcraft.core.model.Category>,
+    onBack: () -> Unit,
+    onAddCategoryToTransaction: (Long, Long) -> Unit = { _, _ -> }
 ) {
     Scaffold(
         topBar = {
@@ -83,7 +86,15 @@ fun AllTransactionsScreen(
                 }
             } else {
                 items(transactions) { transaction ->
-                    TransactionItemCard(transaction = transaction)
+                    TransactionItemCard(
+                        transaction = transaction,
+                        categories = categories,
+                        onAddCategory = { categoryId ->
+                            transaction.id?.let { txId ->
+                                onAddCategoryToTransaction(txId, categoryId)
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -91,7 +102,12 @@ fun AllTransactionsScreen(
 }
 
 @Composable
-private fun TransactionItemCard(transaction: Transaction) {
+private fun TransactionItemCard(
+    transaction: Transaction,
+    categories: List<com.alperen.spendcraft.core.model.Category>,
+    onAddCategory: (Long) -> Unit
+) {
+    var showCategoryDialog by remember { mutableStateOf(false) }
     ModernCard(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -128,11 +144,33 @@ private fun TransactionItemCard(transaction: Transaction) {
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Text(
-                        text = "Category ${transaction.categoryId}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = if (transaction.categoryId != null) {
+                                categories.find { it.id == transaction.categoryId }?.name ?: "Bilinmeyen Kategori"
+                            } else {
+                                "Kategori Yok"
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        if (transaction.categoryId == null) {
+                            IconButton(
+                                onClick = { showCategoryDialog = true },
+                                modifier = Modifier.size(20.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "Kategori Ekle",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                        }
+                    }
                     Text(
                         text = formatDate(transaction.timestampUtcMillis),
                         style = MaterialTheme.typography.bodySmall,
@@ -152,6 +190,44 @@ private fun TransactionItemCard(transaction: Transaction) {
                 }
             )
         }
+    }
+    
+    // Category Selection Dialog
+    if (showCategoryDialog) {
+        AlertDialog(
+            onDismissRequest = { showCategoryDialog = false },
+            title = { Text("Kategori Seç") },
+            text = {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(categories) { category ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onAddCategory(category.id ?: 0L)
+                                    showCategoryDialog = false
+                                },
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        ) {
+                            Text(
+                                text = category.name,
+                                modifier = Modifier.padding(16.dp),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showCategoryDialog = false }) {
+                    Text("İptal")
+                }
+            }
+        )
     }
 }
 

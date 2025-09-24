@@ -160,40 +160,63 @@ fun AddTransactionScreen(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(6.dp))
-                        OutlinedTextField(
-                            value = amount,
-                            onValueChange = { newValue ->
-                                val cleanValue = newValue.replace(Regex("[^0-9]"), "")
-                                if (cleanValue.length <= 8) { // Max 8 digits
-                                    amount = cleanValue
-                                }
-                            },
-                            label = { 
-                                Text(
-                                    stringResource(R.string.amount),
-                                    style = MaterialTheme.typography.bodyMedium
-                                ) 
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        Row(
                             modifier = Modifier.fillMaxWidth(),
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.Call,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                            },
-                            supportingText = {
-                                if (amount.isNotEmpty()) {
-                                    val formattedAmount = formatCurrencyDisplay(amount.toLongOrNull() ?: 0)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            OutlinedTextField(
+                                value = amount,
+                                onValueChange = { newValue ->
+                                    val cleanValue = newValue.replace(Regex("[^0-9]"), "")
+                                    if (cleanValue.length <= 8) { // Max 8 digits
+                                        amount = cleanValue
+                                    }
+                                },
+                                label = { 
                                     Text(
-                                        "₺$formattedAmount",
+                                        stringResource(R.string.amount),
                                         style = MaterialTheme.typography.bodyMedium
+                                    ) 
+                                },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                modifier = Modifier.weight(1f),
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Filled.Call,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                },
+                                supportingText = {
+                                    if (amount.isNotEmpty()) {
+                                        val formattedAmount = formatCurrencyDisplay(amount.toLongOrNull() ?: 0)
+                                        Text(
+                                            "₺$formattedAmount",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                },
+                                textStyle = MaterialTheme.typography.bodyLarge
+                            )
+                            
+                            // Camera button for expense transactions
+                            if (!isIncome) {
+                                IconButton(
+                                    onClick = {
+                                        // TODO: Implement camera receipt scanning
+                                        // For now, just show a placeholder
+                                    },
+                                    modifier = Modifier.size(56.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.AccountBox,
+                                        contentDescription = "Fiş Tara",
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(24.dp)
                                     )
                                 }
-                            },
-                            textStyle = MaterialTheme.typography.bodyLarge
-                        )
+                            }
+                        }
                     }
                 }
             }
