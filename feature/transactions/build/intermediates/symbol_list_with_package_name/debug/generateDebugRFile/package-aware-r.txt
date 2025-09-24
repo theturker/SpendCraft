@@ -1,2 +1,0 @@
-com.alperen.spendcraft.feature.transactions
-string quick_add_title
