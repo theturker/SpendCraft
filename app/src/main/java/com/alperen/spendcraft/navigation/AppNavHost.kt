@@ -61,9 +61,9 @@ fun AppNavHost(
         composable(Routes.LIST) {
             TransactionsScreen(
                 viewModel = vm,
-                onAdd = { navController.navigate(Routes.ADD) },
-                onAddIncome = { navController.navigate(Routes.ADD_INCOME) },
-                onAddExpense = { navController.navigate(Routes.ADD_EXPENSE) },
+                onAdd = { /* Bottom sheet will handle this */ },
+                onAddIncome = { /* Bottom sheet will handle this */ },
+                onAddExpense = { /* Bottom sheet will handle this */ },
                 onReports = { navController.navigate(Routes.REPORTS) },
                 onSettings = { navController.navigate(Routes.SETTINGS) },
                 onAllTransactions = { navController.navigate(Routes.ALL_TRANSACTIONS) }

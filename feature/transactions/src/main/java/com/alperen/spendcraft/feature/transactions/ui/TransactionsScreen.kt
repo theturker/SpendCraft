@@ -53,6 +53,10 @@ fun TransactionsScreen(
     var showEditDialog by remember { mutableStateOf(false) }
     var editingAccountIndex by remember { mutableStateOf(0) }
     
+    // Bottom sheet state
+    var showAddTransactionSheet by remember { mutableStateOf(false) }
+    var initialTransactionType by remember { mutableStateOf<Boolean?>(null) }
+    
     val totalAmount = items.sumOf {
         if (it.type == TransactionType.INCOME) it.amount.minorUnits else -it.amount.minorUnits
     }
@@ -106,7 +110,12 @@ fun TransactionsScreen(
                 )
             }
         },
-        fab = { ModernFab(onClick = onAdd) }
+        fab = { 
+            ModernFab(onClick = { 
+                initialTransactionType = null
+                showAddTransactionSheet = true
+            }) 
+        }
     ) {
         LazyColumn(
             modifier = Modifier
@@ -178,13 +187,19 @@ fun TransactionsScreen(
                     ) {
                         IncomeExpenseButton(
                             text = stringResource(R.string.add_income_button),
-                            onClick = onAddIncome,
+                            onClick = { 
+                                initialTransactionType = true
+                                showAddTransactionSheet = true
+                            },
                             isIncome = true,
                             modifier = Modifier.weight(1f)
                         )
                         IncomeExpenseButton(
                             text = stringResource(R.string.add_expense_button),
-                            onClick = onAddExpense,
+                            onClick = { 
+                                initialTransactionType = false
+                                showAddTransactionSheet = true
+                            },
                             isIncome = false,
                             modifier = Modifier.weight(1f)
                         )
@@ -310,6 +325,18 @@ fun TransactionsScreen(
                     viewModel.updateAccountName(accountId, newName)
                 }
             }
+        )
+    }
+    
+    // Add Transaction Bottom Sheet
+    if (showAddTransactionSheet) {
+        AddTransactionBottomSheet(
+            categories = viewModel.categories,
+            initialTransactionType = initialTransactionType,
+            onSave = { amountMinor, note, categoryId, isIncome ->
+                viewModel.saveTransaction(amountMinor, note, categoryId, null, isIncome)
+            },
+            onDismiss = { showAddTransactionSheet = false }
         )
     }
 }
