@@ -16,7 +16,7 @@ object ThemeHelper {
     
     fun getDarkMode(context: Context): Flow<Boolean> {
         return context.dataStore.data.map { preferences ->
-            preferences[DARK_MODE_KEY] ?: false
+            preferences[DARK_MODE_KEY] ?: true
         }
     }
     
