@@ -49,7 +49,7 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     
-    // HTML exact colors
+    // HTML tasarımına uygun renkler
     val backgroundColor = if (isDarkMode) Color(0xFF111321) else Color(0xFFF6F6F8)
     val primaryColor = Color(0xFF4C5EE6)
     val cardBackground = if (isDarkMode) Color(0xFF111321).copy(alpha = 0.5f) else Color.White.copy(alpha = 0.5f)
@@ -173,6 +173,25 @@ fun LoginScreen(
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodySmall
                         )
+                    }
+                    
+                    // Forgot Password Link
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(
+                            onClick = onNavigateToForgotPassword,
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = primaryColor
+                            )
+                        ) {
+                            Text(
+                                text = if (isTurkish) "Şifremi Unuttum" else "Forgot Password?",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                     
                     // Sign In Button - HTML exact match

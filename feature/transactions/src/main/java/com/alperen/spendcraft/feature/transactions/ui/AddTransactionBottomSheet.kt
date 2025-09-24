@@ -3,8 +3,10 @@ package com.alperen.spendcraft.feature.transactions.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -13,6 +15,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -20,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.core.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,14 +46,16 @@ fun AddTransactionBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true
-        )
+        ),
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Handle bar
+            // HTML tasarımına uygun handle bar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -57,232 +64,245 @@ fun AddTransactionBottomSheet(
             ) {
                 Box(
                     modifier = Modifier
-                        .width(40.dp)
-                        .height(4.dp)
-                        .clip(MaterialTheme.shapes.small)
-                        .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+                        .width(48.dp)
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(3.dp))
+                        .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f))
                 )
             }
             
-            // Title
+            // HTML tasarımına uygun title
             Text(
-                text = "💳 ${stringResource(R.string.add_transaction)}",
-                style = MaterialTheme.typography.headlineSmall,
+                text = "Add Transaction",
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 24.dp)
             )
             
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Transaction Type Selection
+                // HTML tasarımına uygun Category Selection
                 item {
-                    ModernCard {
-                        Column(
-                            modifier = Modifier.padding(12.dp)
+                    Column {
+                        Text(
+                            text = "Category",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text(
-                                text = stringResource(R.string.transaction_type),
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .selectableGroup(),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                // Income Button
-                                ModernCard(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .selectable(
-                                            selected = isIncome,
-                                            onClick = { isIncome = true }
-                                        ),
-                                    onClick = { isIncome = true }
-                                ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(12.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Add,
-                                            contentDescription = null,
-                                            tint = if (isIncome) 
-                                                MaterialTheme.colorScheme.secondary 
-                                            else 
-                                                MaterialTheme.colorScheme.onSurfaceVariant,
-                                            modifier = Modifier.size(24.dp)
-                                        )
-                                        Spacer(modifier = Modifier.height(4.dp))
-                                        Text(
-                                            text = stringResource(R.string.income),
-                                            style = MaterialTheme.typography.bodySmall,
-                                            fontWeight = FontWeight.Medium,
-                                            color = if (isIncome) 
-                                                MaterialTheme.colorScheme.secondary 
-                                            else 
-                                                MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                }
-                                
-                                // Expense Button
-                                ModernCard(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .selectable(
-                                            selected = !isIncome,
-                                            onClick = { isIncome = false }
-                                        ),
-                                    onClick = { isIncome = false }
-                                ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(12.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Delete,
-                                            contentDescription = null,
-                                            tint = if (!isIncome) 
-                                                MaterialTheme.colorScheme.error 
-                                            else 
-                                                MaterialTheme.colorScheme.onSurfaceVariant,
-                                            modifier = Modifier.size(24.dp)
-                                        )
-                                        Spacer(modifier = Modifier.height(4.dp))
-                                        Text(
-                                            text = stringResource(R.string.expense),
-                                            style = MaterialTheme.typography.bodySmall,
-                                            fontWeight = FontWeight.Medium,
-                                            color = if (!isIncome) 
-                                                MaterialTheme.colorScheme.error 
-                                            else 
-                                                MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                }
+                            // Food category (selected by default)
+                            item {
+                                ModernCategoryChip(
+                                    text = "Food",
+                                    icon = Icons.Filled.Menu,
+                                    isSelected = selectedCategoryId == cats.firstOrNull()?.id,
+                                    onClick = { selectedCategoryId = cats.firstOrNull()?.id }
+                                )
+                            }
+                            // Transport category
+                            item {
+                                ModernCategoryChip(
+                                    text = "Transport",
+                                    icon = Icons.Filled.Menu,
+                                    isSelected = false,
+                                    onClick = { /* Handle transport selection */ }
+                                )
+                            }
+                            // Shopping category
+                            item {
+                                ModernCategoryChip(
+                                    text = "Shopping",
+                                    icon = Icons.Filled.Menu,
+                                    isSelected = false,
+                                    onClick = { /* Handle shopping selection */ }
+                                )
+                            }
+                            // Entertainment category
+                            item {
+                                ModernCategoryChip(
+                                    text = "Entertainment",
+                                    icon = Icons.Filled.Menu,
+                                    isSelected = false,
+                                    onClick = { /* Handle entertainment selection */ }
+                                )
+                            }
+                            // Bills category
+                            item {
+                                ModernCategoryChip(
+                                    text = "Bills",
+                                    icon = Icons.Filled.Menu,
+                                    isSelected = false,
+                                    onClick = { /* Handle bills selection */ }
+                                )
+                            }
+                            // Other category
+                            item {
+                                ModernCategoryChip(
+                                    text = "Other",
+                                    icon = Icons.Filled.Menu,
+                                    isSelected = false,
+                                    onClick = { /* Handle other selection */ }
+                                )
                             }
                         }
                     }
                 }
                 
-                // Amount Input
+                // HTML tasarımına uygun Amount Input
                 item {
-                    ModernCard {
+                    Column {
+                        Text(
+                            text = "Amount",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            // Dollar sign prefix
+                            Text(
+                                text = "₺",
+                                style = MaterialTheme.typography.headlineLarge.copy(fontSize = 48.sp),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier
+                                    .padding(start = 16.dp, top = 16.dp)
+                            )
+                            
+                            // Large amount input
+                            OutlinedTextField(
+                                value = amount,
+                                onValueChange = { newValue ->
+                                    val cleanValue = newValue.replace(Regex("[^0-9]"), "")
+                                    if (cleanValue.length <= 8) {
+                                        amount = cleanValue
+                                    }
+                                },
+                                placeholder = { 
+                                    Text(
+                                        "0.00",
+                                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 48.sp),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    ) 
+                                },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(96.dp)
+                                    .padding(start = 48.dp),
+                                textStyle = MaterialTheme.typography.headlineLarge.copy(fontSize = 48.sp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Transparent,
+                                    unfocusedBorderColor = Color.Transparent,
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                        }
+                    }
+                }
+                
+                // HTML tasarımına uygun Date/Time and Note
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // Date
                         Column(
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                text = stringResource(R.string.amount),
-                                style = MaterialTheme.typography.bodyMedium,
+                                text = "Date",
+                                style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.padding(bottom = 8.dp)
                             )
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Row(
+                            OutlinedTextField(
+                                value = "Today",
+                                onValueChange = { },
+                                readOnly = true,
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                OutlinedTextField(
-                                    value = amount,
-                                    onValueChange = { newValue ->
-                                        val cleanValue = newValue.replace(Regex("[^0-9]"), "")
-                                        if (cleanValue.length <= 8) { // Max 8 digits
-                                            amount = cleanValue
-                                        }
-                                    },
-                                    label = { 
-                                        Text(
-                                            stringResource(R.string.amount),
-                                            style = MaterialTheme.typography.bodyMedium
-                                        ) 
-                                    },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    modifier = Modifier.weight(1f),
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Filled.MailOutline,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(24.dp)
-                                        )
-                                    },
-                                    supportingText = {
-                                        if (amount.isNotEmpty()) {
-                                            val formattedAmount = formatCurrencyDisplay(amount.toLongOrNull() ?: 0)
-                                            Text(
-                                                "₺$formattedAmount",
-                                                style = MaterialTheme.typography.bodyMedium
-                                            )
-                                        }
-                                    },
-                                    textStyle = MaterialTheme.typography.bodyLarge
-                                )
-                                
-                                // Camera button for expense transactions
-                                if (!isIncome) {
-                                    IconButton(
-                                        onClick = {
-                                            // TODO: Implement camera receipt scanning
-                                        },
-                                        modifier = Modifier.size(56.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.AccountBox,
-                                            contentDescription = "Fiş Tara",
-                                            tint = MaterialTheme.colorScheme.primary,
-                                            modifier = Modifier.size(24.dp)
-                                        )
-                                    }
-                                }
-                            }
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Transparent,
+                                    unfocusedBorderColor = Color.Transparent,
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                        }
+                        
+                        // Time
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "Time",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            OutlinedTextField(
+                                value = "10:00 AM",
+                                onValueChange = { },
+                                readOnly = true,
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Transparent,
+                                    unfocusedBorderColor = Color.Transparent,
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            )
                         }
                     }
                 }
                 
                 // Note Input
                 item {
-                    ModernCard {
-                        Column(
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.note),
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.height(6.dp))
-                            OutlinedTextField(
-                                value = note,
-                                onValueChange = { note = it },
-                                label = { 
-                                    Text(
-                                        stringResource(R.string.note_optional),
-                                        style = MaterialTheme.typography.bodyMedium
-                                    ) 
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.Edit,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                },
-                                maxLines = 2,
-                                textStyle = MaterialTheme.typography.bodyLarge
-                            )
-                        }
+                    Column {
+                        Text(
+                            text = "Note",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        OutlinedTextField(
+                            value = note,
+                            onValueChange = { note = it },
+                            placeholder = { 
+                                Text(
+                                    "Add a note",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                ) 
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            maxLines = 3
+                        )
                     }
                 }
                 
@@ -350,7 +370,7 @@ fun AddTransactionBottomSheet(
                 }
             }
             
-            // Save Button at Bottom
+            // HTML tasarımına uygun Save Button
             Button(
                 onClick = {
                     val minor = amount.toLong()
@@ -360,22 +380,60 @@ fun AddTransactionBottomSheet(
                 enabled = amount.toLongOrNull() != null && amount.isNotEmpty(),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(56.dp)
                     .padding(top = 16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    contentColor = Color.White
                 ),
-                shape = MaterialTheme.shapes.medium
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.save),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    text = "Add Transaction",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
     }
+}
+
+@Composable
+private fun ModernCategoryChip(
+    text: String,
+    icon: ImageVector,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    FilterChip(
+        onClick = onClick,
+        label = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        },
+        selected = isSelected,
+        modifier = Modifier.height(40.dp),
+        colors = FilterChipDefaults.filterChipColors(
+            selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+            selectedLabelColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+        ),
+        shape = RoundedCornerShape(8.dp)
+    )
 }
 
 // Para birimi formatlaması fonksiyonları
