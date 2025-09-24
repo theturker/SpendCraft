@@ -105,6 +105,7 @@ fun AppNavHost(
         composable(Routes.REPORTS) {
             ReportsScreen(
                 transactionsFlow = vm.items,
+                categoriesFlow = vm.categories,
                 onBack = { navController.popBackStack() }
             )
         }

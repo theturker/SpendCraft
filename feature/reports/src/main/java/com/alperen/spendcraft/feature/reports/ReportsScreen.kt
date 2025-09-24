@@ -1,6 +1,7 @@
 package com.alperen.spendcraft.feature.reports
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,9 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlin.math.cos
@@ -32,20 +35,25 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun ReportsScreen(
     transactionsFlow: StateFlow<List<Transaction>>,
+    categoriesFlow: StateFlow<List<com.alperen.spendcraft.core.model.Category>>,
     onBack: () -> Unit = {}
 ) {
     val items by transactionsFlow.collectAsState()
+    val categories by categoriesFlow.collectAsState()
     val totalExpense = items.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
     val totalIncome = items.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
     val netAmount = totalIncome - totalExpense
     
-    // Kategori bazında harcama analizi
+    // Kategori bazında harcama analizi - kategori isimleri ile
     val expenseByCategory = items
         .filter { it.type == TransactionType.EXPENSE }
         .groupBy { it.categoryId }
         .mapValues { (_, transactions) -> transactions.sumOf { it.amount.minorUnits } }
-        .toList()
-        .sortedByDescending { it.second }
+        .map { (categoryId, amount) ->
+            val categoryName = categories.find { it.id == categoryId }?.name ?: "Bilinmeyen Kategori"
+            Triple(categoryId, categoryName, amount)
+        }
+        .sortedByDescending { it.third }
     
     AppScaffold(
         title = "📊 ${stringResource(R.string.reports)}",
@@ -158,9 +166,10 @@ fun ReportsScreen(
                     )
                 }
                 
-                items(expenseByCategory.take(5)) { (categoryId, amount) ->
+                items(expenseByCategory.take(5)) { (categoryId, categoryName, amount) ->
                     ExpenseCategoryItem(
                         categoryId = categoryId,
+                        categoryName = categoryName,
                         amount = amount,
                         totalExpense = totalExpense
                     )
@@ -233,6 +242,7 @@ fun ReportsScreen(
 @Composable
 private fun ExpenseCategoryItem(
     categoryId: Long?,
+    categoryName: String,
     amount: Long,
     totalExpense: Long
 ) {
@@ -267,8 +277,8 @@ private fun ExpenseCategoryItem(
             Spacer(modifier = Modifier.width(12.dp))
             
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "${stringResource(R.string.category)} ${categoryId ?: stringResource(R.string.unknown_category)}",
+                    Text(
+                        text = categoryName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -291,7 +301,7 @@ private fun ExpenseCategoryItem(
 
 @Composable
 private fun ExpensePieChart(
-    expenseByCategory: List<Pair<Long?, Long>>,
+    expenseByCategory: List<Triple<Long?, String, Long>>,
     totalExpense: Long,
     modifier: Modifier = Modifier
 ) {
@@ -303,17 +313,62 @@ private fun ExpensePieChart(
         Color(0xFF8B5CF6), // Purple
         Color(0xFF06B6D4), // Cyan
         Color(0xFF84CC16), // Lime
-        Color(0xFFF97316)  // Orange-500
+        Color(0xFFF97316), // Orange-500
+        Color(0xFFEC4899), // Pink
+        Color(0xFF6366F1)  // Indigo
     )
+    
+    var selectedIndex by remember { mutableStateOf(-1) }
     
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         androidx.compose.foundation.Canvas(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures { offset ->
+                        val canvasSize = minOf(size.width, size.height)
+                        val radius = canvasSize / 2f * 0.8f
+                        val center = androidx.compose.ui.geometry.Offset(
+                            size.width / 2f,
+                            size.height / 2f
+                        )
+                        
+                        val distance = kotlin.math.sqrt(
+                            (offset.x - center.x) * (offset.x - center.x) + 
+                            (offset.y - center.y) * (offset.y - center.y)
+                        )
+                        
+                        if (distance <= radius) {
+                            val angle = kotlin.math.atan2(
+                                offset.y - center.y,
+                                offset.x - center.x
+                            ) * 180 / kotlin.math.PI
+                            
+                            var currentAngle = -90f
+                            var foundIndex = -1
+                            
+                            expenseByCategory.forEachIndexed { index, (_, _, amount) ->
+                                val sweepAngle = (amount.toFloat() / totalExpense.toFloat()) * 360f
+                                val normalizedAngle = (angle + 90f + 360f) % 360f
+                                val normalizedCurrentAngle = (currentAngle + 360f) % 360f
+                                val normalizedEndAngle = (currentAngle + sweepAngle + 360f) % 360f
+                                
+                                if (normalizedAngle >= normalizedCurrentAngle && 
+                                    normalizedAngle <= normalizedEndAngle) {
+                                    foundIndex = index
+                                }
+                                currentAngle += sweepAngle
+                            }
+                            
+                            selectedIndex = if (foundIndex == selectedIndex) -1 else foundIndex
+                        }
+                    }
+                }
         ) {
-            val canvasSize = size.minDimension
+            val canvasSize = minOf(size.width, size.height)
             val radius = canvasSize / 2f * 0.8f
             val center = androidx.compose.ui.geometry.Offset(
                 size.width / 2f,
@@ -322,9 +377,21 @@ private fun ExpensePieChart(
             
             var startAngle = -90f // Start from top
             
-            expenseByCategory.forEachIndexed { index, (_, amount) ->
+            expenseByCategory.forEachIndexed { index, (_, _, amount) ->
                 val sweepAngle = (amount.toFloat() / totalExpense.toFloat()) * 360f
                 val color = colors[index % colors.size]
+                val isSelected = selectedIndex == index
+                val strokeWidth = if (isSelected) 8.dp.toPx() else 0f
+                val radiusOffset = if (isSelected) 10.dp.toPx() else 0f
+                
+                // Calculate offset for selected segment
+                val midAngle = startAngle + sweepAngle / 2f
+                val offsetX = kotlin.math.cos(midAngle * kotlin.math.PI / 180.0).toFloat() * radiusOffset
+                val offsetY = kotlin.math.sin(midAngle * kotlin.math.PI / 180.0).toFloat() * radiusOffset
+                val offsetCenter = androidx.compose.ui.geometry.Offset(
+                    center.x + offsetX,
+                    center.y + offsetY
+                )
                 
                 drawArc(
                     color = color,
@@ -332,13 +399,56 @@ private fun ExpensePieChart(
                     sweepAngle = sweepAngle,
                     useCenter = true,
                     topLeft = androidx.compose.ui.geometry.Offset(
-                        center.x - radius,
-                        center.y - radius
+                        offsetCenter.x - radius,
+                        offsetCenter.y - radius
                     ),
-                    size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2)
+                    size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
+                    style = if (strokeWidth > 0) Stroke(width = strokeWidth) else androidx.compose.ui.graphics.drawscope.Fill
                 )
                 
                 startAngle += sweepAngle
+            }
+        }
+        
+        // Center text showing total
+        if (selectedIndex == -1) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Toplam",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = formatCurrency(totalExpense),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        } else {
+            val selectedCategory = expenseByCategory[selectedIndex]
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = selectedCategory.second,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                Text(
+                    text = formatCurrency(selectedCategory.third),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "${((selectedCategory.third.toFloat() / totalExpense.toFloat()) * 100).toInt()}%",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
@@ -346,7 +456,7 @@ private fun ExpensePieChart(
 
 @Composable
 private fun ExpenseLegend(
-    expenseByCategory: List<Pair<Long?, Long>>,
+    expenseByCategory: List<Triple<Long?, String, Long>>,
     totalExpense: Long
 ) {
     val colors = listOf(
@@ -357,55 +467,69 @@ private fun ExpenseLegend(
         Color(0xFF8B5CF6), // Purple
         Color(0xFF06B6D4), // Cyan
         Color(0xFF84CC16), // Lime
-        Color(0xFFF97316)  // Orange-500
+        Color(0xFFF97316), // Orange-500
+        Color(0xFFEC4899), // Pink
+        Color(0xFF6366F1)  // Indigo
     )
     
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        expenseByCategory.forEachIndexed { index, (categoryId, amount) ->
+        expenseByCategory.forEachIndexed { index, (_, categoryName, amount) ->
             val percentage = if (totalExpense > 0) (amount.toFloat() / totalExpense.toFloat() * 100) else 0f
             val color = colors[index % colors.size]
             
-            Row(
+            Card(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    // Color indicator
-                    Box(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .clip(CircleShape)
-                            .background(color)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        // Color indicator with shadow
+                        Box(
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clip(CircleShape)
+                                .background(color)
+                                .shadow(
+                                    elevation = 4.dp,
+                                    shape = CircleShape,
+                                    ambientColor = color.copy(alpha = 0.3f),
+                                    spotColor = color.copy(alpha = 0.3f)
+                                )
+                        )
+                        
+                        Column {
+                            Text(
+                                text = categoryName,
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "${percentage.toInt()}%",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                     
                     Text(
-                        text = "${stringResource(R.string.category)} ${categoryId ?: stringResource(R.string.unknown_category)}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = "${percentage.toInt()}%",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
                         text = formatCurrency(amount),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
