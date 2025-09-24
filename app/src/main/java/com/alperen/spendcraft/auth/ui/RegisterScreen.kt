@@ -1,31 +1,42 @@
 package com.alperen.spendcraft.auth.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.painterResource
-import com.alperen.spendcraft.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alperen.spendcraft.auth.AuthViewModel
 import com.alperen.spendcraft.ThemeHelper
 import com.alperen.spendcraft.LocaleHelper
+import com.alperen.spendcraft.R
 
 @Composable
 fun RegisterScreen(
@@ -37,268 +48,353 @@ fun RegisterScreen(
     val isLoading by authViewModel.isLoading.collectAsState()
     val errorMessage by authViewModel.errorMessage.collectAsState()
     val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = true)
-    
-    // Get current language
-    val currentLanguage = LocaleHelper.getLanguage(context)
-    val isTurkish = currentLanguage == "tr"
-    
+
+    val isTr = LocaleHelper.getLanguage(context) == "tr"
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
-    
-    // HTML exact colors
-    val backgroundColor = if (isDarkMode) Color(0xFF111321) else Color(0xFFF6F6F8)
-    val primaryColor = Color(0xFF4C5EE6)
-    val cardBackground = if (isDarkMode) Color(0xFF111321).copy(alpha = 0.5f) else Color.White.copy(alpha = 0.5f)
-    
+    var confirm by remember { mutableStateOf("") }
+    var pwdVisible by remember { mutableStateOf(false) }
+    var confirmVisible by remember { mutableStateOf(false) }
+    var agree by remember { mutableStateOf(false) }
+
+    // Colors
+    val bgTop = Color(0xFF111321)
+    val bgBottom = Color(0xFF0C0F19)
+    val primary = Color(0xFF4C5EE6)
+    val titleColor = Color(0xFFF2F4F8)
+    val labelMuted = Color(0xFF9CA3AF)
+    val fieldStroke = Color(0xFF2D3240)
+    val cardColor = Color(0xFF141826)
+
+    // Password strength
+    val strength = remember(password) { passwordStrength(password) }
+    val strengthText = when (strength.first) {
+        Strength.WEAK -> if (isTr) "Zayıf" else "Weak"
+        Strength.MEDIUM -> if (isTr) "Orta" else "Medium"
+        Strength.STRONG -> if (isTr) "Güçlü" else "Strong"
+    }
+    val strengthColor = when (strength.first) {
+        Strength.WEAK -> Color(0xFFE74C3C)
+        Strength.MEDIUM -> Color(0xFFF39C12)
+        Strength.STRONG -> Color(0xFF2ECC71)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(Brush.verticalGradient(listOf(bgTop, bgBottom)))
     ) {
+        // top glow
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(220.dp)
+                .blur(90.dp)
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Color(0x334C5EE6), Color.Transparent)
+                    ),
+                    shape = RoundedCornerShape(bottomStart = 120.dp, bottomEnd = 120.dp)
+                )
+                .align(Alignment.TopCenter)
+        )
+
         Column(
-            modifier = Modifier
+            Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp)
+                .padding(top = 12.dp, bottom = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Header Section - HTML exact match
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(bottom = 32.dp)
+            // Card
+            SoftShadowCard(
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = cardColor,
+                shape = RoundedCornerShape(26.dp),
+                addDropShadow = true
             ) {
-                Text(
-                    text = "SpendCraft",
-                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 30.sp),
-                    fontWeight = FontWeight.Bold,
-                    color = if (isDarkMode) Color.White else Color(0xFF111827)
-                )
-                
-                Spacer(modifier = Modifier.height(8.dp))
-                
-                Text(
-                    text = if (isTurkish) "Hesap oluşturun ve finansal özgürlüğe başlayın." else "Create an account and start your financial freedom.",
-                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
-                    color = if (isDarkMode) Color(0xFF9CA3AF) else Color(0xFF6B7280),
-                    textAlign = TextAlign.Center
-                )
-            }
-            
-            // Register Form Card - HTML exact match with backdrop-blur effect
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(
-                        elevation = 24.dp,
-                        shape = RoundedCornerShape(12.dp),
-                        ambientColor = primaryColor.copy(alpha = if (isDarkMode) 0.2f else 0.1f),
-                        spotColor = primaryColor.copy(alpha = if (isDarkMode) 0.2f else 0.1f)
-                    ),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = cardBackground
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(32.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                ) {
-                    // Name Field - HTML exact match
-                    OutlinedTextField(
+                Column(Modifier.padding(24.dp)) {
+                    Text(
+                        text = if (isTr) "Hesap oluştur" else "Create your account",
+                        color = titleColor,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    // Name
+                    LinedField(
                         value = name,
                         onValueChange = { name = it },
-                        placeholder = { 
-                            Text(
-                                if (isTurkish) "Ad Soyad" else "Full Name",
-                                color = if (isDarkMode) Color(0xFF71717A) else Color(0xFFA1A1AA)
-                            ) 
+                        placeholder = if (isTr) "Ad Soyad" else "Name",
+                        leading = {
+                            Icon(imageVector = Icons.Default.Person, contentDescription = null, tint = labelMuted)
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = primaryColor,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedContainerColor = if (isDarkMode) Color.Black.copy(alpha = 0.2f) else Color(0xFFF6F6F8),
-                            unfocusedContainerColor = if (isDarkMode) Color.Black.copy(alpha = 0.2f) else Color(0xFFF6F6F8),
-                            focusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
-                            unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
+                        stroke = fieldStroke
                     )
-                    
-                    // Email Field - HTML exact match
-                    OutlinedTextField(
+                    Spacer(Modifier.height(14.dp))
+
+                    // Email
+                    LinedField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = { 
-                            Text(
-                                if (isTurkish) "E-posta Adresi" else "Email Address",
-                                color = if (isDarkMode) Color(0xFF71717A) else Color(0xFFA1A1AA)
-                            ) 
+                        placeholder = if (isTr) "E-posta" else "Email",
+                        leading = {
+                            Icon(imageVector = Icons.Default.Email, contentDescription = null, tint = labelMuted)
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = primaryColor,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedContainerColor = if (isDarkMode) Color.Black.copy(alpha = 0.2f) else Color(0xFFF6F6F8),
-                            unfocusedContainerColor = if (isDarkMode) Color.Black.copy(alpha = 0.2f) else Color(0xFFF6F6F8),
-                            focusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
-                            unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
+                        keyboard = KeyboardType.Email,
+                        stroke = fieldStroke
                     )
-                    
-                    // Password Field - HTML exact match
-                    OutlinedTextField(
+                    Spacer(Modifier.height(14.dp))
+
+                    // Password
+                    LinedField(
                         value = password,
                         onValueChange = { password = it },
-                        placeholder = { 
-                            Text(
-                                if (isTurkish) "Şifre" else "Password",
-                                color = if (isDarkMode) Color(0xFF71717A) else Color(0xFFA1A1AA)
-                            ) 
+                        placeholder = if (isTr) "Şifre" else "Password",
+                        leading = {
+                            Icon(imageVector = Icons.Default.Lock, contentDescription = null, tint = labelMuted)
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        trailing = {
+                            IconButton(onClick = { pwdVisible = !pwdVisible }) {
                                 Icon(
                                     painter = painterResource(
-                                        if (passwordVisible) R.drawable.outline_visibility_24 
+                                        if (confirmVisible) R.drawable.outline_visibility_24
                                         else R.drawable.outline_visibility_off_24
                                     ),
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                                    tint = if (isDarkMode) Color(0xFF71717A) else Color(0xFFA1A1AA)
+                                    contentDescription = null,
+                                    tint = labelMuted
                                 )
                             }
                         },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = primaryColor,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedContainerColor = if (isDarkMode) Color.Black.copy(alpha = 0.2f) else Color(0xFFF6F6F8),
-                            unfocusedContainerColor = if (isDarkMode) Color.Black.copy(alpha = 0.2f) else Color(0xFFF6F6F8),
-                            focusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
-                            unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
+                        keyboard = KeyboardType.Password,
+                        visual = if (pwdVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        stroke = fieldStroke
                     )
-                    
-                    // Confirm Password Field - HTML exact match
-                    OutlinedTextField(
-                        value = confirmPassword,
-                        onValueChange = { confirmPassword = it },
-                        placeholder = { 
-                            Text(
-                                if (isTurkish) "Şifre Tekrar" else "Confirm Password",
-                                color = if (isDarkMode) Color(0xFF71717A) else Color(0xFFA1A1AA)
-                            ) 
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                                Icon(
-                                    painter = painterResource(
-                                        if (confirmPasswordVisible) R.drawable.outline_visibility_24 
-                                        else R.drawable.outline_visibility_off_24
-                                    ),
-                                    contentDescription = if (confirmPasswordVisible) "Hide password" else "Show password",
-                                    tint = if (isDarkMode) Color(0xFF71717A) else Color(0xFFA1A1AA)
-                                )
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = primaryColor,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedContainerColor = if (isDarkMode) Color.Black.copy(alpha = 0.2f) else Color(0xFFF6F6F8),
-                            unfocusedContainerColor = if (isDarkMode) Color.Black.copy(alpha = 0.2f) else Color(0xFFF6F6F8),
-                            focusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
-                            unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    
-                    // Error Message
-                    if (errorMessage != null && errorMessage!!.isNotEmpty()) {
+
+                    // Password strength
+                    Spacer(Modifier.height(10.dp))
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = errorMessage ?: "",
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
+                            text = if (isTr) "Şifre Gücü" else "Password Strength",
+                            color = titleColor.copy(0.9f),
+                            fontSize = 16.sp,
+                            modifier = Modifier.weight(1f)
                         )
+                        Text(text = strengthText, color = strengthColor, fontSize = 16.sp, fontWeight = FontWeight.Medium)
                     }
-                    
-                    // Register Button - HTML exact match
-                    Button(
-                        onClick = {
-                            if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
-                                if (password == confirmPassword) {
-                                    authViewModel.register(name, email, password, confirmPassword)
-                                } else {
-                                    // Show error for password mismatch
-                                }
-                            }
-                        },
-                        enabled = !isLoading && name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty(),
+                    Spacer(Modifier.height(6.dp))
+                    LinearProgressIndicator(
+                        progress = { strength.second },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp)
-                            .shadow(
-                                elevation = 8.dp,
-                                shape = RoundedCornerShape(8.dp),
-                                ambientColor = primaryColor.copy(alpha = 0.4f),
-                                spotColor = primaryColor.copy(alpha = 0.4f)
-                            ),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = primaryColor,
-                            contentColor = Color.White
-                        ),
-                        contentPadding = PaddingValues(0.dp)
+                            .height(8.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        trackColor = Color(0xFF2A2F3D),
+                        color = strengthColor
+                    )
+                    Spacer(Modifier.height(14.dp))
+
+                    // Confirm password
+                    LinedField(
+                        value = confirm,
+                        onValueChange = { confirm = it },
+                        placeholder = if (isTr) "Şifreyi Doğrula" else "Confirm Password",
+                        leading = {
+                            Icon(imageVector = Icons.Default.Lock, contentDescription = null, tint = labelMuted)
+                        },
+                        trailing = {
+                            IconButton(onClick = { confirmVisible = !confirmVisible }) {
+                                Icon(
+                                    painter = painterResource(
+                                        if (confirmVisible) R.drawable.outline_visibility_24
+                                        else R.drawable.outline_visibility_off_24
+                                    ),
+                                    contentDescription = null,
+                                    tint = labelMuted
+                                )
+                            }
+                        },
+                        keyboard = KeyboardType.Password,
+                        visual = if (confirmVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        stroke = fieldStroke
+                    )
+                    Spacer(Modifier.height(16.dp))
+
+                    // Terms & Conditions
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                        Checkbox(
+                            checked = agree,
+                            onCheckedChange = { agree = it },
+                            colors = CheckboxDefaults.colors(checkedColor = primary, uncheckedColor = labelMuted)
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = if (isTr) "Kabul ediyorum " else "I agree to the ",
+                            color = labelMuted,
+                            fontSize = 15.sp
+                        )
+                        val tc = buildAnnotatedString {
+                            append(if (isTr) "Şartlar ve " else "Terms & ")
+                            withStyle(SpanStyle(color = primary)) {
+                                append(if (isTr) "Koşullar" else "Conditions")
+                            }
+                        }
+                        Text(text = tc, fontSize = 15.sp)
+                    }
+
+                    // Error
+                    if (!errorMessage.isNullOrEmpty()) {
+                        Spacer(Modifier.height(6.dp))
+                        Text(text = errorMessage ?: "", color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
+                    }
+
+                    Spacer(Modifier.height(12.dp))
+
+                    // Sign Up (previous behavior preserved)
+                    Button(
+                        onClick = {
+                            if (agree && name.isNotBlank() && email.isNotBlank()
+                                && password.isNotBlank() && confirm == password
+                            ) {
+                                authViewModel.register(name, email, password, confirm)
+                                // önceki akış ne ise (ör. success callback) ViewModel içinde tetiklenmeli
+                            }
+                        },
+                        enabled = !isLoading && agree &&
+                                name.isNotBlank() && email.isNotBlank() &&
+                                password.isNotBlank() && confirm.isNotBlank(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .clip(RoundedCornerShape(18.dp)),
+                        shape = RoundedCornerShape(18.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = primary, contentColor = Color.White),
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
                     ) {
                         if (isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                color = Color.White,
-                                strokeWidth = 2.dp
-                            )
+                            CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
                         } else {
-                            Text(
-                                text = if (isTurkish) "Hesap Oluştur" else "Create Account",
-                                style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
-                                fontWeight = FontWeight.Bold
-                            )
+                            Text(text = if (isTr) "Kayıt Ol" else "Sign Up", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                         }
                     }
+
+                    // Google bölümü ve divider kaldırıldı
                 }
             }
-            
-            // Login Link - HTML exact match
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            Text(
-                text = if (isTurkish) "Zaten hesabınız var mı? " else "Already have an account? ",
-                style = MaterialTheme.typography.bodySmall,
-                color = if (isDarkMode) Color(0xFF9CA3AF) else Color(0xFF6B7280)
-            )
-            
-            TextButton(
-                onClick = onNavigateToLogin,
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = primaryColor
-                )
-            ) {
-                Text(
-                    text = if (isTurkish) "Giriş Yap" else "Sign In",
-                    fontWeight = FontWeight.Medium
-                )
+
+            Spacer(Modifier.height(12.dp))
+
+            // İstersen altta login linki kalsın
+            TextButton(onClick = onNavigateToLogin) {
+                Text(text = if (isTr) "Hesabın var mı? Giriş yap" else "Have an account? Sign in", color = Color(0xFF9CA3AF))
             }
         }
+    }
+}
+
+/* ---------- Reusable pieces ---------- */
+
+@Composable
+private fun LinedField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    leading: (@Composable () -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null,
+    keyboard: KeyboardType = KeyboardType.Text,
+    visual: VisualTransformation = VisualTransformation.None,
+    stroke: Color
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        placeholder = { Text(placeholder, color = Color(0xFFA1A1AA)) },
+        leadingIcon = leading,
+        trailingIcon = trailing,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = keyboard),
+        visualTransformation = visual,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = stroke,
+            unfocusedBorderColor = stroke,
+            focusedContainerColor = Color(0x1A0E111A),
+            unfocusedContainerColor = Color(0x1A0E111A),
+            focusedTextColor = Color(0xFFE6EAF2),
+            unfocusedTextColor = Color(0xFFE6EAF2),
+            cursorColor = Color(0xFF4C5EE6)
+        )
+    )
+}
+
+@Composable
+private fun SoftShadowCard(
+    modifier: Modifier = Modifier,
+    containerColor: Color,
+    shape: RoundedCornerShape = RoundedCornerShape(26.dp),
+    elevationLight: Dp = 8.dp,
+    elevationDark: Dp = 4.dp,
+    addDropShadow: Boolean = true,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val wrap = if (addDropShadow)
+        modifier.shadow(elevation = 18.dp, shape = shape, clip = false)
+    else modifier
+
+    Box(modifier = wrap, contentAlignment = Alignment.Center) {
+        // bottom soft shadow
+        Box(
+            Modifier
+                .fillMaxWidth(0.96f)
+                .height(120.dp)
+                .offset(y = 18.dp)
+                .blur(50.dp)
+                .background(Color.Black.copy(0.20f), shape)
+        )
+        // top glow
+        Box(
+            Modifier
+                .fillMaxWidth(0.92f)
+                .height(100.dp)
+                .offset(y = (-6).dp)
+                .blur(60.dp)
+                .background(Color(0x334C5EE6), shape)
+        )
+        // card
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(BorderStroke(1.dp, Color(0x1FFFFFFF)), shape = shape)
+                .clip(shape),
+            color = containerColor,
+            shape = shape,
+            tonalElevation = elevationDark,
+            shadowElevation = elevationLight
+        ) { Column(content = content) }
+    }
+}
+
+/* ---- Password strength util ---- */
+private enum class Strength { WEAK, MEDIUM, STRONG }
+
+private fun passwordStrength(pwd: String): Pair<Strength, Float> {
+    if (pwd.isEmpty()) return Strength.WEAK to 0f
+    var score = 0
+    if (pwd.length >= 8) score++
+    if (pwd.any { it.isUpperCase() } && pwd.any { it.isLowerCase() }) score++
+    if (pwd.any { it.isDigit() }) score++
+    if (pwd.any { "!@#\$%^&*()_+-=[]{}|;:'\",.<>/?".contains(it) }) score++
+
+    return when {
+        score <= 1 -> Strength.WEAK to 0.25f
+        score == 2 || score == 3 -> Strength.MEDIUM to 0.6f
+        else -> Strength.STRONG to 1f
     }
 }
