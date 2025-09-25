@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +27,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
@@ -97,8 +99,9 @@ fun TransactionsScreen(
 
     val bgGradient = Brush.verticalGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.surface.copy(alpha = 0.0f),
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
+            Color(0xFF1A1B3A), // Koyu mor-mavi
+            Color(0xFF0F0F23), // Daha koyu mor
+            Color(0xFF0A0B1A)  // En koyu arka plan
         )
     )
 
@@ -200,18 +203,39 @@ fun TransactionsScreen(
             // (3) Hızlı Ekle — kartları pill stiline çevirdik
             item {
                 Column {
-                    SectionHeader(
-                        title = "🚀 Hızlı Ekle",
-                        actionText = stringResource(R.string.reports),
-                        onAction = onReports
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_speed_vector),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Hızlı Ekle",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        TextButton(onClick = onReports) { 
+                            Text(stringResource(R.string.reports)) 
+                        }
+                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         QuickActionPill(
                             label = stringResource(R.string.add_income_button),
-                            icon = Icons.Filled.Menu,
+                            icon = painterResource(R.drawable.ic_income_vector),
                             positive = true,
                             modifier = Modifier.weight(1f),
                             onClick = {
@@ -221,7 +245,7 @@ fun TransactionsScreen(
                         )
                         QuickActionPill(
                             label = stringResource(R.string.add_expense_button),
-                            icon = Icons.Filled.Menu,
+                            icon = painterResource(R.drawable.ic_expense_vector),
                             positive = false,
                             modifier = Modifier.weight(1f),
                             onClick = {
@@ -237,11 +261,32 @@ fun TransactionsScreen(
             // İstatistikler
             item {
                 Column {
-                    SectionHeader(
-                        title = "📊 ${stringResource(R.string.transaction_statistics)}",
-                        actionText = stringResource(R.string.view_all),
-                        onAction = onAllTransactions
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_bar_chart_vector),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.transaction_statistics),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        TextButton(onClick = onAllTransactions) { 
+                            Text(stringResource(R.string.view_all)) 
+                        }
+                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -249,14 +294,14 @@ fun TransactionsScreen(
                         StatCard(
                             title = stringResource(R.string.this_month),
                             value = "${items.size} ${stringResource(R.string.transactions_count)}",
-                            icon = Icons.Filled.Menu,
+                            icon = painterResource(R.drawable.ic_calendar_month_vector),
                             color = Color(0xFF667EEA),
                             modifier = Modifier.weight(1f)
                         )
                         StatCard(
                             title = stringResource(R.string.average),
                             value = if (items.isNotEmpty()) formatMinor(totalAmount / items.size) else "₺0",
-                            icon = Icons.Filled.Menu,
+                            icon = painterResource(R.drawable.ic_analytics_vector),
                             color = Color(0xFFF093FB),
                             modifier = Modifier.weight(1f)
                         )
@@ -273,12 +318,23 @@ fun TransactionsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "💳 ${stringResource(R.string.recent_transactions)}",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_history_vector),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.recent_transactions),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                     TextButton(onClick = onAllTransactions) { Text(stringResource(R.string.view_all)) }
                 }
             }
@@ -359,7 +415,7 @@ fun TransactionsScreen(
 @Composable
 private fun QuickActionPill(
     label: String,
-    icon: ImageVector,
+    icon: androidx.compose.ui.graphics.painter.Painter,
     positive: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -381,7 +437,7 @@ private fun QuickActionPill(
             .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(icon, contentDescription = null, modifier = Modifier.size(18.dp))
+        Icon(painter = icon, contentDescription = null, modifier = Modifier.size(18.dp))
         Spacer(Modifier.width(8.dp))
         Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
     }
@@ -429,12 +485,23 @@ private fun GradientAccountsSection(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = account.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_account_balance_vector),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = account.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
                 IconButton(onClick = { onEdit(selectedIndex) }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
@@ -625,7 +692,12 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = if (isIncome) "💰" else "💸", style = MaterialTheme.typography.titleLarge)
+                    Icon(
+                        painter = painterResource(if (isIncome) R.drawable.ic_income_vector else R.drawable.ic_expense_vector),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {

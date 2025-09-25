@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -146,7 +147,7 @@ private fun BudgetSummaryCard(budgets: List<Budget>) {
                 StatCard(
                     title = stringResource(R.string.total_budgets),
                     value = budgets.size.toString(),
-                    icon = Icons.Filled.Settings,
+                    icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector),
                     modifier = Modifier.weight(1f)
                 )
                 
@@ -155,7 +156,7 @@ private fun BudgetSummaryCard(budgets: List<Budget>) {
                 StatCard(
                     title = stringResource(R.string.monthly_limit),
                     value = formatCurrency(budgets.sumOf { it.monthlyLimitMinor }),
-                    icon = Icons.Filled.Settings,
+                    icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_calendar_month_vector),
                     modifier = Modifier.weight(1f)
                 )
             }

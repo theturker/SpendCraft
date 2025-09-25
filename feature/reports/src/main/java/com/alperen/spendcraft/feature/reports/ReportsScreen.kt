@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -82,14 +83,14 @@ fun ReportsScreen(
                     StatCard(
                         title = stringResource(R.string.total_income),
                         value = formatCurrency(totalIncome),
-                        icon = Icons.Filled.ThumbUp,
+                        icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_income_vector),
                         color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
                         title = stringResource(R.string.total_expense),
                         value = formatCurrency(totalExpense),
-                        icon = Icons.Filled.ArrowDropDown,
+                        icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_expense_vector),
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.weight(1f)
                     )

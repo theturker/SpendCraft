@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -193,7 +194,7 @@ fun ModernCard(
 fun StatCard(
     title: String,
     value: String,
-    icon: ImageVector,
+    icon: Painter,
     color: Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier
 ) {
@@ -237,7 +238,7 @@ fun StatCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Icon(
-                    imageVector = icon,
+                    painter = icon,
                     contentDescription = null,
                     tint = color,
                     modifier = Modifier.size(20.dp)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -62,7 +63,7 @@ fun CategoryManagementScreen(
                             StatCard(
                                 title = stringResource(R.string.total),
                                 value = "${categories.size} ${stringResource(R.string.categories)}",
-                                icon = Icons.Filled.AccountBox,
+                                icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector),
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.weight(1f)
                             )
