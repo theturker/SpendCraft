@@ -16,7 +16,7 @@ android {
     defaultConfig {
         applicationId = "com.alperen.spendcraft"
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 

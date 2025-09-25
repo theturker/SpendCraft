@@ -1,15 +1,16 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,23 +18,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import com.alperen.spendcraft.core.ui.R
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun TransactionsScreen(
@@ -43,34 +45,38 @@ fun TransactionsScreen(
     onAddExpense: () -> Unit,
     onReports: () -> Unit,
     onSettings: () -> Unit,
-    onAllTransactions: () -> Unit
+    onAllTransactions: () -> Unit,
+    currentUserName: String? = null
 ) {
     val context = LocalContext.current
     val items by viewModel.items.collectAsState()
     val accounts by viewModel.accounts.collectAsState()
     val streak by viewModel.streak.collectAsState()
+
     var selectedAccountIndex by remember { mutableStateOf(0) }
     var showEditDialog by remember { mutableStateOf(false) }
     var editingAccountIndex by remember { mutableStateOf(0) }
-    
-    // Bottom sheet state
+
     var showAddTransactionSheet by remember { mutableStateOf(false) }
     var initialTransactionType by remember { mutableStateOf<Boolean?>(null) }
-    
+    var txFilter by remember { mutableStateOf(TxFilter.ALL) }
+
     val totalAmount = items.sumOf {
         if (it.type == TransactionType.INCOME) it.amount.minorUnits else -it.amount.minorUnits
     }
-    
-    val incomeAmount = items.filter { it.type == TransactionType.INCOME }
-        .sumOf { it.amount.minorUnits }
-    val expenseAmount = items.filter { it.type == TransactionType.EXPENSE }
-        .sumOf { it.amount.minorUnits }
+    val incomeAmount = items.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
+    val expenseAmount = items.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
 
-    // Create account data for cards
-    val accountsData = remember(accounts, items) {
+    val accountsData = remember(accounts, items) { /* Sende olduğu gibi */
         if (accounts.isEmpty()) {
             listOf(
-                AccountData(null, "💰 ${context.getString(com.alperen.spendcraft.core.ui.R.string.total_balance)}", formatMinor(totalAmount), formatMinor(incomeAmount), formatMinor(expenseAmount))
+                AccountData(
+                    null,
+                    "💰 ${context.getString(R.string.total_balance)}",
+                    formatMinor(totalAmount),
+                    formatMinor(incomeAmount),
+                    formatMinor(expenseAmount)
+                )
             )
         } else {
             accounts.mapIndexed { index, account ->
@@ -78,7 +84,6 @@ fun TransactionsScreen(
                 val accountIncome = accountTransactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
                 val accountExpense = accountTransactions.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
                 val accountBalance = accountIncome - accountExpense
-                
                 AccountData(
                     id = account.id,
                     name = if (index == 0) "💰 ${account.name}" else "🏠 ${account.name}",
@@ -89,125 +94,153 @@ fun TransactionsScreen(
             }
         }
     }
-    
-    AppScaffold(
-        title = "💳 ${stringResource(R.string.app_title)}",
-        actions = {
-            IconButton(onClick = onSettings) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = stringResource(R.string.settings),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        },
-        fab = { 
-            ModernFab(
-                onClick = onReports,
-                icon = Icons.Filled.Menu,
-                contentDescription = stringResource(R.string.reports)
-            ) 
+
+    val bgGradient = Brush.verticalGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.surface.copy(alpha = 0.0f),
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
+        )
+    )
+
+    val shown = remember(items, txFilter) {
+        val base = when (txFilter) {
+            TxFilter.ALL -> items
+            TxFilter.INCOME -> items.filter { it.type == TransactionType.INCOME }
+            TxFilter.EXPENSE -> items.filter { it.type == TransactionType.EXPENSE }
         }
+        base.take(5)
+    }
+
+    // Reklam yüksekliği - sadece reklam yüklendiğinde kullanılacak
+    var isAdLoaded by remember { mutableStateOf(false) }
+    val adHeight = if (isAdLoaded) 56.dp else 0.dp
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(bgGradient)
     ) {
+        // Reklam: EN ÜSTTE SABİT - ayarlar butonu altında
+        AdMobBanner(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 60.dp, start = 16.dp, end = 16.dp), // Ayarlar butonu altında
+            onAdLoaded = { isAdLoaded = true },
+            onAdFailedToLoad = { isAdLoaded = false }
+        )
+
+        // Sağ-üst ayarlar
+        IconButton(
+            onClick = onSettings,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(12.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Settings,
+                contentDescription = stringResource(R.string.settings),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        // İçerik listesi — üstte reklam + altta FAB için padding
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp)
+                .padding(top = adHeight + 60.dp), // reklam üstte + FAB altta
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Welcome Header with Gradient
+            // (1) SpendCraft kartı — ALT YAZI GERİ
             item {
                 GradientCard(
-                    onClick = { /* Welcome animation */ }
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(110.dp),
+                    onClick = { /* welcome anim */ }
                 ) {
                     Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "💰 SpendCraft",
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
+                            text = "SpendCraft",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.ExtraBold,
                             color = Color.White
                         )
+                        Spacer(Modifier.height(4.dp))
                         Text(
-                            text = stringResource(R.string.welcome_subtitle),
-                            style = MaterialTheme.typography.bodyMedium,
+                            text = if (currentUserName != null) "Hoşgeldin, $currentUserName" else stringResource(R.string.welcome_subtitle),
+                            style = MaterialTheme.typography.bodySmall,
+                            textAlign = TextAlign.Center,
                             color = Color.White.copy(alpha = 0.9f)
                         )
                     }
                 }
             }
-            
-            // Balance Card
+
+            // Hesap kartı (gradient + kapsüller)
             item {
-                MultiAccountBalanceCard(
-                    accounts = accountsData,
-                    currentAccountIndex = selectedAccountIndex,
-                    onAccountClick = { index -> selectedAccountIndex = index },
-                    onEditAccount = { index ->
-                        editingAccountIndex = index
+                GradientAccountsSection(
+                    data = accountsData,
+                    selectedIndex = selectedAccountIndex,
+                    onSelect = { selectedAccountIndex = it },
+                    onEdit = {
+                        editingAccountIndex = it
                         showEditDialog = true
                     }
                 )
             }
-            
-            // Streak Banner
-            item {
-                StreakBanner(
-                    streak = streak,
-                    onClick = {
-                        // Focus on QuickAdd - scroll to it or expand it
-                    }
-                )
-            }
-            
-            
-            
-            // Quick Actions with Beautiful Cards
+
+            // Streak
+            item { StreakBanner(streak = streak, onClick = { /*...*/ }) }
+
+            // (3) Hızlı Ekle — kartları pill stiline çevirdik
             item {
                 Column {
-                    Text(
-                        text = "🚀 Hızlı Ekle",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 12.dp)
+                    SectionHeader(
+                        title = "🚀 Hızlı Ekle",
+                        actionText = stringResource(R.string.reports),
+                        onAction = onReports
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        IncomeExpenseButton(
-                            text = stringResource(R.string.add_income_button),
-                            onClick = { 
+                        QuickActionPill(
+                            label = stringResource(R.string.add_income_button),
+                            icon = Icons.Filled.Menu,
+                            positive = true,
+                            modifier = Modifier.weight(1f),
+                            onClick = {
                                 initialTransactionType = true
                                 showAddTransactionSheet = true
-                            },
-                            isIncome = true,
-                            modifier = Modifier.weight(1f)
+                            }
                         )
-                        IncomeExpenseButton(
-                            text = stringResource(R.string.add_expense_button),
-                            onClick = { 
+                        QuickActionPill(
+                            label = stringResource(R.string.add_expense_button),
+                            icon = Icons.Filled.Menu,
+                            positive = false,
+                            modifier = Modifier.weight(1f),
+                            onClick = {
                                 initialTransactionType = false
                                 showAddTransactionSheet = true
-                            },
-                            isIncome = false,
-                            modifier = Modifier.weight(1f)
+                            }
                         )
                     }
+                    Spacer(Modifier.height(10.dp))
                 }
             }
-            
-            // Statistics Cards with Beautiful Design
+
+            // İstatistikler
             item {
                 Column {
-                    Text(
-                        text = "📊 ${stringResource(R.string.transaction_statistics)}",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 12.dp)
+                    SectionHeader(
+                        title = "📊 ${stringResource(R.string.transaction_statistics)}",
+                        actionText = stringResource(R.string.view_all),
+                        onAction = onAllTransactions
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -216,27 +249,24 @@ fun TransactionsScreen(
                         StatCard(
                             title = stringResource(R.string.this_month),
                             value = "${items.size} ${stringResource(R.string.transactions_count)}",
-                            icon = Icons.Filled.Call,
+                            icon = Icons.Filled.Menu,
                             color = Color(0xFF667EEA),
                             modifier = Modifier.weight(1f)
                         )
                         StatCard(
                             title = stringResource(R.string.average),
                             value = if (items.isNotEmpty()) formatMinor(totalAmount / items.size) else "₺0",
-                            icon = Icons.Filled.KeyboardArrowUp,
+                            icon = Icons.Filled.Menu,
                             color = Color(0xFFF093FB),
                             modifier = Modifier.weight(1f)
                         )
                     }
                 }
             }
-            
-            // AdMob Banner
-            item {
-                AdMobBannerWithPadding()
-            }
-            
-            // Recent Transactions Header with Beautiful Design
+
+            // (reklam artık sticky olduğundan buradaki AdMob item'ı kaldırabilirsin // item { AdMobBannerWithPadding() })
+
+            // Son hareketler
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -249,20 +279,10 @@ fun TransactionsScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Button(
-                        onClick = onAllTransactions,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(stringResource(R.string.view_all))
-                    }
+                    TextButton(onClick = onAllTransactions) { Text(stringResource(R.string.view_all)) }
                 }
             }
-            
-            // Transactions List
+
             if (items.isEmpty()) {
                 item {
                 GradientCard(
@@ -296,17 +316,19 @@ fun TransactionsScreen(
                     }
                 }
             } else {
-                items(items.take(5)) { tx ->
+                items(shown) { tx ->
                     ModernTransactionRow(
                         tx = tx,
                         onDelete = { tx.id?.let(viewModel::deleteTransaction) }
                     )
                 }
             }
+
+            item { Spacer(Modifier.height(8.dp)) }
         }
+
     }
-    
-    // Account Name Edit Dialog
+
     if (showEditDialog && editingAccountIndex < accountsData.size) {
         val editingAccount = accountsData[editingAccountIndex]
         AccountNameEditDialog(
@@ -319,8 +341,7 @@ fun TransactionsScreen(
             }
         )
     }
-    
-    // Add Transaction Bottom Sheet
+
     if (showAddTransactionSheet) {
         AddTransactionBottomSheet(
             categories = viewModel.categories,
@@ -333,38 +354,250 @@ fun TransactionsScreen(
     }
 }
 
+/* -------------------------- Yeni: QuickActionPill -------------------------- */
+
+@Composable
+private fun QuickActionPill(
+    label: String,
+    icon: ImageVector,
+    positive: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    val bg = if (positive) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+    else MaterialTheme.colorScheme.error.copy(alpha = 0.12f)
+
+    val border = if (positive)
+        Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary))
+    else
+        Brush.linearGradient(listOf(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.outline))
+
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(999.dp))
+            .background(bg)
+            .border(1.dp, border, RoundedCornerShape(999.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, contentDescription = null, modifier = Modifier.size(18.dp))
+        Spacer(Modifier.width(8.dp))
+        Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+private enum class TxFilter { ALL, INCOME, EXPENSE }
+
+/* -------------------------- Yardımcı UI --------------------------- */
+
+/** Gradient hesap bölümü: seçili hesap özet + gelir/gider kapsülleri */
+@Composable
+private fun GradientAccountsSection(
+    data: List<AccountData>,
+    selectedIndex: Int,
+    onSelect: (Int) -> Unit,
+    onEdit: (Int) -> Unit
+) {
+    val account = data.getOrNull(selectedIndex) ?: return
+
+    // Hero’daki hissi veren geçiş: mor->mavi (dark’ta hoş durur)
+    val gradient = Brush.linearGradient(
+        listOf(Color(0xFF6A5AE0), Color(0xFF4C8DFF))
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(22.dp))
+            .background(gradient)
+            .border(
+                1.dp,
+                Brush.linearGradient(
+                    listOf(
+                        Color.White.copy(alpha = 0.35f),
+                        Color.White.copy(alpha = 0.1f)
+                    )
+                ),
+                RoundedCornerShape(22.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Column {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = account.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                IconButton(onClick = { onEdit(selectedIndex) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Düzenle",
+                        tint = Color.White
+                    )
+                }
+            }
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = account.balance,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.White
+            )
+            Spacer(Modifier.height(12.dp))
+
+            // Kapsüller: Gelir / Gider
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Capsule(text = "↑ ${account.income}", positive = true)
+                Capsule(text = "↓ ${account.expenses}", positive = false)
+            }
+
+            // Altında küçük hesap seçicisi (dot tarzı)
+            if (data.size > 1) {
+                Spacer(Modifier.height(12.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    data.forEachIndexed { i, _ ->
+                        val selected = i == selectedIndex
+                        Box(
+                            modifier = Modifier
+                                .size(if (selected) 10.dp else 8.dp)
+                                .clip(RoundedCornerShape(999.dp))
+                                .background(
+                                    if (selected) Color.White
+                                    else Color.White.copy(alpha = 0.35f)
+                                )
+                                .clickable { onSelect(i) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** Mini kapsül */
+@Composable
+private fun Capsule(text: String, positive: Boolean) {
+    val bg = if (positive) Color(0xFF2ECC71).copy(alpha = 0.25f)
+    else Color(0xFFE74C3C).copy(alpha = 0.25f)
+
+    val border = if (positive)
+        Brush.linearGradient(listOf(Color(0xFF2ECC71), Color(0x332ECC71)))
+    else
+        Brush.linearGradient(listOf(Color(0xFFE74C3C), Color(0x33E74C3C)))
+
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(999.dp))
+            .background(bg)
+            .border(1.dp, border, RoundedCornerShape(999.dp))
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Text(text = text, color = Color.White, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+/** Bölüm başlığı + opsiyonel sağ aksiyon */
+@Composable
+private fun SectionHeader(
+    title: String,
+    actionText: String? = null,
+    onAction: (() -> Unit)? = null
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        if (actionText != null && onAction != null) {
+            TextButton(onClick = onAction) { Text(actionText) }
+        }
+    }
+}
+
+@Composable
+private fun FilterChipPill(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+    val bg by animateColorAsState(
+        targetValue = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
+        else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
+        label = "chip-bg"
+    )
+    val borderBrush = if (selected) {
+        Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary))
+    } else {
+        Brush.linearGradient(listOf(MaterialTheme.colorScheme.outline, MaterialTheme.colorScheme.outlineVariant))
+    }
+
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(999.dp))
+            .background(bg)
+            .border(1.dp, borderBrush, RoundedCornerShape(999.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp))
+        Spacer(Modifier.width(6.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium
+        )
+    }
+}
+
 @Composable
 private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
-    val context = LocalContext.current
     val amount = if (tx.type == TransactionType.INCOME) tx.amount.minorUnits else -tx.amount.minorUnits
     val isIncome = tx.type == TransactionType.INCOME
     var isHovered by remember { mutableStateOf(false) }
     val hapticFeedback = LocalHapticFeedback.current
-    
+
     val scale by animateFloatAsState(
-        targetValue = if (isHovered) 1.02f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
+        targetValue = if (isHovered) 1.015f else 1f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
         label = "scale"
     )
-    
     val rotation by animateFloatAsState(
-        targetValue = if (isHovered) 2f else 0f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
+        targetValue = if (isHovered) 1.5f else 0f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
         label = "rotation"
     )
-    
+
     ModernCard(
         modifier = Modifier
             .fillMaxWidth()
             .scale(scale)
             .rotate(rotation)
-            .clickable { 
+            .border(
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                    if (isIncome)
+                        listOf(Color(0xFF48BB78), Color(0xFF2F855A), Color(0x2248BB78))
+                    else
+                        listOf(Color(0xFFF56565), Color(0xFFE53E3E), Color(0x22F56565))
+                ),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .clickable {
                 isHovered = !isHovered
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
             }
@@ -372,7 +605,7 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
+                .padding(18.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -380,43 +613,26 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                // Beautiful Icon with Gradient Background
                 Box(
                     modifier = Modifier
-                        .size(56.dp)
+                        .size(52.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(
-                            if (isIncome) 
-                                Brush.linearGradient(
-                                    colors = listOf(
-                                        Color(0xFF48BB78),
-                                        Color(0xFF38A169)
-                                    )
-                                )
-                            else 
-                                Brush.linearGradient(
-                                    colors = listOf(
-                                        Color(0xFFF56565),
-                                        Color(0xFFE53E3E)
-                                    )
-                                )
+                            if (isIncome)
+                                Brush.linearGradient(listOf(Color(0xFF48BB78), Color(0xFF38A169)))
+                            else
+                                Brush.linearGradient(listOf(Color(0xFFF56565), Color(0xFFE53E3E)))
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = if (isIncome) "💰" else "💸",
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                    Text(text = if (isIncome) "💰" else "💸", style = MaterialTheme.typography.titleLarge)
                 }
-                
                 Spacer(modifier = Modifier.width(12.dp))
-                
                 Column {
                     Text(
                         text = if (isIncome) stringResource(R.string.income) else stringResource(R.string.expense),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = tx.note ?: stringResource(R.string.no_description),
@@ -425,29 +641,20 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                     )
                 }
             }
-            
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = formatMinor(amount),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = if (isIncome) 
-                        MaterialTheme.colorScheme.secondary 
-                    else 
-                        MaterialTheme.colorScheme.error
+                    color = if (isIncome) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                IconButton(
-                    onClick = onDelete,
-                    modifier = Modifier.size(32.dp)
-                ) {
+                Spacer(modifier = Modifier.width(6.dp))
+                IconButton(onClick = onDelete, modifier = Modifier.size(34.dp)) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = stringResource(R.string.delete),
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(20.dp)
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
             }
