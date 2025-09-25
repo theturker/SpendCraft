@@ -34,6 +34,36 @@ fun AdMobBanner(
         MobileAds.initialize(context) {}
     }
 
+    // Reklam yükleme işlemini arka planda başlat
+    LaunchedEffect(Unit) {
+        if (!isAdLoaded) {
+            val adView = AdView(context).apply {
+                setAdSize(AdSize.BANNER)
+                this.adUnitId = adUnitId
+                
+                adListener = object : AdListener() {
+                    override fun onAdLoaded() {
+                        isAdLoaded = true
+                        onAdLoaded?.invoke()
+                    }
+                    
+                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                        adError = loadAdError.message
+                        onAdFailedToLoad?.invoke(loadAdError.message)
+                    }
+                }
+                
+                loadAd(AdRequest.Builder().build())
+            }
+        }
+    }
+
+    // Reklam yüklenmediğinde hiçbir şey gösterme
+    if (!isAdLoaded) {
+        return // Reklam yüklenmediğinde hiçbir şey gösterme
+    }
+
+    // Sadece reklam yüklendiğinde göster
     AndroidView(
         modifier = modifier
             .fillMaxWidth()
@@ -59,29 +89,6 @@ fun AdMobBanner(
             }
         }
     )
-
-    // Hata durumunda placeholder göster
-    if (adError != null && !isAdLoaded) {
-        Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Reklam yüklenemedi",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
 }
 
 @Composable
