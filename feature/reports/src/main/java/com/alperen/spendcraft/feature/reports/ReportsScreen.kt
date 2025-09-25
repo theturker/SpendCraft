@@ -6,6 +6,8 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -15,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,7 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +39,12 @@ import com.alperen.spendcraft.core.ui.StatCard
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.R
 import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import kotlin.math.PI
+import kotlin.math.sqrt
 
 @Composable
 fun ReportsScreen(
@@ -52,7 +58,7 @@ fun ReportsScreen(
     val totalExpense = items.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
     val totalIncome = items.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
     val netAmount = totalIncome - totalExpense
-    
+
     // Kategori bazında harcama analizi - kategori isimleri ile
     val expenseByCategory = items
         .filter { it.type == TransactionType.EXPENSE }
@@ -63,7 +69,7 @@ fun ReportsScreen(
             Triple(categoryId, categoryName, amount)
         }
         .sortedByDescending { it.third }
-    
+
     AppScaffold(
         title = "📊 ${stringResource(R.string.reports)}",
         onBack = onBack
@@ -72,7 +78,7 @@ fun ReportsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             // Özet Kartları
             item {
@@ -96,88 +102,124 @@ fun ReportsScreen(
                     )
                 }
             }
-            
+
             // Net Bakiye Kartı
             item {
                 ModernCard {
                     Column(
-                        modifier = Modifier.padding(20.dp),
+                        modifier = Modifier.padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = stringResource(R.string.net_balance),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector),
+                                contentDescription = null,
+                                tint = if (netAmount >= 0)
+                                    MaterialTheme.colorScheme.secondary
+                                else
+                                    MaterialTheme.colorScheme.error,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.net_balance),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = formatCurrency(netAmount),
                             style = MaterialTheme.typography.displaySmall,
                             fontWeight = FontWeight.Bold,
-                            color = if (netAmount >= 0) 
-                                MaterialTheme.colorScheme.secondary 
-                            else 
+                            color = if (netAmount >= 0)
+                                MaterialTheme.colorScheme.secondary
+                            else
                                 MaterialTheme.colorScheme.error
                         )
                     }
                 }
             }
-            
+
             // AdMob Banner
             item {
                 AdMobBannerWithPadding()
             }
-            
+
             // Pie Chart - Harcama Dağılımı
             if (expenseByCategory.isNotEmpty()) {
                 item {
                     ModernCard {
                         Column(
-                            modifier = Modifier.padding(20.dp),
+                            modifier = Modifier.padding(24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                text = "📊 ${stringResource(R.string.expense_distribution)}",
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            
-                            Spacer(modifier = Modifier.height(16.dp))
-                            
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_bar_chart_vector),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = stringResource(R.string.expense_distribution),
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(18.dp))
+
                             // Pie Chart
                             ExpensePieChart(
                                 expenseByCategory = expenseByCategory,
                                 totalExpense = totalExpense,
                                 selectedIndex = selectedIndex,
                                 onSelectedIndexChanged = { selectedIndex = it },
-                                modifier = Modifier.size(200.dp)
+                                modifier = Modifier.size(220.dp)
                             )
-                            
-                            Spacer(modifier = Modifier.height(16.dp))
-                            
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
                             // Legend
-                    ExpenseLegend(
-                        expenseByCategory = expenseByCategory,
-                        totalExpense = totalExpense,
-                        selectedIndex = selectedIndex
-                    )
+                            ExpenseLegend(
+                                expenseByCategory = expenseByCategory,
+                                totalExpense = totalExpense,
+                                selectedIndex = selectedIndex
+                            )
                         }
                     }
                 }
             }
-            
-            // Harcama Dağılımı
+
+            // Harcama Dağılımı – İlk 5
             if (expenseByCategory.isNotEmpty()) {
                 item {
-                    Text(
-                        text = "📈 ${stringResource(R.string.expense_distribution)}",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = stringResource(R.string.expense_distribution),
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                 }
-                
+
                 items(expenseByCategory.take(5)) { (categoryId, categoryName, amount) ->
                     ExpenseCategoryItem(
                         categoryId = categoryId,
@@ -187,42 +229,56 @@ fun ReportsScreen(
                     )
                 }
             }
-            
+
             // İşlem İstatistikleri
             item {
                 ModernCard {
                     Column(
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(14.dp)
                     ) {
-                        Text(
-                            text = "📊 ${stringResource(R.string.transaction_statistics)}",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_speed_vector),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.transaction_statistics),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            Column {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
                                     text = stringResource(R.string.total_transactions),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
+                                Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "${items.size}",
                                     style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             }
-                            Column {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
                                     text = stringResource(R.string.income_transactions),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
+                                Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "${items.count { it.type == TransactionType.INCOME }}",
                                     style = MaterialTheme.typography.titleLarge,
@@ -230,12 +286,13 @@ fun ReportsScreen(
                                     color = MaterialTheme.colorScheme.secondary
                                 )
                             }
-                            Column {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
                                     text = stringResource(R.string.expense_transactions),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
+                                Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "${items.count { it.type == TransactionType.EXPENSE }}",
                                     style = MaterialTheme.typography.titleLarge,
@@ -267,7 +324,7 @@ private fun ExpenseCategoryItem(
         MaterialTheme.colorScheme.outline
     )
     val colorIndex = (categoryId?.toInt() ?: 0) % colors.size
-    
+
     ModernCard(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -285,12 +342,12 @@ private fun ExpenseCategoryItem(
                     .clip(RoundedCornerShape(2.dp))
                     .background(colors[colorIndex])
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = categoryName,
+                Text(
+                    text = categoryName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -300,7 +357,8 @@ private fun ExpenseCategoryItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
+            // Fiyat tek satırda
             Text(
                 text = formatCurrency(amount),
                 style = MaterialTheme.typography.titleMedium,
@@ -331,19 +389,7 @@ private fun ExpensePieChart(
         Color(0xFFEC4899), // Pink
         Color(0xFF6366F1)  // Indigo
     )
-    
-    // Animasyonlar
-    val infiniteTransition = rememberInfiniteTransition(label = "chart_animation")
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(20000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "rotation"
-    )
-    
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -361,133 +407,110 @@ private fun ExpensePieChart(
         // Arka plan glow efekti
         Box(
             modifier = Modifier
-                .size(280.dp)
+                .size(260.dp)
                 .background(
                     Brush.radialGradient(
                         colors = listOf(
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                             Color.Transparent
                         ),
-                        radius = 140f
+                        radius = 130f
                     ),
                     shape = CircleShape
                 )
         )
-        
-        androidx.compose.foundation.Canvas(
+
+        Canvas(
             modifier = Modifier
-                .size(240.dp)
-                .pointerInput(expenseByCategory) {
+                .size(200.dp)
+                .pointerInput(expenseByCategory, totalExpense, selectedIndex) {
                     detectTapGestures { offset ->
                         val canvasSize = minOf(size.width, size.height)
-                        val radius = canvasSize / 2f * 0.8f
-                        val center = androidx.compose.ui.geometry.Offset(
-                            size.width / 2f,
-                            size.height / 2f
-                        )
-                        
-                        val distance = kotlin.math.sqrt(
-                            (offset.x - center.x) * (offset.x - center.x) + 
-                            (offset.y - center.y) * (offset.y - center.y)
-                        )
-                        
-                        if (distance <= radius) {
-                            // Açıyı hesapla (Canvas -90 dereceden başlar, yani üstten)
-                            val angle = kotlin.math.atan2(
-                                offset.y - center.y,
-                                offset.x - center.x
-                            ) * 180f / kotlin.math.PI
-                            
-                            // Açıyı 0-360 aralığına normalize et (üstten başlayarak saat yönünde)
-                            val normalizedAngle = (angle + 90f + 360f) % 360f
-                            
-                            var currentAngle = 0f
-                            var foundIndex = -1
-                            
-                            expenseByCategory.forEachIndexed { index, (_, _, amount) ->
-                                val sweepAngle = (amount.toFloat() / totalExpense.toFloat()) * 360f
-                                
-                                // Segment'in başlangıç ve bitiş açılarını kontrol et
-                                if (normalizedAngle >= currentAngle && normalizedAngle < currentAngle + sweepAngle) {
-                                    foundIndex = index
+                        val radius = canvasSize / 2f * 0.75f
+                        val center = Offset(size.width / 2f, size.height / 2f)
+
+                        val dx = offset.x - center.x
+                        val dy = offset.y - center.y
+                        val distance = sqrt(dx * dx + dy * dy)
+
+                        if (distance <= radius && totalExpense > 0) {
+                            // 0° tepe (yukarı), saat yönü artacak şekilde açı
+                            val angleFromTopCw =
+                                ((Math.toDegrees(kotlin.math.atan2(dy, dx).toDouble()) + 450.0) % 360.0).toFloat()
+
+                            var acc = 0f
+                            var found = -1
+                            expenseByCategory.forEachIndexed { i, (_, _, amount) ->
+                                val sweep = (amount.toFloat() / totalExpense.toFloat()) * 360f
+                                if (angleFromTopCw >= acc && angleFromTopCw < acc + sweep) {
+                                    found = i
                                     return@forEachIndexed
                                 }
-                                currentAngle += sweepAngle
+                                acc += sweep
                             }
-                            
-                            onSelectedIndexChanged(if (foundIndex == selectedIndex) -1 else foundIndex)
+                            onSelectedIndexChanged(if (found == selectedIndex) -1 else found)
                         }
                     }
                 }
         ) {
             val canvasSize = minOf(size.width, size.height)
-            val radius = canvasSize / 2f * 0.8f
-            val center = androidx.compose.ui.geometry.Offset(
-                size.width / 2f,
-                size.height / 2f
-            )
+            val radius = canvasSize / 2f * 0.75f
+            val center = Offset(size.width / 2f, size.height / 2f)
 
-            var startAngle = -90f // Start from top
+            var startAngle = -90f // tepe
 
             expenseByCategory.forEachIndexed { index, (_, _, amount) ->
                 val sweepAngle = (amount.toFloat() / totalExpense.toFloat()) * 360f
                 val color = colors[index % colors.size]
                 val isSelected = selectedIndex == index
-                val strokeWidth = if (isSelected) 6.dp.toPx() else 0f
-                val radiusOffset = if (isSelected) 15.dp.toPx() else 0f
-                
-                // Calculate offset for selected segment
+                val radiusOffset = if (isSelected) 20.dp.toPx() else 0f
+
+                // Seçili dilimi dışarı itme ofseti
                 val midAngle = startAngle + sweepAngle / 2f
-                val offsetX = kotlin.math.cos(midAngle * kotlin.math.PI / 180.0).toFloat() * radiusOffset
-                val offsetY = kotlin.math.sin(midAngle * kotlin.math.PI / 180.0).toFloat() * radiusOffset
-                val offsetCenter = androidx.compose.ui.geometry.Offset(
-                    center.x + offsetX,
-                    center.y + offsetY
-                )
-                
-                // Gradient efekti için
-                val gradientColors = listOf(
-                    color,
-                    color.copy(alpha = 0.8f)
-                )
-                
-                // Ana segment
+                val offsetX = cos(midAngle * PI / 180.0).toFloat() * radiusOffset
+                val offsetY = sin(midAngle * PI / 180.0).toFloat() * radiusOffset
+                val offsetCenter = Offset(center.x + offsetX, center.y + offsetY)
+
+                // 1) Seçiliyse arka glow
+                if (isSelected) {
+                    drawArc(
+                        color = color.copy(alpha = 0.30f),
+                        startAngle = startAngle,
+                        sweepAngle = sweepAngle,
+                        useCenter = true,
+                        topLeft = Offset(offsetCenter.x - radius - 10.dp.toPx(), offsetCenter.y - radius - 10.dp.toPx()),
+                        size = Size((radius + 10.dp.toPx()) * 2, (radius + 10.dp.toPx()) * 2),
+                        style = Fill
+                    )
+                }
+
+                // 2) Ana dilim (daima DOLU çiz)
                 drawArc(
                     color = color,
                     startAngle = startAngle,
                     sweepAngle = sweepAngle,
                     useCenter = true,
-                    topLeft = androidx.compose.ui.geometry.Offset(
-                        offsetCenter.x - radius,
-                        offsetCenter.y - radius
-                    ),
-                    size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
-                    style = if (strokeWidth > 0) Stroke(width = strokeWidth) else androidx.compose.ui.graphics.drawscope.Fill
+                    topLeft = Offset(offsetCenter.x - radius, offsetCenter.y - radius),
+                    size = Size(radius * 2, radius * 2),
+                    style = Fill
                 )
-                
-                // Seçili segment için glow efekti
+
+                // 3) Seçiliyse üstüne ince kontur (boşluk görünmez)
                 if (isSelected) {
                     drawArc(
-                        color = color.copy(alpha = 0.3f),
+                        color = color.copy(alpha = 0.9f),
                         startAngle = startAngle,
                         sweepAngle = sweepAngle,
                         useCenter = true,
-                        topLeft = androidx.compose.ui.geometry.Offset(
-                            offsetCenter.x - radius - 8.dp.toPx(),
-                            offsetCenter.y - radius - 8.dp.toPx()
-                        ),
-                        size = androidx.compose.ui.geometry.Size(
-                            (radius + 8.dp.toPx()) * 2, 
-                            (radius + 8.dp.toPx()) * 2
-                        ),
-                        style = androidx.compose.ui.graphics.drawscope.Fill
+                        topLeft = Offset(offsetCenter.x - radius, offsetCenter.y - radius),
+                        size = Size(radius * 2, radius * 2),
+                        style = Stroke(width = 2.dp.toPx())
                     )
                 }
-                
+
                 startAngle += sweepAngle
             }
         }
-        
     }
 }
 
@@ -509,37 +532,50 @@ private fun ExpenseLegend(
         Color(0xFFEC4899), // Pink
         Color(0xFF6366F1)  // Indigo
     )
-    
+
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         expenseByCategory.forEachIndexed { index, (_, categoryName, amount) ->
             val percentage = if (totalExpense > 0) (amount.toFloat() / totalExpense.toFloat() * 100) else 0f
             val color = colors[index % colors.size]
             val isSelected = selectedIndex == index
-            
+
+            // Kart zemini rengi (track için de bunu kullanacağız)
+            val containerColor =
+                if (isSelected) color.copy(alpha = 0.15f)
+                else MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(
-                        elevation = if (isSelected) 12.dp else 8.dp,
+                        elevation = if (isSelected) 12.dp else 4.dp,
                         shape = RoundedCornerShape(16.dp),
-                        ambientColor = if (isSelected) color.copy(alpha = 0.3f) else color.copy(alpha = 0.1f),
-                        spotColor = if (isSelected) color.copy(alpha = 0.3f) else color.copy(alpha = 0.1f)
+                        ambientColor = if (isSelected) color.copy(alpha = 0.4f) else Color.Transparent,
+                        spotColor = if (isSelected) color.copy(alpha = 0.4f) else Color.Transparent
                     ),
                 colors = CardDefaults.cardColors(
-                    containerColor = if (isSelected) 
-                        color.copy(alpha = 0.1f) 
-                    else 
-                        MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+                    containerColor = MaterialTheme.colorScheme.surface // seçili değilmiş gibi hep aynı
                 ),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
+                border = if (isSelected) {
+                    BorderStroke(
+                        2.dp,
+                        Brush.linearGradient(
+                            colors = listOf(
+                                color.copy(alpha = 0.8f),
+                                color.copy(alpha = 0.4f)
+                            )
+                        )
+                    )
+                } else null
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp),
+                        .padding(14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -547,10 +583,10 @@ private fun ExpenseLegend(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Enhanced color indicator with gradient
+                        // Renk göstergesi
                         Box(
                             modifier = Modifier
-                                .size(24.dp)
+                                .size(28.dp)
                                 .background(
                                     Brush.radialGradient(
                                         colors = listOf(
@@ -559,12 +595,6 @@ private fun ExpenseLegend(
                                         )
                                     ),
                                     shape = CircleShape
-                                )
-                                .shadow(
-                                    elevation = 6.dp,
-                                    shape = CircleShape,
-                                    ambientColor = color.copy(alpha = 0.4f),
-                                    spotColor = color.copy(alpha = 0.4f)
                                 )
                         )
 
@@ -575,29 +605,23 @@ private fun ExpenseLegend(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                // Progress bar
+                                // Progress bar track — seçiliyken kart zemini ile aynı
                                 Box(
                                     modifier = Modifier
-                                        .width(60.dp)
-                                        .height(4.dp)
-                                        .background(
-                                            MaterialTheme.colorScheme.surfaceVariant,
-                                            shape = RoundedCornerShape(2.dp)
-                                        )
+                                        .width(70.dp)
+                                        .height(6.dp)
+                                        .background(containerColor, shape = RoundedCornerShape(3.dp))
                                 ) {
                                     Box(
                                         modifier = Modifier
                                             .fillMaxHeight()
-                                            .width((60.dp * (percentage / 100f)).coerceAtLeast(4.dp))
-                                            .background(
-                                                color,
-                                                shape = RoundedCornerShape(2.dp)
-                                            )
+                                            .width((70.dp * (percentage / 100f)).coerceAtLeast(6.dp))
+                                            .background(color, shape = RoundedCornerShape(3.dp))
                                     )
                                 }
                                 Text(
@@ -610,19 +634,12 @@ private fun ExpenseLegend(
                         }
                     }
 
-                    Column(
-                        horizontalAlignment = Alignment.End
-                    ) {
+                    Column(horizontalAlignment = Alignment.End) {
                         Text(
                             text = formatCurrency(amount),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "₺${(amount / 100).toString()}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -636,16 +653,12 @@ private fun formatCurrency(amount: Long): String {
     val abs = kotlin.math.abs(amount)
     val major = abs / 100
     val cents = abs % 100
-    
+
     val majorFormatted = major.toString().reversed().chunked(3).joinToString(".").reversed()
-    
+
     return if (cents > 0) {
         "$sign₺$majorFormatted,${cents.toString().padStart(2, '0')}"
     } else {
         "$sign₺$majorFormatted"
     }
 }
-
-
-
-
