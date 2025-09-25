@@ -189,5 +189,8 @@
     
     <!-- AdMob -->
     <string name="admob_app_id">ca-app-pub-3199248450820147~9439645081</string>
-    <string name="admob_banner_id">ca-app-pub-3199248450820147/4179918859</string>
+    <!-- Test Banner ID (Google Demo) -->
+    <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!-- Production Banner ID (Original) -->
+    <!-- <string name="admob_banner_id">ca-app-pub-3199248450820147/4179918859</string> -->
 </resources>

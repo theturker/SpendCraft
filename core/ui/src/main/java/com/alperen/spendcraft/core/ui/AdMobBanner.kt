@@ -28,67 +28,54 @@ fun AdMobBanner(
     val context = LocalContext.current
     var isAdLoaded by remember { mutableStateOf(false) }
     var adError by remember { mutableStateOf<String?>(null) }
+    var adView by remember { mutableStateOf<AdView?>(null) }
 
-    // AdMob'u başlat
-    LaunchedEffect(Unit) {
+    // AdMob'u başlat ve reklamı yükle
+    DisposableEffect(adUnitId) {
         MobileAds.initialize(context) {}
-    }
 
-    // Reklam yükleme işlemini arka planda başlat
-    LaunchedEffect(Unit) {
-        if (!isAdLoaded) {
-            val adView = AdView(context).apply {
-                setAdSize(AdSize.BANNER)
-                this.adUnitId = adUnitId
-                
-                adListener = object : AdListener() {
-                    override fun onAdLoaded() {
-                        isAdLoaded = true
-                        onAdLoaded?.invoke()
-                    }
-                    
-                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        adError = loadAdError.message
-                        onAdFailedToLoad?.invoke(loadAdError.message)
-                    }
+        val newAdView = AdView(context).apply {
+            setAdSize(AdSize.BANNER)
+            this.adUnitId = adUnitId
+            adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    isAdLoaded = true
+                    onAdLoaded?.invoke()
                 }
-                
-                loadAd(AdRequest.Builder().build())
-            }
-        }
-    }
 
-    // Reklam yüklenmediğinde hiçbir şey gösterme
-    if (!isAdLoaded) {
-        return // Reklam yüklenmediğinde hiçbir şey gösterme
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    adError = loadAdError.message
+                    isAdLoaded = false // Reklam yüklenemediğinde gizle
+                    onAdFailedToLoad?.invoke(loadAdError.message)
+                }
+            }
+            loadAd(AdRequest.Builder().build())
+        }
+        adView = newAdView
+
+        onDispose {
+            newAdView.destroy()
+        }
     }
 
     // Sadece reklam yüklendiğinde göster
-    AndroidView(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(50.dp),
-        factory = { context ->
-            AdView(context).apply {
-                setAdSize(AdSize.BANNER)
-                this.adUnitId = adUnitId
-                
-                adListener = object : AdListener() {
-                    override fun onAdLoaded() {
-                        isAdLoaded = true
-                        onAdLoaded?.invoke()
-                    }
-                    
-                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        adError = loadAdError.message
-                        onAdFailedToLoad?.invoke(loadAdError.message)
-                    }
+    if (isAdLoaded && adView != null) {
+        AndroidView(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            factory = {
+                adView ?: AdView(it).apply { // Fallback if adView is null, though it shouldn't be
+                    setAdSize(AdSize.BANNER)
+                    this.adUnitId = adUnitId
+                    loadAd(AdRequest.Builder().build())
                 }
-                
-                loadAd(AdRequest.Builder().build())
+            },
+            update = { view ->
+                // Reklam görünümünü güncellemek gerekirse buraya eklenebilir
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
