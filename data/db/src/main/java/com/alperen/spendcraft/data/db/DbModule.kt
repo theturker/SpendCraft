@@ -6,13 +6,17 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.alperen.spendcraft.data.db.dao.AccountDao
+import com.alperen.spendcraft.data.db.dao.AIUsageDao
 import com.alperen.spendcraft.data.db.dao.BudgetAlertDao
 import com.alperen.spendcraft.data.db.dao.BudgetDao
 import com.alperen.spendcraft.data.db.dao.CategoryDao
 import com.alperen.spendcraft.data.db.dao.DailyEntryDao
+import com.alperen.spendcraft.data.db.dao.RecurringRuleDao
+import com.alperen.spendcraft.data.db.dao.SharingMemberDao
 import com.alperen.spendcraft.data.db.dao.TxDao
 import com.alperen.spendcraft.data.db.entities.AccountEntity
 import com.alperen.spendcraft.data.db.entities.CategoryEntity
+import com.alperen.spendcraft.data.db.migrations.MIGRATION_4_TO_5
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -90,7 +94,7 @@ object DbModule {
     @Singleton
     fun provideDb(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "spendcraft.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_TO_5)
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                     super.onCreate(db)
@@ -100,7 +104,12 @@ object DbModule {
                         // Insert default account
                         database.accountDao().insertAll(
                             listOf(
-                                AccountEntity(name = "Ana Hesap", isDefault = true)
+                                AccountEntity(
+                                    name = "Ana Hesap", 
+                                    type = "CASH",
+                                    currency = "TRY",
+                                    isDefault = true
+                                )
                             )
                         )
                         
@@ -138,6 +147,15 @@ object DbModule {
     
     @Provides
     fun provideBudgetAlertDao(db: AppDatabase): BudgetAlertDao = db.budgetAlertDao()
+    
+    @Provides
+    fun provideRecurringRuleDao(db: AppDatabase): RecurringRuleDao = db.recurringRuleDao()
+    
+    @Provides
+    fun provideSharingMemberDao(db: AppDatabase): SharingMemberDao = db.sharingMemberDao()
+    
+    @Provides
+    fun provideAIUsageDao(db: AppDatabase): AIUsageDao = db.aiUsageDao()
     
 }
 

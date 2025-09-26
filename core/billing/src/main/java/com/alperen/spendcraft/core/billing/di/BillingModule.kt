@@ -3,6 +3,7 @@ package com.alperen.spendcraft.core.billing.di
 import android.content.Context
 import com.alperen.spendcraft.core.billing.BillingManager
 import com.alperen.spendcraft.core.billing.BillingManagerImpl
+import com.alperen.spendcraft.core.billing.BillingProductValidator
 import com.alperen.spendcraft.core.billing.BillingRepository
 import com.alperen.spendcraft.core.premium.PremiumStateDataStore
 import dagger.Module
@@ -24,10 +25,17 @@ object BillingModule {
     
     @Provides
     @Singleton
+    fun provideBillingProductValidator(): BillingProductValidator {
+        return BillingProductValidator()
+    }
+    
+    @Provides
+    @Singleton
     fun provideBillingRepository(
         billingManager: BillingManager,
-        premiumStateDataStore: PremiumStateDataStore
+        premiumStateDataStore: PremiumStateDataStore,
+        productValidator: BillingProductValidator
     ): BillingRepository {
-        return BillingRepository(billingManager, premiumStateDataStore)
+        return BillingRepository(billingManager, premiumStateDataStore, productValidator)
     }
 }

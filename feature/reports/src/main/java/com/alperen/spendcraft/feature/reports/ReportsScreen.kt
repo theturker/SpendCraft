@@ -39,6 +39,7 @@ import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.StatCard
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.R
+import com.alperen.spendcraft.core.ui.charts.*
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,6 +55,7 @@ fun ReportsScreen(
     onBack: () -> Unit = {}
 ) {
     var selectedIndex by remember { mutableStateOf(-1) }
+    var showBarChart by remember { mutableStateOf(false) }
     val items by transactionsFlow.collectAsState()
     val categories by categoriesFlow.collectAsState()
     val totalExpense = items.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
@@ -158,17 +160,127 @@ fun ReportsScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_bar_chart_vector),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.expense_distribution),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                                
+                                // Toggle Button
+                                OutlinedButton(
+                                    onClick = { showBarChart = !showBarChart },
+                                    modifier = Modifier.height(32.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(
+                                            if (showBarChart) com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector 
+                                            else com.alperen.spendcraft.core.ui.R.drawable.ic_bar_chart_vector
+                                        ),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = if (showBarChart) "Bar" else "Pie",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(18.dp))
+
+                            if (showBarChart) {
+                                // Bar Chart
+                                val barData = expenseByCategory.take(8).mapIndexed { index, (categoryId, categoryName, amount) ->
+                                    val colors = listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.secondary,
+                                        MaterialTheme.colorScheme.tertiary,
+                                        MaterialTheme.colorScheme.error,
+                                        MaterialTheme.colorScheme.outline
+                                    )
+                                    BarData(
+                                        id = categoryId.toString(),
+                                        value = amount.toFloat(),
+                                        label = categoryName.take(8), // Kısa etiket
+                                        color = colors[index % colors.size]
+                                    )
+                                }
+                                
+                                BarChart(
+                                    data = barData,
+                                    onBarClick = { barId ->
+                                        val index = barData.indexOfFirst { it.id == barId }
+                                        selectedIndex = if (selectedIndex == index) -1 else index
+                                    }
+                                )
+                            } else {
+                                // Pie Chart
+                                val pieData = expenseByCategory.mapIndexed { index, (categoryId, categoryName, amount) ->
+                                    val colors = listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.secondary,
+                                        MaterialTheme.colorScheme.tertiary,
+                                        MaterialTheme.colorScheme.error,
+                                        MaterialTheme.colorScheme.outline
+                                    )
+                                    PieSlice(
+                                        id = categoryId.toString(),
+                                        value = amount.toFloat(),
+                                        label = categoryName,
+                                        color = colors[index % colors.size]
+                                    )
+                                }
+                                
+                                PieChart(
+                                    data = pieData,
+                                    onSliceClick = { sliceId ->
+                                        val index = pieData.indexOfFirst { it.id == sliceId }
+                                        selectedIndex = if (selectedIndex == index) -1 else index
+                                    },
+                                    modifier = Modifier.size(220.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Bar Chart - Kategori Harcamaları
+            if (expenseByCategory.isNotEmpty()) {
+                item {
+                    ModernCard {
+                        Column(
+                            modifier = Modifier.padding(24.dp)
+                        ) {
+                            Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Icon(
-                                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_bar_chart_vector),
+                                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector),
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Text(
-                                    text = stringResource(R.string.expense_distribution),
+                                    text = "Kategori Harcamaları",
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
@@ -177,25 +289,29 @@ fun ReportsScreen(
 
                             Spacer(modifier = Modifier.height(18.dp))
 
-                            // Pie Chart
-                            ExpensePieChart(
-                                expenseByCategory = expenseByCategory,
-                                totalExpense = totalExpense,
-                                selectedIndex = selectedIndex,
-                                onSelectedIndexChanged = { selectedIndex = it },
-                                modifier = Modifier.size(220.dp)
+                            val barData = expenseByCategory.take(8).mapIndexed { index, (categoryId, categoryName, amount) ->
+                                val colors = listOf(
+                                    MaterialTheme.colorScheme.primary,
+                                    MaterialTheme.colorScheme.secondary,
+                                    MaterialTheme.colorScheme.tertiary,
+                                    MaterialTheme.colorScheme.error,
+                                    MaterialTheme.colorScheme.outline
+                                )
+                                BarData(
+                                    id = categoryId.toString(),
+                                    value = amount.toFloat(),
+                                    label = categoryName.take(8), // Kısa etiket
+                                    color = colors[index % colors.size]
+                                )
+                            }
+                            
+                            BarChart(
+                                data = barData,
+                                onBarClick = { barId ->
+                                    val index = barData.indexOfFirst { it.id == barId }
+                                    selectedIndex = if (selectedIndex == index) -1 else index
+                                }
                             )
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            // Legend
-                            ExpenseLegend(
-                                expenseByCategory = expenseByCategory,
-                                totalExpense = totalExpense,
-                                selectedIndex = selectedIndex,
-                                onSelectedIndexChanged = { selectedIndex = it }   // ← eklendi
-                            )
-
                         }
                     }
                 }

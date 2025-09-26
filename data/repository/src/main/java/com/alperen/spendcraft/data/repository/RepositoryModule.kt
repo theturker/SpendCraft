@@ -1,5 +1,10 @@
 package com.alperen.spendcraft.data.repository
 
+import com.alperen.spendcraft.core.ai.AIKeyManager
+import com.alperen.spendcraft.core.ai.GroqClient
+import com.alperen.spendcraft.core.billing.BillingRepository
+import com.alperen.spendcraft.core.premium.PremiumStateDataStore
+import com.alperen.spendcraft.data.db.dao.AIUsageDao
 import com.alperen.spendcraft.data.db.dao.AccountDao
 import com.alperen.spendcraft.data.db.dao.BudgetAlertDao
 import com.alperen.spendcraft.data.db.dao.BudgetDao
@@ -41,6 +46,16 @@ object RepositoryModule {
         txDao: TxDao,
         categoryDao: CategoryDao
     ): BudgetRepository = BudgetRepositoryImpl(budgetDao, budgetAlertDao, txDao, categoryDao)
+    
+    @Provides
+    @Singleton
+    fun provideAIRepository(
+        groqClient: GroqClient,
+        aiUsageDao: AIUsageDao,
+        billingRepository: BillingRepository,
+        premiumStateDataStore: PremiumStateDataStore,
+        aiKeyManager: AIKeyManager
+    ): AIRepository = AIRepository(groqClient, aiUsageDao, billingRepository, premiumStateDataStore, aiKeyManager)
 
 }
 

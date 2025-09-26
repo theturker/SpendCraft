@@ -23,6 +23,7 @@ include(":core:ui")
 include(":core:analytics")
 include(":core:billing")
 include(":core:premium")
+include(":core:ai")
 
 include(":domain")
 
@@ -33,7 +34,15 @@ include(":feature:transactions")
 include(":feature:reports")
 include(":feature:paywall")
 include(":feature:premiumdebug")
-// include(":feature:settings") // App modülünde oluşturuldu
+include(":feature:ai")
+include(":feature:settings")
+include(":feature:accounts")
+include(":feature:recurrence")
+include(":feature:sharing")
+include(":feature:dashboard")
+include(":feature:notifications")
+include(":feature:onboarding")
+include(":feature:achievements")
 
 include(":tools:export")
 

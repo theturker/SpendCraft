@@ -4,21 +4,37 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.alperen.spendcraft.data.db.dao.AccountDao
+import com.alperen.spendcraft.data.db.dao.AIUsageDao
 import com.alperen.spendcraft.data.db.dao.BudgetAlertDao
 import com.alperen.spendcraft.data.db.dao.BudgetDao
 import com.alperen.spendcraft.data.db.dao.CategoryDao
 import com.alperen.spendcraft.data.db.dao.DailyEntryDao
+import com.alperen.spendcraft.data.db.dao.RecurringRuleDao
+import com.alperen.spendcraft.data.db.dao.SharingMemberDao
 import com.alperen.spendcraft.data.db.dao.TxDao
 import com.alperen.spendcraft.data.db.entities.AccountEntity
+import com.alperen.spendcraft.data.db.entities.AIUsageEntity
 import com.alperen.spendcraft.data.db.entities.BudgetAlertEntity
 import com.alperen.spendcraft.data.db.entities.BudgetEntity
 import com.alperen.spendcraft.data.db.entities.CategoryEntity
 import com.alperen.spendcraft.data.db.entities.DailyEntryEntity
+import com.alperen.spendcraft.data.db.entities.RecurringRuleEntity
+import com.alperen.spendcraft.data.db.entities.SharingMemberEntity
 import com.alperen.spendcraft.data.db.entities.TransactionEntity
 
 @Database(
-    entities = [TransactionEntity::class, CategoryEntity::class, AccountEntity::class, DailyEntryEntity::class, BudgetEntity::class, BudgetAlertEntity::class],
-    version = 4,
+    entities = [
+        TransactionEntity::class, 
+        CategoryEntity::class, 
+        AccountEntity::class, 
+        DailyEntryEntity::class, 
+        BudgetEntity::class, 
+        BudgetAlertEntity::class,
+        RecurringRuleEntity::class,
+        SharingMemberEntity::class,
+        AIUsageEntity::class
+    ],
+    version = 5,
     exportSchema = true
 )
 @TypeConverters()
@@ -29,6 +45,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun dailyEntryDao(): DailyEntryDao
     abstract fun budgetDao(): BudgetDao
     abstract fun budgetAlertDao(): BudgetAlertDao
+    abstract fun recurringRuleDao(): RecurringRuleDao
+    abstract fun sharingMemberDao(): SharingMemberDao
+    abstract fun aiUsageDao(): AIUsageDao
 }
 
 

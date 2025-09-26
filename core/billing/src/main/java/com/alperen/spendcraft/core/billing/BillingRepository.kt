@@ -20,7 +20,8 @@ import javax.inject.Singleton
 @Singleton
 class BillingRepository @Inject constructor(
     private val billingManager: BillingManager,
-    private val premiumStateDataStore: PremiumStateDataStore
+    private val premiumStateDataStore: PremiumStateDataStore,
+    private val productValidator: BillingProductValidator
 ) {
     
     val isPremium: Flow<Boolean> = premiumStateDataStore.isPremium
@@ -29,7 +30,8 @@ class BillingRepository @Inject constructor(
     
     private val productIds = listOf(
         "premium_monthly",
-        "premium_yearly", 
+        "premium_yearly",
+        "premium_lifetime",
         "ai_weekly"
     )
     
@@ -40,6 +42,17 @@ class BillingRepository @Inject constructor(
             
             // Query products
             billingManager.queryProducts(productIds)
+            
+            // Validate products
+            val products = billingManager.productDetailsFlow.first()
+            val validationResult = productValidator.validateProducts(products)
+            
+            if (!validationResult.isValid) {
+                android.util.Log.w("BillingRepository", "Product validation failed: $validationResult")
+            }
+            
+            // Log product details for debugging
+            productValidator.logProductDetails(products)
             
             // Refresh purchases to check current state
             refreshPurchases()
@@ -58,8 +71,19 @@ class BillingRepository @Inject constructor(
         return performPurchase(activity, "premium_yearly")
     }
     
+    suspend fun buyLifetime(activity: Activity): Result<Unit> {
+        return performPurchase(activity, "premium_lifetime")
+    }
+    
     suspend fun buyAIWeekly(activity: Activity): Result<Unit> {
         return performPurchase(activity, "ai_weekly")
+    }
+    
+    suspend fun hasInappProduct(productId: String): Boolean {
+        return billingManager.purchasesFlow.first().any { purchase ->
+            purchase.products.contains(productId) && 
+            purchase.purchaseState == Purchase.PurchaseState.PURCHASED
+        }
     }
     
     private suspend fun performPurchase(activity: Activity, productId: String): Result<Unit> {
@@ -114,8 +138,8 @@ class BillingRepository @Inject constructor(
             // Check if user has any active premium purchases
             val hasActivePremium = purchases.any { purchase ->
                 when (purchase.products.firstOrNull()) {
-                    "premium_monthly", "premium_yearly", "ai_weekly" -> {
-                        // For subscriptions, check if they're active
+                    "premium_monthly", "premium_yearly", "premium_lifetime" -> {
+                        // For subscriptions and lifetime, check if they're active
                         purchase.purchaseState == Purchase.PurchaseState.PURCHASED
                     }
                     else -> false

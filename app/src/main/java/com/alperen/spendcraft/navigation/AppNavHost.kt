@@ -18,6 +18,15 @@ import com.alperen.spendcraft.feature.settings.ui.CategoryManagementScreen
 import com.alperen.spendcraft.feature.paywall.PaywallScreen
 import com.alperen.spendcraft.feature.paywall.navigation.PaywallNavigation
 import com.alperen.spendcraft.feature.premiumdebug.PremiumDebugScreen
+import com.alperen.spendcraft.feature.ai.AISuggestionsScreen
+import com.alperen.spendcraft.feature.settings.AISettingsScreen
+import com.alperen.spendcraft.feature.accounts.AccountsScreen
+import com.alperen.spendcraft.feature.recurrence.RecurringListScreen
+import com.alperen.spendcraft.feature.sharing.SharingScreen
+import com.alperen.spendcraft.feature.dashboard.DashboardScreen
+import com.alperen.spendcraft.feature.notifications.NotificationsScreen
+import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
+import com.alperen.spendcraft.feature.achievements.AchievementsScreen
 import com.alperen.spendcraft.navigation.DeepLinkHandler
 
 object Routes {
@@ -30,8 +39,17 @@ object Routes {
     const val CATEGORY_MANAGEMENT = "category_management"
     const val BUDGET_MANAGEMENT = "budget_management"
     const val ALL_TRANSACTIONS = "all_transactions"
+    const val AI_SUGGESTIONS = "ai_suggestions"
+    // AI_SETTINGS removed - API key is hardcoded
     const val PAYWALL = PaywallNavigation.ROUTE_PAYWALL
     const val PREMIUM_DEBUG = "premium_debug"
+    const val ACCOUNTS = "accounts"
+    const val RECURRING = "recurring"
+    const val SHARING = "sharing"
+    const val DASHBOARD = "dashboard"
+    const val NOTIFICATIONS = "notifications"
+    const val ONBOARDING = "onboarding"
+    const val ACHIEVEMENTS = "achievements"
 }
 
 @Composable
@@ -132,6 +150,28 @@ fun AppNavHost(
                 onNavigateToPremiumDebug = {
                     navController.navigate(Routes.PREMIUM_DEBUG)
                 },
+                onNavigateToAISuggestions = {
+                    navController.navigate(Routes.AI_SUGGESTIONS)
+                },
+                // AI Settings removed - API key is hardcoded
+                onNavigateToAccounts = {
+                    navController.navigate(Routes.ACCOUNTS)
+                },
+                onNavigateToRecurring = {
+                    navController.navigate(Routes.RECURRING)
+                },
+                onNavigateToSharing = {
+                    navController.navigate(Routes.SHARING)
+                },
+                onNavigateToDashboard = {
+                    navController.navigate(Routes.DASHBOARD)
+                },
+                onNavigateToNotifications = {
+                    navController.navigate(Routes.NOTIFICATIONS)
+                },
+                onNavigateToAchievements = {
+                    navController.navigate(Routes.ACHIEVEMENTS)
+                },
                 onBack = { navController.popBackStack() }
             )
         }
@@ -147,30 +187,7 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() }
             )
         }
-        composable(Routes.BUDGET_MANAGEMENT) {
-            val budgetViewModel: com.alperen.spendcraft.feature.budget.BudgetViewModel = hiltViewModel()
-            val billingRepository: com.alperen.spendcraft.core.billing.BillingRepository = hiltViewModel()
-            val isPremium = billingRepository.isPremium.collectAsState(initial = false).value
-            
-            com.alperen.spendcraft.feature.budget.ui.BudgetManagementScreen(
-                budgets = budgetViewModel.budgets.collectAsState(initial = emptyList()).value,
-                categories = budgetViewModel.categories.collectAsState(initial = emptyList()).value,
-                spentAmounts = budgetViewModel.spentAmounts.collectAsState(initial = emptyMap()).value,
-                isPremium = isPremium,
-                onAddBudget = { budget -> 
-                    budgetViewModel.addBudget(budget)
-                },
-                onUpdateBudget = { budget -> 
-                    budgetViewModel.updateBudget(budget)
-                },
-                onDeleteBudget = { categoryId -> 
-                    budgetViewModel.deleteBudget(categoryId)
-                },
-                onBack = { navController.popBackStack() },
-                onNavigateToPaywall = { navController.navigate(Routes.PAYWALL) },
-                onCalculateSpentAmounts = { budgetViewModel.calculateSpentAmounts() }
-            )
-        }
+        // Budget management will be implemented later
         composable(Routes.ALL_TRANSACTIONS) {
             com.alperen.spendcraft.feature.transactions.ui.AllTransactionsScreen(
                 transactions = vm.items.collectAsState(initial = emptyList()).value,
@@ -190,6 +207,106 @@ fun AppNavHost(
         composable(Routes.PREMIUM_DEBUG) {
             PremiumDebugScreen(
                 onNavigateUp = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.AI_SUGGESTIONS) {
+            val aiViewModel: com.alperen.spendcraft.feature.ai.AIViewModel = hiltViewModel()
+            val isPremium = aiViewModel.billingRepository.isPremium.collectAsState(initial = false).value
+            
+            // Get transaction data for AI analysis
+            val transactions = vm.items.collectAsState(initial = emptyList()).value
+            val categories = vm.categories.collectAsState(initial = emptyList()).value
+            
+            // Calculate category breakdown
+            val categoryBreakdown = transactions
+                .filter { it.type == com.alperen.spendcraft.core.model.TransactionType.EXPENSE }
+                .groupBy { it.categoryId }
+                .mapValues { (categoryId, transactions) ->
+                    transactions.sumOf { it.amount.minorUnits }
+                }
+                .mapKeys { (categoryId, _) ->
+                    categories.find { it.id == categoryId }?.name ?: "Bilinmeyen"
+                }
+            
+            val totalExpense = transactions.filter { it.type == com.alperen.spendcraft.core.model.TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
+            val totalIncome = transactions.filter { it.type == com.alperen.spendcraft.core.model.TransactionType.INCOME }.sumOf { it.amount.minorUnits }
+            val savings = totalIncome - totalExpense
+            
+            AISuggestionsScreen(
+                aiRepository = aiViewModel.aiRepository,
+                categoryBreakdown = categoryBreakdown,
+                totalExpense = totalExpense,
+                income = totalIncome,
+                expenses = totalExpense,
+                savings = savings,
+                isPremium = isPremium,
+                onUpgrade = { navController.navigate(Routes.PAYWALL) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        // AI Settings removed - API key is hardcoded
+        composable(Routes.ACCOUNTS) {
+            // Mock implementation - gerçek uygulamada repository'den veri gelecek
+            AccountsScreen(
+                accountsFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
+                onAddAccount = { /* TODO: Implement */ },
+                onEditAccount = { /* TODO: Implement */ },
+                onArchiveAccount = { /* TODO: Implement */ },
+                onSetDefaultAccount = { /* TODO: Implement */ },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.RECURRING) {
+            val recurringViewModel: com.alperen.spendcraft.feature.recurrence.RecurringViewModel = hiltViewModel()
+            val isPremium = recurringViewModel.billingRepository.isPremium.collectAsState(initial = false).value
+            
+            RecurringListScreen(
+                recurringRulesFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
+                onAddRule = { /* TODO: Implement */ },
+                onEditRule = { /* TODO: Implement */ },
+                onDeleteRule = { /* TODO: Implement */ },
+                isPremium = isPremium,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.SHARING) {
+            val sharingViewModel: com.alperen.spendcraft.feature.sharing.SharingViewModel = hiltViewModel()
+            val isPremium = sharingViewModel.billingRepository.isPremium.collectAsState(initial = false).value
+            
+            SharingScreen(
+                membersFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
+                onInviteMember = { /* TODO: Implement */ },
+                onUpdateRole = { _, _ -> /* TODO: Implement */ },
+                onRemoveMember = { /* TODO: Implement */ },
+                isPremium = isPremium,
+                onUpgrade = { navController.navigate(Routes.PAYWALL) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.DASHBOARD) {
+            DashboardScreen(
+                transactionsFlow = vm.items,
+                categoriesFlow = vm.categories,
+                onNavigateToReports = { navController.navigate(Routes.REPORTS) },
+                onNavigateToSettings = { navController.navigate(Routes.SETTINGS) },
+                onNavigateToAI = { navController.navigate(Routes.AI_SUGGESTIONS) },
+                onNavigateToAccounts = { navController.navigate(Routes.ACCOUNTS) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.NOTIFICATIONS) {
+            NotificationsScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.ONBOARDING) {
+            OnboardingScreen(
+                onFinish = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.ACHIEVEMENTS) {
+            AchievementsScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }

@@ -87,8 +87,10 @@ class BillingManagerImpl @Inject constructor(
                 QueryProductDetailsParams.Product.newBuilder()
                     .setProductId(productId)
                     .setProductType(
-                        if (productId.contains("lifetime")) BillingClient.ProductType.INAPP
-                        else BillingClient.ProductType.SUBS
+                        when {
+                            productId.contains("lifetime") || productId == "ai_weekly" -> BillingClient.ProductType.INAPP
+                            else -> BillingClient.ProductType.SUBS
+                        }
                     )
                     .build()
             }

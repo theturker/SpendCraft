@@ -62,6 +62,14 @@ fun SettingsScreen(
     onNavigateToCategories: () -> Unit = {},
     onNavigateToBudgets: () -> Unit = {},
     onNavigateToPremiumDebug: () -> Unit = {},
+    onNavigateToAISuggestions: () -> Unit = {},
+    onNavigateToAISettings: () -> Unit = {},
+    onNavigateToAccounts: () -> Unit = {},
+    onNavigateToRecurring: () -> Unit = {},
+    onNavigateToSharing: () -> Unit = {},
+    onNavigateToDashboard: () -> Unit = {},
+    onNavigateToNotifications: () -> Unit = {},
+    onNavigateToAchievements: () -> Unit = {},
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -362,6 +370,57 @@ fun SettingsScreen(
                                 }
                             }
                         )
+                    }
+                }
+            }
+
+            // AI Features
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "🤖 AI Özellikleri",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Button(
+                                onClick = onNavigateToAISuggestions,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = null
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text("AI Önerileri")
+                            }
+                            
+                            Button(
+                                onClick = onNavigateToAISettings,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = null
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text("AI Ayarları")
+                            }
+                        }
                     }
                 }
             }

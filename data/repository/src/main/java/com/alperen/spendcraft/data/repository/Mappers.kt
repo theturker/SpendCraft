@@ -54,6 +54,8 @@ object AccountMapper {
     fun toEntity(a: Account, isDefault: Boolean = false): AccountEntity = AccountEntity(
         id = a.id ?: 0,
         name = a.name,
+        type = "CASH",
+        currency = "TRY",
         isDefault = isDefault
     )
 }
