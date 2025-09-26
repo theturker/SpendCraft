@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -191,8 +192,10 @@ fun ReportsScreen(
                             ExpenseLegend(
                                 expenseByCategory = expenseByCategory,
                                 totalExpense = totalExpense,
-                                selectedIndex = selectedIndex
+                                selectedIndex = selectedIndex,
+                                onSelectedIndexChanged = { selectedIndex = it }   // ← eklendi
                             )
+
                         }
                     }
                 }
@@ -518,7 +521,8 @@ private fun ExpensePieChart(
 private fun ExpenseLegend(
     expenseByCategory: List<Triple<Long?, String, Long>>,
     totalExpense: Long,
-    selectedIndex: Int = -1
+    selectedIndex: Int = -1,
+    onSelectedIndexChanged: (Int) -> Unit   // ← eklendi
 ) {
     val colors = listOf(
         Color(0xFF4C5EE6), // Primary blue
@@ -555,9 +559,10 @@ private fun ExpenseLegend(
                         shape = RoundedCornerShape(16.dp),
                         ambientColor = if (isSelected) color.copy(alpha = 0.4f) else Color.Transparent,
                         spotColor = if (isSelected) color.copy(alpha = 0.4f) else Color.Transparent
-                    ),
+                    )
+                    .clickable { onSelectedIndexChanged(if (isSelected) -1 else index) }, // ← eklendi
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface // seçili değilmiş gibi hep aynı
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
                 shape = RoundedCornerShape(16.dp),
                 border = if (isSelected) {

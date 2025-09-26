@@ -15,6 +15,10 @@
 -keep class com.alperen.spendcraft.feature.settings.SettingsOuterClass$Settings { *; }
 -keepclassmembers class com.alperen.spendcraft.feature.settings.SettingsOuterClass$Settings { *; }
 
+# Play Billing
+-keep class com.android.billingclient.** { *; }
+-dontwarn com.android.billingclient.**
+
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.

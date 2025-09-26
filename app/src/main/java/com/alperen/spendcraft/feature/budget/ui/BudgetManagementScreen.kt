@@ -19,6 +19,8 @@ import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.ActionButton
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.StatCard
+import com.alperen.spendcraft.core.premium.PremiumGate
+import com.alperen.spendcraft.core.premium.PremiumLockScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,10 +28,12 @@ fun BudgetManagementScreen(
     budgets: List<Budget> = emptyList(),
     categories: List<Category> = emptyList(),
     spentAmounts: Map<String, Long> = emptyMap(),
+    isPremium: Boolean = false,
     onAddBudget: (Budget) -> Unit = {},
     onUpdateBudget: (Budget) -> Unit = {},
     onDeleteBudget: (String) -> Unit = {},
     onBack: () -> Unit,
+    onNavigateToPaywall: () -> Unit = {},
     onCalculateSpentAmounts: () -> Unit = {}
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
@@ -49,25 +53,54 @@ fun BudgetManagementScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { showAddDialog = true }) {
+                    PremiumGate(
+                        isPremium = isPremium,
+                        premiumContent = {
+                            IconButton(onClick = { showAddDialog = true }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = stringResource(R.string.add_budget)
+                                )
+                            }
+                        },
+                        freeContent = {
+                            IconButton(onClick = { onNavigateToPaywall() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Lock,
+                                    contentDescription = "Premium özellik"
+                                )
+                            }
+                        }
+                    )
+                }
+            )
+        },
+        floatingActionButton = {
+            PremiumGate(
+                isPremium = isPremium,
+                premiumContent = {
+                    FloatingActionButton(
+                        onClick = { showAddDialog = true },
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Add,
                             contentDescription = stringResource(R.string.add_budget)
                         )
                     }
+                },
+                freeContent = {
+                    FloatingActionButton(
+                        onClick = { onNavigateToPaywall() },
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Lock,
+                            contentDescription = "Premium özellik"
+                        )
+                    }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showAddDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.add_budget)
-                )
-            }
         }
     ) { innerPadding ->
         LazyColumn(

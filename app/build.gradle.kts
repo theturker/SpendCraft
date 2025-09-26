@@ -57,11 +57,15 @@ dependencies {
     implementation(project(":core:analytics"))
     implementation(project(":core:model"))
     implementation(project(":core:common"))
+    implementation(project(":core:billing"))
+    implementation(project(":core:premium"))
     implementation(project(":domain"))
     implementation(project(":data:repository"))
     implementation(project(":data:db"))
     implementation(project(":feature:transactions"))
     implementation(project(":feature:reports"))
+    implementation(project(":feature:paywall"))
+    implementation(project(":feature:premiumdebug"))
     // implementation(project(":feature:settings")) // App modülünde oluşturuldu
     implementation(project(":tools:export"))
 
@@ -102,6 +106,9 @@ dependencies {
     
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    
+    // Play Billing
+    implementation("com.android.billingclient:billing-ktx:6.2.1")
     
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.9.0")

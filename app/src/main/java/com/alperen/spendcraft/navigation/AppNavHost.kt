@@ -15,6 +15,9 @@ import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.feature.reports.ReportsScreen
 import com.alperen.spendcraft.feature.settings.ui.SettingsScreen
 import com.alperen.spendcraft.feature.settings.ui.CategoryManagementScreen
+import com.alperen.spendcraft.feature.paywall.PaywallScreen
+import com.alperen.spendcraft.feature.paywall.navigation.PaywallNavigation
+import com.alperen.spendcraft.feature.premiumdebug.PremiumDebugScreen
 import com.alperen.spendcraft.navigation.DeepLinkHandler
 
 object Routes {
@@ -27,6 +30,8 @@ object Routes {
     const val CATEGORY_MANAGEMENT = "category_management"
     const val BUDGET_MANAGEMENT = "budget_management"
     const val ALL_TRANSACTIONS = "all_transactions"
+    const val PAYWALL = PaywallNavigation.ROUTE_PAYWALL
+    const val PREMIUM_DEBUG = "premium_debug"
 }
 
 @Composable
@@ -124,6 +129,9 @@ fun AppNavHost(
                 onNavigateToBudgets = { 
                     navController.navigate(Routes.BUDGET_MANAGEMENT) 
                 },
+                onNavigateToPremiumDebug = {
+                    navController.navigate(Routes.PREMIUM_DEBUG)
+                },
                 onBack = { navController.popBackStack() }
             )
         }
@@ -141,10 +149,14 @@ fun AppNavHost(
         }
         composable(Routes.BUDGET_MANAGEMENT) {
             val budgetViewModel: com.alperen.spendcraft.feature.budget.BudgetViewModel = hiltViewModel()
+            val billingRepository: com.alperen.spendcraft.core.billing.BillingRepository = hiltViewModel()
+            val isPremium = billingRepository.isPremium.collectAsState(initial = false).value
+            
             com.alperen.spendcraft.feature.budget.ui.BudgetManagementScreen(
-                budgets = budgetViewModel.budgets.collectAsState().value,
-                categories = budgetViewModel.categories.collectAsState().value,
-                spentAmounts = budgetViewModel.spentAmounts.collectAsState().value,
+                budgets = budgetViewModel.budgets.collectAsState(initial = emptyList()).value,
+                categories = budgetViewModel.categories.collectAsState(initial = emptyList()).value,
+                spentAmounts = budgetViewModel.spentAmounts.collectAsState(initial = emptyMap()).value,
+                isPremium = isPremium,
                 onAddBudget = { budget -> 
                     budgetViewModel.addBudget(budget)
                 },
@@ -155,17 +167,29 @@ fun AppNavHost(
                     budgetViewModel.deleteBudget(categoryId)
                 },
                 onBack = { navController.popBackStack() },
+                onNavigateToPaywall = { navController.navigate(Routes.PAYWALL) },
                 onCalculateSpentAmounts = { budgetViewModel.calculateSpentAmounts() }
             )
         }
         composable(Routes.ALL_TRANSACTIONS) {
             com.alperen.spendcraft.feature.transactions.ui.AllTransactionsScreen(
-                transactions = vm.items.collectAsState().value,
-                categories = vm.categories.collectAsState().value,
+                transactions = vm.items.collectAsState(initial = emptyList()).value,
+                categories = vm.categories.collectAsState(initial = emptyList()).value,
                 onBack = { navController.popBackStack() },
                 onAddCategoryToTransaction = { transactionId, categoryId ->
                     vm.updateTransactionCategory(transactionId, categoryId)
                 }
+            )
+        }
+        composable(Routes.PAYWALL) {
+            PaywallScreen(
+                onNavigateUp = { navController.popBackStack() },
+                onSuccess = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.PREMIUM_DEBUG) {
+            PremiumDebugScreen(
+                onNavigateUp = { navController.popBackStack() }
             )
         }
     }
