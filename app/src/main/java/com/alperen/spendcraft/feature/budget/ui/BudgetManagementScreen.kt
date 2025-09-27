@@ -381,7 +381,6 @@ private fun BudgetDialog(
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .menuAnchor()
                     )
                     
                     ExposedDropdownMenu(

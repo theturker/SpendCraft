@@ -239,11 +239,15 @@ fun RecurringEditorScreen(
                 Button(
                     onClick = {
                         val ruleData = RecurringRuleData(
-                            templateTransactionId = templateTransaction?.id ?: 0L,
-                            frequency = frequency.value,
+                            title = templateTransaction?.note ?: "Tekrarlayan İşlem",
+                            amount = templateTransaction?.amount?.minorUnits?.toDouble()?.div(100) ?: 0.0,
+                            categoryId = templateTransaction?.categoryId ?: 0L,
+                            type = if (templateTransaction?.type == com.alperen.spendcraft.core.model.TransactionType.INCOME) TransactionType.INCOME else TransactionType.EXPENSE,
+                            frequency = Frequency.valueOf(frequency.name),
                             interval = interval,
                             startDate = startDate,
-                            endDate = if (hasEndDate) endDate else null
+                            endDate = if (hasEndDate) endDate else null,
+                            description = templateTransaction?.note ?: ""
                         )
                         onSave(ruleData)
                     },
@@ -257,10 +261,3 @@ fun RecurringEditorScreen(
     }
 }
 
-data class RecurringRuleData(
-    val templateTransactionId: Long,
-    val frequency: String,
-    val interval: Int,
-    val startDate: Long,
-    val endDate: Long?
-)

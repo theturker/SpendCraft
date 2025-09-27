@@ -48,6 +48,8 @@ import androidx.compose.ui.res.stringResource
 import com.alperen.spendcraft.R
 import com.alperen.spendcraft.core.ui.R as CoreR
 import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
@@ -75,6 +77,9 @@ fun SettingsScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = false)
+    
+    // Premium state - TODO: Implement premium state integration
+    val isPremium = false
     var currency by rememberSaveable { mutableStateOf(CurrencyHelper.getCurrency(context)) }
     var expanded by rememberSaveable { mutableStateOf(false) }
     var languageExpanded by rememberSaveable { mutableStateOf(false) }
@@ -114,7 +119,7 @@ fun SettingsScreen(
         ) {
             // AdMob Banner
             item {
-                com.alperen.spendcraft.core.ui.AdMobBannerWithPadding()
+                com.alperen.spendcraft.core.ui.AdMobBannerWithPadding(isPremium = isPremium)
             }
             
             // Language Selection

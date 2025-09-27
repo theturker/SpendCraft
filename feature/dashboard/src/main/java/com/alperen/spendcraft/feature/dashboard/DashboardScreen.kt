@@ -42,6 +42,9 @@ fun DashboardScreen(
     val transactions by transactionsFlow.collectAsState()
     val categories by categoriesFlow.collectAsState()
     
+    // Premium state - TODO: Implement premium state integration
+    val isPremium = false
+    
     // Analytics data
     val totalIncome = transactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
     val totalExpense = transactions.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
@@ -299,7 +302,7 @@ fun DashboardScreen(
 
             // AdMob Banner
             item {
-                AdMobBannerWithPadding()
+                AdMobBannerWithPadding(isPremium = isPremium)
             }
         }
     }

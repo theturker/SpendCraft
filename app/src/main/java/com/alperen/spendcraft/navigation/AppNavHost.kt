@@ -13,6 +13,7 @@ import com.alperen.spendcraft.feature.transactions.ui.AddTransactionScreen
 import com.alperen.spendcraft.feature.transactions.ui.TransactionsScreen
 import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.feature.reports.ReportsScreen
+import com.alperen.spendcraft.feature.reports.ExportReportScreen
 import com.alperen.spendcraft.feature.settings.ui.SettingsScreen
 import com.alperen.spendcraft.feature.settings.ui.CategoryManagementScreen
 import com.alperen.spendcraft.feature.paywall.PaywallScreen
@@ -22,6 +23,8 @@ import com.alperen.spendcraft.feature.ai.AISuggestionsScreen
 import com.alperen.spendcraft.feature.settings.AISettingsScreen
 import com.alperen.spendcraft.feature.accounts.AccountsScreen
 import com.alperen.spendcraft.feature.recurrence.RecurringListScreen
+import com.alperen.spendcraft.feature.recurrence.AddRecurringRuleScreen
+import com.alperen.spendcraft.feature.recurrence.RecurringEditorScreen
 import com.alperen.spendcraft.feature.sharing.SharingScreen
 import com.alperen.spendcraft.feature.dashboard.DashboardScreen
 import com.alperen.spendcraft.feature.notifications.NotificationsScreen
@@ -35,6 +38,7 @@ object Routes {
     const val ADD_INCOME = "add_income"
     const val ADD_EXPENSE = "add_expense"
     const val REPORTS = "reports"
+    const val EXPORT_REPORT = "export_report"
     const val SETTINGS = "settings"
     const val CATEGORY_MANAGEMENT = "category_management"
     const val BUDGET_MANAGEMENT = "budget_management"
@@ -45,6 +49,8 @@ object Routes {
     const val PREMIUM_DEBUG = "premium_debug"
     const val ACCOUNTS = "accounts"
     const val RECURRING = "recurring"
+    const val ADD_RECURRING_RULE = "add_recurring_rule"
+    const val EDIT_RECURRING_RULE = "edit_recurring_rule"
     const val SHARING = "sharing"
     const val DASHBOARD = "dashboard"
     const val NOTIFICATIONS = "notifications"
@@ -129,7 +135,18 @@ fun AppNavHost(
             ReportsScreen(
                 transactionsFlow = vm.items,
                 categoriesFlow = vm.categories,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onExport = { navController.navigate(Routes.EXPORT_REPORT) }
+            )
+        }
+        composable(Routes.EXPORT_REPORT) {
+            ExportReportScreen(
+                transactions = vm.items.collectAsState().value,
+                categories = vm.categories.collectAsState().value,
+                onNavigateBack = { navController.popBackStack() },
+                onExport = { format, dateRange, startDate, endDate ->
+                    // TODO: Implement export functionality
+                }
             )
         }
         composable(Routes.SETTINGS) {
@@ -187,7 +204,20 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() }
             )
         }
-        // Budget management will be implemented later
+        composable(Routes.BUDGET_MANAGEMENT) {
+            com.alperen.spendcraft.feature.budget.ui.BudgetManagementScreen(
+                budgets = emptyList(), // TODO: Get budgets from ViewModel
+                categories = vm.categories.collectAsState().value,
+                spentAmounts = emptyMap(), // TODO: Get spent amounts from ViewModel
+                isPremium = false, // TODO: Get premium state from ViewModel
+                onAddBudget = { /* TODO: Implement */ },
+                onUpdateBudget = { /* TODO: Implement */ },
+                onDeleteBudget = { /* TODO: Implement */ },
+                onBack = { navController.popBackStack() },
+                onNavigateToPaywall = { navController.navigate(Routes.PAYWALL) },
+                onCalculateSpentAmounts = { /* TODO: Implement */ }
+            )
+        }
         composable(Routes.ALL_TRANSACTIONS) {
             com.alperen.spendcraft.feature.transactions.ui.AllTransactionsScreen(
                 transactions = vm.items.collectAsState(initial = emptyList()).value,
@@ -262,11 +292,35 @@ fun AppNavHost(
             
             RecurringListScreen(
                 recurringRulesFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
-                onAddRule = { /* TODO: Implement */ },
-                onEditRule = { /* TODO: Implement */ },
-                onDeleteRule = { /* TODO: Implement */ },
+                onAddRule = { 
+                    // Navigate to add recurring rule screen
+                    navController.navigate(Routes.ADD_RECURRING_RULE)
+                },
+                onEditRule = { rule ->
+                    // Navigate to edit recurring rule screen
+                    navController.navigate("${Routes.EDIT_RECURRING_RULE}/${rule.id}")
+                },
+                onDeleteRule = { rule ->
+                    // TODO: Implement delete functionality
+                },
                 isPremium = isPremium,
                 onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.ADD_RECURRING_RULE) {
+            AddRecurringRuleScreen(
+                categories = vm.categories.collectAsState().value,
+                onSave = { /* TODO: Implement save functionality */ },
+                onCancel = { navController.popBackStack() }
+            )
+        }
+        composable("${Routes.EDIT_RECURRING_RULE}/{ruleId}") { backStackEntry ->
+            val ruleId = backStackEntry.arguments?.getString("ruleId")?.toLongOrNull() ?: 0L
+            RecurringEditorScreen(
+                templateTransaction = null, // TODO: Get transaction from ViewModel
+                onSave = { /* TODO: Implement save functionality */ },
+                onCancel = { navController.popBackStack() },
+                isPremium = false // TODO: Get premium state from ViewModel
             )
         }
         composable(Routes.SHARING) {

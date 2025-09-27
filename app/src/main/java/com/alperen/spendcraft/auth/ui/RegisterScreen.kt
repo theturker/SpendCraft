@@ -244,6 +244,10 @@ fun RegisterScreen(
                             withStyle(SpanStyle(color = primary)) {
                                 append(if (isTr) "Koşullar" else "Conditions")
                             }
+                            append(if (isTr) " ve " else " and ")
+                            withStyle(SpanStyle(color = primary)) {
+                                append(if (isTr) "Gizlilik Politikası" else "Privacy Policy")
+                            }
                         }
                         Text(text = tc, fontSize = 15.sp)
                     }

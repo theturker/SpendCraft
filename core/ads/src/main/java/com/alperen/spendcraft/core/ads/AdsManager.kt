@@ -12,6 +12,11 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,10 +32,20 @@ class AdsManager @Inject constructor(
     private var interstitialAd: InterstitialAd? = null
     private var rewardedAd: RewardedAd? = null
     
+    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    
     init {
         MobileAds.initialize(context)
         // Listen to premium state changes
-        // premiumStateDataStore.isPremium.collect { _isPremium.value = it }
+        premiumStateDataStore.isPremium
+            .onEach { isPremium ->
+                _isPremium.value = isPremium
+            }
+            .launchIn(coroutineScope)
+    }
+    
+    fun updatePremiumState(isPremium: Boolean) {
+        _isPremium.value = isPremium
     }
     
     fun loadBannerAd(adView: AdView) {

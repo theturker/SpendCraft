@@ -33,7 +33,17 @@ fun RecurringListScreen(
     
     AppScaffold(
         title = "Tekrarlayan İşlemler",
-        onBack = onBack
+        onBack = onBack,
+        actions = {
+            if (isPremium) {
+                IconButton(onClick = onAddRule) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "Yeni Tekrarlayan İşlem Ekle"
+                    )
+                }
+            }
+        }
     ) {
         Column(
             modifier = Modifier.fillMaxSize()

@@ -54,6 +54,9 @@ fun TransactionsScreen(
     val items by viewModel.items.collectAsState()
     val accounts by viewModel.accounts.collectAsState()
     val streak by viewModel.streak.collectAsState()
+    
+    // Premium state - TODO: Implement premium state integration
+    val isPremium = false
 
     var selectedAccountIndex by remember { mutableStateOf(0) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -128,6 +131,7 @@ fun TransactionsScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 60.dp, start = 16.dp, end = 16.dp), // Ayarlar butonu altında
+            isPremium = isPremium,
             onAdLoaded = { isAdLoaded = true },
             onAdFailedToLoad = { isAdLoaded = false }
         )

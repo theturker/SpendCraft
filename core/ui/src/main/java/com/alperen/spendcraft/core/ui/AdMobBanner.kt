@@ -22,6 +22,7 @@ import com.alperen.spendcraft.core.ui.R
 fun AdMobBanner(
     modifier: Modifier = Modifier,
     adUnitId: String = stringResource(R.string.admob_banner_id),
+    isPremium: Boolean = false,
     onAdLoaded: (() -> Unit)? = null,
     onAdFailedToLoad: ((String) -> Unit)? = null
 ) {
@@ -29,6 +30,11 @@ fun AdMobBanner(
     var isAdLoaded by remember { mutableStateOf(false) }
     var adError by remember { mutableStateOf<String?>(null) }
     var adView by remember { mutableStateOf<AdView?>(null) }
+
+    // Premium kullanıcılar için reklam gösterme
+    if (isPremium) {
+        return
+    }
 
     // AdMob'u başlat ve reklamı yükle
     DisposableEffect(adUnitId) {
@@ -82,6 +88,7 @@ fun AdMobBanner(
 fun AdMobBannerWithPadding(
     modifier: Modifier = Modifier,
     adUnitId: String = stringResource(R.string.admob_banner_id),
+    isPremium: Boolean = false,
     onAdLoaded: (() -> Unit)? = null,
     onAdFailedToLoad: ((String) -> Unit)? = null
 ) {
@@ -90,6 +97,7 @@ fun AdMobBannerWithPadding(
     ) {
         AdMobBanner(
             adUnitId = adUnitId,
+            isPremium = isPremium,
             onAdLoaded = onAdLoaded,
             onAdFailedToLoad = onAdFailedToLoad
         )

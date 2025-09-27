@@ -286,7 +286,6 @@ fun AddTransactionScreen(
                                     ) 
                                 },
                                 modifier = Modifier
-                                    .menuAnchor()
                                     .fillMaxWidth(),
                                 leadingIcon = {
                                     Icon(

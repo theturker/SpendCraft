@@ -52,7 +52,8 @@ import kotlin.math.sqrt
 fun ReportsScreen(
     transactionsFlow: StateFlow<List<Transaction>>,
     categoriesFlow: StateFlow<List<com.alperen.spendcraft.core.model.Category>>,
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onExport: () -> Unit = {}
 ) {
     var selectedIndex by remember { mutableStateOf(-1) }
     var showBarChart by remember { mutableStateOf(false) }
@@ -61,6 +62,9 @@ fun ReportsScreen(
     val totalExpense = items.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
     val totalIncome = items.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
     val netAmount = totalIncome - totalExpense
+    
+    // Premium state - TODO: Implement premium state integration
+    val isPremium = false
 
     // Kategori bazında harcama analizi - kategori isimleri ile
     val expenseByCategory = items
@@ -75,7 +79,15 @@ fun ReportsScreen(
 
     AppScaffold(
         title = "📊 ${stringResource(R.string.reports)}",
-        onBack = onBack
+        onBack = onBack,
+        actions = {
+            IconButton(onClick = onExport) {
+                Icon(
+                    Icons.Default.Share,
+                    contentDescription = "Raporu İndir"
+                )
+            }
+        }
     ) {
         LazyColumn(
             modifier = Modifier
@@ -148,7 +160,7 @@ fun ReportsScreen(
 
             // AdMob Banner
             item {
-                AdMobBannerWithPadding()
+                AdMobBannerWithPadding(isPremium = isPremium)
             }
 
             // Pie Chart - Harcama Dağılımı

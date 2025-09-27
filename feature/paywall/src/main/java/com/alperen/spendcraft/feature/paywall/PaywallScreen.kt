@@ -18,8 +18,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 
@@ -40,7 +42,7 @@ fun PaywallScreen(
     onSuccess: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val viewModel: PaywallViewModel = viewModel()
+    val viewModel: PaywallViewModel = hiltViewModel()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val successMessage by viewModel.successMessage.collectAsState()
@@ -355,7 +357,9 @@ fun PaywallScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    TextButton(onClick = { /* TODO: Open terms */ }) {
+                    TextButton(onClick = { 
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://theturker.github.io/SpendCraft/")))
+                    }) {
                         Text("Kullanım Şartları")
                     }
                     
@@ -364,7 +368,9 @@ fun PaywallScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     
-                    TextButton(onClick = { /* TODO: Open privacy */ }) {
+                    TextButton(onClick = { 
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://theturker.github.io/SpendCraft/")))
+                    }) {
                         Text("Gizlilik Politikası")
                     }
                 }
