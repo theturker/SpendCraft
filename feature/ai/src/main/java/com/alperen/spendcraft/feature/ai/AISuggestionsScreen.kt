@@ -17,6 +17,7 @@ import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.PremiumGate
 import com.alperen.spendcraft.data.repository.AIRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 @Composable
 fun AISuggestionsScreen(
@@ -34,6 +35,7 @@ fun AISuggestionsScreen(
     var currentAdvice by remember { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var selectedAdviceType by remember { mutableStateOf<AdviceType?>(null) }
+    val coroutineScope = rememberCoroutineScope()
     
     AppScaffold(
         title = "AI Önerileri",
@@ -110,19 +112,35 @@ fun AISuggestionsScreen(
                             errorMessage = null
                             currentAdvice = null
                             
-                        // Generate advice based on selected type
-                        when (selectedAdviceType) {
-                            AdviceType.SPENDING_ANALYSIS -> {
-                                // Call aiRepository.generateSpendingAdvice()
+                            coroutineScope.launch {
+                                try {
+                                    val result = when (selectedAdviceType) {
+                                        AdviceType.SPENDING_ANALYSIS -> {
+                                            aiRepository.generateSpendingAdvice(categoryBreakdown, totalExpense)
+                                        }
+                                        AdviceType.BUDGET_OPTIMIZATION -> {
+                                            aiRepository.generateBudgetAdvice(income, expenses, savings)
+                                        }
+                                        AdviceType.SAVINGS_ADVICE -> {
+                                            aiRepository.generateAdvice("Tasarruf yapmak için bana öneriler ver. Gelirim: ${income/100} TL, Giderim: ${expenses/100} TL, Tasarrufum: ${savings/100} TL")
+                                        }
+                                        null -> return@launch
+                                    }
+                                    
+                                    if (result.isSuccess) {
+                                        currentAdvice = result.getOrNull()
+                                        errorMessage = null
+                                    } else {
+                                        errorMessage = result.exceptionOrNull()?.message ?: "Bilinmeyen hata oluştu"
+                                        currentAdvice = null
+                                    }
+                                } catch (e: Exception) {
+                                    errorMessage = e.message ?: "Bilinmeyen hata oluştu"
+                                    currentAdvice = null
+                                } finally {
+                                    isLoading = false
+                                }
                             }
-                            AdviceType.BUDGET_OPTIMIZATION -> {
-                                // Call aiRepository.generateBudgetAdvice()
-                            }
-                            AdviceType.SAVINGS_ADVICE -> {
-                                // Call aiRepository.generateAdvice()
-                            }
-                            null -> {}
-                        }
                         }
                     },
                     enabled = selectedAdviceType != null && !isLoading,
