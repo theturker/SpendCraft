@@ -6,12 +6,14 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.alperen.spendcraft.data.db.dao.AccountDao
+import com.alperen.spendcraft.data.db.dao.AchievementDao
 import com.alperen.spendcraft.data.db.dao.AIUsageDao
 import com.alperen.spendcraft.data.db.dao.BudgetAlertDao
 import com.alperen.spendcraft.data.db.dao.BudgetDao
 import com.alperen.spendcraft.data.db.dao.CategoryDao
 import com.alperen.spendcraft.data.db.dao.DailyEntryDao
 import com.alperen.spendcraft.data.db.dao.RecurringRuleDao
+import com.alperen.spendcraft.data.db.dao.RecurringTransactionDao
 import com.alperen.spendcraft.data.db.dao.SharingMemberDao
 import com.alperen.spendcraft.data.db.dao.TxDao
 import com.alperen.spendcraft.data.db.entities.AccountEntity
@@ -116,11 +118,11 @@ object DbModule {
                         // Insert default categories
                         database.categoryDao().insertAll(
                             listOf(
-                                CategoryEntity(name = "Yemek", icon = "🍔"),
-                                CategoryEntity(name = "Ulaşım", icon = "🚌"),
-                                CategoryEntity(name = "Eğlence", icon = "🎬"),
-                                CategoryEntity(name = "Maaş", icon = "💼"),
-                                CategoryEntity(name = "Alışveriş", icon = "🛒")
+                                CategoryEntity(name = "Yemek", color = "#FF5722", icon = "🍔"),
+                                CategoryEntity(name = "Ulaşım", color = "#2196F3", icon = "🚌"),
+                                CategoryEntity(name = "Eğlence", color = "#9C27B0", icon = "🎬"),
+                                CategoryEntity(name = "Maaş", color = "#4CAF50", icon = "💼"),
+                                CategoryEntity(name = "Alışveriş", color = "#FF9800", icon = "🛒")
                             )
                         )
                         database.close()
@@ -156,6 +158,12 @@ object DbModule {
     
     @Provides
     fun provideAIUsageDao(db: AppDatabase): AIUsageDao = db.aiUsageDao()
+    
+    @Provides
+    fun provideAchievementDao(db: AppDatabase): AchievementDao = db.achievementDao()
+    
+    @Provides
+    fun provideRecurringTransactionDao(db: AppDatabase): RecurringTransactionDao = db.recurringTransactionDao()
     
 }
 

@@ -7,8 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.alperen.spendcraft.MainActivity
-import com.alperen.spendcraft.R
+// import com.alperen.spendcraft.MainActivity
+// import com.alperen.spendcraft.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton

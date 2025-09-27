@@ -35,12 +35,14 @@ object CategoryMapper {
     fun fromEntity(e: CategoryEntity): Category = Category(
         id = e.id,
         name = e.name,
+        color = e.color,
         icon = e.icon
     )
     
     fun toEntity(c: Category): CategoryEntity = CategoryEntity(
         id = c.id ?: 0,
         name = c.name,
+        color = c.color,
         icon = c.icon
     )
 }

@@ -2,8 +2,8 @@ package com.alperen.spendcraft.core.notifications
 
 import android.content.Context
 import androidx.work.*
-import com.alperen.spendcraft.data.repository.TransactionRepository
-import com.alperen.spendcraft.data.repository.BudgetRepository
+// import com.alperen.spendcraft.data.repository.TransactionRepository
+// import com.alperen.spendcraft.data.repository.BudgetRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

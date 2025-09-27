@@ -12,6 +12,7 @@ import com.alperen.spendcraft.data.db.dao.CategoryDao
 import com.alperen.spendcraft.data.db.dao.DailyEntryDao
 import com.alperen.spendcraft.data.db.dao.TxDao
 import com.alperen.spendcraft.domain.repo.BudgetRepository
+import com.alperen.spendcraft.domain.repo.CategoryRepository
 import com.alperen.spendcraft.domain.repo.StreakRepository
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import dagger.Module
@@ -46,6 +47,12 @@ object RepositoryModule {
         txDao: TxDao,
         categoryDao: CategoryDao
     ): BudgetRepository = BudgetRepositoryImpl(budgetDao, budgetAlertDao, txDao, categoryDao)
+    
+    @Provides
+    @Singleton
+    fun provideCategoryRepository(
+        categoryDao: CategoryDao
+    ): CategoryRepository = CategoryRepositoryImpl(categoryDao)
     
     @Provides
     @Singleton

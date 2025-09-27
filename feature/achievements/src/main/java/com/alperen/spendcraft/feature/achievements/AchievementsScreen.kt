@@ -57,10 +57,24 @@ enum class AchievementRarity {
 
 @Composable
 fun AchievementsScreen(
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    viewModel: AchievementsViewModel? = null
 ) {
+    // Gerçek veri - ViewModel'den gelecek
+    val achievements by (viewModel?.achievements ?: remember { 
+        kotlinx.coroutines.flow.MutableStateFlow(emptyList<com.alperen.spendcraft.data.db.entities.AchievementEntity>()) 
+    }).collectAsState(initial = emptyList())
+    
+    val totalPoints by (viewModel?.totalPoints ?: remember { 
+        kotlinx.coroutines.flow.MutableStateFlow(0) 
+    }).collectAsState(initial = 0)
+    
+    val unlockedCount by (viewModel?.unlockedCount ?: remember { 
+        kotlinx.coroutines.flow.MutableStateFlow(0) 
+    }).collectAsState(initial = 0)
+    
     // Mock data - gerçek uygulamada repository'den gelecek
-    val achievements = listOf(
+    val mockAchievements = listOf(
         // Tracking Achievements
         Achievement(
             id = "first_transaction",
@@ -214,9 +228,30 @@ fun AchievementsScreen(
             rarity = AchievementRarity.RARE
         )
     )
+    
+    // Gerçek veri kullan, yoksa mock data
+    val displayAchievements = if (achievements.isNotEmpty()) {
+        achievements.map { entity ->
+            Achievement(
+                id = entity.id.toString(),
+                title = entity.name,
+                description = entity.description,
+                icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_vector),
+                category = AchievementCategory.TRACKING,
+                isUnlocked = entity.isUnlocked,
+                progress = if (entity.maxProgress > 0) entity.progress.toFloat() / entity.maxProgress else 0f,
+                currentProgress = entity.progress,
+                maxProgress = entity.maxProgress,
+                reward = "+10 XP",
+                rarity = AchievementRarity.COMMON
+            )
+        }
+    } else {
+        mockAchievements
+    }
 
-    val unlockedAchievements = achievements.filter { it.isUnlocked }
-    val lockedAchievements = achievements.filter { !it.isUnlocked }
+    val unlockedAchievements = displayAchievements.filter { it.isUnlocked }
+    val lockedAchievements = displayAchievements.filter { !it.isUnlocked }
     
     AppScaffold(
         title = "Başarımlar",
@@ -246,17 +281,17 @@ fun AchievementsScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             AchievementStat(
-                                value = unlockedAchievements.size.toString(),
+                                value = unlockedCount.toString(),
                                 label = "Kazanılan",
                                 color = MaterialTheme.colorScheme.secondary
                             )
                             AchievementStat(
-                                value = achievements.size.toString(),
+                                value = displayAchievements.size.toString(),
                                 label = "Toplam",
                                 color = MaterialTheme.colorScheme.primary
                             )
                             AchievementStat(
-                                value = "${(unlockedAchievements.size * 100 / achievements.size)}%",
+                                value = "${(unlockedCount * 100 / displayAchievements.size)}%",
                                 label = "Tamamlama",
                                 color = MaterialTheme.colorScheme.tertiary
                             )

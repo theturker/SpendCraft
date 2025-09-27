@@ -37,4 +37,10 @@ interface AchievementDao {
     
     @Query("SELECT SUM(points) FROM achievements WHERE isUnlocked = 1")
     suspend fun getTotalPoints(): Int
+    
+    @Query("SELECT * FROM achievements WHERE name = :name")
+    suspend fun getAchievementByName(name: String): AchievementEntity?
+    
+    @Query("UPDATE achievements SET progress = :progress, isUnlocked = :isUnlocked, unlockedAt = :unlockedAt WHERE id = :id")
+    suspend fun updateAchievement(id: Long, progress: Int, isUnlocked: Boolean, unlockedAt: Long?)
 }

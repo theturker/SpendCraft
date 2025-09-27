@@ -311,10 +311,12 @@ fun AppNavHost(
             )
         }
         composable(Routes.ADD_RECURRING_RULE) {
+            val recurringViewModel: com.alperen.spendcraft.feature.recurrence.RecurringViewModel = hiltViewModel()
             AddRecurringRuleScreen(
                 categories = vm.categories.collectAsState().value,
                 onSave = { /* TODO: Implement save functionality */ },
-                onCancel = { navController.popBackStack() }
+                onCancel = { navController.popBackStack() },
+                viewModel = recurringViewModel
             )
         }
         composable("${Routes.EDIT_RECURRING_RULE}/{ruleId}") { backStackEntry ->
@@ -352,8 +354,10 @@ fun AppNavHost(
             )
         }
         composable(Routes.NOTIFICATIONS) {
+            val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = hiltViewModel()
             NotificationsScreen(
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                viewModel = notificationsViewModel
             )
         }
         composable(Routes.ONBOARDING) {
@@ -362,8 +366,10 @@ fun AppNavHost(
             )
         }
         composable(Routes.ACHIEVEMENTS) {
+            val achievementsViewModel: com.alperen.spendcraft.feature.achievements.AchievementsViewModel = hiltViewModel()
             AchievementsScreen(
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                viewModel = achievementsViewModel
             )
         }
     }

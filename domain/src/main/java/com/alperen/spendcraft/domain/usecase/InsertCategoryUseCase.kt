@@ -11,6 +11,7 @@ class InsertCategoryUseCase @Inject constructor(
         val category = Category(
             id = null,
             name = name,
+            color = "#FF5722", // Default color
             icon = "📂" // Default icon
         )
         return repository.insertCategory(category)

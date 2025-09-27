@@ -25,7 +25,8 @@ import java.util.*
 fun AddRecurringRuleScreen(
     categories: List<Category>,
     onSave: (RecurringRuleData) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    viewModel: RecurringViewModel? = null
 ) {
     var title by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
@@ -334,7 +335,33 @@ fun AddRecurringRuleScreen(
                     Button(
                         onClick = {
                             if (title.isNotBlank() && amount.isNotBlank() && selectedCategory != null) {
-                                val ruleData = RecurringRuleData(
+                                val amountLong = (amount.toDoubleOrNull() ?: 0.0 * 100).toLong() // Convert to minor units
+                                val frequency = when (selectedFrequency) {
+                                    Frequency.DAILY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.DAILY
+                                    Frequency.WEEKLY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.WEEKLY
+                                    Frequency.MONTHLY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.MONTHLY
+                                    Frequency.YEARLY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.YEARLY
+                                }
+                                val type = when (selectedType) {
+                                    TransactionType.INCOME -> com.alperen.spendcraft.core.model.TransactionType.INCOME
+                                    TransactionType.EXPENSE -> com.alperen.spendcraft.core.model.TransactionType.EXPENSE
+                                }
+                                
+                                // Önce ViewModel'e kaydet
+                                viewModel?.addRecurringTransaction(
+                                    name = title,
+                                    amount = amountLong,
+                                    categoryId = selectedCategory!!,
+                                    accountId = 1L, // Default account
+                                    type = type,
+                                    frequency = frequency,
+                                    startDate = startDate,
+                                    endDate = if (hasEndDate) endDate else null,
+                                    note = description
+                                )
+                                
+                                // Sonra callback'i çağır (navigation'ı kapatır)
+                                onSave(RecurringRuleData(
                                     title = title,
                                     amount = amount.toDoubleOrNull() ?: 0.0,
                                     categoryId = selectedCategory!!,
@@ -344,8 +371,7 @@ fun AddRecurringRuleScreen(
                                     startDate = startDate,
                                     endDate = if (hasEndDate) endDate else null,
                                     description = description
-                                )
-                                onSave(ruleData)
+                                ))
                             }
                         },
                         enabled = title.isNotBlank() && amount.isNotBlank() && selectedCategory != null,

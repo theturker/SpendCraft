@@ -24,6 +24,25 @@ interface CategoryDao {
 
     @Query("DELETE FROM categories WHERE id = :id")
     suspend fun deleteById(id: Long)
+    
+    // Yeni metodlar
+    @Query("SELECT * FROM categories ORDER BY name ASC")
+    fun observeCategories(): Flow<List<CategoryEntity>>
+    
+    @Query("SELECT * FROM categories ORDER BY name ASC")
+    suspend fun getAllCategories(): List<CategoryEntity>
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategory(category: CategoryEntity): Long
+    
+    @Query("UPDATE categories SET name = :name, color = :color, icon = :icon WHERE id = :id")
+    suspend fun updateCategory(id: Long, name: String, color: String, icon: String)
+    
+    @Query("DELETE FROM categories WHERE id = :categoryId")
+    suspend fun deleteCategory(categoryId: Long)
+    
+    @Query("SELECT * FROM categories WHERE id = :categoryId")
+    suspend fun getCategoryById(categoryId: Long): CategoryEntity?
 }
 
 

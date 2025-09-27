@@ -21,87 +21,31 @@ import com.alperen.spendcraft.core.ui.ModernCard
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class NotificationItem(
-    val id: String,
-    val title: String,
-    val message: String,
-    val type: NotificationType,
-    val timestamp: Long,
-    val isRead: Boolean = false
-)
-
-enum class NotificationType {
-    BUDGET_ALERT,
-    SPENDING_REMINDER,
-    ACHIEVEMENT,
-    PAYMENT_DUE,
-    AI_INSIGHT,
-    SYSTEM
-}
 
 @Composable
 fun NotificationsScreen(
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    viewModel: NotificationsViewModel? = null
 ) {
-    // Mock data - gerçek uygulamada repository'den gelecek
-    val notifications = remember {
-        listOf(
-            NotificationItem(
-                id = "1",
-                title = "Bütçe Uyarısı",
-                message = "Market kategorisinde aylık bütçenizin %85'ini harcadınız",
-                type = NotificationType.BUDGET_ALERT,
-                timestamp = System.currentTimeMillis() - 3600000, // 1 saat önce
-                isRead = false
-            ),
-            NotificationItem(
-                id = "2",
-                title = "AI Önerisi",
-                message = "Bu ay kahve harcamalarınız %30 arttı. Alternatif öneriler için AI sayfasını ziyaret edin.",
-                type = NotificationType.AI_INSIGHT,
-                timestamp = System.currentTimeMillis() - 7200000, // 2 saat önce
-                isRead = false
-            ),
-            NotificationItem(
-                id = "3",
-                title = "Başarım Kazandınız!",
-                message = "🎉 7 gün üst üste işlem kaydettiniz! Streak Badge kazandınız.",
-                type = NotificationType.ACHIEVEMENT,
-                timestamp = System.currentTimeMillis() - 86400000, // 1 gün önce
-                isRead = true
-            ),
-            NotificationItem(
-                id = "4",
-                title = "Ödeme Hatırlatması",
-                message = "Elektrik faturası ödemesi yarın son gün",
-                type = NotificationType.PAYMENT_DUE,
-                timestamp = System.currentTimeMillis() - 172800000, // 2 gün önce
-                isRead = true
-            ),
-            NotificationItem(
-                id = "5",
-                title = "Harcama Hatırlatması",
-                message = "Bugün henüz bir işlem kaydetmediniz",
-                type = NotificationType.SPENDING_REMINDER,
-                timestamp = System.currentTimeMillis() - 259200000, // 3 gün önce
-                isRead = true
-            ),
-            NotificationItem(
-                id = "6",
-                title = "Sistem Güncellemesi",
-                message = "SpendCraft v2.1.0 güncellemesi mevcut. Yeni AI özelliklerini keşfedin!",
-                type = NotificationType.SYSTEM,
-                timestamp = System.currentTimeMillis() - 604800000, // 1 hafta önce
-                isRead = true
-            )
-        )
-    }
+    // Gerçek veri - ViewModel'den gelecek
+    val notifications by (viewModel?.notifications ?: remember { 
+        kotlinx.coroutines.flow.MutableStateFlow(emptyList<NotificationItem>()) 
+    }).collectAsState(initial = emptyList())
+    
+    // Gerçek veri kullan
+    val displayNotifications = notifications
 
     AppScaffold(
         title = "Bildirimler",
         onBack = onBack,
         actions = {
-            IconButton(onClick = { /* Mark all as read */ }) {
+            IconButton(onClick = { 
+                displayNotifications.forEach { notification ->
+                    if (!notification.isRead) {
+                        viewModel?.markNotificationAsRead(notification.id)
+                    }
+                }
+            }) {
                 Icon(
                     painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_done_all_vector),
                     contentDescription = "Tümünü okundu işaretle"
@@ -114,7 +58,7 @@ fun NotificationsScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            if (notifications.isEmpty()) {
+            if (displayNotifications.isEmpty()) {
                 item {
                     ModernCard {
                         Column(
@@ -146,8 +90,8 @@ fun NotificationsScreen(
                 }
             } else {
                 // Unread notifications first
-                val unreadNotifications = notifications.filter { !it.isRead }
-                val readNotifications = notifications.filter { it.isRead }
+                val unreadNotifications = displayNotifications.filter { !it.isRead }
+                val readNotifications = displayNotifications.filter { it.isRead }
 
                 if (unreadNotifications.isNotEmpty()) {
                     item {
@@ -163,8 +107,8 @@ fun NotificationsScreen(
                     items(unreadNotifications) { notification ->
                         NotificationCard(
                             notification = notification,
-                            onMarkAsRead = { /* Handle mark as read */ },
-                            onDelete = { /* Handle delete */ }
+                            onMarkAsRead = { viewModel?.markNotificationAsRead(notification.id) },
+                            onDelete = { viewModel?.deleteNotification(notification.id) }
                         )
                     }
                 }
@@ -183,8 +127,8 @@ fun NotificationsScreen(
                     items(readNotifications) { notification ->
                         NotificationCard(
                             notification = notification,
-                            onMarkAsRead = { /* Handle mark as read */ },
-                            onDelete = { /* Handle delete */ }
+                            onMarkAsRead = { viewModel?.markNotificationAsRead(notification.id) },
+                            onDelete = { viewModel?.deleteNotification(notification.id) }
                         )
                     }
                 }

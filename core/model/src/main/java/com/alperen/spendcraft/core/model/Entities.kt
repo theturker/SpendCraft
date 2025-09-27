@@ -3,6 +3,7 @@ package com.alperen.spendcraft.core.model
 data class Category(
     val id: Long?,
     val name: String,
+    val color: String,
     val icon: String? = null
 )
 

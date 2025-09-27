@@ -24,6 +24,8 @@ include(":core:analytics")
 include(":core:billing")
 include(":core:premium")
 include(":core:ai")
+include(":core:achievements")
+// include(":core:notifications") // Geçici olarak devre dışı
 
 include(":domain")
 
