@@ -48,6 +48,9 @@ fun TransactionsScreen(
     onReports: () -> Unit,
     onSettings: () -> Unit,
     onAllTransactions: () -> Unit,
+    onDashboard: () -> Unit = {},
+    onNotifications: () -> Unit = {},
+    onAchievements: () -> Unit = {},
     currentUserName: String? = null
 ) {
     val context = LocalContext.current
@@ -55,8 +58,8 @@ fun TransactionsScreen(
     val accounts by viewModel.accounts.collectAsState()
     val streak by viewModel.streak.collectAsState()
     
-    // Premium state - TODO: Implement premium state integration
-    val isPremium = false
+    // Premium state - Get from ViewModel
+    val isPremium = false // TODO: Implement premium state
 
     var selectedAccountIndex by remember { mutableStateOf(0) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -256,6 +259,46 @@ fun TransactionsScreen(
                                 initialTransactionType = false
                                 showAddTransactionSheet = true
                             }
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        QuickActionPill(
+                            label = "Dashboard",
+                            icon = painterResource(R.drawable.ic_dashboard_vector),
+                            positive = true,
+                            modifier = Modifier.weight(1f),
+                            onClick = onDashboard
+                        )
+                        QuickActionPill(
+                            label = "Bildirimler",
+                            icon = painterResource(R.drawable.ic_notifications_vector),
+                            positive = true,
+                            modifier = Modifier.weight(1f),
+                            onClick = onNotifications
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        QuickActionPill(
+                            label = "Başarımlar",
+                            icon = painterResource(R.drawable.ic_trophy_vector),
+                            positive = true,
+                            modifier = Modifier.weight(1f),
+                            onClick = onAchievements
+                        )
+                        QuickActionPill(
+                            label = "Raporlar",
+                            icon = painterResource(R.drawable.ic_analytics_vector),
+                            positive = true,
+                            modifier = Modifier.weight(1f),
+                            onClick = onReports
                         )
                     }
                     Spacer(Modifier.height(10.dp))

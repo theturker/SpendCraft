@@ -63,8 +63,8 @@ fun ReportsScreen(
     val totalIncome = items.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
     val netAmount = totalIncome - totalExpense
     
-    // Premium state - TODO: Implement premium state integration
-    val isPremium = false
+    // Premium state - Get from parameter
+    val isPremium = false // TODO: Pass from parent
 
     // Kategori bazında harcama analizi - kategori isimleri ile
     val expenseByCategory = items

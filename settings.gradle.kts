@@ -45,6 +45,3 @@ include(":feature:onboarding")
 include(":feature:achievements")
 
 include(":tools:export")
-
-include(":feature:ocr")
-include(":sync:cloud")

@@ -42,8 +42,8 @@ fun DashboardScreen(
     val transactions by transactionsFlow.collectAsState()
     val categories by categoriesFlow.collectAsState()
     
-    // Premium state - TODO: Implement premium state integration
-    val isPremium = false
+    // Premium state - Get from parameter
+    val isPremium = false // TODO: Pass from parent
     
     // Analytics data
     val totalIncome = transactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }

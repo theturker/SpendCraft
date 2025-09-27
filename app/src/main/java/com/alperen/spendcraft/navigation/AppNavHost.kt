@@ -95,7 +95,10 @@ fun AppNavHost(
                 onAddExpense = { /* Bottom sheet will handle this */ },
                 onReports = { navController.navigate(Routes.REPORTS) },
                 onSettings = { navController.navigate(Routes.SETTINGS) },
-                onAllTransactions = { navController.navigate(Routes.ALL_TRANSACTIONS) }
+                onAllTransactions = { navController.navigate(Routes.ALL_TRANSACTIONS) },
+                onDashboard = { navController.navigate(Routes.DASHBOARD) },
+                onNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
+                onAchievements = { navController.navigate(Routes.ACHIEVEMENTS) }
             )
         }
         composable(Routes.ADD) {

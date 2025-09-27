@@ -25,6 +25,7 @@ import javax.inject.Inject
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import com.alperen.spendcraft.core.common.NotificationTester
+// import com.alperen.spendcraft.core.billing.BillingRepository
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
@@ -39,7 +40,8 @@ class TransactionsViewModel @Inject constructor(
     private val updateAccount: UpdateAccountUseCase,
     private val markTodayLogged: MarkTodayLoggedUseCase,
     observeStreak: ObserveStreakUseCase,
-    private val notificationTester: NotificationTester
+    private val notificationTester: NotificationTester,
+    // private val billingRepository: BillingRepository
 ) : ViewModel() {
 
     val items: StateFlow<List<Transaction>> = observeTransactions()
@@ -53,6 +55,9 @@ class TransactionsViewModel @Inject constructor(
 
     val streak: StateFlow<com.alperen.spendcraft.core.model.Streak> = observeStreak()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), com.alperen.spendcraft.core.model.Streak(0, 0))
+    
+    // val isPremium: StateFlow<Boolean> = billingRepository.isPremium
+    //     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     // Quick add state
     private val _lastUsedCategoryId = mutableStateOf<Long?>(null)
