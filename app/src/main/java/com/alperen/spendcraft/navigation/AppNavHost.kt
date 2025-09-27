@@ -294,16 +294,16 @@ fun AppNavHost(
             val isPremium = recurringViewModel.billingRepository.isPremium.collectAsState(initial = false).value
             
             RecurringListScreen(
-                recurringRulesFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
+                recurringTransactionsFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
                 onAddRule = { 
                     // Navigate to add recurring rule screen
                     navController.navigate(Routes.ADD_RECURRING_RULE)
                 },
-                onEditRule = { rule ->
+                onEditRule = { transaction ->
                     // Navigate to edit recurring rule screen
-                    navController.navigate("${Routes.EDIT_RECURRING_RULE}/${rule.id}")
+                    navController.navigate("${Routes.EDIT_RECURRING_RULE}/${transaction.id}")
                 },
-                onDeleteRule = { rule ->
+                onDeleteRule = { transaction ->
                     // TODO: Implement delete functionality
                 },
                 isPremium = isPremium,

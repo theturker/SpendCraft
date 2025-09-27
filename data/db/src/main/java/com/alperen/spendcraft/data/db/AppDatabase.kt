@@ -12,6 +12,8 @@ import com.alperen.spendcraft.data.db.dao.DailyEntryDao
 import com.alperen.spendcraft.data.db.dao.RecurringRuleDao
 import com.alperen.spendcraft.data.db.dao.SharingMemberDao
 import com.alperen.spendcraft.data.db.dao.TxDao
+import com.alperen.spendcraft.data.db.dao.AchievementDao
+import com.alperen.spendcraft.data.db.dao.RecurringTransactionDao
 import com.alperen.spendcraft.data.db.entities.AccountEntity
 import com.alperen.spendcraft.data.db.entities.AIUsageEntity
 import com.alperen.spendcraft.data.db.entities.BudgetAlertEntity
@@ -21,6 +23,8 @@ import com.alperen.spendcraft.data.db.entities.DailyEntryEntity
 import com.alperen.spendcraft.data.db.entities.RecurringRuleEntity
 import com.alperen.spendcraft.data.db.entities.SharingMemberEntity
 import com.alperen.spendcraft.data.db.entities.TransactionEntity
+import com.alperen.spendcraft.data.db.entities.AchievementEntity
+import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity
 
 @Database(
     entities = [
@@ -32,9 +36,11 @@ import com.alperen.spendcraft.data.db.entities.TransactionEntity
         BudgetAlertEntity::class,
         RecurringRuleEntity::class,
         SharingMemberEntity::class,
+        AchievementEntity::class,
+        RecurringTransactionEntity::class,
         AIUsageEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 @TypeConverters()
@@ -47,6 +53,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetAlertDao(): BudgetAlertDao
     abstract fun recurringRuleDao(): RecurringRuleDao
     abstract fun sharingMemberDao(): SharingMemberDao
+    abstract fun achievementDao(): AchievementDao
+    abstract fun recurringTransactionDao(): RecurringTransactionDao
     abstract fun aiUsageDao(): AIUsageDao
 }
 

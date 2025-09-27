@@ -15,21 +15,21 @@ import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.PremiumGate
-import com.alperen.spendcraft.data.db.entities.RecurringRuleEntity
+import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity
 import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun RecurringListScreen(
-    recurringRulesFlow: Flow<List<RecurringRuleEntity>>,
+    recurringTransactionsFlow: Flow<List<RecurringTransactionEntity>>,
     onAddRule: () -> Unit,
-    onEditRule: (RecurringRuleEntity) -> Unit,
-    onDeleteRule: (RecurringRuleEntity) -> Unit,
+    onEditRule: (RecurringTransactionEntity) -> Unit,
+    onDeleteRule: (RecurringTransactionEntity) -> Unit,
     isPremium: Boolean,
     onBack: () -> Unit = {}
 ) {
-    val recurringRules by recurringRulesFlow.collectAsState(initial = emptyList())
+    val recurringTransactions by recurringTransactionsFlow.collectAsState(initial = emptyList())
     
     AppScaffold(
         title = "Tekrarlayan İşlemler",
@@ -62,7 +62,7 @@ fun RecurringListScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                if (recurringRules.isEmpty()) {
+                if (recurringTransactions.isEmpty()) {
                     item {
                         ModernCard {
                             Column(
@@ -92,11 +92,11 @@ fun RecurringListScreen(
                         }
                     }
                 } else {
-                    items(recurringRules) { rule ->
-                        RecurringRuleItem(
-                            rule = rule,
-                            onEdit = { onEditRule(rule) },
-                            onDelete = { onDeleteRule(rule) }
+                    items(recurringTransactions) { transaction ->
+                        RecurringTransactionItem(
+                            transaction = transaction,
+                            onEdit = { onEditRule(transaction) },
+                            onDelete = { onDeleteRule(transaction) }
                         )
                     }
                 }
@@ -106,8 +106,8 @@ fun RecurringListScreen(
 }
 
 @Composable
-private fun RecurringRuleItem(
-    rule: RecurringRuleEntity,
+private fun RecurringTransactionItem(
+    transaction: RecurringTransactionEntity,
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -127,12 +127,12 @@ private fun RecurringRuleItem(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = getFrequencyDisplayName(rule.frequency),
+                        text = transaction.name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Her ${rule.interval} ${getFrequencyUnit(rule.frequency)}",
+                        text = "${transaction.amount} TL - ${getFrequencyDisplayName(transaction.frequency)}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -171,13 +171,13 @@ private fun RecurringRuleItem(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = dateFormatter.format(Date(rule.nextRunEpoch)),
+                        text = dateFormatter.format(Date(transaction.nextExecution)),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
                 }
                 
-                if (rule.endEpoch != null) {
+                if (transaction.endDate != null) {
                     Column {
                         Text(
                             text = "Bitiş:",
@@ -185,7 +185,7 @@ private fun RecurringRuleItem(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = dateFormatter.format(Date(rule.endEpoch!!)),
+                            text = dateFormatter.format(Date(transaction.endDate!!)),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
@@ -200,15 +200,15 @@ private fun RecurringRuleItem(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(
-                    if (rule.isActive) painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_play_arrow_vector) else painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_pause_vector),
+                    if (transaction.isActive) painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_play_arrow_vector) else painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_pause_vector),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
-                    tint = if (rule.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = if (transaction.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = if (rule.isActive) "Aktif" else "Duraklatıldı",
+                    text = if (transaction.isActive) "Aktif" else "Duraklatıldı",
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (rule.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (transaction.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -240,22 +240,11 @@ private fun RecurringRuleItem(
     }
 }
 
-private fun getFrequencyDisplayName(frequency: String): String {
+private fun getFrequencyDisplayName(frequency: com.alperen.spendcraft.data.db.entities.RecurringFrequency): String {
     return when (frequency) {
-        "DAILY" -> "Günlük"
-        "WEEKLY" -> "Haftalık"
-        "MONTHLY" -> "Aylık"
-        "YEARLY" -> "Yıllık"
-        else -> frequency
-    }
-}
-
-private fun getFrequencyUnit(frequency: String): String {
-    return when (frequency) {
-        "DAILY" -> "gün"
-        "WEEKLY" -> "hafta"
-        "MONTHLY" -> "ay"
-        "YEARLY" -> "yıl"
-        else -> "birim"
+        com.alperen.spendcraft.data.db.entities.RecurringFrequency.DAILY -> "Günlük"
+        com.alperen.spendcraft.data.db.entities.RecurringFrequency.WEEKLY -> "Haftalık"
+        com.alperen.spendcraft.data.db.entities.RecurringFrequency.MONTHLY -> "Aylık"
+        com.alperen.spendcraft.data.db.entities.RecurringFrequency.YEARLY -> "Yıllık"
     }
 }
