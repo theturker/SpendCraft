@@ -15,7 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,6 +25,7 @@ import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
 import com.alperen.spendcraft.reminder.ReminderScheduler
 import com.alperen.spendcraft.feature.welcome.ui.WelcomeScreen
+import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
 import com.alperen.spendcraft.FirstLaunchHelper
 import com.alperen.spendcraft.auth.AuthViewModel
 import com.alperen.spendcraft.auth.AuthState
@@ -88,12 +91,14 @@ class MainActivity : ComponentActivity() {
         
         setContent {
             val context = LocalContext.current
+            val scope = rememberCoroutineScope()
             val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = false)
             val isFirstLaunch by firstLaunchHelper.isFirstLaunch.collectAsState(initial = true)
             val authViewModel: AuthViewModel = viewModel()
             val authState by authViewModel.authState.collectAsState()
             
             var currentAuthScreen by remember { mutableStateOf("login") }
+            var showOnboarding by remember { mutableStateOf(false) }
             
             // Google Auth Service'i initialize et
             LaunchedEffect(Unit) {
@@ -114,8 +119,18 @@ class MainActivity : ComponentActivity() {
                         isFirstLaunch -> {
                             WelcomeScreen(
                                 onStart = { 
+                                    showOnboarding = true
+                                }
+                            )
+                        }
+                        showOnboarding -> {
+                            OnboardingScreen(
+                                onFinish = {
+                                    showOnboarding = false
                                     // Mark first launch as completed
-                                    // This will be handled in a coroutine
+                                    scope.launch {
+                                        firstLaunchHelper.setFirstLaunchCompleted()
+                                    }
                                 }
                             )
                         }
