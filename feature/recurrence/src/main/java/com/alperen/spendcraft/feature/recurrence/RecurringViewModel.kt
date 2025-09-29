@@ -3,21 +3,24 @@ package com.alperen.spendcraft.feature.recurrence
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alperen.spendcraft.core.billing.BillingRepository
-// import com.alperen.spendcraft.core.recurring.RecurringTransactionManager
+import com.alperen.spendcraft.data.db.dao.RecurringTransactionDao
 import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity
 import com.alperen.spendcraft.data.db.entities.RecurringFrequency
 import com.alperen.spendcraft.core.model.TransactionType
+import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecurringViewModel @Inject constructor(
-    val billingRepository: BillingRepository
-    // private val recurringTransactionManager: RecurringTransactionManager
+    val billingRepository: BillingRepository,
+    private val recurringTransactionDao: RecurringTransactionDao,
+    private val transactionsRepository: TransactionsRepository
 ) : ViewModel() {
     
     private val _recurringTransactions = MutableStateFlow<List<RecurringTransactionEntity>>(emptyList())
@@ -30,10 +33,20 @@ class RecurringViewModel @Inject constructor(
     private fun loadRecurringTransactions() {
         viewModelScope.launch {
             try {
-                // val transactions = recurringTransactionManager.getAllRecurringTransactions()
-                // _recurringTransactions.value = transactions
+                println("🔍 DEBUG: RecurringViewModel - loadRecurringTransactions başlıyor")
+                // collect kullan - tüm değişiklikleri dinle
+                recurringTransactionDao.getAllRecurringTransactions().collect { transactions ->
+                    println("🔍 DEBUG: RecurringViewModel - ${transactions.size} adet tekrarlayan işlem yüklendi")
+                    transactions.forEachIndexed { index, transaction ->
+                        println("🔍 DEBUG: [$index] ${transaction.name} (${transaction.amount} kuruş, ${transaction.frequency}, ID: ${transaction.id})")
+                    }
+                    println("🔍 DEBUG: _recurringTransactions.value güncelleniyor: ${transactions.size} item")
+                    _recurringTransactions.value = transactions
+                    println("🔍 DEBUG: _recurringTransactions.value güncellendi: ${_recurringTransactions.value.size} item")
+                }
             } catch (e: Exception) {
                 // Handle error
+                println("Error loading recurring transactions: ${e.message}")
             }
         }
     }
@@ -51,6 +64,9 @@ class RecurringViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
+                println("🔍 DEBUG: RecurringViewModel - addRecurringTransaction başlıyor")
+                println("🔍 DEBUG: - name: $name, amount: $amount, categoryId: $categoryId")
+                
                 // Gerçek veri ekleme - Room database'e kaydet
                 val newTransaction = RecurringTransactionEntity(
                     name = name,
@@ -66,15 +82,33 @@ class RecurringViewModel @Inject constructor(
                     nextExecution = calculateNextExecution(startDate, frequency),
                     note = note
                 )
+
+                println("🔍 DEBUG: RecurringTransactionEntity oluşturuldu: $newTransaction")
+
+                // Room database'e kaydet
+                val insertedId = recurringTransactionDao.insertRecurringTransaction(newTransaction)
+                println("🔍 DEBUG: Recurring transaction saved with ID: $insertedId")
+                println("🔍 DEBUG: Kaydedilen transaction: $newTransaction")
                 
-                // Şimdilik memory'de tutuyoruz, ileride Room'a bağlayacağız
-                val currentList = _recurringTransactions.value.toMutableList()
-                currentList.add(newTransaction)
-                _recurringTransactions.value = currentList
+                // Eğer başlangıç tarihi bugün ise, otomatik olarak normal işlem de oluştur
+                val currentTime = System.currentTimeMillis()
+                val todayStart = java.util.Calendar.getInstance().apply {
+                    set(java.util.Calendar.HOUR_OF_DAY, 0)
+                    set(java.util.Calendar.MINUTE, 0)
+                    set(java.util.Calendar.SECOND, 0)
+                    set(java.util.Calendar.MILLISECOND, 0)
+                }.timeInMillis
                 
-                loadRecurringTransactions() // Refresh list
+                val todayEnd = todayStart + (24 * 60 * 60 * 1000) - 1 // Günün sonu
+                
+                if (startDate >= todayStart && startDate <= todayEnd) {
+                    println("🔍 DEBUG: Başlangıç tarihi bugün, normal işlem oluşturuluyor")
+                    createTransactionFromRecurring(newTransaction, startDate)
+                }
+                
+                // collect otomatik olarak güncellenecek, manuel yenileme gerekmez
             } catch (e: Exception) {
-                // Handle error
+                println("Error saving recurring transaction: ${e.message}")
             }
         }
     }
@@ -91,6 +125,31 @@ class RecurringViewModel @Inject constructor(
         }
         
         return calendar.timeInMillis
+    }
+    
+    private suspend fun createTransactionFromRecurring(recurringTransaction: RecurringTransactionEntity, executionDate: Long) {
+        try {
+            println("🔍 DEBUG: createTransactionFromRecurring çağrıldı")
+            println("🔍 DEBUG: - name: ${recurringTransaction.name}, amount: ${recurringTransaction.amount}")
+            
+            // Normal işlem oluştur
+            val transaction = com.alperen.spendcraft.core.model.Transaction(
+                id = null, // Yeni işlem
+                amount = com.alperen.spendcraft.core.model.Money(recurringTransaction.amount),
+                note = recurringTransaction.note ?: recurringTransaction.name,
+                categoryId = recurringTransaction.categoryId,
+                accountId = recurringTransaction.accountId,
+                type = recurringTransaction.type,
+                timestampUtcMillis = executionDate
+            )
+            
+            // TransactionsRepository'e kaydet
+            transactionsRepository.upsert(transaction)
+            println("🔍 DEBUG: Normal işlem oluşturuldu ve kaydedildi")
+            
+        } catch (e: Exception) {
+            println("Error creating transaction from recurring: ${e.message}")
+        }
     }
     
     fun updateRecurringTransaction(transaction: RecurringTransactionEntity) {

@@ -36,6 +36,7 @@ dependencies {
     implementation(project(":core:billing"))
     implementation(project(":data:db"))
     implementation(project(":data:repository"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

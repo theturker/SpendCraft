@@ -31,6 +31,14 @@ fun RecurringListScreen(
 ) {
     val recurringTransactions by recurringTransactionsFlow.collectAsState(initial = emptyList())
     
+    // Debug log
+    LaunchedEffect(recurringTransactions) {
+        println("🔍 DEBUG: RecurringListScreen - ${recurringTransactions.size} adet tekrarlayan işlem alındı")
+        recurringTransactions.forEachIndexed { index, transaction ->
+            println("🔍 DEBUG: RecurringListScreen [$index] ${transaction.name} (ID: ${transaction.id})")
+        }
+    }
+    
     AppScaffold(
         title = "Tekrarlayan İşlemler",
         onBack = onBack,

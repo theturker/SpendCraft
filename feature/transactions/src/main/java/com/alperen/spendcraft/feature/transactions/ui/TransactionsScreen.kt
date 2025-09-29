@@ -117,7 +117,8 @@ fun TransactionsScreen(
             TxFilter.INCOME -> items.filter { it.type == TransactionType.INCOME }
             TxFilter.EXPENSE -> items.filter { it.type == TransactionType.EXPENSE }
         }
-        base.take(5)
+        // Son işlemler için tarihe göre sırala ve ilk 5'i al
+        base.sortedByDescending { it.timestampUtcMillis }.take(5)
     }
 
     // Reklam yüksekliği - sadece reklam yüklendiğinde kullanılacak

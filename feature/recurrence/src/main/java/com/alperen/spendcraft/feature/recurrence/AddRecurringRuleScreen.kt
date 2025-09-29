@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import java.text.SimpleDateFormat
+import java.util.*
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.data.db.entities.RecurringRuleEntity
@@ -38,6 +41,10 @@ fun AddRecurringRuleScreen(
     var endDate by remember { mutableStateOf<Long?>(null) }
     var hasEndDate by remember { mutableStateOf(false) }
     var description by remember { mutableStateOf("") }
+    
+    // Date picker states
+    var showStartDatePicker by remember { mutableStateOf(false) }
+    var showEndDatePicker by remember { mutableStateOf(false) }
     
     AppScaffold(
         title = "Tekrarlayan İşlem Ekle",
@@ -226,12 +233,12 @@ fun AddRecurringRuleScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         OutlinedTextField(
-                            value = java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(startDate)),
+                            value = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(startDate)),
                             onValueChange = { },
                             label = { Text("Başlangıç Tarihi") },
                             readOnly = true,
                             trailingIcon = {
-                                IconButton(onClick = { /* TODO: Show date picker */ }) {
+                                IconButton(onClick = { showStartDatePicker = true }) {
                                     Icon(Icons.Default.DateRange, contentDescription = "Tarih Seç")
                                 }
                             },
@@ -260,13 +267,13 @@ fun AddRecurringRuleScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
                                 value = endDate?.let { 
-                                    java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
+                                    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
                                 } ?: "",
                                 onValueChange = { },
                                 label = { Text("Bitiş Tarihi") },
                                 readOnly = true,
                                 trailingIcon = {
-                                    IconButton(onClick = { /* TODO: Show date picker */ }) {
+                                    IconButton(onClick = { showEndDatePicker = true }) {
                                         Icon(Icons.Default.DateRange, contentDescription = "Tarih Seç")
                                     }
                                 },
@@ -334,8 +341,10 @@ fun AddRecurringRuleScreen(
                     
                     Button(
                         onClick = {
+                            println("🔍 DEBUG: Kaydet butonuna basıldı")
                             if (title.isNotBlank() && amount.isNotBlank() && selectedCategory != null) {
-                                val amountLong = (amount.toDoubleOrNull() ?: 0.0 * 100).toLong() // Convert to minor units
+                                println("🔍 DEBUG: Form valid, kaydetme işlemi başlıyor")
+                                val amountLong = ((amount.toDoubleOrNull() ?: 0.0) * 100).toLong() // Convert to minor units
                                 val frequency = when (selectedFrequency) {
                                     Frequency.DAILY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.DAILY
                                     Frequency.WEEKLY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.WEEKLY
@@ -347,6 +356,7 @@ fun AddRecurringRuleScreen(
                                     TransactionType.EXPENSE -> com.alperen.spendcraft.core.model.TransactionType.EXPENSE
                                 }
                                 
+                                println("🔍 DEBUG: ViewModel'e kaydetme başlıyor")
                                 // Önce ViewModel'e kaydet
                                 viewModel?.addRecurringTransaction(
                                     name = title,
@@ -360,6 +370,7 @@ fun AddRecurringRuleScreen(
                                     note = description
                                 )
                                 
+                                println("🔍 DEBUG: onSave callback çağrılıyor")
                                 // Sonra callback'i çağır (navigation'ı kapatır)
                                 onSave(RecurringRuleData(
                                     title = title,
@@ -372,12 +383,124 @@ fun AddRecurringRuleScreen(
                                     endDate = if (hasEndDate) endDate else null,
                                     description = description
                                 ))
+                                println("🔍 DEBUG: onSave callback tamamlandı")
+                            } else {
+                                println("🔍 DEBUG: Form invalid - title: '$title', amount: '$amount', category: $selectedCategory")
                             }
                         },
                         enabled = title.isNotBlank() && amount.isNotBlank() && selectedCategory != null,
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Kaydet")
+                    }
+                }
+            }
+        }
+    }
+    
+    // Date Pickers
+    if (showStartDatePicker) {
+        DatePickerDialog(
+            onDateSelected = { date ->
+                startDate = date
+                showStartDatePicker = false
+            },
+            onDismiss = { showStartDatePicker = false }
+        )
+    }
+    
+    if (showEndDatePicker) {
+        DatePickerDialog(
+            onDateSelected = { date ->
+                endDate = date
+                showEndDatePicker = false
+            },
+            onDismiss = { showEndDatePicker = false }
+        )
+    }
+}
+
+@Composable
+fun DatePickerDialog(
+    onDateSelected: (Long) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var selectedDate by remember { mutableStateOf(System.currentTimeMillis()) }
+    var day by remember { mutableStateOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) }
+    var month by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+    var year by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
+    
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "Tarih Seçin",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                // Gün seçimi
+                Text("Gün", style = MaterialTheme.typography.bodyMedium)
+                OutlinedTextField(
+                    value = day.toString(),
+                    onValueChange = { day = it.toIntOrNull() ?: 1 },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                // Ay seçimi
+                Text("Ay", style = MaterialTheme.typography.bodyMedium)
+                OutlinedTextField(
+                    value = (month + 1).toString(),
+                    onValueChange = { month = (it.toIntOrNull() ?: 1) - 1 },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                // Yıl seçimi
+                Text("Yıl", style = MaterialTheme.typography.bodyMedium)
+                OutlinedTextField(
+                    value = year.toString(),
+                    onValueChange = { year = it.toIntOrNull() ?: Calendar.getInstance().get(Calendar.YEAR) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = onDismiss,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("İptal")
+                    }
+                    
+                    Button(
+                        onClick = { 
+                            val calendar = Calendar.getInstance()
+                            calendar.set(year, month, day)
+                            onDateSelected(calendar.timeInMillis)
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Seç")
                     }
                 }
             }

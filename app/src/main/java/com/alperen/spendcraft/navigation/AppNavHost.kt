@@ -294,7 +294,7 @@ fun AppNavHost(
             val isPremium = recurringViewModel.billingRepository.isPremium.collectAsState(initial = false).value
             
             RecurringListScreen(
-                recurringTransactionsFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
+                recurringTransactionsFlow = recurringViewModel.recurringTransactions,
                 onAddRule = { 
                     // Navigate to add recurring rule screen
                     navController.navigate(Routes.ADD_RECURRING_RULE)
@@ -314,7 +314,10 @@ fun AppNavHost(
             val recurringViewModel: com.alperen.spendcraft.feature.recurrence.RecurringViewModel = hiltViewModel()
             AddRecurringRuleScreen(
                 categories = vm.categories.collectAsState().value,
-                onSave = { /* TODO: Implement save functionality */ },
+                onSave = { 
+                    println("🔍 DEBUG: onSave callback çağrıldı, navigation geri dönüyor")
+                    navController.popBackStack() 
+                },
                 onCancel = { navController.popBackStack() },
                 viewModel = recurringViewModel
             )

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "recurring_transactions")
 data class RecurringTransactionEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
     val amount: Long,
