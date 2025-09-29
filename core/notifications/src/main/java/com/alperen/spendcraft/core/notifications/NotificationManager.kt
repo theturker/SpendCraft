@@ -18,12 +18,7 @@ class NotificationManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     
-    // NotificationsViewModel referansı - dependency injection ile set edilecek
-    private var notificationsViewModel: Any? = null
-    
-    fun setNotificationsViewModel(viewModel: Any) {
-        this.notificationsViewModel = viewModel
-    }
+    // Sadece sistem bildirimleri gönderir
     
     companion object {
         const val CHANNEL_ID_BUDGET = "budget_alerts"
@@ -111,8 +106,6 @@ class NotificationManager @Inject constructor(
             .build()
         
         notificationManager.notify(NOTIFICATION_ID_BUDGET, notification)
-        
-        // Uygulama içi bildirim NotificationsViewModel'de yapılacak
     }
     
     fun showSpendingReminder() {
@@ -135,8 +128,6 @@ class NotificationManager @Inject constructor(
             .build()
         
         notificationManager.notify(NOTIFICATION_ID_REMINDER, notification)
-        
-        // Uygulama içi bildirim NotificationsViewModel'de yapılacak
     }
     
     fun showAchievementNotification(achievementName: String, description: String) {
@@ -159,8 +150,6 @@ class NotificationManager @Inject constructor(
             .build()
         
         notificationManager.notify(NOTIFICATION_ID_ACHIEVEMENT, notification)
-        
-        // Uygulama içi bildirim NotificationsViewModel'de yapılacak
     }
     
     fun showGeneralNotification(title: String, message: String) {
@@ -183,8 +172,6 @@ class NotificationManager @Inject constructor(
             .build()
         
         notificationManager.notify(NOTIFICATION_ID_GENERAL, notification)
-        
-        // Uygulama içi bildirim NotificationsViewModel'de yapılacak
     }
     
     fun cancelNotification(notificationId: Int) {

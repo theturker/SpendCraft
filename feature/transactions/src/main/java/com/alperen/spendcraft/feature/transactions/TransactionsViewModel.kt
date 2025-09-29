@@ -18,6 +18,9 @@ import com.alperen.spendcraft.domain.usecase.MarkTodayLoggedUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveStreakUseCase
 import com.alperen.spendcraft.domain.usecase.CheckBudgetBreachesUseCase
 import com.alperen.spendcraft.core.notifications.NotificationManager
+import com.alperen.spendcraft.core.notifications.NotificationEventBus
+import com.alperen.spendcraft.core.notifications.NotificationEvent
+import com.alperen.spendcraft.core.notifications.NotificationType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +48,7 @@ class TransactionsViewModel @Inject constructor(
     private val notificationTester: NotificationTester,
     private val checkBudgetBreachesUseCase: CheckBudgetBreachesUseCase,
     private val notificationManager: NotificationManager,
+    private val notificationEventBus: NotificationEventBus,
     // private val billingRepository: BillingRepository
 ) : ViewModel() {
 
@@ -183,6 +187,15 @@ class TransactionsViewModel @Inject constructor(
                     // Breach mesajından kategori adını çıkar
                     val categoryName = breach.substringAfter("Budget exceeded for ").substringBefore("!")
                     notificationManager.showBudgetAlert("100%", categoryName)
+                    
+                    // Uygulama içi bildirim ekle
+                    notificationEventBus.sendNotificationEvent(
+                        NotificationEvent(
+                            title = "⚠️ Bütçe Uyarısı",
+                            message = "$categoryName bütçenizi 100% aştınız!",
+                            type = NotificationType.BUDGET_ALERT
+                        )
+                    )
                 }
             }
             
@@ -215,6 +228,15 @@ class TransactionsViewModel @Inject constructor(
                 val deficit = -netAmount
                 val deficitFormatted = String.format("%.2f", deficit / 100.0)
                 notificationManager.showBudgetAlert("Açık", "Toplam açığınız: $deficitFormatted TL")
+                
+                // Uygulama içi bildirim ekle
+                notificationEventBus.sendNotificationEvent(
+                    NotificationEvent(
+                        title = "⚠️ Genel Bütçe Uyarısı",
+                        message = "Toplam açığınız: $deficitFormatted TL",
+                        type = NotificationType.BUDGET_ALERT
+                    )
+                )
             }
         } catch (e: Exception) {
             // Handle error silently

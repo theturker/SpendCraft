@@ -1,5 +1,7 @@
 package com.alperen.spendcraft.feature.notifications
 
+import com.alperen.spendcraft.core.notifications.NotificationType
+
 data class NotificationItem(
     val id: String,
     val title: String,
@@ -8,12 +10,3 @@ data class NotificationItem(
     val timestamp: Long,
     val isRead: Boolean = false
 )
-
-enum class NotificationType {
-    BUDGET_ALERT,
-    SPENDING_REMINDER,
-    ACHIEVEMENT,
-    PAYMENT_DUE,
-    AI_INSIGHT,
-    SYSTEM
-}

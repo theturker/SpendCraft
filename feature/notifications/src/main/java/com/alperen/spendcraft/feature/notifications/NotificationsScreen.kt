@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
+import com.alperen.spendcraft.core.notifications.NotificationType
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,7 +43,7 @@ fun NotificationsScreen(
             IconButton(onClick = { 
                 displayNotifications.forEach { notification ->
                     if (!notification.isRead) {
-                        viewModel?.markNotificationAsRead(notification.id)
+                        viewModel?.markAsRead(notification.id)
                     }
                 }
             }) {
@@ -107,7 +108,7 @@ fun NotificationsScreen(
                     items(unreadNotifications) { notification ->
                         NotificationCard(
                             notification = notification,
-                            onMarkAsRead = { viewModel?.markNotificationAsRead(notification.id) },
+                            onMarkAsRead = { viewModel?.markAsRead(notification.id) },
                             onDelete = { viewModel?.deleteNotification(notification.id) }
                         )
                     }
@@ -127,7 +128,7 @@ fun NotificationsScreen(
                     items(readNotifications) { notification ->
                         NotificationCard(
                             notification = notification,
-                            onMarkAsRead = { viewModel?.markNotificationAsRead(notification.id) },
+                            onMarkAsRead = { viewModel?.markAsRead(notification.id) },
                             onDelete = { viewModel?.deleteNotification(notification.id) }
                         )
                     }
@@ -245,8 +246,6 @@ private fun getNotificationIcon(type: NotificationType) = when (type) {
     NotificationType.BUDGET_ALERT -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_warning_vector)
     NotificationType.SPENDING_REMINDER -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_schedule_vector)
     NotificationType.ACHIEVEMENT -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector)
-    NotificationType.PAYMENT_DUE -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_payment_vector)
-    NotificationType.AI_INSIGHT -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_star_vector)
     NotificationType.SYSTEM -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_system_update_vector)
 }
 
@@ -255,7 +254,5 @@ private fun getNotificationColor(type: NotificationType) = when (type) {
     NotificationType.BUDGET_ALERT -> MaterialTheme.colorScheme.error
     NotificationType.SPENDING_REMINDER -> MaterialTheme.colorScheme.primary
     NotificationType.ACHIEVEMENT -> Color(0xFFFFD700) // Gold
-    NotificationType.PAYMENT_DUE -> MaterialTheme.colorScheme.error
-    NotificationType.AI_INSIGHT -> MaterialTheme.colorScheme.secondary
     NotificationType.SYSTEM -> MaterialTheme.colorScheme.onSurfaceVariant
 }
