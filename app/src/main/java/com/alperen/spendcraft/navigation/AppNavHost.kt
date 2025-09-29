@@ -208,17 +208,19 @@ fun AppNavHost(
             )
         }
         composable(Routes.BUDGET_MANAGEMENT) {
+            val budgetViewModel: com.alperen.spendcraft.feature.budget.BudgetViewModel = hiltViewModel()
+            
             com.alperen.spendcraft.feature.budget.ui.BudgetManagementScreen(
-                budgets = emptyList(), // TODO: Get budgets from ViewModel
-                categories = vm.categories.collectAsState().value,
-                spentAmounts = emptyMap(), // TODO: Get spent amounts from ViewModel
-                isPremium = false, // TODO: Get premium state from ViewModel
-                onAddBudget = { /* TODO: Implement */ },
-                onUpdateBudget = { /* TODO: Implement */ },
-                onDeleteBudget = { /* TODO: Implement */ },
+                budgets = budgetViewModel.budgets.collectAsState().value,
+                categories = budgetViewModel.categories.collectAsState().value,
+                spentAmounts = budgetViewModel.spentAmounts.collectAsState().value,
+                isPremium = true, // Geçici olarak true yapıyoruz - gerçek premium kontrolü için billing repository gerekli
+                onAddBudget = { budget -> budgetViewModel.addBudget(budget) },
+                onUpdateBudget = { budget -> budgetViewModel.updateBudget(budget) },
+                onDeleteBudget = { categoryId -> budgetViewModel.deleteBudget(categoryId) },
                 onBack = { navController.popBackStack() },
                 onNavigateToPaywall = { navController.navigate(Routes.PAYWALL) },
-                onCalculateSpentAmounts = { /* TODO: Implement */ }
+                onCalculateSpentAmounts = { budgetViewModel.calculateSpentAmounts() }
             )
         }
         composable(Routes.ALL_TRANSACTIONS) {

@@ -184,18 +184,37 @@ class TransactionsViewModel @Inject constructor(
             // Bütçe aşımı tespit edildiğinde bildirim gönder
             if (breaches.isNotEmpty()) {
                 for (breach in breaches) {
-                    // Breach mesajından kategori adını çıkar
-                    val categoryName = breach.substringAfter("Budget exceeded for ").substringBefore("!")
-                    notificationManager.showBudgetAlert("100%", categoryName)
-                    
-                    // Uygulama içi bildirim ekle
-                    notificationEventBus.sendNotificationEvent(
-                        NotificationEvent(
-                            title = "⚠️ Bütçe Uyarısı",
-                            message = "$categoryName bütçenizi 100% aştınız!",
-                            type = NotificationType.BUDGET_ALERT
+                    if (breach.contains("Budget exceeded")) {
+                        // 100% aşım bildirimi
+                        val categoryName = breach.substringAfter("Budget exceeded for ").substringBefore("!")
+                        notificationManager.showBudgetAlert("100%", categoryName)
+                        
+                        // Uygulama içi bildirim ekle
+                        notificationEventBus.sendNotificationEvent(
+                            NotificationEvent(
+                                title = "⚠️ Bütçe Uyarısı",
+                                message = "$categoryName bütçenizi 100% aştınız!",
+                                type = NotificationType.BUDGET_ALERT
+                            )
                         )
-                    )
+                    } else if (breach.contains("Budget warning")) {
+                        // 80% uyarı bildirimi
+                        val categoryName = breach.substringAfter("Budget warning for ").substringBefore("!")
+                        val percentage = breach.substringAfter("(").substringBefore("%)").toIntOrNull() ?: 80
+                        val spentAmount = breach.substringAfter("Spent: ").substringBefore(",")
+                        val limitAmount = breach.substringAfter("Budget: ").substringBefore(" (")
+                        
+                        notificationManager.showBudgetWarning(percentage, categoryName, spentAmount, limitAmount)
+                        
+                        // Uygulama içi bildirim ekle
+                        notificationEventBus.sendNotificationEvent(
+                            NotificationEvent(
+                                title = "⚠️ Bütçe Uyarısı",
+                                message = "$categoryName bütçenizin %$percentage'ini kullandınız!",
+                                type = NotificationType.BUDGET_ALERT
+                            )
+                        )
+                    }
                 }
             }
             

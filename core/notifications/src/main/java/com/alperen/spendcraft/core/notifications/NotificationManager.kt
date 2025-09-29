@@ -108,6 +108,28 @@ class NotificationManager @Inject constructor(
         notificationManager.notify(NOTIFICATION_ID_BUDGET, notification)
     }
     
+    fun showBudgetWarning(percentage: Int, budgetName: String, spentAmount: String, limitAmount: String) {
+        val intent = Intent().apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID_BUDGET)
+            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .setContentTitle("⚠️ Bütçe Uyarısı")
+            .setContentText("$budgetName bütçenizin %$percentage'ini kullandınız! (₺$spentAmount / ₺$limitAmount)")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+        
+        notificationManager.notify(NOTIFICATION_ID_BUDGET + 1, notification)
+    }
+    
     fun showSpendingReminder() {
         val intent = Intent().apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

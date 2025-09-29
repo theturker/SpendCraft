@@ -368,33 +368,56 @@ private fun BudgetDialog(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Category Selection
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
-                ) {
-                    OutlinedTextField(
-                        value = selectedCategory,
-                        onValueChange = { },
-                        readOnly = true,
-                        label = { Text(stringResource(R.string.category)) },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                // Category Selection - Debug için basit dropdown
+                OutlinedTextField(
+                    value = selectedCategory,
+                    onValueChange = { },
+                    readOnly = true,
+                    label = { Text("Kategori (${categories.size} adet)") },
+                    trailingIcon = { 
+                        IconButton(onClick = { expanded = !expanded }) {
+                            Icon(
+                                imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                                contentDescription = "Kategori seç"
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                
+                // Dropdown Menu
+                if (expanded) {
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                    )
-                    
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                            .padding(vertical = 4.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                     ) {
-                        categories.forEach { category ->
-                            DropdownMenuItem(
-                                text = { Text(category.name) },
-                                onClick = {
-                                    selectedCategory = category.name
-                                    expanded = false
+                        Column {
+                            if (categories.isEmpty()) {
+                                Text(
+                                    text = "Henüz kategori yok - önce kategori ekleyin",
+                                    modifier = Modifier.padding(16.dp),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            } else {
+                                categories.forEach { category ->
+                                    TextButton(
+                                        onClick = {
+                                            selectedCategory = category.name
+                                            expanded = false
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            text = "${category.name} (ID: ${category.id})",
+                                            modifier = Modifier.fillMaxWidth(),
+                                            textAlign = androidx.compose.ui.text.style.TextAlign.Start
+                                        )
+                                    }
                                 }
-                            )
+                            }
                         }
                     }
                 }
