@@ -237,13 +237,25 @@ fun AchievementsScreen(
                 title = entity.name,
                 description = entity.description,
                 icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_vector),
-                category = AchievementCategory.TRACKING,
+                category = when (entity.category) {
+                    com.alperen.spendcraft.data.db.entities.AchievementCategory.SPENDING -> AchievementCategory.TRACKING
+                    com.alperen.spendcraft.data.db.entities.AchievementCategory.BUDGET -> AchievementCategory.BUDGETING
+                    com.alperen.spendcraft.data.db.entities.AchievementCategory.SAVING -> AchievementCategory.SAVING
+                    com.alperen.spendcraft.data.db.entities.AchievementCategory.STREAK -> AchievementCategory.STREAK
+                    com.alperen.spendcraft.data.db.entities.AchievementCategory.CATEGORY -> AchievementCategory.TRACKING
+                    com.alperen.spendcraft.data.db.entities.AchievementCategory.SPECIAL -> AchievementCategory.PREMIUM
+                },
                 isUnlocked = entity.isUnlocked,
                 progress = if (entity.maxProgress > 0) entity.progress.toFloat() / entity.maxProgress else 0f,
                 currentProgress = entity.progress,
                 maxProgress = entity.maxProgress,
-                reward = "+10 XP",
-                rarity = AchievementRarity.COMMON
+                reward = "+${entity.points} XP",
+                rarity = when (entity.points) {
+                    in 0..25 -> AchievementRarity.COMMON
+                    in 26..50 -> AchievementRarity.RARE
+                    in 51..100 -> AchievementRarity.EPIC
+                    else -> AchievementRarity.LEGENDARY
+                }
             )
         }
     } else {

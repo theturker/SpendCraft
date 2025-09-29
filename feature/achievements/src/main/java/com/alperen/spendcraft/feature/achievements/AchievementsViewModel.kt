@@ -2,7 +2,8 @@ package com.alperen.spendcraft.feature.achievements
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alperen.spendcraft.core.achievements.AchievementManager
+import com.alperen.spendcraft.domain.achievements.AchievementManager
+import com.alperen.spendcraft.core.achievements.AchievementManagerImpl
 import com.alperen.spendcraft.data.db.entities.AchievementEntity
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import com.alperen.spendcraft.domain.repo.BudgetRepository
@@ -38,14 +39,18 @@ class AchievementsViewModel @Inject constructor(
 
     private fun loadAchievements() {
         viewModelScope.launch {
+            // İlk başta achievement'ları initialize et
+            achievementManager.initializeAchievements()
+            
             // Başarımları kontrol et ve güncelle
             achievementManager.checkAchievements()
             
             // AchievementManager'dan güncel başarımları al
             achievementManager.allAchievements.collect { achievements ->
-                _achievements.value = achievements
-                _totalPoints.value = achievements.filter { it.isUnlocked }.sumOf { it.points }
-                _unlockedCount.value = achievements.count { it.isUnlocked }
+                val achievementEntities = achievements.filterIsInstance<AchievementEntity>()
+                _achievements.value = achievementEntities
+                _totalPoints.value = achievementEntities.filter { it.isUnlocked }.sumOf { it.points }
+                _unlockedCount.value = achievementEntities.count { it.isUnlocked }
             }
         }
     }
