@@ -18,6 +18,13 @@ class NotificationManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     
+    // NotificationsViewModel referansı - dependency injection ile set edilecek
+    private var notificationsViewModel: Any? = null
+    
+    fun setNotificationsViewModel(viewModel: Any) {
+        this.notificationsViewModel = viewModel
+    }
+    
     companion object {
         const val CHANNEL_ID_BUDGET = "budget_alerts"
         const val CHANNEL_ID_REMINDERS = "spending_reminders"
@@ -85,7 +92,7 @@ class NotificationManager @Inject constructor(
     }
     
     fun showBudgetAlert(amount: String, budgetName: String) {
-        val intent = Intent(context, MainActivity::class.java).apply {
+        val intent = Intent().apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         
@@ -95,7 +102,7 @@ class NotificationManager @Inject constructor(
         )
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_BUDGET)
-            .setSmallIcon(R.drawable.ic_warning_vector)
+            .setSmallIcon(android.R.drawable.ic_dialog_alert)
             .setContentTitle("⚠️ Bütçe Uyarısı")
             .setContentText("$budgetName bütçenizi $amount aştınız!")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -104,10 +111,12 @@ class NotificationManager @Inject constructor(
             .build()
         
         notificationManager.notify(NOTIFICATION_ID_BUDGET, notification)
+        
+        // Uygulama içi bildirim NotificationsViewModel'de yapılacak
     }
     
     fun showSpendingReminder() {
-        val intent = Intent(context, MainActivity::class.java).apply {
+        val intent = Intent().apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         
@@ -117,7 +126,7 @@ class NotificationManager @Inject constructor(
         )
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_REMINDERS)
-            .setSmallIcon(R.drawable.ic_reminder_vector)
+            .setSmallIcon(android.R.drawable.ic_menu_edit)
             .setContentTitle("📝 Günlük Hatırlatma")
             .setContentText("Bugünkü harcamalarınızı kaydetmeyi unutmayın!")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -126,10 +135,12 @@ class NotificationManager @Inject constructor(
             .build()
         
         notificationManager.notify(NOTIFICATION_ID_REMINDER, notification)
+        
+        // Uygulama içi bildirim NotificationsViewModel'de yapılacak
     }
     
     fun showAchievementNotification(achievementName: String, description: String) {
-        val intent = Intent(context, MainActivity::class.java).apply {
+        val intent = Intent().apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         
@@ -139,7 +150,7 @@ class NotificationManager @Inject constructor(
         )
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_ACHIEVEMENTS)
-            .setSmallIcon(R.drawable.ic_trophy_vector)
+            .setSmallIcon(android.R.drawable.ic_menu_myplaces)
             .setContentTitle("🏆 Yeni Başarım!")
             .setContentText("$achievementName: $description")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -148,10 +159,12 @@ class NotificationManager @Inject constructor(
             .build()
         
         notificationManager.notify(NOTIFICATION_ID_ACHIEVEMENT, notification)
+        
+        // Uygulama içi bildirim NotificationsViewModel'de yapılacak
     }
     
     fun showGeneralNotification(title: String, message: String) {
-        val intent = Intent(context, MainActivity::class.java).apply {
+        val intent = Intent().apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         
@@ -161,7 +174,7 @@ class NotificationManager @Inject constructor(
         )
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_GENERAL)
-            .setSmallIcon(R.drawable.ic_notifications_vector)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -170,6 +183,8 @@ class NotificationManager @Inject constructor(
             .build()
         
         notificationManager.notify(NOTIFICATION_ID_GENERAL, notification)
+        
+        // Uygulama içi bildirim NotificationsViewModel'de yapılacak
     }
     
     fun cancelNotification(notificationId: Int) {

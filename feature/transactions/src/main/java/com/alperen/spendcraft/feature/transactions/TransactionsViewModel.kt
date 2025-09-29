@@ -16,6 +16,8 @@ import com.alperen.spendcraft.domain.usecase.UpdateAccountUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveTransactionsByAccountUseCase
 import com.alperen.spendcraft.domain.usecase.MarkTodayLoggedUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveStreakUseCase
+import com.alperen.spendcraft.domain.usecase.CheckBudgetBreachesUseCase
+import com.alperen.spendcraft.core.notifications.NotificationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -41,6 +43,8 @@ class TransactionsViewModel @Inject constructor(
     private val markTodayLogged: MarkTodayLoggedUseCase,
     observeStreak: ObserveStreakUseCase,
     private val notificationTester: NotificationTester,
+    private val checkBudgetBreachesUseCase: CheckBudgetBreachesUseCase,
+    private val notificationManager: NotificationManager,
     // private val billingRepository: BillingRepository
 ) : ViewModel() {
 
@@ -87,6 +91,9 @@ class TransactionsViewModel @Inject constructor(
             
             // Mark today as logged for streak
             markTodayLogged()
+            
+            // Bütçe kontrolü yap ve bildirim gönder
+            checkBudgetBreaches()
         }
     }
 
@@ -149,6 +156,9 @@ class TransactionsViewModel @Inject constructor(
             
             // Update last used values
             _lastUsedCategoryId.value = categoryId
+            
+            // Bütçe kontrolü yap ve bildirim gönder
+            checkBudgetBreaches()
         }
     }
     
@@ -161,6 +171,75 @@ class TransactionsViewModel @Inject constructor(
     // TEST ONLY - Remove in production
     fun testNotificationNow() {
         notificationTester.testNotificationNow()
+    }
+    
+    private suspend fun checkBudgetBreaches() {
+        try {
+            val breaches = checkBudgetBreachesUseCase()
+            
+            // Bütçe aşımı tespit edildiğinde bildirim gönder
+            if (breaches.isNotEmpty()) {
+                for (breach in breaches) {
+                    // Breach mesajından kategori adını çıkar
+                    val categoryName = breach.substringAfter("Budget exceeded for ").substringBefore("!")
+                    notificationManager.showBudgetAlert("100%", categoryName)
+                }
+            }
+            
+            // Genel bütçe kontrolü - toplam gelir vs gider
+            checkGeneralBudgetBreach()
+        } catch (e: Exception) {
+            // Handle error silently
+        }
+    }
+    
+    private suspend fun checkGeneralBudgetBreach() {
+        try {
+            val currentMonth = getCurrentMonth()
+            val (monthStart, monthEnd) = getMonthBoundaries(currentMonth)
+            
+            // Bu ayın tüm işlemlerini al
+            val allTransactions = items.value.filter { tx ->
+                tx.timestampUtcMillis >= monthStart && tx.timestampUtcMillis < monthEnd
+            }
+            
+            val totalIncome = allTransactions.filter { it.type == TransactionType.INCOME }
+                .sumOf { it.amount.minorUnits }
+            val totalExpense = allTransactions.filter { it.type == TransactionType.EXPENSE }
+                .sumOf { it.amount.minorUnits }
+            
+            val netAmount = totalIncome - totalExpense
+            
+            // Eğer net negatif ise (gider > gelir) bildirim gönder
+            if (netAmount < 0) {
+                val deficit = -netAmount
+                val deficitFormatted = String.format("%.2f", deficit / 100.0)
+                notificationManager.showBudgetAlert("Açık", "Toplam açığınız: $deficitFormatted TL")
+            }
+        } catch (e: Exception) {
+            // Handle error silently
+        }
+    }
+    
+    private fun getCurrentMonth(): String {
+        val calendar = java.util.Calendar.getInstance()
+        return "${calendar.get(java.util.Calendar.YEAR)}-${calendar.get(java.util.Calendar.MONTH) + 1}"
+    }
+    
+    private fun getMonthBoundaries(monthKey: String): Pair<Long, Long> {
+        val (year, month) = monthKey.split("-").map { it.toInt() }
+        val calendar = java.util.Calendar.getInstance()
+        
+        // Ayın başlangıcı
+        calendar.set(year, month - 1, 1, 0, 0, 0)
+        calendar.set(java.util.Calendar.MILLISECOND, 0)
+        val monthStart = calendar.timeInMillis
+        
+        // Ayın sonu
+        calendar.add(java.util.Calendar.MONTH, 1)
+        val monthEnd = calendar.timeInMillis
+        
+        return Pair(monthStart, monthEnd)
     }
 }
 

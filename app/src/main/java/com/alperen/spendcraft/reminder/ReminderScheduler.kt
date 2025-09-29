@@ -12,10 +12,7 @@ object ReminderScheduler {
     fun scheduleDaily(context: Context) {
         val currentTime = Calendar.getInstance()
         val targetTime = Calendar.getInstance().apply {
-            // TEST: 30 saniye sonra tetikle (normal: 21:00)
-            timeInMillis = currentTime.timeInMillis + 30_000 // 30 saniye sonra
-            
-            /* Normal production code:
+            // Production: 21:00'da tetikle
             set(Calendar.HOUR_OF_DAY, 21) // 21:00
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
@@ -25,7 +22,6 @@ object ReminderScheduler {
             if (before(currentTime)) {
                 add(Calendar.DAY_OF_YEAR, 1)
             }
-            */
         }
         
         val delayInMillis = targetTime.timeInMillis - currentTime.timeInMillis

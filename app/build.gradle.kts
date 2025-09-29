@@ -60,6 +60,7 @@ dependencies {
     implementation(project(":core:billing"))
     implementation(project(":core:premium"))
     implementation(project(":core:ai"))
+    implementation(project(":core:notifications"))
     implementation(project(":domain"))
     implementation(project(":data:repository"))
     implementation(project(":data:db"))

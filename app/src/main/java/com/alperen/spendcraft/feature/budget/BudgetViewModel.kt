@@ -10,6 +10,7 @@ import com.alperen.spendcraft.domain.usecase.DeleteBudgetUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveCategoriesUseCase
 import com.alperen.spendcraft.domain.usecase.CheckBudgetBreachesUseCase
 import com.alperen.spendcraft.domain.usecase.GetSpentAmountsUseCase
+import com.alperen.spendcraft.core.notifications.NotificationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -22,7 +23,8 @@ class BudgetViewModel @Inject constructor(
     private val deleteBudgetUseCase: DeleteBudgetUseCase,
     private val observeCategoriesUseCase: ObserveCategoriesUseCase,
     private val checkBudgetBreachesUseCase: CheckBudgetBreachesUseCase,
-    private val getSpentAmountsUseCase: GetSpentAmountsUseCase
+    private val getSpentAmountsUseCase: GetSpentAmountsUseCase,
+    private val notificationManager: NotificationManager
 ) : ViewModel() {
 
     val budgets: StateFlow<List<Budget>> = observeBudgetsUseCase()
@@ -89,6 +91,15 @@ class BudgetViewModel @Inject constructor(
         try {
             val breaches = checkBudgetBreachesUseCase()
             _budgetBreaches.value = breaches
+            
+            // Bütçe aşımı tespit edildiğinde bildirim gönder
+            if (breaches.isNotEmpty()) {
+                for (breach in breaches) {
+                    // Breach mesajından kategori adını çıkar
+                    val categoryName = breach.substringAfter("Budget exceeded for ").substringBefore("!")
+                    notificationManager.showBudgetAlert("100%", categoryName)
+                }
+            }
         } catch (e: Exception) {
             // Handle error
         }
