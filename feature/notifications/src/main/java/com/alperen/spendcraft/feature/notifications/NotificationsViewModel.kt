@@ -2,9 +2,7 @@ package com.alperen.spendcraft.feature.notifications
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alperen.spendcraft.data.db.entities.TransactionEntity
 import com.alperen.spendcraft.domain.repo.BudgetRepository
-import com.alperen.spendcraft.domain.repo.CategoryRepository
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationsViewModel @Inject constructor(
     private val transactionRepository: TransactionsRepository,
-    private val budgetRepository: BudgetRepository,
-    private val categoryRepository: CategoryRepository
+    private val budgetRepository: BudgetRepository
 ) : ViewModel() {
     
     private val _notifications = MutableStateFlow<List<NotificationItem>>(emptyList())
@@ -49,7 +46,17 @@ class NotificationsViewModel @Inject constructor(
         // Gerçek verileri al
         val transactions = transactionRepository.getAllAscending()
         val budgets = budgetRepository.observeBudgets().first()
-        val categories = categoryRepository.getAllCategories()
+        
+        // Debug log'ları
+        println("🔍 DEBUG: Transactions count: ${transactions.size}")
+        println("🔍 DEBUG: Budgets count: ${budgets.size}")
+        
+        if (transactions.isNotEmpty()) {
+            println("🔍 DEBUG: First transaction: ${transactions.first()}")
+        }
+        if (budgets.isNotEmpty()) {
+            println("🔍 DEBUG: First budget: ${budgets.first()}")
+        }
         
         // 1. Hoş geldin bildirimi (eğer hiç işlem yoksa)
         if (transactions.isEmpty()) {
@@ -74,13 +81,15 @@ class NotificationsViewModel @Inject constructor(
             val budgetLimit = budget.monthlyLimitMinor
             val percentage = if (budgetLimit > 0) (monthlySpent * 100) / budgetLimit else 0
             
+            println("🔍 DEBUG: Budget ${budget.categoryId} - Spent: $monthlySpent, Limit: $budgetLimit, Percentage: $percentage%")
+            
             if (percentage >= 80) {
-                val categoryName = categories.find { it.id?.toString() == budget.categoryId }?.name ?: "Bilinmeyen"
+                println("🔍 DEBUG: Creating budget alert for category ${budget.categoryId} - $percentage%")
                 notifications.add(
                     NotificationItem(
                         id = "budget_alert_${budget.categoryId}_${currentTime}",
                         title = "Bütçe Uyarısı",
-                        message = "$categoryName kategorisinde aylık bütçenizin %${percentage.toInt()}'ini harcadınız",
+                        message = "Kategori ${budget.categoryId} kategorisinde aylık bütçenizin %${percentage.toInt()}'ini harcadınız",
                         type = NotificationType.BUDGET_ALERT,
                         timestamp = currentTime,
                         isRead = false
