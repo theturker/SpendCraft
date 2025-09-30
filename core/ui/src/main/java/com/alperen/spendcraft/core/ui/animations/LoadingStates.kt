@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.core.ui.animations
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun LoadingSpinner(
     modifier: Modifier = Modifier,
-    color: Color = SpendCraftTheme.colors.primary,
+    color: Color = MaterialTheme.colorScheme.primary,
     size: androidx.compose.ui.unit.Dp = 24.dp
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "spinner")
@@ -50,7 +49,7 @@ fun LoadingSpinner(
 @Composable
 fun LoadingDots(
     modifier: Modifier = Modifier,
-    color: Color = SpendCraftTheme.colors.primary
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "dots")
     
@@ -128,7 +127,7 @@ fun LoadingCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = SpendCraftTheme.colors.surfaceVariant.copy(alpha = alpha)
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
@@ -142,14 +141,14 @@ fun LoadingCard(
                     .fillMaxWidth(0.7f)
                     .height(20.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(SpendCraftTheme.colors.onSurfaceVariant.copy(alpha = 0.3f))
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f))
             )
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .height(16.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(SpendCraftTheme.colors.onSurfaceVariant.copy(alpha = 0.3f))
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f))
             )
         }
     }
@@ -168,8 +167,8 @@ fun LoadingState(
         LoadingSpinner(size = 48.dp)
         Text(
             text = message,
-            style = SpendCraftTheme.typography.bodyLarge,
-            color = SpendCraftTheme.colors.onSurfaceVariant
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

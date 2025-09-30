@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,14 +56,14 @@ fun QuickAddCard(
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = null,
-                    tint = SpendCraftTheme.colors.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
                     text = "Hızlı Harcama Ekle",
-                    style = SpendCraftTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = SpendCraftTheme.colors.onSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
             
@@ -111,8 +110,8 @@ fun QuickAddCard(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "₺${amount}",
-                    style = SpendCraftTheme.typography.bodyMedium,
-                    color = SpendCraftTheme.colors.onSurfaceVariant
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.accounts
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -52,18 +51,18 @@ fun AccountsScreen(
                                 painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector),
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp),
-                                tint = SpendCraftTheme.colors.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = "Henüz hesap yok",
-                                style = SpendCraftTheme.typography.titleMedium,
-                                color = SpendCraftTheme.colors.onSurfaceVariant
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
                                 text = "İlk hesabınızı ekleyerek başlayın",
-                                style = SpendCraftTheme.typography.bodyMedium,
-                                color = SpendCraftTheme.colors.onSurfaceVariant
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -108,19 +107,19 @@ private fun AccountItem(
                         getAccountTypeIcon(account.type),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        tint = SpendCraftTheme.colors.primary
+                        tint = MaterialTheme.colorScheme.primary
                     )
                     
                     Column {
                         Text(
                             text = account.name,
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = getAccountTypeDisplayName(account.type),
-                            style = SpendCraftTheme.typography.bodyMedium,
-                            color = SpendCraftTheme.colors.onSurfaceVariant
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -133,7 +132,7 @@ private fun AccountItem(
                             Icon(
                                 Icons.Default.Star,
                                 contentDescription = "Varsayılan yap",
-                                tint = SpendCraftTheme.colors.primary
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -142,7 +141,7 @@ private fun AccountItem(
                         Icon(
                             Icons.Default.Edit,
                             contentDescription = "Düzenle",
-                            tint = SpendCraftTheme.colors.primary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                     
@@ -151,7 +150,7 @@ private fun AccountItem(
                         Icon(
                             painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_archive_vector),
                                 contentDescription = "Arşivle",
-                                tint = SpendCraftTheme.colors.error
+                                tint = MaterialTheme.colorScheme.error
                             )
                         }
                     }
@@ -166,19 +165,19 @@ private fun AccountItem(
             ) {
                 Text(
                     text = "Para birimi: ${account.currency}",
-                    style = SpendCraftTheme.typography.bodySmall,
-                    color = SpendCraftTheme.colors.onSurfaceVariant
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 
                 if (account.isDefault) {
                     Surface(
-                        color = SpendCraftTheme.colors.primary,
-                        shape = SpendCraftTheme.shapes.small
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = MaterialTheme.shapes.small
                     ) {
                         Text(
                             text = "Varsayılan",
-                            style = SpendCraftTheme.typography.bodySmall,
-                            color = SpendCraftTheme.colors.onPrimary,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
@@ -186,13 +185,13 @@ private fun AccountItem(
                 
                 if (account.archived) {
                     Surface(
-                        color = SpendCraftTheme.colors.onSurfaceVariant,
-                        shape = SpendCraftTheme.shapes.small
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        shape = MaterialTheme.shapes.small
                     ) {
                         Text(
                             text = "Arşivlendi",
-                            style = SpendCraftTheme.typography.bodySmall,
-                            color = SpendCraftTheme.colors.surface,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.surface,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
@@ -253,7 +252,7 @@ fun AccountEditorScreen(
                 ) {
                     Text(
                         text = "Hesap Bilgileri",
-                        style = SpendCraftTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -269,7 +268,7 @@ fun AccountEditorScreen(
                     
                     Text(
                         text = "Hesap Türü",
-                        style = SpendCraftTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -298,7 +297,7 @@ fun AccountEditorScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = typeName,
-                                style = SpendCraftTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     }

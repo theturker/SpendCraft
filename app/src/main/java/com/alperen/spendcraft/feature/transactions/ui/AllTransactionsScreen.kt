@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -63,24 +62,24 @@ fun AllTransactionsScreen(
                                 imageVector = Icons.Filled.List,
                                 contentDescription = null,
                                 modifier = Modifier.size(64.dp),
-                                tint = SpendCraftTheme.colors.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             
                             Spacer(modifier = Modifier.height(16.dp))
                             
                             Text(
                                 text = "İşlem Yok",
-                                style = SpendCraftTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = SpendCraftTheme.colors.onSurface
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             
                             Spacer(modifier = Modifier.height(8.dp))
                             
                             Text(
                                 text = "İşlem eklemeye başlayın",
-                                style = SpendCraftTheme.typography.bodyMedium,
-                                color = SpendCraftTheme.colors.onSurfaceVariant
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -131,9 +130,9 @@ private fun TransactionItemCard(
                     },
                     contentDescription = null,
                     tint = if (transaction.type == TransactionType.INCOME) {
-                        SpendCraftTheme.colors.primary
+                        MaterialTheme.colorScheme.primary
                     } else {
-                        SpendCraftTheme.colors.error
+                        MaterialTheme.colorScheme.error
                     },
                     modifier = Modifier.size(24.dp)
                 )
@@ -141,9 +140,9 @@ private fun TransactionItemCard(
                 Column {
                     Text(
                         text = transaction.note ?: "No description",
-                        style = SpendCraftTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = SpendCraftTheme.colors.onSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -155,8 +154,8 @@ private fun TransactionItemCard(
                             } else {
                                 "Kategori Yok"
                             },
-                            style = SpendCraftTheme.typography.bodyMedium,
-                            color = SpendCraftTheme.colors.onSurfaceVariant
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         if (transaction.categoryId == null) {
                             IconButton(
@@ -166,7 +165,7 @@ private fun TransactionItemCard(
                                 Icon(
                                     imageVector = Icons.Filled.Add,
                                     contentDescription = "Kategori Ekle",
-                                    tint = SpendCraftTheme.colors.primary,
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(16.dp)
                                 )
                             }
@@ -174,20 +173,20 @@ private fun TransactionItemCard(
                     }
                     Text(
                         text = formatDate(transaction.timestampUtcMillis),
-                        style = SpendCraftTheme.typography.bodySmall,
-                        color = SpendCraftTheme.colors.onSurfaceVariant
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
             
             Text(
                 text = formatAmount(transaction.amount.minorUnits, transaction.type),
-                style = SpendCraftTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = if (transaction.type == TransactionType.INCOME) {
-                    SpendCraftTheme.colors.primary
+                    MaterialTheme.colorScheme.primary
                 } else {
-                    SpendCraftTheme.colors.error
+                    MaterialTheme.colorScheme.error
                 }
             )
         }
@@ -211,13 +210,13 @@ private fun TransactionItemCard(
                                     showCategoryDialog = false
                                 },
                             colors = CardDefaults.cardColors(
-                                containerColor = SpendCraftTheme.colors.surfaceVariant
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant
                             )
                         ) {
                             Text(
                                 text = category.name,
                                 modifier = Modifier.padding(16.dp),
-                                style = SpendCraftTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     }

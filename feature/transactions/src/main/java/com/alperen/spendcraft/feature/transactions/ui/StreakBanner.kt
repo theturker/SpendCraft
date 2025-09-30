@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -49,21 +48,21 @@ fun StreakBanner(
                 Icon(
                     imageVector = Icons.Filled.AccountBox,
                     contentDescription = null,
-                    tint = if (streak.current > 0) Color(0xFFFF6B35) else SpendCraftTheme.colors.onSurfaceVariant,
+                    tint = if (streak.current > 0) Color(0xFFFF6B35) else MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(24.dp)
                 )
                 
                 Column {
                     Text(
                         text = "🔥 ${streak.current} ${stringResource(R.string.day_streak)}",
-                        style = SpendCraftTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = SpendCraftTheme.colors.onSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = "${stringResource(R.string.best_streak)} ${streak.best}",
-                        style = SpendCraftTheme.typography.bodyMedium,
-                        color = SpendCraftTheme.colors.onSurfaceVariant
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -74,15 +73,15 @@ fun StreakBanner(
                         badge.contains("Altın") || badge.contains("Gold") -> Color(0xFFFFD700)
                         badge.contains("Gümüş") || badge.contains("Silver") -> Color(0xFFC0C0C0)
                         badge.contains("Bronz") || badge.contains("Bronze") -> Color(0xFFCD7F32)
-                        else -> SpendCraftTheme.colors.primaryContainer
+                        else -> MaterialTheme.colorScheme.primaryContainer
                     },
-                    shape = SpendCraftTheme.shapes.small,
+                    shape = MaterialTheme.shapes.small,
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Text(
                         text = badge,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        style = SpendCraftTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )

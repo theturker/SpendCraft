@@ -19,7 +19,6 @@ include(":app")
 
 include(":core:common")
 include(":core:model")
-include(":core:designsystem")
 include(":core:ui")
 include(":core:analytics")
 include(":core:billing")

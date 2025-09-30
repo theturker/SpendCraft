@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.premiumdebug
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -39,14 +38,14 @@ fun BillingDebugScreen(
                     ) {
                         Text(
                             text = "Premium Durumu",
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = if (isPremium) "✅ Premium Aktif" else "❌ Premium Değil",
-                            style = SpendCraftTheme.typography.bodyLarge,
-                            color = if (isPremium) SpendCraftTheme.colors.primary else SpendCraftTheme.colors.error
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = if (isPremium) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -60,34 +59,34 @@ fun BillingDebugScreen(
                     ) {
                         Text(
                             text = "Debug Bilgileri",
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Bu ekran premium durumunu test etmek için kullanılır.",
-                            style = SpendCraftTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Premium özellikler:",
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
                             text = "• Sınırsız AI önerileri",
-                            style = SpendCraftTheme.typography.bodySmall,
-                            color = SpendCraftTheme.colors.onSurfaceVariant
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             text = "• Gelişmiş raporlar",
-                            style = SpendCraftTheme.typography.bodySmall,
-                            color = SpendCraftTheme.colors.onSurfaceVariant
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             text = "• Reklamsız deneyim",
-                            style = SpendCraftTheme.typography.bodySmall,
-                            color = SpendCraftTheme.colors.onSurfaceVariant
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }

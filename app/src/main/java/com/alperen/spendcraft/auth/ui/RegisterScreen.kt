@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.auth.ui
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -177,7 +176,7 @@ fun RegisterScreen(
                 
                 Text(
                     text = if (isTr) "Hesap Oluştur" else "Create Account",
-                    style = SpendCraftTheme.typography.headlineLarge.copy(
+                    style = MaterialTheme.typography.headlineLarge.copy(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     ),
@@ -192,7 +191,7 @@ fun RegisterScreen(
                         "Yeni hesabınızı oluşturun" 
                     else 
                         "Create your new account",
-                    style = SpendCraftTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.bodyLarge.copy(
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     ),
@@ -247,7 +246,7 @@ fun RegisterScreen(
                             unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
                             cursorColor = primaryColor
                         ),
-                        textStyle = SpendCraftTheme.typography.bodyLarge.copy(fontSize = 14.sp),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
                         shape = RoundedCornerShape(10.dp),
                         singleLine = true
                     )
@@ -280,7 +279,7 @@ fun RegisterScreen(
                             unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
                             cursorColor = primaryColor
                         ),
-                        textStyle = SpendCraftTheme.typography.bodyLarge.copy(fontSize = 14.sp),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
                         shape = RoundedCornerShape(10.dp),
                         singleLine = true
                     )
@@ -326,7 +325,7 @@ fun RegisterScreen(
                             unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
                             cursorColor = primaryColor
                         ),
-                        textStyle = SpendCraftTheme.typography.bodyLarge.copy(fontSize = 14.sp),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
                         shape = RoundedCornerShape(10.dp),
                         singleLine = true
                     )
@@ -405,7 +404,7 @@ fun RegisterScreen(
                             unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
                             cursorColor = primaryColor
                         ),
-                        textStyle = SpendCraftTheme.typography.bodyLarge.copy(fontSize = 14.sp),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
                         shape = RoundedCornerShape(10.dp),
                         singleLine = true
                     )
@@ -444,8 +443,8 @@ fun RegisterScreen(
                     if (!errorMessage.isNullOrEmpty()) {
                         Text(
                             text = errorMessage ?: "",
-                            color = SpendCraftTheme.colors.error,
-                            style = SpendCraftTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall.copy(
                                 fontSize = 13.sp,
                                 lineHeight = 16.sp
                             )
@@ -500,7 +499,7 @@ fun RegisterScreen(
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
                                     text = if (isTr) "Kayıt Ol" else "Sign Up",
-                                    style = SpendCraftTheme.typography.titleMedium.copy(
+                                    style = MaterialTheme.typography.titleMedium.copy(
                                         fontSize = 15.sp,
                                         fontWeight = FontWeight.SemiBold
                                     )
@@ -524,7 +523,7 @@ fun RegisterScreen(
             ) {
                 Text(
                     text = if (isTr) "Hesabın var mı? Giriş yap" else "Have an account? Sign in",
-                    style = SpendCraftTheme.typography.bodyMedium.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium
                     )

@@ -1,8 +1,10 @@
 package com.alperen.spendcraft.core.ui
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.*
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,22 +12,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,10 +37,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import com.alperen.spendcraft.core.designsystem.animation.CardPressAnimationState
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftMotionHelpers
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import com.alperen.spendcraft.core.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,12 +52,12 @@ fun AppScaffold(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
+                title = { 
                     Text(
                         text = title,
-                        style = SpendCraftTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
-                    )
+                    ) 
                 },
                 navigationIcon = {
                     when {
@@ -77,9 +65,9 @@ fun AppScaffold(
                         onBack != null -> {
                             IconButton(onClick = onBack) {
                                 Icon(
-                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack, 
                                     contentDescription = "Geri",
-                                    tint = SpendCraftTheme.colors.onSurface
+                                    tint = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }
@@ -87,13 +75,13 @@ fun AppScaffold(
                 },
                 actions = actions,
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SpendCraftTheme.colors.surfaces.surface1,
-                    titleContentColor = SpendCraftTheme.colors.onSurface
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         },
         floatingActionButton = { fab?.invoke() },
-        containerColor = SpendCraftTheme.colors.background
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             content()
@@ -109,9 +97,9 @@ fun ModernFab(
 ) {
     FloatingActionButton(
         onClick = onClick,
-        containerColor = SpendCraftTheme.colors.primary,
-        contentColor = SpendCraftTheme.colors.onPrimary,
-        modifier = Modifier.shadow(8.dp, SpendCraftTheme.shapes.tokens.circular)
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        modifier = Modifier.shadow(8.dp, CircleShape)
     ) {
         Icon(
             imageVector = icon,
@@ -124,13 +112,16 @@ fun ModernFab(
 @Composable
 fun GradientCard(
     modifier: Modifier = Modifier,
-    colors: List<Color> = SpendCraftTheme.colors.gradients.primary,
+    colors: List<Color> = listOf(
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.tertiary
+    ),
     content: @Composable () -> Unit
 ) {
     Card(
         modifier = modifier
-            .shadow(12.dp, SpendCraftTheme.shapes.tokens.roundedLg)
-            .clip(SpendCraftTheme.shapes.tokens.roundedLg),
+            .shadow(8.dp, RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp)),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Box(
@@ -151,38 +142,49 @@ fun ModernCard(
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
     val hapticFeedback = LocalHapticFeedback.current
-    val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
-    val pressAnimation = SpendCraftMotionHelpers.cardPress(pressed)
-
-    val clickModifier = if (onClick != null) {
-        Modifier.clickable(
-            interactionSource = interactionSource,
-            indication = null
-        ) {
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-            onClick()
-        }
-    } else {
-        Modifier
-    }
-
+    
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.98f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "scale"
+    )
+    
+    val elevation by animateFloatAsState(
+        targetValue = if (isPressed) 4.dp.value else 12.dp.value,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "elevation"
+    )
+    
     Card(
         modifier = modifier
-            .scale(pressAnimation.scale)
+            .scale(scale)
             .shadow(
-                elevation = pressAnimation.elevation,
-                shape = SpendCraftTheme.shapes.tokens.roundedLg,
-                ambientColor = SpendCraftTheme.colors.surfaces.shadowAmbient.copy(alpha = pressAnimation.ambientAlpha),
-                spotColor = SpendCraftTheme.colors.surfaces.shadowSpot.copy(alpha = pressAnimation.spotAlpha)
+                elevation = elevation.dp,
+                shape = RoundedCornerShape(20.dp),
+                ambientColor = Color.Black.copy(alpha = 0.08f),
+                spotColor = Color.Black.copy(alpha = 0.12f)
             )
-            .clip(SpendCraftTheme.shapes.tokens.roundedLg)
-            .then(clickModifier),
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                if (onClick != null) {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onClick()
+                }
+            },
         colors = CardDefaults.cardColors(
-            containerColor = SpendCraftTheme.colors.surfaces.surface1
+            containerColor = MaterialTheme.colorScheme.surface
         ),
-        shape = SpendCraftTheme.shapes.tokens.roundedLg
+        shape = RoundedCornerShape(20.dp)
     ) {
         content()
     }
@@ -193,7 +195,7 @@ fun StatCard(
     title: String,
     value: String,
     icon: Painter,
-    color: Color = SpendCraftTheme.colors.primary,
+    color: Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier
 ) {
     var isHovered by remember { mutableStateOf(false) }
@@ -232,8 +234,8 @@ fun StatCard(
             ) {
                 Text(
                     text = title,
-                    style = SpendCraftTheme.typography.bodyMedium,
-                    color = SpendCraftTheme.colors.onSurfaceVariant
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Icon(
                     painter = icon,
@@ -245,9 +247,9 @@ fun StatCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = value,
-                style = SpendCraftTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = SpendCraftTheme.colors.onSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -260,7 +262,7 @@ fun ActionButton(
     icon: ImageVector? = null,
     modifier: Modifier = Modifier,
     colors: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = SpendCraftTheme.colors.primary
+        containerColor = MaterialTheme.colorScheme.primary
     )
 ) {
     Button(
@@ -279,7 +281,7 @@ fun ActionButton(
         }
         Text(
             text = text,
-            style = SpendCraftTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.SemiBold
         )
     }
@@ -299,9 +301,9 @@ fun IncomeExpenseButton(
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isIncome) 
-                SpendCraftTheme.colors.secondary 
+                MaterialTheme.colorScheme.secondary 
             else 
-                SpendCraftTheme.colors.error
+                MaterialTheme.colorScheme.error
         )
     )
 }
@@ -339,8 +341,8 @@ fun MultiAccountBalanceCard(
             val account = accounts[page]
             GradientCard(
                 colors = listOf(
-                    SpendCraftTheme.colors.primary,
-                    SpendCraftTheme.colors.tertiary
+                    MaterialTheme.colorScheme.primary,
+                    MaterialTheme.colorScheme.tertiary
                 )
             ) {
                 Column {
@@ -351,7 +353,7 @@ fun MultiAccountBalanceCard(
                     ) {
                         Text(
                             text = account.name,
-                            style = SpendCraftTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = Color.White.copy(alpha = 0.9f)
                         )
                         IconButton(onClick = { onEditAccount(page) }) {
@@ -366,7 +368,7 @@ fun MultiAccountBalanceCard(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = account.balance,
-                        style = SpendCraftTheme.typography.displaySmall,
+                        style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
@@ -378,12 +380,12 @@ fun MultiAccountBalanceCard(
                         Column {
                             Text(
                                 text = stringResource(R.string.income),
-                                style = SpendCraftTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = Color.White.copy(alpha = 0.9f)
                             )
                             Text(
                                 text = account.income,
-                                style = SpendCraftTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF10B981)
                             )
@@ -391,12 +393,12 @@ fun MultiAccountBalanceCard(
                         Column {
                             Text(
                                 text = stringResource(R.string.expenses),
-                                style = SpendCraftTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = Color.White.copy(alpha = 0.9f)
                             )
                             Text(
                                 text = account.expenses,
-                                style = SpendCraftTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFFEF4444)
                             )
@@ -419,9 +421,9 @@ fun MultiAccountBalanceCard(
                             .size(8.dp)
                             .background(
                                 if (pagerState.currentPage == index) 
-                                    SpendCraftTheme.colors.primary 
+                                    MaterialTheme.colorScheme.primary 
                                 else 
-                                    SpendCraftTheme.colors.onSurfaceVariant.copy(alpha = 0.3f),
+                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
                                 CircleShape
                             )
                     )
@@ -610,8 +612,8 @@ fun FloatingActionButton(
             ) {
                 isPressed = !isPressed
             },
-        containerColor = SpendCraftTheme.colors.primary,
-        contentColor = SpendCraftTheme.colors.onPrimary
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
     ) {
         Icon(
             imageVector = icon,

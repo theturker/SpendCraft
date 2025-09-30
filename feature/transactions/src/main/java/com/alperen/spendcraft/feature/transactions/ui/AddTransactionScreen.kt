@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
@@ -57,9 +56,9 @@ fun AddTransactionScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.transaction_type),
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(
@@ -88,20 +87,20 @@ fun AddTransactionScreen(
                                         imageVector = Icons.Filled.Add,
                                         contentDescription = null,
                                         tint = if (isIncome) 
-                                            SpendCraftTheme.colors.secondary 
+                                            MaterialTheme.colorScheme.secondary 
                                         else 
-                                            SpendCraftTheme.colors.onSurfaceVariant,
+                                            MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(24.dp)
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
                                         text = stringResource(R.string.income),
-                                        style = SpendCraftTheme.typography.bodySmall,
+                                        style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Medium,
                                         color = if (isIncome) 
-                                            SpendCraftTheme.colors.secondary 
+                                            MaterialTheme.colorScheme.secondary 
                                         else 
-                                            SpendCraftTheme.colors.onSurfaceVariant
+                                            MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
@@ -126,20 +125,20 @@ fun AddTransactionScreen(
                                         imageVector = Icons.Filled.ThumbUp,
                                         contentDescription = null,
                                         tint = if (!isIncome) 
-                                            SpendCraftTheme.colors.error 
+                                            MaterialTheme.colorScheme.error 
                                         else 
-                                            SpendCraftTheme.colors.onSurfaceVariant,
+                                            MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(24.dp)
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
                                         text = stringResource(R.string.expense),
-                                        style = SpendCraftTheme.typography.bodySmall,
+                                        style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Medium,
                                         color = if (!isIncome) 
-                                            SpendCraftTheme.colors.error 
+                                            MaterialTheme.colorScheme.error 
                                         else 
-                                            SpendCraftTheme.colors.onSurfaceVariant
+                                            MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
@@ -156,9 +155,9 @@ fun AddTransactionScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.amount),
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Row(
@@ -176,7 +175,7 @@ fun AddTransactionScreen(
                                 label = { 
                                     Text(
                                         stringResource(R.string.amount),
-                                        style = SpendCraftTheme.typography.bodyMedium
+                                        style = MaterialTheme.typography.bodyMedium
                                     ) 
                                 },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -193,11 +192,11 @@ fun AddTransactionScreen(
                                         val formattedAmount = formatCurrencyDisplay(amount.toLongOrNull() ?: 0)
                                         Text(
                                             "₺$formattedAmount",
-                                            style = SpendCraftTheme.typography.bodyMedium
+                                            style = MaterialTheme.typography.bodyMedium
                                         )
                                     }
                                 },
-                                textStyle = SpendCraftTheme.typography.bodyLarge
+                                textStyle = MaterialTheme.typography.bodyLarge
                             )
                             
                             // Camera button for expense transactions
@@ -212,7 +211,7 @@ fun AddTransactionScreen(
                                     Icon(
                                         imageVector = Icons.Filled.AccountBox,
                                         contentDescription = "Fiş Tara",
-                                        tint = SpendCraftTheme.colors.primary,
+                                        tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
@@ -230,9 +229,9 @@ fun AddTransactionScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.note),
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         OutlinedTextField(
@@ -241,7 +240,7 @@ fun AddTransactionScreen(
                             label = { 
                                 Text(
                                     stringResource(R.string.note_optional),
-                                    style = SpendCraftTheme.typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium
                                 ) 
                             },
                             modifier = Modifier.fillMaxWidth(),
@@ -253,7 +252,7 @@ fun AddTransactionScreen(
                                 )
                             },
                             maxLines = 2,
-                            textStyle = SpendCraftTheme.typography.bodyLarge
+                            textStyle = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
@@ -267,9 +266,9 @@ fun AddTransactionScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.category),
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         ExposedDropdownMenuBox(
@@ -283,7 +282,7 @@ fun AddTransactionScreen(
                                 label = { 
                                     Text(
                                         stringResource(R.string.category),
-                                        style = SpendCraftTheme.typography.bodyMedium
+                                        style = MaterialTheme.typography.bodyMedium
                                     ) 
                                 },
                                 modifier = Modifier
@@ -295,7 +294,7 @@ fun AddTransactionScreen(
                                         modifier = Modifier.size(24.dp)
                                     )
                                 },
-                                textStyle = SpendCraftTheme.typography.bodyLarge
+                                textStyle = MaterialTheme.typography.bodyLarge
                             )
                             ExposedDropdownMenu(
                                 expanded = expanded,
@@ -306,7 +305,7 @@ fun AddTransactionScreen(
                                         text = { 
                                             Text(
                                                 cat.name,
-                                                style = SpendCraftTheme.typography.bodyMedium
+                                                style = MaterialTheme.typography.bodyMedium
                                             ) 
                                         },
                                         onClick = {
@@ -333,14 +332,14 @@ fun AddTransactionScreen(
                     .fillMaxWidth()
                     .padding(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = SpendCraftTheme.colors.primary,
-                    contentColor = SpendCraftTheme.colors.onPrimary
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
-                shape = SpendCraftTheme.shapes.medium
+                shape = MaterialTheme.shapes.medium
             ) {
                 Text(
                     text = stringResource(R.string.save),
-                    style = SpendCraftTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )

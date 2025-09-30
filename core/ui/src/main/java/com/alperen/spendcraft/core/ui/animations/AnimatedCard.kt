@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.core.ui.animations
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -52,7 +51,7 @@ fun AnimatedModernCard(
                 }
             ),
         colors = CardDefaults.cardColors(
-            containerColor = SpendCraftTheme.colors.surface
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = elevation),
         shape = RoundedCornerShape(16.dp)
@@ -69,7 +68,7 @@ fun AnimatedStatCard(
     title: String,
     value: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
-    color: Color = SpendCraftTheme.colors.primary,
+    color: Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 ) {
@@ -120,14 +119,14 @@ fun AnimatedStatCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = title,
-                style = SpendCraftTheme.typography.bodyMedium,
-                color = SpendCraftTheme.colors.onSurfaceVariant
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 text = value,
-                style = SpendCraftTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                color = SpendCraftTheme.colors.onSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -144,9 +143,9 @@ fun AnimatedBalanceCard(
     onExpenseClick: (() -> Unit)? = null
 ) {
     val balanceColor = if (balance >= 0) {
-        SpendCraftTheme.colors.primary
+        MaterialTheme.colorScheme.primary
     } else {
-        SpendCraftTheme.colors.error
+        MaterialTheme.colorScheme.error
     }
     
     Card(
@@ -164,7 +163,7 @@ fun AnimatedBalanceCard(
             // Balance
             AnimatedCounter(
                 targetValue = balance,
-                style = SpendCraftTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineLarge,
                 color = balanceColor,
                 prefix = "₺"
             )
@@ -180,7 +179,7 @@ fun AnimatedBalanceCard(
                     title = "Gelir",
                     value = "₺${formatCurrency(income)}",
                     icon = Icons.Filled.TrendingUp,
-                    color = SpendCraftTheme.colors.primary,
+                    color = MaterialTheme.colorScheme.primary,
                     onClick = onIncomeClick
                 )
                 
@@ -188,7 +187,7 @@ fun AnimatedBalanceCard(
                     title = "Gider",
                     value = "₺${formatCurrency(expense)}",
                     icon = Icons.Filled.TrendingDown,
-                    color = SpendCraftTheme.colors.error,
+                    color = MaterialTheme.colorScheme.error,
                     onClick = onExpenseClick
                 )
             }

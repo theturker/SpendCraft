@@ -5,7 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -93,7 +93,7 @@ fun BarChart(
             displayData.forEach { barData ->
                 Text(
                     text = barData.label,
-                    style = SpendCraftTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.weight(1f),
                     maxLines = 1
                 )
@@ -217,7 +217,7 @@ fun HorizontalBarChart(
                 // Label
                 Text(
                     text = barData.label,
-                    style = SpendCraftTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.width(100.dp),
                     maxLines = 1
                 )
@@ -249,7 +249,7 @@ fun HorizontalBarChart(
                 if (showValues) {
                     Text(
                         text = "${barData.value.toInt()}",
-                        style = SpendCraftTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium
                     )
                 }

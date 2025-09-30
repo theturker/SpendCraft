@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.core.ui
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,24 +29,24 @@ fun PremiumGate(
                 Icons.Default.Star,
                 contentDescription = null,
                 modifier = Modifier.size(48.dp),
-                tint = SpendCraftTheme.colors.primary
+                tint = MaterialTheme.colorScheme.primary
             )
             
             Spacer(modifier = Modifier.height(16.dp))
             
             Text(
                 text = title,
-                style = SpendCraftTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = SpendCraftTheme.colors.onSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
             
             Spacer(modifier = Modifier.height(8.dp))
             
             Text(
                 text = description,
-                style = SpendCraftTheme.typography.bodyMedium,
-                color = SpendCraftTheme.colors.onSurfaceVariant
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             
             Spacer(modifier = Modifier.height(20.dp))
@@ -97,19 +96,19 @@ fun PremiumFeatureCard(
                     ) {
                         Text(
                             text = title,
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = description,
-                            style = SpendCraftTheme.typography.bodyMedium,
-                            color = SpendCraftTheme.colors.onSurfaceVariant
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Icon(
                         Icons.Default.Lock,
                         contentDescription = null,
-                        tint = SpendCraftTheme.colors.onSurfaceVariant
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 

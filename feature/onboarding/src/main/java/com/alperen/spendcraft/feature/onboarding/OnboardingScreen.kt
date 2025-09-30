@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.onboarding
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -92,8 +91,8 @@ fun OnboardingScreen(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        SpendCraftTheme.colors.background,
-                        SpendCraftTheme.colors.surface
+                        MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.surface
                     )
                 )
             )
@@ -111,7 +110,7 @@ fun OnboardingScreen(
                 TextButton(onClick = onFinish) {
                     Text(
                         text = "Atla",
-                        color = SpendCraftTheme.colors.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -144,9 +143,9 @@ fun OnboardingScreen(
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(
                                     if (index == pagerState.currentPage) {
-                                        SpendCraftTheme.colors.primary
+                                        MaterialTheme.colorScheme.primary
                                     } else {
-                                        SpendCraftTheme.colors.onSurfaceVariant.copy(alpha = 0.3f)
+                                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
                                     }
                                 )
                         )
@@ -260,10 +259,10 @@ private fun OnboardingPageContent(
         // Title
         Text(
             text = page.title,
-            style = SpendCraftTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            color = SpendCraftTheme.colors.onBackground
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -271,10 +270,10 @@ private fun OnboardingPageContent(
         // Description
         Text(
             text = page.description,
-            style = SpendCraftTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            color = SpendCraftTheme.colors.onSurfaceVariant,
-            lineHeight = SpendCraftTheme.typography.bodyLarge.lineHeight * 1.3
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.3
         )
     }
 }

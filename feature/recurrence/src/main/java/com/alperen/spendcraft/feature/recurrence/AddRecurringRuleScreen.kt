@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.recurrence
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -64,7 +63,7 @@ fun AddRecurringRuleScreen(
                     ) {
                         Text(
                             text = "İşlem Bilgileri",
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -91,7 +90,7 @@ fun AddRecurringRuleScreen(
                         // İşlem Türü
                         Text(
                             text = "İşlem Türü",
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -118,7 +117,7 @@ fun AddRecurringRuleScreen(
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         text = type.displayName,
-                                        style = SpendCraftTheme.typography.bodyMedium
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
                             }
@@ -129,7 +128,7 @@ fun AddRecurringRuleScreen(
                         // Kategori Seçimi
                         Text(
                             text = "Kategori",
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -169,7 +168,7 @@ fun AddRecurringRuleScreen(
                     ) {
                         Text(
                             text = "Tekrar Ayarları",
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -177,7 +176,7 @@ fun AddRecurringRuleScreen(
                         // Sıklık
                         Text(
                             text = "Sıklık",
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -204,7 +203,7 @@ fun AddRecurringRuleScreen(
                         ) {
                             Text(
                                 text = "Her",
-                                style = SpendCraftTheme.typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             
@@ -219,7 +218,7 @@ fun AddRecurringRuleScreen(
                             
                             Text(
                                 text = selectedFrequency.unit,
-                                style = SpendCraftTheme.typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                         
@@ -228,7 +227,7 @@ fun AddRecurringRuleScreen(
                         // Başlangıç Tarihi
                         Text(
                             text = "Başlangıç Tarihi",
-                            style = SpendCraftTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -260,7 +259,7 @@ fun AddRecurringRuleScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "Bitiş tarihi belirle",
-                                style = SpendCraftTheme.typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                         
@@ -293,7 +292,7 @@ fun AddRecurringRuleScreen(
                     ) {
                         Text(
                             text = "Önizleme",
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(12.dp))
@@ -301,26 +300,26 @@ fun AddRecurringRuleScreen(
                         if (title.isNotBlank() && amount.isNotBlank()) {
                             Text(
                                 text = "$title - ${amount} TL",
-                                style = SpendCraftTheme.typography.bodyLarge,
+                                style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
                                 text = "Her $interval ${selectedFrequency.unit} tekrarlanacak",
-                                style = SpendCraftTheme.typography.bodyMedium,
-                                color = SpendCraftTheme.colors.onSurfaceVariant
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             if (description.isNotBlank()) {
                                 Text(
                                     text = description,
-                                    style = SpendCraftTheme.typography.bodySmall,
-                                    color = SpendCraftTheme.colors.onSurfaceVariant
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         } else {
                             Text(
                                 text = "Bilgileri doldurun",
-                                style = SpendCraftTheme.typography.bodyMedium,
-                                color = SpendCraftTheme.colors.onSurfaceVariant
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -443,14 +442,14 @@ fun DatePickerDialog(
             ) {
                 Text(
                     text = "Tarih Seçin",
-                    style = SpendCraftTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 // Gün seçimi
-                Text("Gün", style = SpendCraftTheme.typography.bodyMedium)
+                Text("Gün", style = MaterialTheme.typography.bodyMedium)
                 OutlinedTextField(
                     value = day.toString(),
                     onValueChange = { day = it.toIntOrNull() ?: 1 },
@@ -461,7 +460,7 @@ fun DatePickerDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 // Ay seçimi
-                Text("Ay", style = SpendCraftTheme.typography.bodyMedium)
+                Text("Ay", style = MaterialTheme.typography.bodyMedium)
                 OutlinedTextField(
                     value = (month + 1).toString(),
                     onValueChange = { month = (it.toIntOrNull() ?: 1) - 1 },
@@ -472,7 +471,7 @@ fun DatePickerDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 // Yıl seçimi
-                Text("Yıl", style = SpendCraftTheme.typography.bodyMedium)
+                Text("Yıl", style = MaterialTheme.typography.bodyMedium)
                 OutlinedTextField(
                     value = year.toString(),
                     onValueChange = { year = it.toIntOrNull() ?: Calendar.getInstance().get(Calendar.YEAR) },

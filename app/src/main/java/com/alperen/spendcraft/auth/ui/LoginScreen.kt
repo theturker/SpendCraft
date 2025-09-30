@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.auth.ui
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -66,25 +65,25 @@ fun LoginScreen(
     val cardBackground = if (isDarkMode) Color(0xFF181B28) else Color.White.copy(alpha = 0.97f)
 
     // Tipografi
-    val h1 = SpendCraftTheme.typography.headlineLarge.copy(
+    val h1 = MaterialTheme.typography.headlineLarge.copy(
         fontSize = 32.sp,
         fontWeight = FontWeight.ExtraBold,
         color = titleColor,
         lineHeight = 36.sp,
         letterSpacing = (-0.25).sp
     )
-    val subtitle = SpendCraftTheme.typography.bodyLarge.copy(
+    val subtitle = MaterialTheme.typography.bodyLarge.copy(
         fontSize = 15.sp,
         color = subtitleColor,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
     )
-    val buttonText = SpendCraftTheme.typography.titleMedium.copy(
+    val buttonText = MaterialTheme.typography.titleMedium.copy(
         fontSize = 18.sp,
         fontWeight = FontWeight.Bold,
         letterSpacing = 0.2.sp
     )
-    val linkText = SpendCraftTheme.typography.bodySmall.copy(
+    val linkText = MaterialTheme.typography.bodySmall.copy(
         fontSize = 13.sp,
         fontWeight = FontWeight.Medium,
         letterSpacing = 0.15.sp
@@ -163,7 +162,7 @@ fun LoginScreen(
                             unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
                             cursorColor = primaryColor
                         ),
-                        textStyle = SpendCraftTheme.typography.bodyLarge.copy(fontSize = 15.sp),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
                         leadingIcon = {
@@ -209,7 +208,7 @@ fun LoginScreen(
                             unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
                             cursorColor = primaryColor
                         ),
-                        textStyle = SpendCraftTheme.typography.bodyLarge.copy(fontSize = 15.sp),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
                         leadingIcon = {
@@ -225,8 +224,8 @@ fun LoginScreen(
                     if (!errorMessage.isNullOrEmpty()) {
                         Text(
                             text = errorMessage ?: "",
-                            color = SpendCraftTheme.colors.error,
-                            style = SpendCraftTheme.typography.bodySmall.copy(lineHeight = 16.sp)
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall.copy(lineHeight = 16.sp)
                         )
                     }
 
@@ -294,7 +293,7 @@ fun LoginScreen(
                             } else {
                                 Text(
                                     text = if (isTurkish) "Giriş Yap" else "Sign In",
-                                    style = SpendCraftTheme.typography.titleLarge.copy(
+                                    style = MaterialTheme.typography.titleLarge.copy(
                                         fontSize = 17.sp,
                                         fontWeight = FontWeight.SemiBold,
                                         letterSpacing = 0.5.sp
@@ -319,7 +318,7 @@ fun LoginScreen(
                         Text(
                             text = if (isTurkish) "veya" else "Or continue with",
                             modifier = Modifier.padding(horizontal = 16.dp),
-                            style = SpendCraftTheme.typography.bodySmall.copy(
+                            style = MaterialTheme.typography.bodySmall.copy(
                                 color = subtitleColor,
                                 letterSpacing = 0.1.sp
                             )
@@ -380,7 +379,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(22.dp))
             Text(
                 text = if (isTurkish) "Hesabınız yok mu?" else "Don’t have an account?",
-                style = SpendCraftTheme.typography.bodySmall.copy(
+                style = MaterialTheme.typography.bodySmall.copy(
                     color = subtitleColor,
                     letterSpacing = 0.1.sp
                 )

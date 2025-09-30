@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.settings.ui
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -52,9 +51,9 @@ fun CategoryManagementScreen(
                     ) {
                         Text(
                             text = "📊 ${stringResource(R.string.category_statistics)}",
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Row(
@@ -65,7 +64,7 @@ fun CategoryManagementScreen(
                                 title = stringResource(R.string.total),
                                 value = "${categories.size} ${stringResource(R.string.categories)}",
                                 icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector),
-                                color = SpendCraftTheme.colors.primary,
+                                color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -88,19 +87,19 @@ fun CategoryManagementScreen(
                                 imageVector = Icons.Filled.AccountBox,
                                 contentDescription = null,
                                 modifier = Modifier.size(64.dp),
-                                tint = SpendCraftTheme.colors.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = "Henüz kategori yok",
-                                style = SpendCraftTheme.typography.titleLarge,
-                                color = SpendCraftTheme.colors.onSurfaceVariant
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "İlk kategorinizi ekleyerek başlayın",
-                                style = SpendCraftTheme.typography.bodyMedium,
-                                color = SpendCraftTheme.colors.onSurfaceVariant
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -119,15 +118,15 @@ fun CategoryManagementScreen(
                             Icon(
                                 imageVector = Icons.Filled.AccountBox,
                                 contentDescription = null,
-                                tint = SpendCraftTheme.colors.primary,
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 text = category.name,
-                                style = SpendCraftTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = SpendCraftTheme.colors.onSurface,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.weight(1f)
                             )
                             IconButton(
@@ -136,7 +135,7 @@ fun CategoryManagementScreen(
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
                                     contentDescription = "Sil",
-                                    tint = SpendCraftTheme.colors.error
+                                    tint = MaterialTheme.colorScheme.error
                                 )
                             }
                         }

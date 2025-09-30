@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.premiumdebug
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -51,9 +50,9 @@ fun PremiumDebugScreen(
                     ) {
                         Text(
                             text = "📊 Mevcut Durum",
-                            style = SpendCraftTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -65,25 +64,25 @@ fun PremiumDebugScreen(
                         ) {
                             Text(
                                 text = "Premium Durumu:",
-                                style = SpendCraftTheme.typography.bodyLarge,
-                                color = SpendCraftTheme.colors.onSurfaceVariant
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             
                             Card(
                                 colors = CardDefaults.cardColors(
                                     containerColor = if (isPremium) 
-                                        SpendCraftTheme.colors.primary 
+                                        MaterialTheme.colorScheme.primary 
                                     else 
-                                        SpendCraftTheme.colors.surfaceVariant
+                                        MaterialTheme.colorScheme.surfaceVariant
                                 )
                             ) {
                                 Text(
                                     text = if (isPremium) "✅ Premium" else "❌ Free",
-                                    style = SpendCraftTheme.typography.bodyMedium,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = if (isPremium) 
-                                        SpendCraftTheme.colors.onPrimary 
+                                        MaterialTheme.colorScheme.onPrimary 
                                     else 
-                                        SpendCraftTheme.colors.onSurfaceVariant,
+                                        MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                 )
                             }
@@ -100,17 +99,17 @@ fun PremiumDebugScreen(
                     ) {
                         Text(
                             text = "🎛️ Premium Simülasyonu",
-                            style = SpendCraftTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
                         
                         Text(
                             text = "Bu toggle sadece DataStore'da premium durumunu değiştirir. Gerçek satın alma yapmaz.",
-                            style = SpendCraftTheme.typography.bodyMedium,
-                            color = SpendCraftTheme.colors.onSurfaceVariant
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -122,8 +121,8 @@ fun PremiumDebugScreen(
                         ) {
                             Text(
                                 text = "Premium'u Aç/Kapat:",
-                                style = SpendCraftTheme.typography.bodyLarge,
-                                color = SpendCraftTheme.colors.onSurface
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             
                             Switch(
@@ -149,9 +148,9 @@ fun PremiumDebugScreen(
                     ) {
                         Text(
                             text = "🧪 Test Aksiyonları",
-                            style = SpendCraftTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -165,7 +164,7 @@ fun PremiumDebugScreen(
                             if (isLoading) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(20.dp),
-                                    color = SpendCraftTheme.colors.onPrimary
+                                    color = MaterialTheme.colorScheme.onPrimary
                                 )
                             } else {
                                 Icon(
@@ -218,9 +217,9 @@ fun PremiumDebugScreen(
                     ) {
                         Text(
                             text = "ℹ️ Debug Bilgileri",
-                            style = SpendCraftTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = SpendCraftTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -241,14 +240,14 @@ fun PremiumDebugScreen(
                             ) {
                                 Text(
                                     text = key,
-                                    style = SpendCraftTheme.typography.bodyMedium,
-                                    color = SpendCraftTheme.colors.onSurfaceVariant
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Text(
                                     text = value,
-                                    style = SpendCraftTheme.typography.bodyMedium,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = SpendCraftTheme.colors.onSurface
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }
@@ -260,7 +259,7 @@ fun PremiumDebugScreen(
             item {
                 Card(
                     colors = CardDefaults.cardColors(
-                        containerColor = SpendCraftTheme.colors.errorContainer
+                        containerColor = MaterialTheme.colorScheme.errorContainer
                     )
                 ) {
                     Row(
@@ -270,15 +269,15 @@ fun PremiumDebugScreen(
                         Icon(
                             imageVector = Icons.Filled.Warning,
                             contentDescription = null,
-                            tint = SpendCraftTheme.colors.onErrorContainer
+                            tint = MaterialTheme.colorScheme.onErrorContainer
                         )
                         
                         Spacer(modifier = Modifier.width(8.dp))
                         
                         Text(
                             text = "Bu ekran sadece debug build'de görünür. Production'da kullanılamaz.",
-                            style = SpendCraftTheme.typography.bodyMedium,
-                            color = SpendCraftTheme.colors.onErrorContainer
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer
                         )
                     }
                 }

@@ -27,7 +27,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
     implementation(project(":core:billing"))
     implementation(project(":core:premium"))

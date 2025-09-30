@@ -1,26 +1,11 @@
 package com.alperen.spendcraft.core.ui.animations
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
@@ -29,14 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
+import kotlin.math.roundToInt
 
 @Composable
 fun AnimatedCounter(
     targetValue: Long,
     modifier: Modifier = Modifier,
-    style: TextStyle = SpendCraftTheme.typography.headlineMedium,
-    color: Color = SpendCraftTheme.colors.onSurface,
+    style: TextStyle = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+    color: Color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
     durationMillis: Int = 1000,
     prefix: String = "",
     suffix: String = ""
@@ -69,8 +54,8 @@ fun AnimatedCounter(
 fun AnimatedProgressBar(
     progress: Float,
     modifier: Modifier = Modifier,
-    color: Color = SpendCraftTheme.colors.primary,
-    backgroundColor: Color = SpendCraftTheme.colors.surfaceVariant,
+    color: Color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant,
     height: Dp = 8.dp
 ) {
     val animatedProgress by animateFloatAsState(
@@ -82,20 +67,20 @@ fun AnimatedProgressBar(
         label = "progress"
     )
     
-    Box(
+    androidx.compose.foundation.layout.Box(
         modifier = modifier
             .fillMaxWidth()
             .height(height)
-            .clip(RoundedCornerShape(4.dp))
+            .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
             .background(backgroundColor)
     ) {
-        Box(
+        androidx.compose.foundation.layout.Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(animatedProgress)
                 .background(
                     color = color,
-                    shape = RoundedCornerShape(4.dp)
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
                 )
         )
     }
@@ -124,13 +109,13 @@ fun AnimatedFloatingActionButton(
         label = "rotation"
     )
     
-    FloatingActionButton(
+    androidx.compose.material3.FloatingActionButton(
         onClick = onClick,
         modifier = modifier
             .scale(scale)
             .rotate(rotation)
     ) {
-        Icon(
+        androidx.compose.material3.Icon(
             imageVector = icon,
             contentDescription = contentDescription
         )

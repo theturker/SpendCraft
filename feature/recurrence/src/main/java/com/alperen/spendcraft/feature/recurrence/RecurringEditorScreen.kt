@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.feature.recurrence
 
-import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -63,18 +62,18 @@ fun RecurringEditorScreen(
                     ) {
                         Text(
                             text = "Şablon İşlem",
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "${if (transaction.type == com.alperen.spendcraft.core.model.TransactionType.INCOME) "Gelir" else "Gider"}: ${transaction.amount.minorUnits / 100} TL",
-                            style = SpendCraftTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge
                         )
                         Text(
                             text = "Not: ${transaction.note ?: "Yok"}",
-                            style = SpendCraftTheme.typography.bodyMedium,
-                            color = SpendCraftTheme.colors.onSurfaceVariant
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -87,7 +86,7 @@ fun RecurringEditorScreen(
                 ) {
                     Text(
                         text = "Sıklık",
-                        style = SpendCraftTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -110,7 +109,7 @@ fun RecurringEditorScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = freq.displayName,
-                                style = SpendCraftTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     }
@@ -124,7 +123,7 @@ fun RecurringEditorScreen(
                 ) {
                     Text(
                         text = "Aralık",
-                        style = SpendCraftTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -142,7 +141,7 @@ fun RecurringEditorScreen(
                         
                         Text(
                             text = "Her $interval ${frequency.displayName.lowercase()}",
-                            style = SpendCraftTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge
                         )
                         
                         OutlinedButton(
@@ -162,7 +161,7 @@ fun RecurringEditorScreen(
                 ) {
                     Text(
                         text = "Başlangıç Tarihi",
-                        style = SpendCraftTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -195,7 +194,7 @@ fun RecurringEditorScreen(
                         )
                         Text(
                             text = "Bitiş tarihi belirle",
-                            style = SpendCraftTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                     }
