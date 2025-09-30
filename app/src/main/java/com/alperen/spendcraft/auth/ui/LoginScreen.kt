@@ -122,20 +122,24 @@ fun LoginScreen(
                 )
             }
 
-            // ====== Kart: Soft Shadow + Drop Shadow + Gradient Border ======
-            SoftShadowCard(
-                modifier = Modifier.fillMaxWidth(),
-                isDarkMode = isDarkMode,
-                primaryColor = primaryColor,
-                containerColor = cardBackground,
-                shape = RoundedCornerShape(22.dp),
-                elevationLight = 12.dp,
-                elevationDark = 3.dp,
-                addDropShadow = true
+            // ====== Modern Card Design ======
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 16.dp,
+                        shape = RoundedCornerShape(24.dp),
+                        ambientColor = primaryColor.copy(alpha = 0.1f),
+                        spotColor = primaryColor.copy(alpha = 0.2f)
+                    ),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = cardBackground
+                )
             ) {
                 Column(
-                    modifier = Modifier.padding(28.dp),
-                    verticalArrangement = Arrangement.spacedBy(18.dp)
+                    modifier = Modifier.padding(32.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     // Email
                     OutlinedTextField(
@@ -242,34 +246,61 @@ fun LoginScreen(
                         }
                     }
 
-                    // Giriş Yap Butonu
-                    Button(
-                        onClick = { authViewModel.signIn(email, password) },
+                    // Modern Giriş Yap Butonu
+                    Card(
+                        onClick = { 
+                            if (!isLoading && email.isNotEmpty() && password.isNotEmpty()) {
+                                authViewModel.signIn(email, password)
+                            }
+                        },
                         enabled = !isLoading && email.isNotEmpty() && password.isNotEmpty(),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(52.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = if (isDarkMode) 0.dp else 8.dp,
-                            pressedElevation = if (isDarkMode) 0.dp else 10.dp
-                        ),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = primaryColor,
-                            contentColor = onPrimary
+                            .height(56.dp)
+                            .shadow(
+                                elevation = 12.dp,
+                                shape = RoundedCornerShape(16.dp),
+                                ambientColor = primaryColor.copy(alpha = 0.3f),
+                                spotColor = primaryColor.copy(alpha = 0.3f)
+                            ),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.Transparent
                         )
                     ) {
-                        if (isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                color = onPrimary,
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            Text(
-                                text = if (isTurkish) "Giriş Yap" else "Sign In",
-                                style = buttonText
-                            )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.linearGradient(
+                                        colors = listOf(primaryColor, primaryColor.copy(alpha = 0.8f))
+                                    ),
+                                    shape = RoundedCornerShape(16.dp)
+                                )
+                                .border(
+                                    width = 1.dp,
+                                    color = Color.White.copy(alpha = 0.2f),
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(22.dp),
+                                    color = Color.White,
+                                    strokeWidth = 2.5.dp
+                                )
+                            } else {
+                                Text(
+                                    text = if (isTurkish) "Giriş Yap" else "Sign In",
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontSize = 17.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        letterSpacing = 0.5.sp
+                                    ),
+                                    color = Color.White
+                                )
+                            }
                         }
                     }
 
@@ -298,45 +329,46 @@ fun LoginScreen(
                         )
                     }
 
-                    // Google ile giriş
-                    OutlinedButton(
+                    // Google ile giriş - sadece logo
+                    Card(
                         onClick = { onGoogleSignInResult(null) },
                         enabled = !isLoading,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        border = BorderStroke(
-                            width = 1.5.dp,
-                            brush = Brush.linearGradient(
-                                if (isDarkMode)
-                                    listOf(Color(0xFF2E3342), Color(0xFF3A4052))
-                                else
-                                    listOf(Color(0xFFE2E8F0), Color(0xFFDDE3EE))
-                            )
-                        ),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = if (isDarkMode) Color(0xFF10121B) else Color(0xFFF6F6F8),
-                            contentColor = if (isDarkMode) Color(0xFFE5E7EB) else Color(0xFF374151)
+                            .height(60.dp)
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = RoundedCornerShape(16.dp),
+                                ambientColor = Color.Black.copy(alpha = 0.1f),
+                                spotColor = Color.Black.copy(alpha = 0.1f)
+                            ),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isDarkMode) Color(0xFF1A1D29) else Color.White
                         )
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    if (isDarkMode) 
+                                        Color(0xFF1A1D29) 
+                                    else 
+                                        Color.White,
+                                    RoundedCornerShape(16.dp)
+                                )
+                                .border(
+                                    width = 1.dp,
+                                    color = if (isDarkMode) Color(0xFF2E3342) else Color(0xFFE2E8F0),
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.google),
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp),
-                                tint = if (isDarkMode) Color(0xFF9CA3AF) else Color(0xFF6B7280)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                text = if (isTurkish) "Google ile Giriş Yap" else "Sign in with Google",
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
+                                contentDescription = if (isTurkish) "Google ile giriş yap" else "Sign in with Google",
+                                modifier = Modifier.size(28.dp),
+                                tint = Color.Unspecified
                             )
                         }
                     }

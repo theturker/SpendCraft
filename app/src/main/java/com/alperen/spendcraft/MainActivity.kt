@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
+import com.alperen.spendcraft.core.ui.SplashScreen
 import com.alperen.spendcraft.reminder.ReminderScheduler
 import com.alperen.spendcraft.feature.welcome.ui.WelcomeScreen
 import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
@@ -74,21 +75,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Request notification permission on Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            } else {
-                ReminderScheduler.scheduleDaily(this)
-            }
-        } else {
-            ReminderScheduler.scheduleDaily(this)
-        }
-        
+        // Splash screen'i hemen başlat - Android native splash'i bypass et
         setContent {
             val context = LocalContext.current
             val scope = rememberCoroutineScope()
@@ -99,6 +86,7 @@ class MainActivity : ComponentActivity() {
             
             var currentAuthScreen by remember { mutableStateOf("login") }
             var showOnboarding by remember { mutableStateOf(false) }
+            var showSplash by remember { mutableStateOf(true) }
             
             // Google Auth Service'i initialize et
             LaunchedEffect(Unit) {
@@ -116,6 +104,13 @@ class MainActivity : ComponentActivity() {
             SpendCraftTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     when {
+                        showSplash -> {
+                            SplashScreen(
+                                onLoadingComplete = {
+                                    showSplash = false
+                                }
+                            )
+                        }
                         isFirstLaunch -> {
                             WelcomeScreen(
                                 onStart = { 
@@ -138,27 +133,17 @@ class MainActivity : ComponentActivity() {
                             when (currentAuthScreen) {
                                 "login" -> {
                                     LoginScreen(
-                                        onLoginSuccess = { /* Navigation will be handled by auth state change */ },
+                                        onLoginSuccess = { /* Auth state will handle navigation */ },
                                         onNavigateToRegister = { currentAuthScreen = "register" },
                                         onNavigateToForgotPassword = { currentAuthScreen = "forgot" },
                                         onGoogleSignInResult = { account ->
-                                            if (account != null) {
-                                                authViewModel.signInWithGoogle(account)
-                                            } else {
-                                                // Google Sign-In başlat
-                                                try {
-                                                    val signInIntent = googleAuthService.getSignInIntent()
-                                                    googleSignInLauncher.launch(signInIntent)
-                                                } catch (e: Exception) {
-                                                    println("Google Sign-In Intent failed: ${e.message}")
-                                                }
-                                            }
+                                            googleSignInResult = account
                                         }
                                     )
                                 }
                                 "register" -> {
                                     RegisterScreen(
-                                        onRegisterSuccess = { /* Navigation will be handled by auth state change */ },
+                                        onRegisterSuccess = { /* Auth state will handle navigation */ },
                                         onNavigateToLogin = { currentAuthScreen = "login" }
                                     )
                                 }
@@ -170,25 +155,28 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         authState is AuthState.Authenticated -> {
-                            AppNavHost(
-                                deepLinkUri = intent.data
-                            )
-                        }
-                        else -> {
-                            // Loading state
-                            androidx.compose.material3.CircularProgressIndicator()
+                            AppNavHost()
                         }
                     }
                 }
             }
+            
+            // Request notification permission on Android 13+ (splash sonrası)
+            LaunchedEffect(Unit) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.POST_NOTIFICATIONS
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        ReminderScheduler.scheduleDaily(context as MainActivity)
+                    }
+                } else {
+                    ReminderScheduler.scheduleDaily(context as MainActivity)
+                }
+            }
         }
     }
-    
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.setLocale(newBase, LocaleHelper.getLanguage(newBase)))
-    }
 }
-
-
-
-

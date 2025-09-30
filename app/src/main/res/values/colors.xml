@@ -60,6 +60,9 @@
     <color name="interactive_hover">#5A67D8</color>
     <color name="interactive_pressed">#4C51BF</color>
     
+    <!-- Splash Screen Colors -->
+    <color name="splash_background">#111121</color>
+    
     <!-- Legacy Colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

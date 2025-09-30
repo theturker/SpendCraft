@@ -2,6 +2,7 @@ package com.alperen.spendcraft.feature.welcome.ui
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.R
 import com.alperen.spendcraft.core.ui.ActionButton
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import com.alperen.spendcraft.LocaleHelper
 import com.alperen.spendcraft.FirstLaunchHelper
 import com.alperen.spendcraft.ThemeHelper
@@ -115,20 +117,20 @@ fun WelcomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Top section with logo and title - moved up
+            // Top section with logo and title - better spacing
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(top = 32.dp)
             ) {
-                // Animated Star Logo with "S" in center - smaller
+                // Animated Star Logo with "S" in center
                 Box(
-                    modifier = Modifier.size(120.dp),
+                    modifier = Modifier.size(110.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     // Rotating star background
                     Box(
                         modifier = Modifier
-                            .size(120.dp)
+                            .size(110.dp)
                             .rotate(rotation)
                             .clip(CircleShape)
                             .background(primaryColor),
@@ -138,14 +140,14 @@ fun WelcomeScreen(
                             imageVector = Icons.Filled.Star,
                             contentDescription = null,
                             tint = Color.White,
-                            modifier = Modifier.size(60.dp)
+                            modifier = Modifier.size(55.dp)
                         )
                     }
                     
                     // "S" text overlay
                     Text(
                         text = "S",
-                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp),
+                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 26.sp),
                         fontWeight = FontWeight.ExtraBold,
                         color = Color.White
                     )
@@ -153,7 +155,7 @@ fun WelcomeScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Title - smaller font
+                // Title - better spacing
                 Text(
                     text = if (isTurkish) "SpendCraft'a Hoş Geldiniz" else "Welcome to SpendCraft",
                     style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp),
@@ -162,73 +164,119 @@ fun WelcomeScreen(
                     color = Color.White
                 )
 
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // Subtitle - smaller font
+                // Subtitle - better spacing
                 Text(
                     text = if (isTurkish) "Finansal özgürlüğe ilk adımı atın." else "Take the first step towards financial freedom.",
-                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp),
                     textAlign = TextAlign.Center,
                     color = Color(0xFF9CA3AF)
                 )
             }
 
-            // Scrollable Features section
+            // Features section with better spacing - 3x2 grid (3 rows, 2 columns each)
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .alpha(cardAlpha)
                     .offset(y = cardOffset.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Spacer(modifier = Modifier.height(8.dp))
+                // First row - 2 cards
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CompactFeatureCard(
+                        icon = painterResource(R.drawable.credit_card),
+                        title = if (isTurkish) "Harcama Takibi" else "Expense Tracking",
+                        primaryColor = primaryColor,
+                        gradientColors = listOf(primaryColor, primaryColor.copy(alpha = 0.7f)),
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    CompactFeatureCard(
+                        icon = painterResource(R.drawable.bar_chart),
+                        title = if (isTurkish) "Raporlar" else "Reports",
+                        primaryColor = primaryColor,
+                        gradientColors = listOf(Color(0xFF6366F1), Color(0xFF8B5CF6)),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
                 
-                BeautifulFeatureCard(
-                    icon = painterResource(R.drawable.credit_card),
-                    title = if (isTurkish) "Harcama Takibi" else "Expense Tracking",
-                    description = if (isTurkish) "Giderlerinizi kolayca takip edin ve finansal durumunuzu kontrol altında tutun." else "Easily track your expenses and keep your financial situation under control.",
-                    primaryColor = primaryColor,
-                    gradientColors = listOf(primaryColor, primaryColor.copy(alpha = 0.7f))
-                )
+                // Second row - 2 cards
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CompactFeatureCard(
+                        icon = painterResource(R.drawable.outline_account_balance_24),
+                        title = if (isTurkish) "Bütçe" else "Budget",
+                        primaryColor = primaryColor,
+                        gradientColors = listOf(Color(0xFF10B981), Color(0xFF059669)),
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    CompactFeatureCard(
+                        icon = painterResource(R.drawable.outline_check_circle_24),
+                        title = if (isTurkish) "Başarılar" else "Achievements",
+                        primaryColor = primaryColor,
+                        gradientColors = listOf(Color(0xFFF59E0B), Color(0xFFD97706)),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
                 
-                BeautifulFeatureCard(
-                    icon = painterResource(R.drawable.bar_chart),
-                    title = if (isTurkish) "Detaylı Raporlar" else "Detailed Reports",
-                    description = if (isTurkish) "Harcama analizleri ve trend grafikleri ile finansal durumunuzu anlayın." else "Understand your financial situation with expense analysis and trend charts.",
-                    primaryColor = primaryColor,
-                    gradientColors = listOf(Color(0xFF6366F1), Color(0xFF8B5CF6))
-                )
-                
-                BeautifulFeatureCard(
-                    icon = painterResource(R.drawable.outline_account_balance_24),
-                    title = if (isTurkish) "Bütçe Yönetimi" else "Budget Management",
-                    description = if (isTurkish) "Kategori bazında bütçe limitleri belirleyin ve hedeflerinize ulaşın." else "Set budget limits by category and reach your goals.",
-                    primaryColor = primaryColor,
-                    gradientColors = listOf(Color(0xFF10B981), Color(0xFF059669))
-                )
-                
-                BeautifulFeatureCard(
-                    icon = painterResource(R.drawable.outline_check_circle_24),
-                    title = if (isTurkish) "Başarı Takibi" else "Achievement Tracking",
-                    description = if (isTurkish) "Günlük seriler ve rozetler kazanarak finansal başarılarınızı kutlayın." else "Celebrate your financial achievements by earning daily streaks and badges.",
-                    primaryColor = primaryColor,
-                    gradientColors = listOf(Color(0xFFF59E0B), Color(0xFFD97706))
-                )
-                
-                Spacer(modifier = Modifier.height(8.dp))
+                // Third row - 2 cards
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CompactFeatureCard(
+                        icon = painterResource(R.drawable.outline_notifications_24),
+                        title = if (isTurkish) "Hatırlatıcılar" else "Reminders",
+                        primaryColor = primaryColor,
+                        gradientColors = listOf(Color(0xFF8B5CF6), Color(0xFFA855F7)),
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    CompactFeatureCard(
+                        icon = painterResource(R.drawable.outline_analytics_24),
+                        title = if (isTurkish) "Analiz" else "Analytics",
+                        primaryColor = primaryColor,
+                        gradientColors = listOf(Color(0xFF06B6D4), Color(0xFF0891B2)),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
         }
     }
 
-    // Beautiful sticky bottom button
+    // Beautiful elegant bottom button
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(20.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-        Button(
+        // Subtle background blur effect
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            backgroundColor.copy(alpha = 0.8f)
+                        )
+                    )
+                )
+        )
+        
+        // Elegant button with glass morphism
+        Card(
             onClick = {
                 kotlinx.coroutines.GlobalScope.launch {
                     firstLaunchHelper.setFirstLaunchCompleted()
@@ -237,45 +285,69 @@ fun WelcomeScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
+                .height(64.dp)
                 .shadow(
-                    elevation = 12.dp,
-                    shape = RoundedCornerShape(16.dp),
-                    ambientColor = primaryColor.copy(alpha = 0.3f),
+                    elevation = 20.dp,
+                    shape = RoundedCornerShape(20.dp),
+                    ambientColor = primaryColor.copy(alpha = 0.2f),
                     spotColor = primaryColor.copy(alpha = 0.3f)
                 ),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(
                 containerColor = Color.Transparent
-            ),
-            contentPadding = PaddingValues(0.dp)
+            )
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
                         Brush.linearGradient(
-                            colors = listOf(primaryColor, primaryColor.copy(alpha = 0.8f))
+                            colors = listOf(
+                                primaryColor.copy(alpha = 0.9f),
+                                primaryColor.copy(alpha = 0.7f)
+                            )
                         ),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = Color.White.copy(alpha = 0.2f),
+                        shape = RoundedCornerShape(20.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowForward,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    // Elegant icon with subtle animation
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .background(
+                                Color.White.copy(alpha = 0.2f),
+                                CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowForward,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.width(12.dp))
+                    
                     Text(
                         text = if (isTurkish) "Başlayalım" else "Let's Start",
-                        style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.5.sp
+                        ),
                         color = Color.White
                     )
                 }
@@ -285,24 +357,22 @@ fun WelcomeScreen(
 }
 
 @Composable
-private fun BeautifulFeatureCard(
+private fun CompactFeatureCard(
     icon: androidx.compose.ui.graphics.painter.Painter,
     title: String,
-    description: String,
     primaryColor: Color,
-    gradientColors: List<Color>
+    gradientColors: List<Color>,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp)
+        modifier = modifier
             .shadow(
-                elevation = 16.dp,
-                shape = RoundedCornerShape(20.dp),
+                elevation = 12.dp,
+                shape = RoundedCornerShape(16.dp),
                 ambientColor = gradientColors.first().copy(alpha = 0.2f),
                 spotColor = gradientColors.first().copy(alpha = 0.2f)
             ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         )
@@ -317,29 +387,29 @@ private fun BeautifulFeatureCard(
                             Color(0xFF1F2937).copy(alpha = 0.8f)
                         )
                     ),
-                    shape = RoundedCornerShape(20.dp)
+                    shape = RoundedCornerShape(16.dp)
                 )
         ) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(14.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Beautiful icon container with gradient - smaller
+                // Compact icon container
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp))
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(10.dp))
                         .background(
                             Brush.linearGradient(
                                 colors = gradientColors
                             )
                         )
                         .shadow(
-                            elevation = 6.dp,
-                            shape = RoundedCornerShape(12.dp),
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(10.dp),
                             ambientColor = gradientColors.first().copy(alpha = 0.3f),
                             spotColor = gradientColors.first().copy(alpha = 0.3f)
                         ),
@@ -349,28 +419,21 @@ private fun BeautifulFeatureCard(
                         painter = icon,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(18.dp)
                     )
                 }
                 
-                // Enhanced text content - smaller fonts
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleLarge.copy(fontSize = 16.sp),
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
-                        color = Color(0xFF9CA3AF),
-                        lineHeight = 18.sp
-                    )
-                }
+                // Compact text content
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 12.sp),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 14.sp
+                )
             }
         }
     }
