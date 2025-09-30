@@ -137,7 +137,13 @@ class MainActivity : ComponentActivity() {
                                         onNavigateToRegister = { currentAuthScreen = "register" },
                                         onNavigateToForgotPassword = { currentAuthScreen = "forgot" },
                                         onGoogleSignInResult = { account ->
-                                            googleSignInResult = account
+                                            if (account == null) {
+                                                // Google butonuna basıldığında Google Sign-In intent'ini başlat
+                                                val signInIntent = googleAuthService.getSignInIntent()
+                                                googleSignInLauncher.launch(signInIntent)
+                                            } else {
+                                                googleSignInResult = account
+                                            }
                                         }
                                     )
                                 }
