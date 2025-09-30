@@ -162,35 +162,6 @@ fun TransactionsScreen(
                 .padding(top = adHeight + 60.dp), // reklam üstte + FAB altta
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // (1) SpendCraft kartı — ALT YAZI GERİ
-            item {
-                GradientCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(110.dp),
-                    onClick = { /* welcome anim */ }
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "SpendCraft",
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = Color.White
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = if (currentUserName != null) "Hoşgeldin, $currentUserName" else stringResource(R.string.welcome_subtitle),
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.Center,
-                            color = Color.White.copy(alpha = 0.9f)
-                        )
-                    }
-                }
-            }
 
             // Hesap kartı (gradient + kapsüller)
             item {
@@ -233,9 +204,7 @@ fun TransactionsScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        TextButton(onClick = onReports) { 
-                            Text(stringResource(R.string.reports)) 
-                        }
+                        Spacer(Modifier.height(8.dp))
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -331,8 +300,8 @@ fun TransactionsScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        TextButton(onClick = onAllTransactions) { 
-                            Text(stringResource(R.string.view_all)) 
+                        TextButton(onClick = onReports) {
+                            Text(stringResource(R.string.reports))
                         }
                     }
                     Row(
