@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.recurrence
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -83,18 +84,18 @@ fun RecurringListScreen(
                             painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_schedule_vector),
                                     contentDescription = null,
                                     modifier = Modifier.size(48.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    tint = SpendCraftTheme.colors.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(
                                     text = "Henüz tekrarlayan işlem yok",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    style = SpendCraftTheme.typography.titleMedium,
+                                    color = SpendCraftTheme.colors.onSurfaceVariant
                                 )
                                 Text(
                                     text = "Düzenli işlemlerinizi otomatikleştirin",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    style = SpendCraftTheme.typography.bodyMedium,
+                                    color = SpendCraftTheme.colors.onSurfaceVariant
                                 )
                             }
                         }
@@ -136,13 +137,13 @@ private fun RecurringTransactionItem(
                 ) {
                     Text(
                         text = transaction.name,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "${transaction.amount} TL - ${getFrequencyDisplayName(transaction.frequency)}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = SpendCraftTheme.typography.bodyMedium,
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                 }
                 
@@ -153,14 +154,14 @@ private fun RecurringTransactionItem(
                         Icon(
                             Icons.Default.Edit,
                             contentDescription = "Düzenle",
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = SpendCraftTheme.colors.primary
                         )
                     }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = "Sil",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = SpendCraftTheme.colors.error
                         )
                     }
                 }
@@ -175,12 +176,12 @@ private fun RecurringTransactionItem(
                 Column {
                     Text(
                         text = "Sonraki çalışma:",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = SpendCraftTheme.typography.bodySmall,
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                     Text(
                         text = dateFormatter.format(Date(transaction.nextExecution)),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = SpendCraftTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -189,12 +190,12 @@ private fun RecurringTransactionItem(
                     Column {
                         Text(
                             text = "Bitiş:",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            style = SpendCraftTheme.typography.bodySmall,
+                            color = SpendCraftTheme.colors.onSurfaceVariant
                         )
                         Text(
                             text = dateFormatter.format(Date(transaction.endDate!!)),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = SpendCraftTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -211,12 +212,12 @@ private fun RecurringTransactionItem(
                     if (transaction.isActive) painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_play_arrow_vector) else painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_pause_vector),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
-                    tint = if (transaction.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = if (transaction.isActive) SpendCraftTheme.colors.primary else SpendCraftTheme.colors.onSurfaceVariant
                 )
                 Text(
                     text = if (transaction.isActive) "Aktif" else "Duraklatıldı",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (transaction.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    style = SpendCraftTheme.typography.bodySmall,
+                    color = if (transaction.isActive) SpendCraftTheme.colors.primary else SpendCraftTheme.colors.onSurfaceVariant
                 )
             }
         }

@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.sharing
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -62,7 +63,7 @@ fun SharingScreen(
                         ) {
                             Text(
                                 text = "Üye Davet Et",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(12.dp))
@@ -115,18 +116,18 @@ fun SharingScreen(
                                 painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_group_vector),
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = SpendCraftTheme.colors.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = "Henüz üye yok",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = SpendCraftTheme.typography.titleMedium,
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                             Text(
                                 text = "Aile üyelerinizi davet ederek bütçeyi paylaşın",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = SpendCraftTheme.typography.bodyMedium,
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                         }
                     }
@@ -149,15 +150,15 @@ fun SharingScreen(
                     ) {
                         Text(
                             text = "Paylaşım Hakkında",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         Text(
                             text = "• Owner: Tüm yetkilere sahip\n• Editor: İşlem ekleyebilir/düzenleyebilir\n• Viewer: Sadece görüntüleyebilir",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            style = SpendCraftTheme.typography.bodyMedium,
+                            color = SpendCraftTheme.colors.onSurfaceVariant
                         )
                     }
                 }
@@ -193,19 +194,19 @@ private fun SharingMemberItem(
                         Icons.Default.Person,
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = SpendCraftTheme.colors.primary
                     )
                     
                     Column {
                         Text(
                             text = member.userId,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = getRoleDisplayName(member.role),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            style = SpendCraftTheme.typography.bodyMedium,
+                            color = SpendCraftTheme.colors.onSurfaceVariant
                         )
                     }
                 }
@@ -218,7 +219,7 @@ private fun SharingMemberItem(
                             Icon(
                                 Icons.Default.Edit,
                                 contentDescription = "Rol değiştir",
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = SpendCraftTheme.colors.primary
                             )
                         }
                         
@@ -226,7 +227,7 @@ private fun SharingMemberItem(
                             Icon(
                                 painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_remove_vector),
                                 contentDescription = "Üyeyi çıkar",
-                                tint = MaterialTheme.colorScheme.error
+                                tint = SpendCraftTheme.colors.error
                             )
                         }
                     }
@@ -242,12 +243,12 @@ private fun SharingMemberItem(
                 Column {
                     Text(
                         text = "Davet tarihi:",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = SpendCraftTheme.typography.bodySmall,
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                     Text(
                         text = dateFormatter.format(Date(member.invitedAt)),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = SpendCraftTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -256,24 +257,24 @@ private fun SharingMemberItem(
                     Column {
                         Text(
                             text = "Katılım tarihi:",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            style = SpendCraftTheme.typography.bodySmall,
+                            color = SpendCraftTheme.colors.onSurfaceVariant
                         )
                         Text(
                             text = dateFormatter.format(Date(member.joinedAt ?: 0L)),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = SpendCraftTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                     }
                 } else {
                     Surface(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = MaterialTheme.shapes.small
+                        color = SpendCraftTheme.colors.primaryContainer,
+                        shape = SpendCraftTheme.shapes.small
                     ) {
                         Text(
                             text = "Bekliyor",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            style = SpendCraftTheme.typography.bodySmall,
+                            color = SpendCraftTheme.colors.onPrimaryContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }

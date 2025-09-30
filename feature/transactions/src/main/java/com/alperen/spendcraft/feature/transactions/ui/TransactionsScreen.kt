@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -150,7 +151,7 @@ fun TransactionsScreen(
             Icon(
                 imageVector = Icons.Filled.Settings,
                 contentDescription = stringResource(R.string.settings),
-                tint = MaterialTheme.colorScheme.primary
+                tint = SpendCraftTheme.colors.primary
             )
         }
 
@@ -177,14 +178,14 @@ fun TransactionsScreen(
                     ) {
                         Text(
                             text = "SpendCraft",
-                            style = MaterialTheme.typography.headlineSmall,
+                            style = SpendCraftTheme.typography.headlineSmall,
                             fontWeight = FontWeight.ExtraBold,
                             color = Color.White
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
                             text = if (currentUserName != null) "Hoşgeldin, $currentUserName" else stringResource(R.string.welcome_subtitle),
-                            style = MaterialTheme.typography.bodySmall,
+                            style = SpendCraftTheme.typography.bodySmall,
                             textAlign = TextAlign.Center,
                             color = Color.White.copy(alpha = 0.9f)
                         )
@@ -222,15 +223,15 @@ fun TransactionsScreen(
                         Icon(
                             painter = painterResource(R.drawable.ic_speed_vector),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = SpendCraftTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "Hızlı Ekle",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = SpendCraftTheme.colors.onSurface
                             )
                         }
                         TextButton(onClick = onReports) { 
@@ -320,15 +321,15 @@ fun TransactionsScreen(
                             Icon(
                                 painter = painterResource(R.drawable.ic_bar_chart_vector),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = SpendCraftTheme.colors.primary,
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = stringResource(R.string.transaction_statistics),
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = SpendCraftTheme.colors.onSurface
                             )
                         }
                         TextButton(onClick = onAllTransactions) { 
@@ -372,15 +373,15 @@ fun TransactionsScreen(
                         Icon(
                             painter = painterResource(R.drawable.ic_history_vector),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = SpendCraftTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(R.string.recent_transactions),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = SpendCraftTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = SpendCraftTheme.colors.onSurface
                         )
                     }
                     TextButton(onClick = onAllTransactions) { Text(stringResource(R.string.view_all)) }
@@ -401,19 +402,19 @@ fun TransactionsScreen(
                         ) {
                             Text(
                                 text = "🎯",
-                                style = MaterialTheme.typography.displayLarge
+                                style = SpendCraftTheme.typography.displayLarge
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = stringResource(R.string.no_transactions_yet),
-                                style = MaterialTheme.typography.titleLarge,
+                                style = SpendCraftTheme.typography.titleLarge,
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = stringResource(R.string.start_adding_transactions),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = SpendCraftTheme.typography.bodyMedium,
                                 color = Color.White.copy(alpha = 0.9f)
                             )
                         }
@@ -468,13 +469,13 @@ private fun QuickActionPill(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    val bg = if (positive) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-    else MaterialTheme.colorScheme.error.copy(alpha = 0.12f)
+    val bg = if (positive) SpendCraftTheme.colors.primary.copy(alpha = 0.12f)
+    else SpendCraftTheme.colors.error.copy(alpha = 0.12f)
 
     val border = if (positive)
-        Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary))
+        Brush.linearGradient(listOf(SpendCraftTheme.colors.primary, SpendCraftTheme.colors.secondary))
     else
-        Brush.linearGradient(listOf(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.outline))
+        Brush.linearGradient(listOf(SpendCraftTheme.colors.error, SpendCraftTheme.colors.outline))
 
     Row(
         modifier = modifier
@@ -487,7 +488,7 @@ private fun QuickActionPill(
     ) {
         Icon(painter = icon, contentDescription = null, modifier = Modifier.size(18.dp))
         Spacer(Modifier.width(8.dp))
-        Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+        Text(label, style = SpendCraftTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -545,7 +546,7 @@ private fun GradientAccountsSection(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = account.name,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
@@ -561,7 +562,7 @@ private fun GradientAccountsSection(
             Spacer(Modifier.height(6.dp))
             Text(
                 text = account.balance,
-                style = MaterialTheme.typography.headlineSmall,
+                style = SpendCraftTheme.typography.headlineSmall,
                 fontWeight = FontWeight.ExtraBold,
                 color = Color.White
             )
@@ -614,7 +615,7 @@ private fun Capsule(text: String, positive: Boolean) {
             .border(1.dp, border, RoundedCornerShape(999.dp))
             .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
-        Text(text = text, color = Color.White, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+        Text(text = text, color = Color.White, style = SpendCraftTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -632,9 +633,9 @@ private fun SectionHeader(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium,
+            style = SpendCraftTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            color = SpendCraftTheme.colors.onSurface
         )
         if (actionText != null && onAction != null) {
             TextButton(onClick = onAction) { Text(actionText) }
@@ -650,14 +651,14 @@ private fun FilterChipPill(
     icon: androidx.compose.ui.graphics.vector.ImageVector
 ) {
     val bg by animateColorAsState(
-        targetValue = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
-        else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
+        targetValue = if (selected) SpendCraftTheme.colors.primary.copy(alpha = 0.18f)
+        else SpendCraftTheme.colors.surfaceVariant.copy(alpha = 0.35f),
         label = "chip-bg"
     )
     val borderBrush = if (selected) {
-        Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary))
+        Brush.linearGradient(listOf(SpendCraftTheme.colors.primary, SpendCraftTheme.colors.secondary))
     } else {
-        Brush.linearGradient(listOf(MaterialTheme.colorScheme.outline, MaterialTheme.colorScheme.outlineVariant))
+        Brush.linearGradient(listOf(SpendCraftTheme.colors.outline, SpendCraftTheme.colors.outlineVariant))
     }
 
     Row(
@@ -673,7 +674,7 @@ private fun FilterChipPill(
         Spacer(Modifier.width(6.dp))
         Text(
             text = label,
-            style = MaterialTheme.typography.labelLarge,
+            style = SpendCraftTheme.typography.labelLarge,
             fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium
         )
     }
@@ -751,13 +752,13 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                 Column {
                     Text(
                         text = if (isIncome) stringResource(R.string.income) else stringResource(R.string.expense),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = tx.note ?: stringResource(R.string.no_description),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = SpendCraftTheme.typography.bodyMedium,
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -765,16 +766,16 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = formatMinor(amount),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = SpendCraftTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = if (isIncome) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error
+                    color = if (isIncome) SpendCraftTheme.colors.secondary else SpendCraftTheme.colors.error
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 IconButton(onClick = onDelete, modifier = Modifier.size(34.dp)) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = stringResource(R.string.delete),
-                        tint = MaterialTheme.colorScheme.error
+                        tint = SpendCraftTheme.colors.error
                     )
                 }
             }

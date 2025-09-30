@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.reports
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -75,7 +76,7 @@ fun ExportReportScreen(
                     ) {
                         Text(
                             text = "İndirme Formatı",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(12.dp))
@@ -99,19 +100,19 @@ fun ExportReportScreen(
                                 Icon(
                                     imageVector = format.icon,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = SpendCraftTheme.colors.primary
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Column {
                                     Text(
                                         text = format.displayName,
-                                        style = MaterialTheme.typography.bodyLarge,
+                                        style = SpendCraftTheme.typography.bodyLarge,
                                         fontWeight = FontWeight.Medium
                                     )
                                     Text(
                                         text = format.description,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodySmall,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                             }
@@ -128,7 +129,7 @@ fun ExportReportScreen(
                     ) {
                         Text(
                             text = "Tarih Aralığı",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(12.dp))
@@ -151,7 +152,7 @@ fun ExportReportScreen(
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Text(
                                     text = range.displayName,
-                                    style = MaterialTheme.typography.bodyLarge
+                                    style = SpendCraftTheme.typography.bodyLarge
                                 )
                             }
                         }
@@ -216,18 +217,18 @@ fun ExportReportScreen(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
                             containerColor = if (message.contains("başarıyla")) 
-                                MaterialTheme.colorScheme.primaryContainer 
+                                SpendCraftTheme.colors.primaryContainer 
                             else 
-                                MaterialTheme.colorScheme.errorContainer
+                                SpendCraftTheme.colors.errorContainer
                         )
                     ) {
                         Text(
                             text = message,
                             modifier = Modifier.padding(16.dp),
                             color = if (message.contains("başarıyla")) 
-                                MaterialTheme.colorScheme.onPrimaryContainer 
+                                SpendCraftTheme.colors.onPrimaryContainer 
                             else 
-                                MaterialTheme.colorScheme.onErrorContainer
+                                SpendCraftTheme.colors.onErrorContainer
                         )
                     }
                 }

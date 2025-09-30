@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.settings
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -50,11 +51,11 @@ fun AISettingsScreen(
                         Icon(
                             Icons.Default.Settings,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = SpendCraftTheme.colors.primary
                         )
                         Text(
                             text = "Groq API Anahtarı",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -63,8 +64,8 @@ fun AISettingsScreen(
                     
                     Text(
                         text = "AI önerileri almak için Groq API anahtarınızı girin. Anahtarınız güvenli bir şekilde şifrelenerek saklanır.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = SpendCraftTheme.typography.bodyMedium,
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                     
                     Spacer(modifier = Modifier.height(16.dp))
@@ -130,13 +131,13 @@ fun AISettingsScreen(
                             if (aiKeyManager.hasGroqApiKey()) Icons.Default.CheckCircle else Icons.Default.Warning,
                             contentDescription = null,
                             tint = if (aiKeyManager.hasGroqApiKey()) 
-                                MaterialTheme.colorScheme.primary 
+                                SpendCraftTheme.colors.primary 
                             else 
-                                MaterialTheme.colorScheme.error
+                                SpendCraftTheme.colors.error
                         )
                         Text(
                             text = "API Anahtarı Durumu",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -149,11 +150,11 @@ fun AISettingsScreen(
                         } else {
                             "⚠️ API anahtarı kaydedilmedi. AI önerileri çalışmayacak."
                         },
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = SpendCraftTheme.typography.bodyMedium,
                         color = if (aiKeyManager.hasGroqApiKey()) 
-                            MaterialTheme.colorScheme.primary 
+                            SpendCraftTheme.colors.primary 
                         else 
-                            MaterialTheme.colorScheme.error
+                            SpendCraftTheme.colors.error
                     )
                 }
             }
@@ -165,7 +166,7 @@ fun AISettingsScreen(
                 ) {
                     Text(
                         text = "API Anahtarı Nasıl Alınır?",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     
@@ -183,8 +184,8 @@ fun AISettingsScreen(
                     steps.forEach { step ->
                         Text(
                             text = step,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = SpendCraftTheme.typography.bodyMedium,
+                            color = SpendCraftTheme.colors.onSurfaceVariant,
                             modifier = Modifier.padding(vertical = 2.dp)
                         )
                     }

@@ -9,7 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Surface
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
@@ -22,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alperen.spendcraft.navigation.AppNavHost
-import com.alperen.spendcraft.core.ui.SpendCraftTheme
 import com.alperen.spendcraft.core.ui.SplashScreen
 import com.alperen.spendcraft.reminder.ReminderScheduler
 import com.alperen.spendcraft.feature.welcome.ui.WelcomeScreen
@@ -39,6 +37,8 @@ import com.google.android.gms.common.api.ApiException
 import android.content.Intent
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import com.alperenturker.spendcraft.ui.theme.SpendCraftTheme
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme as CoreTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
             }
 
             SpendCraftTheme(darkTheme = isDarkMode) {
-                Surface(color = MaterialTheme.colorScheme.background) {
+                Surface(color = CoreTheme.colors.background) {
                     when {
                         showSplash -> {
                             SplashScreen(

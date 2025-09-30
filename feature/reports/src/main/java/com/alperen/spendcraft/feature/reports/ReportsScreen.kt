@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.reports
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -105,14 +106,14 @@ fun ReportsScreen(
                         title = stringResource(R.string.total_income),
                         value = formatCurrency(totalIncome),
                         icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_income_vector),
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = SpendCraftTheme.colors.secondary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
                         title = stringResource(R.string.total_expense),
                         value = formatCurrency(totalExpense),
                         icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_expense_vector),
-                        color = MaterialTheme.colorScheme.error,
+                        color = SpendCraftTheme.colors.error,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -133,26 +134,26 @@ fun ReportsScreen(
                                 painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector),
                                 contentDescription = null,
                                 tint = if (netAmount >= 0)
-                                    MaterialTheme.colorScheme.secondary
+                                    SpendCraftTheme.colors.secondary
                                 else
-                                    MaterialTheme.colorScheme.error,
+                                    SpendCraftTheme.colors.error,
                                 modifier = Modifier.size(24.dp)
                             )
                             Text(
                                 text = stringResource(R.string.net_balance),
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = SpendCraftTheme.typography.titleMedium,
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = formatCurrency(netAmount),
-                            style = MaterialTheme.typography.displaySmall,
+                            style = SpendCraftTheme.typography.displaySmall,
                             fontWeight = FontWeight.Bold,
                             color = if (netAmount >= 0)
-                                MaterialTheme.colorScheme.secondary
+                                SpendCraftTheme.colors.secondary
                             else
-                                MaterialTheme.colorScheme.error
+                                SpendCraftTheme.colors.error
                         )
                     }
                 }
@@ -183,14 +184,14 @@ fun ReportsScreen(
                                     Icon(
                                         painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_bar_chart_vector),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
+                                        tint = SpendCraftTheme.colors.primary,
                                         modifier = Modifier.size(24.dp)
                                     )
                                     Text(
                                         text = stringResource(R.string.expense_distribution),
-                                        style = MaterialTheme.typography.titleLarge,
+                                        style = SpendCraftTheme.typography.titleLarge,
                                         fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        color = SpendCraftTheme.colors.onSurface
                                     )
                                 }
                                 
@@ -210,7 +211,7 @@ fun ReportsScreen(
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         text = if (showBarChart) "Bar" else "Pie",
-                                        style = MaterialTheme.typography.bodySmall
+                                        style = SpendCraftTheme.typography.bodySmall
                                     )
                                 }
                             }
@@ -221,11 +222,11 @@ fun ReportsScreen(
                                 // Bar Chart
                                 val barData = expenseByCategory.take(8).mapIndexed { index, (categoryId, categoryName, amount) ->
                                     val colors = listOf(
-                                        MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.secondary,
-                                        MaterialTheme.colorScheme.tertiary,
-                                        MaterialTheme.colorScheme.error,
-                                        MaterialTheme.colorScheme.outline
+                                        SpendCraftTheme.colors.primary,
+                                        SpendCraftTheme.colors.secondary,
+                                        SpendCraftTheme.colors.tertiary,
+                                        SpendCraftTheme.colors.error,
+                                        SpendCraftTheme.colors.outline
                                     )
                                     BarData(
                                         id = categoryId.toString(),
@@ -246,11 +247,11 @@ fun ReportsScreen(
                                 // Pie Chart
                                 val pieData = expenseByCategory.mapIndexed { index, (categoryId, categoryName, amount) ->
                                     val colors = listOf(
-                                        MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.secondary,
-                                        MaterialTheme.colorScheme.tertiary,
-                                        MaterialTheme.colorScheme.error,
-                                        MaterialTheme.colorScheme.outline
+                                        SpendCraftTheme.colors.primary,
+                                        SpendCraftTheme.colors.secondary,
+                                        SpendCraftTheme.colors.tertiary,
+                                        SpendCraftTheme.colors.error,
+                                        SpendCraftTheme.colors.outline
                                     )
                                     PieSlice(
                                         id = categoryId.toString(),
@@ -288,14 +289,14 @@ fun ReportsScreen(
                                 Icon(
                                     painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector),
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
+                                    tint = SpendCraftTheme.colors.primary,
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Text(
                                     text = "Kategori Harcamaları",
-                                    style = MaterialTheme.typography.titleLarge,
+                                    style = SpendCraftTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
+                                    color = SpendCraftTheme.colors.onSurface
                                 )
                             }
 
@@ -303,11 +304,11 @@ fun ReportsScreen(
 
                             val barData = expenseByCategory.take(8).mapIndexed { index, (categoryId, categoryName, amount) ->
                                 val colors = listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.secondary,
-                                    MaterialTheme.colorScheme.tertiary,
-                                    MaterialTheme.colorScheme.error,
-                                    MaterialTheme.colorScheme.outline
+                                    SpendCraftTheme.colors.primary,
+                                    SpendCraftTheme.colors.secondary,
+                                    SpendCraftTheme.colors.tertiary,
+                                    SpendCraftTheme.colors.error,
+                                    SpendCraftTheme.colors.outline
                                 )
                                 BarData(
                                     id = categoryId.toString(),
@@ -339,14 +340,14 @@ fun ReportsScreen(
                         Icon(
                             painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = SpendCraftTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
                             text = stringResource(R.string.expense_distribution),
-                            style = MaterialTheme.typography.headlineSmall,
+                            style = SpendCraftTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = SpendCraftTheme.colors.onBackground
                         )
                     }
                 }
@@ -374,14 +375,14 @@ fun ReportsScreen(
                             Icon(
                                 painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_speed_vector),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = SpendCraftTheme.colors.primary,
                                 modifier = Modifier.size(24.dp)
                             )
                             Text(
                                 text = stringResource(R.string.transaction_statistics),
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = SpendCraftTheme.colors.onSurface
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
@@ -392,43 +393,43 @@ fun ReportsScreen(
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
                                     text = stringResource(R.string.total_transactions),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    style = SpendCraftTheme.typography.bodyMedium,
+                                    color = SpendCraftTheme.colors.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "${items.size}",
-                                    style = MaterialTheme.typography.titleLarge,
+                                    style = SpendCraftTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = SpendCraftTheme.colors.primary
                                 )
                             }
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
                                     text = stringResource(R.string.income_transactions),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    style = SpendCraftTheme.typography.bodyMedium,
+                                    color = SpendCraftTheme.colors.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "${items.count { it.type == TransactionType.INCOME }}",
-                                    style = MaterialTheme.typography.titleLarge,
+                                    style = SpendCraftTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = SpendCraftTheme.colors.secondary
                                 )
                             }
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
                                     text = stringResource(R.string.expense_transactions),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    style = SpendCraftTheme.typography.bodyMedium,
+                                    color = SpendCraftTheme.colors.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "${items.count { it.type == TransactionType.EXPENSE }}",
-                                    style = MaterialTheme.typography.titleLarge,
+                                    style = SpendCraftTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.error
+                                    color = SpendCraftTheme.colors.error
                                 )
                             }
                         }
@@ -448,11 +449,11 @@ private fun ExpenseCategoryItem(
 ) {
     val percentage = if (totalExpense > 0) (amount.toFloat() / totalExpense.toFloat() * 100) else 0f
     val colors = listOf(
-        MaterialTheme.colorScheme.primary,
-        MaterialTheme.colorScheme.secondary,
-        MaterialTheme.colorScheme.tertiary,
-        MaterialTheme.colorScheme.error,
-        MaterialTheme.colorScheme.outline
+        SpendCraftTheme.colors.primary,
+        SpendCraftTheme.colors.secondary,
+        SpendCraftTheme.colors.tertiary,
+        SpendCraftTheme.colors.error,
+        SpendCraftTheme.colors.outline
     )
     val colorIndex = (categoryId?.toInt() ?: 0) % colors.size
 
@@ -479,22 +480,22 @@ private fun ExpenseCategoryItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = categoryName,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = SpendCraftTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
                     text = "${percentage.toInt()}%",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = SpendCraftTheme.typography.bodyMedium,
+                    color = SpendCraftTheme.colors.onSurfaceVariant
                 )
             }
 
             // Fiyat tek satırda
             Text(
                 text = formatCurrency(amount),
-                style = MaterialTheme.typography.titleMedium,
+                style = SpendCraftTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.error
+                color = SpendCraftTheme.colors.error
             )
         }
     }
@@ -527,7 +528,7 @@ private fun ExpensePieChart(
             .background(
                 Brush.radialGradient(
                     colors = listOf(
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                        SpendCraftTheme.colors.primary.copy(alpha = 0.1f),
                         Color.Transparent
                     ),
                     radius = 200f
@@ -542,7 +543,7 @@ private fun ExpensePieChart(
                 .background(
                     Brush.radialGradient(
                         colors = listOf(
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                            SpendCraftTheme.colors.primary.copy(alpha = 0.15f),
                             Color.Transparent
                         ),
                         radius = 130f
@@ -677,7 +678,7 @@ private fun ExpenseLegend(
             // Kart zemini rengi (track için de bunu kullanacağız)
             val containerColor =
                 if (isSelected) color.copy(alpha = 0.15f)
-                else MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                else SpendCraftTheme.colors.surface.copy(alpha = 0.9f)
 
             Card(
                 modifier = Modifier
@@ -690,7 +691,7 @@ private fun ExpenseLegend(
                     )
                     .clickable { onSelectedIndexChanged(if (isSelected) -1 else index) }, // ← eklendi
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = SpendCraftTheme.colors.surface
                 ),
                 shape = RoundedCornerShape(16.dp),
                 border = if (isSelected) {
@@ -734,9 +735,9 @@ private fun ExpenseLegend(
                         Column {
                             Text(
                                 text = categoryName,
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = SpendCraftTheme.colors.onSurface
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Row(
@@ -759,7 +760,7 @@ private fun ExpenseLegend(
                                 }
                                 Text(
                                     text = "${percentage.toInt()}%",
-                                    style = MaterialTheme.typography.bodySmall,
+                                    style = SpendCraftTheme.typography.bodySmall,
                                     color = color,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -770,9 +771,9 @@ private fun ExpenseLegend(
                     Column(horizontalAlignment = Alignment.End) {
                         Text(
                             text = formatCurrency(amount),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = SpendCraftTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = SpendCraftTheme.colors.onSurface
                         )
                     }
                 }

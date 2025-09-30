@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.budget.ui
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -81,7 +82,7 @@ fun BudgetManagementScreen(
                 premiumContent = {
                     FloatingActionButton(
                         onClick = { showAddDialog = true },
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = SpendCraftTheme.colors.primary
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Add,
@@ -92,7 +93,7 @@ fun BudgetManagementScreen(
                 freeContent = {
                     FloatingActionButton(
                         onClick = { onNavigateToPaywall() },
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        containerColor = SpendCraftTheme.colors.surfaceVariant
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Lock,
@@ -166,9 +167,9 @@ private fun BudgetSummaryCard(budgets: List<Budget>) {
         ) {
             Text(
                 text = stringResource(R.string.budget_progress),
-                style = MaterialTheme.typography.titleMedium,
+                style = SpendCraftTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = SpendCraftTheme.colors.onSurface
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -224,14 +225,14 @@ private fun BudgetItemCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = category?.name ?: budget.categoryId,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = SpendCraftTheme.colors.onSurface
                     )
                     Text(
                         text = stringResource(R.string.monthly_budget),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = SpendCraftTheme.typography.bodyMedium,
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                 }
                 
@@ -261,14 +262,14 @@ private fun BudgetItemCard(
                 ) {
                     Text(
                         text = stringResource(R.string.spent_this_month),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = SpendCraftTheme.typography.bodySmall,
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                     Text(
                         text = "${(progress * 100).toInt()}%",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = SpendCraftTheme.typography.bodySmall,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (progress > 0.8f) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (progress > 0.8f) SpendCraftTheme.colors.error else SpendCraftTheme.colors.onSurfaceVariant
                     )
                 }
                 
@@ -278,9 +279,9 @@ private fun BudgetItemCard(
                     progress = progress,
                     modifier = Modifier.fillMaxWidth(),
                     color = when {
-                        progress >= 1f -> MaterialTheme.colorScheme.error
-                        progress >= 0.8f -> MaterialTheme.colorScheme.tertiary
-                        else -> MaterialTheme.colorScheme.primary
+                        progress >= 1f -> SpendCraftTheme.colors.error
+                        progress >= 0.8f -> SpendCraftTheme.colors.tertiary
+                        else -> SpendCraftTheme.colors.primary
                     }
                 )
                 
@@ -292,14 +293,14 @@ private fun BudgetItemCard(
                 ) {
                     Text(
                         text = formatCurrency(spentAmount),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = SpendCraftTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = SpendCraftTheme.colors.onSurface
                     )
                     Text(
                         text = formatCurrency(budget.monthlyLimitMinor),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = SpendCraftTheme.typography.bodyMedium,
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -322,24 +323,24 @@ private fun EmptyBudgetsCard() {
                 imageVector = Icons.Filled.Settings,
                 contentDescription = null,
                 modifier = Modifier.size(64.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = SpendCraftTheme.colors.onSurfaceVariant
             )
             
             Spacer(modifier = Modifier.height(16.dp))
             
             Text(
                 text = stringResource(R.string.no_budgets),
-                style = MaterialTheme.typography.titleMedium,
+                style = SpendCraftTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = SpendCraftTheme.colors.onSurface
             )
             
             Spacer(modifier = Modifier.height(8.dp))
             
             Text(
                 text = stringResource(R.string.no_budgets_desc),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = SpendCraftTheme.typography.bodyMedium,
+                color = SpendCraftTheme.colors.onSurfaceVariant
             )
         }
     }
@@ -398,8 +399,8 @@ private fun BudgetDialog(
                                 Text(
                                     text = "Henüz kategori yok - önce kategori ekleyin",
                                     modifier = Modifier.padding(16.dp),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    style = SpendCraftTheme.typography.bodyMedium,
+                                    color = SpendCraftTheme.colors.onSurfaceVariant
                                 )
                             } else {
                                 categories.forEach { category ->

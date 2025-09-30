@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.paywall
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -85,17 +86,17 @@ fun PaywallScreen(
                     ) {
                         Text(
                             text = "🚀 SpendCraft Premium",
-                            style = MaterialTheme.typography.headlineMedium,
+                            style = SpendCraftTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = SpendCraftTheme.colors.primary
                         )
                         
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         Text(
                             text = "Tüm özelliklerin kilidini açın",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = SpendCraftTheme.typography.bodyLarge,
+                            color = SpendCraftTheme.colors.onSurfaceVariant,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -110,9 +111,9 @@ fun PaywallScreen(
                     ) {
                         Text(
                             text = "✨ Premium Avantajları",
-                            style = MaterialTheme.typography.titleLarge,
+                            style = SpendCraftTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = SpendCraftTheme.colors.onSurface
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -134,17 +135,17 @@ fun PaywallScreen(
                             ) {
                                 Text(
                                     text = title,
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = SpendCraftTheme.typography.titleMedium,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = SpendCraftTheme.colors.primary
                                 )
                                 
                                 Spacer(modifier = Modifier.width(12.dp))
                                 
                                 Text(
                                     text = description,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = SpendCraftTheme.typography.bodyMedium,
+                                    color = SpendCraftTheme.colors.onSurfaceVariant,
                                     modifier = Modifier.weight(1f)
                                 )
                             }
@@ -167,11 +168,11 @@ fun PaywallScreen(
                                 Icons.Default.Star,
                                 contentDescription = null,
                                 modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = SpendCraftTheme.colors.primary
                             )
                             Text(
                                 text = "🤖 AI Haftalık Öneriler",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -180,8 +181,8 @@ fun PaywallScreen(
                         
                         Text(
                             text = "Premium olmadan da AI önerileri alın! Haftalık 1 AI analizi ile harcama alışkanlıklarınızı optimize edin.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            style = SpendCraftTheme.typography.bodyMedium,
+                            color = SpendCraftTheme.colors.onSurfaceVariant
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -194,21 +195,21 @@ fun PaywallScreen(
                             Column {
                                 Text(
                                     text = "₺9,99/hafta",
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = SpendCraftTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = SpendCraftTheme.colors.primary
                                 )
                                 Text(
                                     text = "Tek seferlik satın alma",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    style = SpendCraftTheme.typography.bodySmall,
+                                    color = SpendCraftTheme.colors.onSurfaceVariant
                                 )
                             }
                             
                             Button(
                                 onClick = { showAIWeekly = true },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.secondary
+                                    containerColor = SpendCraftTheme.colors.secondary
                                 )
                             ) {
                                 Text("AI Paketi Al")
@@ -226,9 +227,9 @@ fun PaywallScreen(
                     ) {
                         Text(
                             text = "💎 Planınızı Seçin",
-                            style = MaterialTheme.typography.titleLarge,
+                            style = SpendCraftTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = SpendCraftTheme.colors.onSurface
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -249,14 +250,14 @@ fun PaywallScreen(
                                     .padding(vertical = 4.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = if (isSelected) 
-                                        MaterialTheme.colorScheme.primaryContainer 
+                                        SpendCraftTheme.colors.primaryContainer 
                                     else 
-                                        MaterialTheme.colorScheme.surface
+                                        SpendCraftTheme.colors.surface
                                 ),
                                 border = if (isSelected) 
                                     androidx.compose.foundation.BorderStroke(
                                         2.dp, 
-                                        MaterialTheme.colorScheme.primary
+                                        SpendCraftTheme.colors.primary
                                     ) 
                                 else null,
                                 onClick = { selectedProduct = productId }
@@ -271,22 +272,22 @@ fun PaywallScreen(
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Text(
                                                 text = title,
-                                                style = MaterialTheme.typography.titleMedium,
+                                                style = SpendCraftTheme.typography.titleMedium,
                                                 fontWeight = FontWeight.SemiBold,
-                                                color = MaterialTheme.colorScheme.onSurface
+                                                color = SpendCraftTheme.colors.onSurface
                                             )
                                             
                                             if (isPopular) {
                                                 Spacer(modifier = Modifier.width(8.dp))
                                                 Card(
                                                     colors = CardDefaults.cardColors(
-                                                        containerColor = MaterialTheme.colorScheme.primary
+                                                        containerColor = SpendCraftTheme.colors.primary
                                                     )
                                                 ) {
                                                     Text(
                                                         text = "POPÜLER",
-                                                        style = MaterialTheme.typography.labelSmall,
-                                                        color = MaterialTheme.colorScheme.onPrimary,
+                                                        style = SpendCraftTheme.typography.labelSmall,
+                                                        color = SpendCraftTheme.colors.onPrimary,
                                                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                                     )
                                                 }
@@ -295,15 +296,15 @@ fun PaywallScreen(
                                         
                                         Text(
                                             text = viewModel.getProductDescription(productId),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            style = SpendCraftTheme.typography.bodyMedium,
+                                            color = SpendCraftTheme.colors.onSurfaceVariant
                                         )
                                         
                                         Text(
                                             text = viewModel.getProductPrice(productId),
-                                            style = MaterialTheme.typography.titleLarge,
+                                            style = SpendCraftTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary
+                                            color = SpendCraftTheme.colors.primary
                                         )
                                     }
                                     
@@ -333,18 +334,18 @@ fun PaywallScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = SpendCraftTheme.colors.primary
                     )
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
-                            color = MaterialTheme.colorScheme.onPrimary
+                            color = SpendCraftTheme.colors.onPrimary
                         )
                     } else {
                         Text(
                             text = "⭐ Premium'a Yükselt",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -365,7 +366,7 @@ fun PaywallScreen(
                     
                     Text(
                         text = " • ",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                     
                     TextButton(onClick = { 

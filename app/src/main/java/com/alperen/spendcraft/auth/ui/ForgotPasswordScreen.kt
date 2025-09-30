@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.auth.ui
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -132,7 +133,7 @@ fun ForgotPasswordScreen(
                 
                 Text(
                     text = if (isTurkish) "Şifremi Unuttum" else "Forgot Password",
-                    style = MaterialTheme.typography.headlineLarge.copy(
+                    style = SpendCraftTheme.typography.headlineLarge.copy(
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold
                     ),
@@ -147,7 +148,7 @@ fun ForgotPasswordScreen(
                         "E-posta adresinizi girin, size şifre sıfırlama bağlantısı gönderelim" 
                     else 
                         "Enter your email address and we'll send you a password reset link",
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = SpendCraftTheme.typography.bodyLarge.copy(
                         fontSize = 15.sp,
                         lineHeight = 22.sp
                     ),
@@ -204,7 +205,7 @@ fun ForgotPasswordScreen(
                                 unfocusedTextColor = if (isDarkMode) Color.White else Color(0xFF111827),
                                 cursorColor = primaryColor
                             ),
-                            textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp),
+                            textStyle = SpendCraftTheme.typography.bodyLarge.copy(fontSize = 15.sp),
                             shape = RoundedCornerShape(12.dp),
                             singleLine = true
                         )
@@ -213,8 +214,8 @@ fun ForgotPasswordScreen(
                         if (errorMessage != null && errorMessage!!.isNotEmpty()) {
                             Text(
                                 text = errorMessage ?: "",
-                                color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.bodySmall.copy(
+                                color = SpendCraftTheme.colors.error,
+                                style = SpendCraftTheme.typography.bodySmall.copy(
                                     fontSize = 13.sp,
                                     lineHeight = 16.sp
                                 )
@@ -266,7 +267,7 @@ fun ForgotPasswordScreen(
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         text = if (isTurkish) "Gönder" else "Send",
-                                        style = MaterialTheme.typography.titleMedium.copy(
+                                        style = SpendCraftTheme.typography.titleMedium.copy(
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.SemiBold
                                         )
@@ -325,7 +326,7 @@ fun ForgotPasswordScreen(
                         
                         Text(
                             text = if (isTurkish) "E-posta Gönderildi!" else "Email Sent!",
-                            style = MaterialTheme.typography.headlineMedium.copy(
+                            style = SpendCraftTheme.typography.headlineMedium.copy(
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold
                             ),
@@ -340,7 +341,7 @@ fun ForgotPasswordScreen(
                                 "Şifre sıfırlama bağlantısı $email adresine gönderildi. Lütfen e-posta kutunuzu kontrol edin." 
                             else 
                                 "Password reset link has been sent to $email. Please check your email inbox.",
-                            style = MaterialTheme.typography.bodyLarge.copy(
+                            style = SpendCraftTheme.typography.bodyLarge.copy(
                                 fontSize = 15.sp,
                                 lineHeight = 22.sp
                             ),
@@ -379,7 +380,7 @@ fun ForgotPasswordScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = if (isTurkish) "Giriş Sayfasına Dön" else "Back to Login",
-                                    style = MaterialTheme.typography.titleMedium.copy(
+                                    style = SpendCraftTheme.typography.titleMedium.copy(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.SemiBold
                                     )
@@ -441,7 +442,7 @@ fun ForgotPasswordScreen(
                         
                         Text(
                             text = if (isTurkish) "E-posta Gönderildi!" else "Email Sent!",
-                            style = MaterialTheme.typography.headlineMedium.copy(
+                            style = SpendCraftTheme.typography.headlineMedium.copy(
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold
                             ),
@@ -456,7 +457,7 @@ fun ForgotPasswordScreen(
                                 "Şifre sıfırlama bağlantısı $email adresine gönderildi.\n\nE-posta kutunuzu kontrol edin ve bağlantıya tıklayarak yeni şifrenizi belirleyin.\n\nŞifrenizi belirledikten sonra giriş yapabilirsiniz."
                             else 
                                 "Password reset link has been sent to $email.\n\nCheck your email inbox and click the link to set your new password.\n\nYou can sign in after setting your new password.",
-                            style = MaterialTheme.typography.bodyLarge.copy(
+                            style = SpendCraftTheme.typography.bodyLarge.copy(
                                 fontSize = 15.sp,
                                 lineHeight = 22.sp
                             ),
@@ -498,7 +499,7 @@ fun ForgotPasswordScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = if (isTurkish) "Tamam" else "OK",
-                                    style = MaterialTheme.typography.titleMedium.copy(
+                                    style = SpendCraftTheme.typography.titleMedium.copy(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.SemiBold
                                     )

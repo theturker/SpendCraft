@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.ai
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -64,7 +65,7 @@ fun AISuggestionsScreen(
                     ) {
                         Text(
                             text = "Öneri Türü Seçin",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(12.dp))
@@ -88,13 +89,13 @@ fun AISuggestionsScreen(
                                 Column {
                                     Text(
                                         text = adviceType.title,
-                                        style = MaterialTheme.typography.bodyLarge,
+                                        style = SpendCraftTheme.typography.bodyLarge,
                                         fontWeight = FontWeight.Medium
                                     )
                                     Text(
                                         text = adviceType.description,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodySmall,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                             }
@@ -170,13 +171,13 @@ fun AISuggestionsScreen(
                             Icon(
                                 Icons.Default.Warning,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.error
+                                tint = SpendCraftTheme.colors.error
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = error,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.error
+                                style = SpendCraftTheme.typography.bodyMedium,
+                                color = SpendCraftTheme.colors.error
                             )
                         }
                     }
@@ -197,18 +198,18 @@ fun AISuggestionsScreen(
                                 Icon(
                                     Icons.Default.Star,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = SpendCraftTheme.colors.primary
                                 )
                                 Text(
                                     text = "AI Önerisi",
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = SpendCraftTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
                                 text = advice,
-                                style = MaterialTheme.typography.bodyLarge
+                                style = SpendCraftTheme.typography.bodyLarge
                             )
                         }
                     }
@@ -223,7 +224,7 @@ fun AISuggestionsScreen(
                     ) {
                         Text(
                             text = "Kullanım Bilgisi",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -233,8 +234,8 @@ fun AISuggestionsScreen(
                             } else {
                                 "Haftalık 1 AI önerisi hakkınız var"
                             },
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            style = SpendCraftTheme.typography.bodyMedium,
+                            color = SpendCraftTheme.colors.onSurfaceVariant
                         )
                     }
                 }

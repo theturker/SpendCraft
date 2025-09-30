@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.achievements
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -283,7 +284,7 @@ fun AchievementsScreen(
                     ) {
                         Text(
                             text = "Başarım İlerlemesi",
-                            style = MaterialTheme.typography.titleLarge,
+                            style = SpendCraftTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -295,17 +296,17 @@ fun AchievementsScreen(
                             AchievementStat(
                                 value = unlockedCount.toString(),
                                 label = "Kazanılan",
-                                color = MaterialTheme.colorScheme.secondary
+                                color = SpendCraftTheme.colors.secondary
                             )
                             AchievementStat(
                                 value = displayAchievements.size.toString(),
                                 label = "Toplam",
-                                color = MaterialTheme.colorScheme.primary
+                                color = SpendCraftTheme.colors.primary
                             )
                             AchievementStat(
                                 value = "${(unlockedCount * 100 / displayAchievements.size)}%",
                                 label = "Tamamlama",
-                                color = MaterialTheme.colorScheme.tertiary
+                                color = SpendCraftTheme.colors.tertiary
                             )
                         }
                     }
@@ -317,9 +318,9 @@ fun AchievementsScreen(
                 item {
                     Text(
                         text = "🏆 Kazanılan Başarımlar",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = SpendCraftTheme.colors.primary
                     )
                 }
 
@@ -336,9 +337,9 @@ fun AchievementsScreen(
                 item {
                     Text(
                         text = "🔒 Henüz Kazanılmayan",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = SpendCraftTheme.colors.onSurfaceVariant
                     )
                 }
 
@@ -390,8 +391,8 @@ private fun AchievementCard(
                         } else {
                             Brush.radialGradient(
                                 colors = listOf(
-                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.1f),
-                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.05f)
+                                    SpendCraftTheme.colors.onSurfaceVariant.copy(alpha = 0.1f),
+                                    SpendCraftTheme.colors.onSurfaceVariant.copy(alpha = 0.05f)
                                 )
                             )
                         },
@@ -418,7 +419,7 @@ private fun AchievementCard(
                     tint = if (isUnlocked) {
                         Color.White
                     } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        SpendCraftTheme.colors.onSurfaceVariant.copy(alpha = 0.5f)
                     }
                 )
             }
@@ -432,12 +433,12 @@ private fun AchievementCard(
                 ) {
                     Text(
                         text = achievement.title,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = if (isUnlocked) {
-                            MaterialTheme.colorScheme.onSurface
+                            SpendCraftTheme.colors.onSurface
                         } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
+                            SpendCraftTheme.colors.onSurfaceVariant
                         }
                     )
                     
@@ -448,8 +449,8 @@ private fun AchievementCard(
 
                 Text(
                     text = achievement.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = SpendCraftTheme.typography.bodyMedium,
+                    color = SpendCraftTheme.colors.onSurfaceVariant
                 )
 
                 if (!isUnlocked && achievement.progress > 0f) {
@@ -462,13 +463,13 @@ private fun AchievementCard(
                         ) {
                             Text(
                                 text = "İlerleme",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = SpendCraftTheme.typography.bodySmall,
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                             Text(
                                 text = "${achievement.currentProgress}/${achievement.maxProgress}",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.primary
+                                style = SpendCraftTheme.typography.bodySmall,
+                                color = SpendCraftTheme.colors.primary
                             )
                         }
                         
@@ -477,8 +478,8 @@ private fun AchievementCard(
                         LinearProgressIndicator(
                             progress = achievement.progress,
                             modifier = Modifier.fillMaxWidth(),
-                            color = MaterialTheme.colorScheme.primary,
-                            trackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+                            color = SpendCraftTheme.colors.primary,
+                            trackColor = SpendCraftTheme.colors.onSurfaceVariant.copy(alpha = 0.2f)
                         )
                     }
                 }
@@ -486,13 +487,13 @@ private fun AchievementCard(
                 achievement.reward?.let { reward ->
                     Spacer(modifier = Modifier.height(8.dp))
                     Surface(
-                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                        color = SpendCraftTheme.colors.primaryContainer.copy(alpha = 0.5f),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
                             text = "🎁 $reward",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            style = SpendCraftTheme.typography.bodySmall,
+                            color = SpendCraftTheme.colors.onPrimaryContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
@@ -513,14 +514,14 @@ private fun AchievementStat(
     ) {
         Text(
             text = value,
-            style = MaterialTheme.typography.headlineMedium,
+            style = SpendCraftTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = color
         )
         Text(
             text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = SpendCraftTheme.typography.bodySmall,
+            color = SpendCraftTheme.colors.onSurfaceVariant
         )
     }
 }
@@ -545,7 +546,7 @@ private fun RarityBadge(rarity: AchievementRarity) {
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.bodySmall,
+            style = SpendCraftTheme.typography.bodySmall,
             color = Color.White,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
