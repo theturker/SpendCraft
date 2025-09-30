@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.dashboard
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -92,13 +93,13 @@ fun DashboardScreen(
                         Column {
                             Text(
                                 text = "Hoş Geldiniz",
-                                style = MaterialTheme.typography.headlineSmall,
+                                style = SpendCraftTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )
                             Text(
                                 text = "Finansal durumunuzu kontrol edin",
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = SpendCraftTheme.typography.bodyMedium,
                                 color = Color.White.copy(alpha = 0.9f)
                             )
                         }
@@ -123,14 +124,14 @@ fun DashboardScreen(
                         title = "Toplam Gelir",
                         value = formatCurrency(totalIncome),
                         icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_income_vector),
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = SpendCraftTheme.colors.secondary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
                         title = "Toplam Gider",
                         value = formatCurrency(totalExpense),
                         icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_expense_vector),
-                        color = MaterialTheme.colorScheme.error,
+                        color = SpendCraftTheme.colors.error,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -145,18 +146,18 @@ fun DashboardScreen(
                     ) {
                         Text(
                             text = "Net Bakiye",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            style = SpendCraftTheme.typography.titleMedium,
+                            color = SpendCraftTheme.colors.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = formatCurrency(netBalance),
-                            style = MaterialTheme.typography.displaySmall,
+                            style = SpendCraftTheme.typography.displaySmall,
                             fontWeight = FontWeight.Bold,
                             color = if (netBalance >= 0) 
-                                MaterialTheme.colorScheme.secondary 
+                                SpendCraftTheme.colors.secondary 
                             else 
-                                MaterialTheme.colorScheme.error
+                                SpendCraftTheme.colors.error
                         )
                     }
                 }
@@ -170,7 +171,7 @@ fun DashboardScreen(
                     ) {
                         Text(
                             text = "Hızlı Erişim",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -220,7 +221,7 @@ fun DashboardScreen(
                         ) {
                             Text(
                                 text = "En Çok Harcanan Kategoriler",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(16.dp))
@@ -242,31 +243,31 @@ fun DashboardScreen(
                                                 .size(12.dp)
                                                 .background(
                                                     when (index) {
-                                                        0 -> MaterialTheme.colorScheme.primary
-                                                        1 -> MaterialTheme.colorScheme.secondary
-                                                        else -> MaterialTheme.colorScheme.tertiary
+                                                        0 -> SpendCraftTheme.colors.primary
+                                                        1 -> SpendCraftTheme.colors.secondary
+                                                        else -> SpendCraftTheme.colors.tertiary
                                                     },
                                                     CircleShape
                                                 )
                                         )
                                         Text(
                                             text = categoryName,
-                                            style = MaterialTheme.typography.bodyMedium,
+                                            style = SpendCraftTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Medium
                                         )
                                     }
                                     Text(
                                         text = formatCurrency(amount),
-                                        style = MaterialTheme.typography.bodyMedium,
+                                        style = SpendCraftTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.error
+                                        color = SpendCraftTheme.colors.error
                                     )
                                 }
                                 
                                 if (index < topCategories.lastIndex) {
                                     Divider(
                                         modifier = Modifier.padding(vertical = 4.dp),
-                                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                                        color = SpendCraftTheme.colors.outline.copy(alpha = 0.3f)
                                     )
                                 }
                             }
@@ -284,7 +285,7 @@ fun DashboardScreen(
                         ) {
                             Text(
                                 text = "Son İşlemler",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(16.dp))
@@ -318,7 +319,7 @@ private fun QuickActionCard(
         onClick = onClick,
         modifier = Modifier.size(80.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = SpendCraftTheme.colors.primaryContainer
         )
     ) {
         Column(
@@ -330,13 +331,13 @@ private fun QuickActionCard(
                 icon,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                tint = SpendCraftTheme.colors.onPrimaryContainer
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                style = SpendCraftTheme.typography.bodySmall,
+                color = SpendCraftTheme.colors.onPrimaryContainer
             )
         }
     }
@@ -365,31 +366,31 @@ private fun RecentTransactionItem(
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
                 tint = if (transaction.type == TransactionType.INCOME) 
-                    MaterialTheme.colorScheme.secondary 
+                    SpendCraftTheme.colors.secondary 
                 else 
-                    MaterialTheme.colorScheme.error
+                    SpendCraftTheme.colors.error
             )
             Column {
                 Text(
                     text = categoryName,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = SpendCraftTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = dateFormatter.format(Date(transaction.timestampUtcMillis)),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = SpendCraftTheme.typography.bodySmall,
+                    color = SpendCraftTheme.colors.onSurfaceVariant
                 )
             }
         }
         Text(
             text = "${if (transaction.type == TransactionType.INCOME) "+" else "-"}${formatCurrency(transaction.amount.minorUnits)}",
-            style = MaterialTheme.typography.bodyMedium,
+            style = SpendCraftTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             color = if (transaction.type == TransactionType.INCOME) 
-                MaterialTheme.colorScheme.secondary 
+                SpendCraftTheme.colors.secondary 
             else 
-                MaterialTheme.colorScheme.error
+                SpendCraftTheme.colors.error
         )
     }
 }

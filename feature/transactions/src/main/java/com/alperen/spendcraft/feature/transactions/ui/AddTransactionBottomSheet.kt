@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -56,8 +57,8 @@ fun AddTransactionBottomSheet(
         sheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = false
         ),
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        containerColor = SpendCraftTheme.colors.surface,
+        contentColor = SpendCraftTheme.colors.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -69,9 +70,9 @@ fun AddTransactionBottomSheet(
             // Title
             Text(
                 text = if (isIncome) "💰 Gelir Ekle" else "💸 Gider Ekle",
-                style = MaterialTheme.typography.headlineSmall,
+                style = SpendCraftTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = SpendCraftTheme.colors.onSurface,
                 modifier = Modifier.padding(bottom = 20.dp)
             )
             
@@ -84,9 +85,9 @@ fun AddTransactionBottomSheet(
                     Column {
                         Text(
                             text = "Kategori",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = SpendCraftTheme.colors.onSurface,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                         
@@ -119,15 +120,15 @@ fun AddTransactionBottomSheet(
                             Icon(
                                 painter = painterResource(R.drawable.ic_wallet),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = SpendCraftTheme.colors.primary,
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "Tutar",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = SpendCraftTheme.colors.onSurface
                             )
                         }
                         
@@ -143,9 +144,9 @@ fun AddTransactionBottomSheet(
                             ) {
                                 Text(
                                     text = "₺",
-                                    style = MaterialTheme.typography.titleLarge,
+                                    style = SpendCraftTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary,
+                                    color = SpendCraftTheme.colors.primary,
                                     modifier = Modifier.padding(end = 8.dp)
                                 )
                                 
@@ -160,13 +161,13 @@ fun AddTransactionBottomSheet(
                                     placeholder = { 
                                         Text(
                                             "0,00",
-                                            style = MaterialTheme.typography.titleLarge,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            style = SpendCraftTheme.typography.titleLarge,
+                                            color = SpendCraftTheme.colors.onSurfaceVariant
                                         ) 
                                     },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                     modifier = Modifier.weight(1f),
-                                    textStyle = MaterialTheme.typography.titleLarge,
+                                    textStyle = SpendCraftTheme.typography.titleLarge,
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedBorderColor = Color.Transparent,
                                         unfocusedBorderColor = Color.Transparent,
@@ -197,15 +198,15 @@ fun AddTransactionBottomSheet(
                             Icon(
                                 painter = painterResource(R.drawable.ic_calendar),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = SpendCraftTheme.colors.primary,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Tarih",
-                                style = MaterialTheme.typography.titleSmall,
+                                style = SpendCraftTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = SpendCraftTheme.colors.onSurface
                             )
                         }
                             
@@ -222,13 +223,13 @@ fun AddTransactionBottomSheet(
                                 ) {
                                     Text(
                                         text = dateFormatter.format(selectedDate),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        style = SpendCraftTheme.typography.bodyLarge,
+                                        color = SpendCraftTheme.colors.onSurface
                                     )
                                     Icon(
                                         painter = painterResource(R.drawable.ic_calendar),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -245,15 +246,15 @@ fun AddTransactionBottomSheet(
                             Icon(
                                 painter = painterResource(R.drawable.ic_clock),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = SpendCraftTheme.colors.primary,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Saat",
-                                style = MaterialTheme.typography.titleSmall,
+                                style = SpendCraftTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = SpendCraftTheme.colors.onSurface
                             )
                         }
                             
@@ -270,13 +271,13 @@ fun AddTransactionBottomSheet(
                                 ) {
                                     Text(
                                         text = timeFormatter.format(selectedTime),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        style = SpendCraftTheme.typography.bodyLarge,
+                                        color = SpendCraftTheme.colors.onSurface
                                     )
                                     Icon(
                                         painter = painterResource(R.drawable.ic_clock),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -294,15 +295,15 @@ fun AddTransactionBottomSheet(
                             Icon(
                                 painter = painterResource(R.drawable.ic_note),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = SpendCraftTheme.colors.primary,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Not (İsteğe bağlı)",
-                                style = MaterialTheme.typography.titleSmall,
+                                style = SpendCraftTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = SpendCraftTheme.colors.onSurface
                             )
                         }
                         
@@ -315,7 +316,7 @@ fun AddTransactionBottomSheet(
                                 placeholder = { 
                                     Text(
                                         "İşlem hakkında not ekleyin...",
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     ) 
                                 },
                                 modifier = Modifier
@@ -356,7 +357,7 @@ fun AddTransactionBottomSheet(
             ) {
                 Text(
                     text = if (isIncome) "💰 Gelir Ekle" else "💸 Gider Ekle",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = SpendCraftTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -397,7 +398,7 @@ private fun CompactCategoryChip(
         label = {
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodySmall,
+                style = SpendCraftTheme.typography.bodySmall,
                 fontWeight = FontWeight.Medium,
                 maxLines = 1,
                 overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
@@ -406,10 +407,10 @@ private fun CompactCategoryChip(
         selected = isSelected,
         modifier = Modifier.height(32.dp),
         colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-            selectedLabelColor = MaterialTheme.colorScheme.primary,
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+            selectedContainerColor = SpendCraftTheme.colors.primary.copy(alpha = 0.1f),
+            selectedLabelColor = SpendCraftTheme.colors.primary,
+            containerColor = SpendCraftTheme.colors.surfaceVariant,
+            labelColor = SpendCraftTheme.colors.onSurfaceVariant
         ),
         shape = RoundedCornerShape(6.dp)
     )
@@ -436,7 +437,7 @@ private fun ModernCategoryChip(
                 )
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = SpendCraftTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -444,10 +445,10 @@ private fun ModernCategoryChip(
         selected = isSelected,
         modifier = Modifier.height(40.dp),
         colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-            selectedLabelColor = MaterialTheme.colorScheme.primary,
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+            selectedContainerColor = SpendCraftTheme.colors.primary.copy(alpha = 0.1f),
+            selectedLabelColor = SpendCraftTheme.colors.primary,
+            containerColor = SpendCraftTheme.colors.surfaceVariant,
+            labelColor = SpendCraftTheme.colors.onSurfaceVariant
         ),
         shape = RoundedCornerShape(8.dp)
     )

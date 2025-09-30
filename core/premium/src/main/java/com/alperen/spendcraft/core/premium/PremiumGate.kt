@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.core.premium
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -43,7 +44,7 @@ fun PremiumLockScreen(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = SpendCraftTheme.colors.surfaceVariant
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -54,20 +55,20 @@ fun PremiumLockScreen(
             Icon(
                 imageVector = Icons.Filled.Lock,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = SpendCraftTheme.colors.primary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             
             Text(
                 text = "Premium Özellik",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                style = SpendCraftTheme.typography.titleMedium,
+                color = SpendCraftTheme.colors.onSurface
             )
             
             Text(
                 text = "Bu özelliği kullanmak için Premium'a yükseltin",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = SpendCraftTheme.typography.bodyMedium,
+                color = SpendCraftTheme.colors.onSurfaceVariant
             )
             
             Button(
@@ -97,7 +98,7 @@ fun PremiumBadge(
         Card(
             modifier = modifier,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = SpendCraftTheme.colors.primary
             )
         ) {
             Row(
@@ -107,13 +108,13 @@ fun PremiumBadge(
                 Icon(
                     imageVector = Icons.Filled.Star,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = SpendCraftTheme.colors.onPrimary,
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 Text(
                     text = "Premium",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.labelSmall
+                    color = SpendCraftTheme.colors.onPrimary,
+                    style = SpendCraftTheme.typography.labelSmall
                 )
             }
         }

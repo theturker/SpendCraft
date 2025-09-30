@@ -1,6 +1,11 @@
 package com.alperen.spendcraft.core.ui.animations
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,17 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 
 @Composable
 fun ShimmerCard(
     modifier: Modifier = Modifier
 ) {
     val shimmerColors = listOf(
-        androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-        androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f),
-        androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+        SpendCraftTheme.colors.surfaceVariant.copy(alpha = 0.6f),
+        SpendCraftTheme.colors.surfaceVariant.copy(alpha = 0.2f),
+        SpendCraftTheme.colors.surfaceVariant.copy(alpha = 0.6f)
     )
     
     val transition = rememberInfiniteTransition(label = "shimmer")
@@ -46,7 +51,7 @@ fun ShimmerCard(
             .fillMaxWidth()
             .height(120.dp),
         colors = CardDefaults.cardColors(
-            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface
+            containerColor = SpendCraftTheme.colors.surfaces.surface1
         )
     ) {
         Column(

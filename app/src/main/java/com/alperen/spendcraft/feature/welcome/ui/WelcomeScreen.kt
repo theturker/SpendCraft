@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.welcome.ui
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -147,7 +148,7 @@ fun WelcomeScreen(
                     // "S" text overlay
                     Text(
                         text = "S",
-                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 26.sp),
+                        style = SpendCraftTheme.typography.headlineLarge.copy(fontSize = 26.sp),
                         fontWeight = FontWeight.ExtraBold,
                         color = Color.White
                     )
@@ -158,7 +159,7 @@ fun WelcomeScreen(
                 // Title - better spacing
                 Text(
                     text = if (isTurkish) "SpendCraft'a Hoş Geldiniz" else "Welcome to SpendCraft",
-                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp),
+                    style = SpendCraftTheme.typography.headlineLarge.copy(fontSize = 24.sp),
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = Color.White
@@ -169,7 +170,7 @@ fun WelcomeScreen(
                 // Subtitle - better spacing
                 Text(
                     text = if (isTurkish) "Finansal özgürlüğe ilk adımı atın." else "Take the first step towards financial freedom.",
-                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp),
+                    style = SpendCraftTheme.typography.bodyLarge.copy(fontSize = 15.sp),
                     textAlign = TextAlign.Center,
                     color = Color(0xFF9CA3AF)
                 )
@@ -343,7 +344,7 @@ fun WelcomeScreen(
                     
                     Text(
                         text = if (isTurkish) "Başlayalım" else "Let's Start",
-                        style = MaterialTheme.typography.titleLarge.copy(
+                        style = SpendCraftTheme.typography.titleLarge.copy(
                             fontSize = 17.sp,
                             fontWeight = FontWeight.SemiBold,
                             letterSpacing = 0.5.sp
@@ -426,7 +427,7 @@ private fun CompactFeatureCard(
                 // Compact text content
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 12.sp),
+                    style = SpendCraftTheme.typography.titleMedium.copy(fontSize = 12.sp),
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     textAlign = TextAlign.Center,

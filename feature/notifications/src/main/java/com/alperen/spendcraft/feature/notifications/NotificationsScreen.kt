@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.notifications
 
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -72,19 +73,19 @@ fun NotificationsScreen(
                                 Icons.Default.Notifications,
                                 contentDescription = null,
                                 modifier = Modifier.size(64.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = SpendCraftTheme.colors.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = "Bildirim Yok",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                             Text(
                                 text = "Henüz hiç bildiriminiz yok",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = SpendCraftTheme.typography.bodyMedium,
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                         }
                     }
@@ -98,9 +99,9 @@ fun NotificationsScreen(
                     item {
                         Text(
                             text = "Okunmamış (${unreadNotifications.size})",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = SpendCraftTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = SpendCraftTheme.colors.primary,
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
                     }
@@ -118,9 +119,9 @@ fun NotificationsScreen(
                     item {
                         Text(
                             text = "Okunmuş",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = SpendCraftTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = SpendCraftTheme.colors.onSurfaceVariant,
                             modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
                         )
                     }
@@ -170,7 +171,7 @@ private fun NotificationCard(
                             .size(8.dp)
                             .offset(x = 8.dp, y = (-8).dp)
                             .background(
-                                MaterialTheme.colorScheme.primary,
+                                SpendCraftTheme.colors.primary,
                                 CircleShape
                             )
                     )
@@ -182,28 +183,28 @@ private fun NotificationCard(
             ) {
                 Text(
                     text = notification.title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = SpendCraftTheme.typography.titleMedium,
                     fontWeight = if (notification.isRead) FontWeight.Medium else FontWeight.Bold,
                     color = if (notification.isRead) 
-                        MaterialTheme.colorScheme.onSurfaceVariant 
+                        SpendCraftTheme.colors.onSurfaceVariant 
                     else 
-                        MaterialTheme.colorScheme.onSurface
+                        SpendCraftTheme.colors.onSurface
                 )
                 
                 Spacer(modifier = Modifier.height(4.dp))
                 
                 Text(
                     text = notification.message,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = SpendCraftTheme.typography.bodyMedium,
+                    color = SpendCraftTheme.colors.onSurfaceVariant
                 )
                 
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 Text(
                     text = dateFormatter.format(Date(notification.timestamp)),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = SpendCraftTheme.typography.bodySmall,
+                    color = SpendCraftTheme.colors.onSurfaceVariant
                 )
             }
 
@@ -220,7 +221,7 @@ private fun NotificationCard(
                             Icons.Default.Done,
                             contentDescription = "Okundu işaretle",
                             modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = SpendCraftTheme.colors.primary
                         )
                     }
                 }
@@ -233,7 +234,7 @@ private fun NotificationCard(
                         Icons.Default.Delete,
                         contentDescription = "Sil",
                         modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.error
+                        tint = SpendCraftTheme.colors.error
                     )
                 }
             }
@@ -251,8 +252,8 @@ private fun getNotificationIcon(type: NotificationType) = when (type) {
 
 @Composable
 private fun getNotificationColor(type: NotificationType) = when (type) {
-    NotificationType.BUDGET_ALERT -> MaterialTheme.colorScheme.error
-    NotificationType.SPENDING_REMINDER -> MaterialTheme.colorScheme.primary
+    NotificationType.BUDGET_ALERT -> SpendCraftTheme.colors.error
+    NotificationType.SPENDING_REMINDER -> SpendCraftTheme.colors.primary
     NotificationType.ACHIEVEMENT -> Color(0xFFFFD700) // Gold
-    NotificationType.SYSTEM -> MaterialTheme.colorScheme.onSurfaceVariant
+    NotificationType.SYSTEM -> SpendCraftTheme.colors.onSurfaceVariant
 }

@@ -19,7 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import com.alperen.spendcraft.core.designsystem.theme.SpendCraftTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -121,7 +121,7 @@ fun SettingsScreen(
                 Column {
                     Text(
                         text = "🌍 ${stringResource(R.string.language_selection)}",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.height(8.dp))
@@ -129,7 +129,7 @@ fun SettingsScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = SpendCraftTheme.colors.surface
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -138,8 +138,8 @@ fun SettingsScreen(
                         ) {
                             Text(
                                 text = "${stringResource(CoreR.string.current_settings)}: $selectedLanguage",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = SpendCraftTheme.typography.bodyMedium,
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                             Spacer(Modifier.height(8.dp))
                             Row(
@@ -157,11 +157,11 @@ fun SettingsScreen(
                                         modifier = Modifier.weight(1f),
                                         colors = if (selectedLanguage == displayName) {
                                             ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.primary
+                                                containerColor = SpendCraftTheme.colors.primary
                                             )
                                         } else {
                                             ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                                containerColor = SpendCraftTheme.colors.surfaceVariant
                                             )
                                         }
                                     ) {
@@ -179,7 +179,7 @@ fun SettingsScreen(
                 Column {
                     Text(
                         text = "💰 ${stringResource(R.string.budget_management)}",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.height(8.dp))
@@ -187,7 +187,7 @@ fun SettingsScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = SpendCraftTheme.colors.surface
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -201,20 +201,20 @@ fun SettingsScreen(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = stringResource(R.string.set_budget_limits),
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = SpendCraftTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     Text(
                                         text = stringResource(R.string.monthly_budget),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodyMedium,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = onNavigateToBudgets) {
                                     Icon(
                                         imageVector = Icons.Filled.Settings,
                                         contentDescription = stringResource(R.string.budget_management),
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -228,7 +228,7 @@ fun SettingsScreen(
                 Column {
                     Text(
                         text = "📂 ${stringResource(CoreR.string.category_management)}",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.height(8.dp))
@@ -236,7 +236,7 @@ fun SettingsScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = SpendCraftTheme.colors.surface
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -250,20 +250,20 @@ fun SettingsScreen(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = stringResource(CoreR.string.manage_categories),
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = SpendCraftTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     Text(
                                         text = "${categories.size} ${stringResource(CoreR.string.categories_available)}",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodyMedium,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = onNavigateToCategories) {
                                     Icon(
                                         imageVector = Icons.Filled.Settings,
                                         contentDescription = stringResource(CoreR.string.category_management),
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -277,7 +277,7 @@ fun SettingsScreen(
                 Column {
                     Text(
                         text = "💰 ${stringResource(CoreR.string.currency_selection)}",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.height(8.dp))
@@ -285,7 +285,7 @@ fun SettingsScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = SpendCraftTheme.colors.surface
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -294,8 +294,8 @@ fun SettingsScreen(
                         ) {
                             Text(
                                 text = "${stringResource(CoreR.string.current_settings)}: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = SpendCraftTheme.typography.bodyMedium,
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                             Spacer(Modifier.height(8.dp))
                             Row(
@@ -311,11 +311,11 @@ fun SettingsScreen(
                                         modifier = Modifier.weight(1f),
                                         colors = if (currency == currencyCode) {
                                             ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.primary
+                                                containerColor = SpendCraftTheme.colors.primary
                                             )
                                         } else {
                                             ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                                containerColor = SpendCraftTheme.colors.surfaceVariant
                                             )
                                         }
                                     ) {
@@ -337,7 +337,7 @@ fun SettingsScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                        containerColor = SpendCraftTheme.colors.surface
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
@@ -352,13 +352,13 @@ fun SettingsScreen(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = stringResource(CoreR.string.dark_mode),
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
                                 text = stringResource(CoreR.string.switch_to_dark_theme),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = SpendCraftTheme.typography.bodySmall,
+                                color = SpendCraftTheme.colors.onSurfaceVariant
                             )
                         }
                         Switch(
@@ -378,7 +378,7 @@ fun SettingsScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                        containerColor = SpendCraftTheme.colors.surface
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
@@ -387,7 +387,7 @@ fun SettingsScreen(
                     ) {
                         Text(
                             text = "🤖 AI Özellikleri",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = SpendCraftTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(Modifier.height(12.dp))
@@ -429,7 +429,7 @@ fun SettingsScreen(
                 Column {
                     Text(
                         text = "🚀 Yeni Özellikler",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.height(8.dp))
@@ -437,7 +437,7 @@ fun SettingsScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = SpendCraftTheme.colors.surface
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -454,26 +454,26 @@ fun SettingsScreen(
                                     painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_dashboard_vector),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = SpendCraftTheme.colors.primary
                                 )
                                 Spacer(Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = "Dashboard",
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = SpendCraftTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     Text(
                                         text = "Finansal durumunuzu görün",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodyMedium,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = onNavigateToDashboard) {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowForward,
                                         contentDescription = "Dashboard",
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -487,26 +487,26 @@ fun SettingsScreen(
                                     painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_account_balance_vector),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = SpendCraftTheme.colors.primary
                                 )
                                 Spacer(Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = "Hesaplar",
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = SpendCraftTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     Text(
                                         text = "Çoklu hesap yönetimi",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodyMedium,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = onNavigateToAccounts) {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowForward,
                                         contentDescription = "Hesaplar",
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -520,26 +520,26 @@ fun SettingsScreen(
                                     painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_repeat_vector),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = SpendCraftTheme.colors.primary
                                 )
                                 Spacer(Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = "Tekrarlayan İşlemler",
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = SpendCraftTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     Text(
                                         text = "Otomatik işlem oluşturma",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodyMedium,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = onNavigateToRecurring) {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowForward,
                                         contentDescription = "Tekrarlayan İşlemler",
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -553,27 +553,27 @@ fun SettingsScreen(
                                     painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_share_vector),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = if (isPremium) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                    tint = if (isPremium) SpendCraftTheme.colors.primary else SpendCraftTheme.colors.onSurfaceVariant
                                 )
                                 Spacer(Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = "Aile/Ortak Bütçe",
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = SpendCraftTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold,
-                                        color = if (isPremium) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                                        color = if (isPremium) SpendCraftTheme.colors.onSurface else SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                     Text(
                                         text = if (isPremium) "Bütçeyi paylaşın" else "Premium özellik",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodyMedium,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = onNavigateToSharing) {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowForward,
                                         contentDescription = "Paylaşım",
-                                        tint = if (isPremium) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                        tint = if (isPremium) SpendCraftTheme.colors.primary else SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                             }
@@ -587,7 +587,7 @@ fun SettingsScreen(
                 Column {
                     Text(
                         text = "🔔 Bildirimler & Başarımlar",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = SpendCraftTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.height(8.dp))
@@ -595,7 +595,7 @@ fun SettingsScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = SpendCraftTheme.colors.surface
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -612,26 +612,26 @@ fun SettingsScreen(
                                     painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_notifications_vector),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = SpendCraftTheme.colors.primary
                                 )
                                 Spacer(Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = "Bildirimler",
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = SpendCraftTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     Text(
                                         text = "Uyarılar ve hatırlatmalar",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodyMedium,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = onNavigateToNotifications) {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowForward,
                                         contentDescription = "Bildirimler",
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -645,26 +645,26 @@ fun SettingsScreen(
                                     painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_trophy_vector),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = SpendCraftTheme.colors.primary
                                 )
                                 Spacer(Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = "Başarımlar",
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = SpendCraftTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     Text(
                                         text = "Rozetler ve seviyeler",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        style = SpendCraftTheme.typography.bodyMedium,
+                                        color = SpendCraftTheme.colors.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = onNavigateToAchievements) {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowForward,
                                         contentDescription = "Başarımlar",
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = SpendCraftTheme.colors.primary
                                     )
                                 }
                             }
@@ -678,7 +678,7 @@ fun SettingsScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer
+                        containerColor = SpendCraftTheme.colors.errorContainer
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
@@ -693,21 +693,21 @@ fun SettingsScreen(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = "Premium Debug",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = SpendCraftTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onErrorContainer
+                                color = SpendCraftTheme.colors.onErrorContainer
                             )
                             Text(
                                 text = "Premium durumunu test et",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onErrorContainer
+                                style = SpendCraftTheme.typography.bodySmall,
+                                color = SpendCraftTheme.colors.onErrorContainer
                             )
                         }
                         IconButton(onClick = onNavigateToPremiumDebug) {
                             Icon(
                                 imageVector = Icons.Filled.Settings,
                                 contentDescription = "Premium Debug",
-                                tint = MaterialTheme.colorScheme.onErrorContainer
+                                tint = SpendCraftTheme.colors.onErrorContainer
                             )
                         }
                     }
