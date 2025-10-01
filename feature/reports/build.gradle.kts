@@ -26,6 +26,7 @@ android {
 dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:ui"))
+    implementation(project(":core:notifications"))
     implementation(project(":data:repository"))
 
     implementation(libs.androidx.compose.ui)

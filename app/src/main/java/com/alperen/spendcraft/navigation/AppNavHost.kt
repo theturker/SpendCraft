@@ -40,6 +40,7 @@ object Routes {
     const val ADD_EXPENSE = "add_expense"
     const val REPORTS = "reports"
     const val EXPORT_REPORT = "export_report"
+    const val REPORT_PREVIEW = "report_preview/{uri}"
     const val SETTINGS = "settings"
     const val CATEGORY_MANAGEMENT = "category_management"
     const val BUDGET_MANAGEMENT = "budget_management"
@@ -153,7 +154,19 @@ fun AppNavHost(
                 onNavigateBack = { navController.popBackStack() },
                 onExport = { format, dateRange, startDate, endDate ->
                     // TODO: Implement export functionality
+                },
+                onPreview = { uri ->
+                    val encoded = java.net.URLEncoder.encode(uri.toString(), "UTF-8")
+                    val route = Routes.REPORT_PREVIEW.replace("{uri}", encoded)
+                    navController.navigate(route)
                 }
+            )
+        }
+        composable(Routes.REPORT_PREVIEW) { backStackEntry ->
+            val uriArg = backStackEntry.arguments?.getString("uri") ?: ""
+            com.alperen.spendcraft.feature.reports.ReportPreviewScreen(
+                uriString = uriArg,
+                onBack = { navController.popBackStack() }
             )
         }
         composable(Routes.SETTINGS) {

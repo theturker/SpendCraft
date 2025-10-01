@@ -17,6 +17,36 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ExportService(private val context: Context) {
+    private fun drawMultilineText(canvas: android.graphics.Canvas, text: String, x: Float, y: Float, maxWidth: Float, paint: android.graphics.Paint) {
+        val staticLayout = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            android.text.StaticLayout.Builder.obtain(text, 0, text.length, android.text.TextPaint(paint), maxWidth.toInt())
+                .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
+                .setLineSpacing(0f, 1f)
+                .setIncludePad(false)
+                .build()
+        } else {
+            @Suppress("DEPRECATION")
+            android.text.StaticLayout(text, android.text.TextPaint(paint), maxWidth.toInt(), android.text.Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false)
+        }
+        canvas.save()
+        canvas.translate(x, y)
+        staticLayout.draw(canvas)
+        canvas.restore()
+    }
+
+    private fun estimateMultilineHeight(text: String, maxWidth: Float, paint: android.graphics.Paint): Int {
+        val staticLayout = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            android.text.StaticLayout.Builder.obtain(text, 0, text.length, android.text.TextPaint(paint), maxWidth.toInt())
+                .setAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
+                .setLineSpacing(0f, 1f)
+                .setIncludePad(false)
+                .build()
+        } else {
+            @Suppress("DEPRECATION")
+            android.text.StaticLayout(text, android.text.TextPaint(paint), maxWidth.toInt(), android.text.Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false)
+        }
+        return staticLayout.height
+    }
     
     fun exportToCsv(
         transactions: List<Transaction>,
@@ -87,7 +117,9 @@ class ExportService(private val context: Context) {
         categories: List<Category>,
         dateRange: com.alperen.spendcraft.feature.reports.DateRange,
         customStart: Long,
-        customEnd: Long
+        customEnd: Long,
+        aiAnalysis: String? = null,
+        aiRecommendation: String? = null
     ): Uri? {
         return try {
             val filtered = filterTransactionsByDateRange(transactions, dateRange, customStart, customEnd)
@@ -152,9 +184,9 @@ class ExportService(private val context: Context) {
                     } catch (_: Exception) {}
 
                     canvas.drawText("SpendCraft - Finans Raporu", 110f, y.toFloat(), titlePaint)
-                    y += 12
+                    y += 18 // başlık-tarih arası ekstra boşluk
                     canvas.drawText("${java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault()).format(java.util.Date())}", 110f, y.toFloat(), textPaint)
-                    y += 20
+                    y += 26 // tarih ile özet kutusu arası biraz daha boşluk
 
                     // Özet kutusu
                     canvas.drawRect(30f, y.toFloat(), 565f, (y + 50).toFloat(), highlightPaint)
@@ -165,7 +197,7 @@ class ExportService(private val context: Context) {
                     canvas.drawText(summary, 40f, (y + 30).toFloat(), android.graphics.Paint().apply { color = android.graphics.Color.WHITE; textSize = 12f; isFakeBoldText = true })
                     y += 70
 
-                    // AI benzeri özet (lokal analiz) – hızlı içgörü
+                    // AI Analizi (maks 500 karakter)
                     val expenseCount = filtered.count { it.type == TransactionType.EXPENSE }
                     val incomeCount = filtered.count { it.type == TransactionType.INCOME }
                     val topCategory = filtered.filter { it.type == TransactionType.EXPENSE }
@@ -173,12 +205,21 @@ class ExportService(private val context: Context) {
                         .maxByOrNull { (_, list) -> list.sumOf { it.amount.minorUnits } }
                         ?.key
                     val topCategoryName = categories.find { it.id == topCategory }?.name ?: "Bilinmeyen"
-                    val insight = "${expenseCount} gider, ${incomeCount} gelir. En çok harcama: $topCategoryName."
-                    canvas.drawText("Analiz: $insight", 30f, y.toFloat(), textPaint)
-                    y += 20
+                    val fallbackAnalysis = "${expenseCount} gider ve ${incomeCount} gelir içeriyor. En çok harcama kategorisi: ${topCategoryName}. Bütçenizi bu kategori özelinde gözden geçirmeniz faydalı olabilir."
+                    val analysisText = (aiAnalysis ?: fallbackAnalysis).take(500)
+                    drawMultilineText(canvas, analysisText, 30f, y.toFloat(), 535f, textPaint)
+                    y += estimateMultilineHeight(analysisText, 535f, textPaint) + 10
 
+                    // AI Önerisi (maks 400 karakter)
+                    val fallbackRecommendation = "Aylık sabit giderlerinizi gözden geçirip otomatik tasarruf hedefi belirleyin. En yüksek harcama yaptığınız kategoride %10 kısıntı hedefleyin ve haftalık takip edin."
+                    val recommendationText = (aiRecommendation ?: fallbackRecommendation).take(400)
+                    drawMultilineText(canvas, recommendationText, 30f, y.toFloat(), 535f, textPaint)
+                    y += estimateMultilineHeight(recommendationText, 535f, textPaint) + 16
+
+                    // Hesap Ekstresi başlığı – üst/alt ek boşluk
+                    y += 4
                     canvas.drawText("Hesap Ekstresi", 30f, y.toFloat(), titlePaint)
-                    y += 16
+                    y += 20
 
                     // Tablo başlıkları
                     canvas.drawText("Tarih", 30f, y.toFloat(), textPaint)
@@ -188,7 +229,7 @@ class ExportService(private val context: Context) {
                     canvas.drawText("Açıklama", 430f, y.toFloat(), textPaint)
                     y += 12
                     canvas.drawLine(30f, y.toFloat(), 565f, y.toFloat(), android.graphics.Paint().apply { color = android.graphics.Color.LTGRAY })
-                    y += 10
+                    y += 12
 
                     val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
                     filtered.forEach { tx ->

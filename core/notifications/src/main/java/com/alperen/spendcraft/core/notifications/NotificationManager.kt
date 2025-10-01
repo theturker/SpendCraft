@@ -25,6 +25,7 @@ class NotificationManager @Inject constructor(
         const val CHANNEL_ID_REMINDERS = "spending_reminders"
         const val CHANNEL_ID_ACHIEVEMENTS = "achievements"
         const val CHANNEL_ID_GENERAL = "general"
+        const val CHANNEL_ID_REPORTS = "reports"
         
         const val NOTIFICATION_ID_BUDGET = 1001
         const val NOTIFICATION_ID_REMINDER = 1002
@@ -80,10 +81,40 @@ class NotificationManager @Inject constructor(
                 enableVibration(false)
             }
             
+            val reportsChannel = NotificationChannel(
+                CHANNEL_ID_REPORTS,
+                "Raporlar",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "Rapor oluşturma bildirimi"
+                enableVibration(false)
+            }
             notificationManager.createNotificationChannels(
-                listOf(budgetChannel, reminderChannel, achievementChannel, generalChannel)
+                listOf(budgetChannel, reminderChannel, achievementChannel, generalChannel, reportsChannel)
             )
         }
+    }
+
+    fun showFileNotification(title: String, message: String, uri: android.net.Uri, mimeType: String = "application/pdf") {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            1010,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID_REPORTS)
+            .setSmallIcon(android.R.drawable.ic_menu_save)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+        notificationManager.notify(2001, notification)
     }
     
     fun showBudgetAlert(amount: String, budgetName: String) {

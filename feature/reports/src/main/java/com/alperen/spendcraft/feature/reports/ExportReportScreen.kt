@@ -47,7 +47,8 @@ fun ExportReportScreen(
     transactions: List<Transaction>,
     categories: List<Category>,
     onNavigateBack: () -> Unit,
-    onExport: (format: ExportFormat, dateRange: DateRange, customStart: Long, customEnd: Long) -> Unit
+    onExport: (format: ExportFormat, dateRange: DateRange, customStart: Long, customEnd: Long) -> Unit,
+    onPreview: (uri: android.net.Uri) -> Unit = {}
 ) {
     val context = LocalContext.current
     var selectedFormat by remember { mutableStateOf<ExportFormat?>(null) }
@@ -171,7 +172,11 @@ fun ExportReportScreen(
                                 val exportService = ExportService(context)
                                 val uri = when (selectedFormat!!) {
                                     ExportFormat.CSV -> exportService.exportToCsv(transactions, categories, selectedDateRange!!, customStartDate, customEndDate)
-                                    ExportFormat.PDF -> exportService.exportToPdf(transactions, categories, selectedDateRange!!, customStartDate, customEndDate)
+                                    ExportFormat.PDF -> exportService.exportToPdf(
+                                        transactions, categories, selectedDateRange!!, customStartDate, customEndDate,
+                                        aiAnalysis = null, // İleride AI özetini burada geçebiliriz
+                                        aiRecommendation = null
+                                    )
                                     ExportFormat.EXCEL -> exportService.exportToExcel(transactions, categories, selectedDateRange!!, customStartDate, customEndDate)
                                 }
                                 
@@ -181,7 +186,21 @@ fun ExportReportScreen(
                                         ExportFormat.CSV -> "text/csv"
                                         ExportFormat.EXCEL -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                                     }
-                                    exportService.shareFile(uri, mime)
+                                    if (selectedFormat == ExportFormat.PDF) {
+                                        onPreview(uri)
+                                    } else {
+                                        exportService.shareFile(uri, mime)
+                                    }
+                                    // Bildirim: rapor oluşturuldu – tıklayınca dosya açılsın
+                                    try {
+                                        val notifier = com.alperen.spendcraft.core.notifications.NotificationManager(context)
+                                        notifier.showFileNotification(
+                                            title = "Rapor hazır",
+                                            message = if (selectedFormat == ExportFormat.PDF) "PDF rapor oluşturuldu" else "Rapor oluşturuldu",
+                                            uri = uri,
+                                            mimeType = mime
+                                        )
+                                    } catch (_: Exception) {}
                                     exportMessage = "Rapor başarıyla oluşturuldu! Paylaşım menüsünden dosyayı Downloads klasörüne kaydedebilir veya başka uygulamalarla paylaşabilirsiniz."
                                 } else {
                                     exportMessage = "Bu format henüz desteklenmiyor. CSV formatını kullanın."
