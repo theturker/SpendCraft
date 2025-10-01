@@ -34,6 +34,15 @@ class AchievementsViewModel @Inject constructor(
     private val _unlockedCount = MutableStateFlow(0)
     val unlockedCount: StateFlow<Int> = _unlockedCount.asStateFlow()
 
+    private val _rewardProgressPercent = MutableStateFlow(0)
+    val rewardProgressPercent: StateFlow<Int> = _rewardProgressPercent.asStateFlow()
+
+    private val _rewardXpCurrent = MutableStateFlow(0)
+    val rewardXpCurrent: StateFlow<Int> = _rewardXpCurrent.asStateFlow()
+
+    private val _rewardXpTarget = MutableStateFlow(0)
+    val rewardXpTarget: StateFlow<Int> = _rewardXpTarget.asStateFlow()
+
     init {
         loadAchievements()
     }
@@ -50,8 +59,15 @@ class AchievementsViewModel @Inject constructor(
             achievementManager.allAchievements.collect { achievements ->
                 val achievementEntities = achievements.filterIsInstance<AchievementEntity>()
                 _achievements.value = achievementEntities
-                _totalPoints.value = achievementEntities.filter { it.isUnlocked }.sumOf { it.points }
+                val unlockedPoints = achievementEntities.filter { it.isUnlocked }.sumOf { it.points }
+                val totalPts = achievementEntities.sumOf { it.points }
+                _totalPoints.value = unlockedPoints
                 _unlockedCount.value = achievementEntities.count { it.isUnlocked }
+
+                // Ödül ilerlemesi (% ve XP): tüm başarımlar tamamlanınca ödül
+                _rewardXpCurrent.value = unlockedPoints
+                _rewardXpTarget.value = if (totalPts > 0) totalPts else 100
+                _rewardProgressPercent.value = if (totalPts > 0) ((unlockedPoints * 100) / totalPts).coerceIn(0, 100) else 0
 
                 // Ödül: Premium değilken tüm başarımlar %100 tamamlandıysa 30 gün premium ver
                 val total = achievementEntities.size

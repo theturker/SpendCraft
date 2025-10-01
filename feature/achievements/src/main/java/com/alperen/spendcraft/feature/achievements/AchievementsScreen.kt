@@ -72,7 +72,47 @@ fun AchievementsScreen(
     val unlockedCount by (viewModel?.unlockedCount ?: remember { 
         kotlinx.coroutines.flow.MutableStateFlow(0) 
     }).collectAsState(initial = 0)
+    val rewardPercent by (viewModel?.rewardProgressPercent ?: remember { 
+        kotlinx.coroutines.flow.MutableStateFlow(0) 
+    }).collectAsState(initial = 0)
+    val rewardXp by (viewModel?.rewardXpCurrent ?: remember { 
+        kotlinx.coroutines.flow.MutableStateFlow(0) 
+    }).collectAsState(initial = 0)
+    val rewardXpTarget by (viewModel?.rewardXpTarget ?: remember { 
+        kotlinx.coroutines.flow.MutableStateFlow(0) 
+    }).collectAsState(initial = 0)
     
+    // Üst bilgilendirme kartı: Premium deneme ödül ilerlemesi
+    androidx.compose.foundation.lazy.LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        item {
+            com.alperen.spendcraft.core.ui.ModernCard {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "🎁 1 Aylık Premium Deneme Ödülü",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    LinearProgressIndicator(
+                        progress = (rewardPercent / 100f).coerceIn(0f, 1f),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        text = "%$rewardPercent • XP: $rewardXp / $rewardXpTarget",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+
     // Mock data - gerçek uygulamada repository'den gelecek
     val mockAchievements = listOf(
         // Tracking Achievements
