@@ -53,25 +53,21 @@ fun BudgetManagementScreen(
                     }
                 },
                 actions = {
-                    PremiumGate(
-                        isPremium = isPremium,
-                        premiumContent = {
-                            IconButton(onClick = { showAddDialog = true }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = stringResource(R.string.add_budget)
-                                )
-                            }
-                        },
-                        freeContent = {
-                            IconButton(onClick = { onNavigateToPaywall() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Lock,
-                                    contentDescription = "Premium özellik"
-                                )
-                            }
+                    if (isPremium || budgets.size < 3) {
+                        IconButton(onClick = { showAddDialog = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = stringResource(R.string.add_budget)
+                            )
                         }
-                    )
+                    } else {
+                        IconButton(onClick = { onNavigateToPaywall() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Lock,
+                                contentDescription = "Premium özellik"
+                            )
+                        }
+                    }
                 }
             )
         },

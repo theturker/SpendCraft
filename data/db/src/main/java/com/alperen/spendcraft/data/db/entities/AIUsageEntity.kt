@@ -14,6 +14,6 @@ data class AIUsageEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val userId: String = "local", // For local usage tracking
     val lastUsedEpoch: Long = 0,
-    val weeklyQuota: Int = 1, // How many AI requests per week
+    val weeklyQuota: Int = 2, // How many AI requests per week (free kullanıcılar için 2)
     val usedThisWeek: Int = 0 // How many used this week
 )

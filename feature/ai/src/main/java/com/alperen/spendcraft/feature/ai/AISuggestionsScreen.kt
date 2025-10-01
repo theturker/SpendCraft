@@ -36,10 +36,28 @@ fun AISuggestionsScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var selectedAdviceType by remember { mutableStateOf<AdviceType?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    var weeklyQuota by remember { mutableStateOf(2) }
+    var usedThisWeek by remember { mutableStateOf(0) }
+    LaunchedEffect(Unit) {
+        aiRepository.getUsageInfo().collect { info ->
+            weeklyQuota = info.weeklyQuota
+            usedThisWeek = info.usedThisWeek
+        }
+    }
     
     AppScaffold(
         title = "AI Önerileri",
-        onBack = onBack
+        onBack = onBack,
+        showBannerAd = true,
+        isPremium = isPremium,
+        bannerContent = {
+            com.alperen.spendcraft.core.ui.AdMobBanner(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                isPremium = isPremium
+            )
+        }
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -143,7 +161,7 @@ fun AISuggestionsScreen(
                             }
                         }
                     },
-                    enabled = selectedAdviceType != null && !isLoading,
+                    enabled = selectedAdviceType != null && !isLoading && (isPremium || (weeklyQuota - usedThisWeek) > 0),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     if (isLoading) {
@@ -153,9 +171,8 @@ fun AISuggestionsScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                     }
-                    Text(
-                        text = if (isLoading) "Öneri oluşturuluyor..." else "AI Önerisi Al"
-                    )
+                    val remaining = (weeklyQuota - usedThisWeek).coerceAtLeast(0)
+                    Text(text = if (isLoading) "Öneri oluşturuluyor..." else if (isPremium) "AI Önerisi Al (Sınırsız)" else "AI Önerisi Al ($remaining/$weeklyQuota)")
                 }
             }
             
@@ -227,15 +244,19 @@ fun AISuggestionsScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = if (isPremium) {
-                                "Premium üyesiniz - Sınırsız AI önerisi"
-                            } else {
-                                "Haftalık 1 AI önerisi hakkınız var"
-                            },
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        if (isPremium) {
+                            Text(
+                                text = "Premium üyesiniz - Sınırsız AI önerisi",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        } else {
+                            Text(
+                                text = "Haftalık $weeklyQuota AI önerisi hakkınız var. Kalan: ${(weeklyQuota - usedThisWeek).coerceAtLeast(0)}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }

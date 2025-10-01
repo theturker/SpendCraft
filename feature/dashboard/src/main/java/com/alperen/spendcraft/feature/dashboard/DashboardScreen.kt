@@ -42,8 +42,8 @@ fun DashboardScreen(
     val transactions by transactionsFlow.collectAsState()
     val categories by categoriesFlow.collectAsState()
     
-    // Premium state - Get from parameter
-    val isPremium = false // TODO: Pass from parent
+    // Premium: AppScaffold üzerinden banner kontrolü
+    val isPremium = false // Parametre olarak eklenebilir
     
     // Analytics data
     val totalIncome = transactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
@@ -67,7 +67,17 @@ fun DashboardScreen(
 
     AppScaffold(
         title = "Dashboard",
-        onBack = onBack
+        onBack = onBack,
+        showBannerAd = true,
+        isPremium = isPremium,
+        bannerContent = {
+            AdMobBanner(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                isPremium = isPremium
+            )
+        }
     ) {
         LazyColumn(
             modifier = Modifier

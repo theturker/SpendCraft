@@ -51,15 +51,15 @@ fun TransactionsScreen(
     onDashboard: () -> Unit = {},
     onNotifications: () -> Unit = {},
     onAchievements: () -> Unit = {},
-    currentUserName: String? = null
+    currentUserName: String? = null,
+    isPremium: Boolean = false
 ) {
     val context = LocalContext.current
     val items by viewModel.items.collectAsState()
     val accounts by viewModel.accounts.collectAsState()
     val streak by viewModel.streak.collectAsState()
     
-    // Premium state - Get from ViewModel
-    val isPremium = false // TODO: Implement premium state
+    // Premium state is provided by caller
 
     var selectedAccountIndex by remember { mutableStateOf(0) }
     var showEditDialog by remember { mutableStateOf(false) }

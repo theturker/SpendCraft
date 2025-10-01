@@ -65,6 +65,21 @@ class BudgetViewModel @Inject constructor(
         }
     }
 
+    fun addBudgetWithLimit(budget: Budget, isPremium: Boolean) {
+        viewModelScope.launch {
+            try {
+                val current = budgets.value
+                if (!isPremium && current.size >= 3) {
+                    return@launch
+                }
+                upsertBudgetUseCase(budget)
+                checkBudgetBreaches()
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
+
     fun updateBudget(budget: Budget) {
         viewModelScope.launch {
             try {

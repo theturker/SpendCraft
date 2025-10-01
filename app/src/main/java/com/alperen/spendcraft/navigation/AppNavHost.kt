@@ -89,6 +89,8 @@ fun AppNavHost(
     
     NavHost(navController = navController, startDestination = Routes.LIST) {
         composable(Routes.LIST) {
+            val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
+            val isPremium by paywallVm.isPremium.collectAsState()
             TransactionsScreen(
                 viewModel = vm,
                 onAdd = { /* Bottom sheet will handle this */ },
@@ -99,7 +101,8 @@ fun AppNavHost(
                 onAllTransactions = { navController.navigate(Routes.ALL_TRANSACTIONS) },
                 onDashboard = { navController.navigate(Routes.DASHBOARD) },
                 onNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
-                onAchievements = { navController.navigate(Routes.ACHIEVEMENTS) }
+                onAchievements = { navController.navigate(Routes.ACHIEVEMENTS) },
+                isPremium = isPremium
             )
         }
         composable(Routes.ADD) {
@@ -220,7 +223,7 @@ fun AppNavHost(
                 categories = budgetViewModel.categories.collectAsState().value,
                 spentAmounts = budgetViewModel.spentAmounts.collectAsState().value,
                 isPremium = isPremium,
-                onAddBudget = { budget -> budgetViewModel.addBudget(budget) },
+                onAddBudget = { budget -> budgetViewModel.addBudgetWithLimit(budget, isPremium) },
                 onUpdateBudget = { budget -> budgetViewModel.updateBudget(budget) },
                 onDeleteBudget = { categoryId -> budgetViewModel.deleteBudget(categoryId) },
                 onBack = { navController.popBackStack() },
@@ -361,6 +364,8 @@ fun AppNavHost(
             )
         }
         composable(Routes.DASHBOARD) {
+            val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
+            val isPremium by paywallVm.isPremium.collectAsState()
             DashboardScreen(
                 transactionsFlow = vm.items,
                 categoriesFlow = vm.categories,

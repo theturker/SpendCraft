@@ -47,6 +47,9 @@ fun AppScaffold(
     navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable (RowScope.() -> Unit) = {},
     fab: (@Composable () -> Unit)? = null,
+    showBannerAd: Boolean = false,
+    isPremium: Boolean = false,
+    bannerContent: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     Scaffold(
@@ -83,8 +86,14 @@ fun AppScaffold(
         floatingActionButton = { fab?.invoke() },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
-            content()
+        Column(modifier = Modifier.padding(padding)) {
+            if (showBannerAd && !isPremium) {
+                // Üstte sabit banner
+                bannerContent?.invoke()
+            }
+            Box(modifier = Modifier.weight(1f, fill = true)) {
+                content()
+            }
         }
     }
 }
