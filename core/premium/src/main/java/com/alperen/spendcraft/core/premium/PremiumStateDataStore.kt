@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -28,15 +29,27 @@ class PremiumStateDataStore @Inject constructor(
     
     companion object {
         private val IS_PREMIUM = booleanPreferencesKey("is_premium")
+        private val PREMIUM_EXPIRY_EPOCH = longPreferencesKey("premium_expiry_epoch")
     }
     
     val isPremium: Flow<Boolean> = dataStore.data.map { preferences ->
-        preferences[IS_PREMIUM] ?: false
+        val isFlagPremium = preferences[IS_PREMIUM] ?: false
+        val expiry = preferences[PREMIUM_EXPIRY_EPOCH] ?: 0L
+        val now = System.currentTimeMillis()
+        isFlagPremium || expiry > now
     }
     
     suspend fun setPremium(enabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[IS_PREMIUM] = enabled
+        }
+    }
+
+    suspend fun grantPremiumForDays(days: Int) {
+        val millis = days.toLong() * 24L * 60L * 60L * 1000L
+        val expiry = System.currentTimeMillis() + millis
+        dataStore.edit { preferences ->
+            preferences[PREMIUM_EXPIRY_EPOCH] = expiry
         }
     }
     

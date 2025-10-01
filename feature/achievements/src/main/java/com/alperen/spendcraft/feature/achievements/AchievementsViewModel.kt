@@ -21,7 +21,8 @@ class AchievementsViewModel @Inject constructor(
     private val achievementManager: AchievementManager,
     private val transactionRepository: TransactionsRepository,
     private val budgetRepository: BudgetRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val premiumStateDataStore: com.alperen.spendcraft.core.premium.PremiumStateDataStore
 ) : ViewModel() {
     
     private val _achievements = MutableStateFlow<List<AchievementEntity>>(emptyList())
@@ -51,6 +52,19 @@ class AchievementsViewModel @Inject constructor(
                 _achievements.value = achievementEntities
                 _totalPoints.value = achievementEntities.filter { it.isUnlocked }.sumOf { it.points }
                 _unlockedCount.value = achievementEntities.count { it.isUnlocked }
+
+                // Ödül: Premium değilken tüm başarımlar %100 tamamlandıysa 30 gün premium ver
+                val total = achievementEntities.size
+                val unlocked = achievementEntities.count { it.isUnlocked }
+                if (total > 0 && unlocked == total) {
+                    // Kullanıcı premium değilse ver
+                    viewModelScope.launch {
+                        val isPremiumNow = premiumStateDataStore.isPremium.first()
+                        if (!isPremiumNow) {
+                            premiumStateDataStore.grantPremiumForDays(30)
+                        }
+                    }
+                }
             }
         }
     }

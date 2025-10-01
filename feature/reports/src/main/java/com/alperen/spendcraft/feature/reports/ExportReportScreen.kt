@@ -176,7 +176,12 @@ fun ExportReportScreen(
                                 }
                                 
                                 if (uri != null) {
-                                    exportService.shareFile(uri)
+                                    val mime = when (selectedFormat!!) {
+                                        ExportFormat.PDF -> "application/pdf"
+                                        ExportFormat.CSV -> "text/csv"
+                                        ExportFormat.EXCEL -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                    }
+                                    exportService.shareFile(uri, mime)
                                     exportMessage = "Rapor başarıyla oluşturuldu! Paylaşım menüsünden dosyayı Downloads klasörüne kaydedebilir veya başka uygulamalarla paylaşabilirsiniz."
                                 } else {
                                     exportMessage = "Bu format henüz desteklenmiyor. CSV formatını kullanın."

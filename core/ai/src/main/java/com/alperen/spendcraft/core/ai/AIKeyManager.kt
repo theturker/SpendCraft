@@ -28,7 +28,7 @@ class AIKeyManager @Inject constructor(
     private val GROQ_API_KEY = "groq_api_key"
     
     fun getGroqApiKey(): String? {
-        return "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"
+        return ""
     }
     
     fun setGroqApiKey(apiKey: String) {

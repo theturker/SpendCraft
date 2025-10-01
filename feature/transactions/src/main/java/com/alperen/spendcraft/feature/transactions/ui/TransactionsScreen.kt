@@ -206,6 +206,8 @@ fun TransactionsScreen(
                         }
                         Spacer(Modifier.height(8.dp))
                     }
+                    // Başlık ile kartlar arasında ekstra boşluk
+                    Spacer(Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)

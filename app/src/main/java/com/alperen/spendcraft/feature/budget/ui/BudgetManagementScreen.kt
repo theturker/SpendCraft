@@ -109,6 +109,25 @@ fun BudgetManagementScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Kota bilgisi + Reklam
+            item {
+                ModernCard {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = if (isPremium) "Premium üyesiniz - sınırsız bütçe yönetimi" else "Ücretsiz plan: 3 bütçe hakkı. Kalan: ${(3 - budgets.size).coerceAtLeast(0)}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        com.alperen.spendcraft.core.ui.AdMobBanner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
+                            isPremium = isPremium
+                        )
+                    }
+                }
+            }
             // Budget Summary
             item {
                 BudgetSummaryCard(budgets = budgets)

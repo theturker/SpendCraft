@@ -80,6 +80,16 @@ fun ReportsScreen(
     AppScaffold(
         title = "📊 ${stringResource(R.string.reports)}",
         onBack = onBack,
+        showBannerAd = true,
+        isPremium = isPremium,
+        bannerContent = {
+            AdMobBanner(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                isPremium = isPremium
+            )
+        },
         actions = {
             IconButton(onClick = onExport) {
                 Icon(
@@ -243,7 +253,7 @@ fun ReportsScreen(
                                     }
                                 )
                             } else {
-                                // Pie Chart
+                                // Donut Chart stili (daha modern görünüm)
                                 val pieData = expenseByCategory.mapIndexed { index, (categoryId, categoryName, amount) ->
                                     val colors = listOf(
                                         MaterialTheme.colorScheme.primary,
@@ -266,7 +276,7 @@ fun ReportsScreen(
                                         val index = pieData.indexOfFirst { it.id == sliceId }
                                         selectedIndex = if (selectedIndex == index) -1 else index
                                     },
-                                    modifier = Modifier.size(220.dp)
+                                    modifier = Modifier.size(240.dp)
                                 )
                             }
                         }
