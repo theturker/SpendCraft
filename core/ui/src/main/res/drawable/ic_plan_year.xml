@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Star icon -->
+    <path android:fillColor="#F59E0B" android:pathData="M12,2l2.9,6.1L22,9.3l-5,4.8L18,22l-6,-3.2L6,22l1,-7.9L2,9.3l7.1,-1.2z"/>
+</vector>
+

@@ -34,10 +34,7 @@ import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
-import com.alperen.spendcraft.core.ui.R
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextAlign
+import com.alperen.spendcraft.core.ui.R as CoreR
 
 @Composable
 fun TransactionsScreen(
@@ -79,7 +76,7 @@ fun TransactionsScreen(
             listOf(
                 AccountData(
                     null,
-                    "💰 ${context.getString(R.string.total_balance)}",
+                    "💰 ${context.getString(CoreR.string.total_balance)}",
                     formatMinor(totalAmount),
                     formatMinor(incomeAmount),
                     formatMinor(expenseAmount)
@@ -104,9 +101,8 @@ fun TransactionsScreen(
 
     val bgGradient = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF1A1B3A), // Koyu mor-mavi
-            Color(0xFF0F0F23), // Daha koyu mor
-            Color(0xFF0A0B1A)  // En koyu arka plan
+            Color(0xFFFFFFFF),
+            Color(0xFFF8FAFC)
         )
     )
 
@@ -147,9 +143,9 @@ fun TransactionsScreen(
                 .padding(12.dp)
         ) {
             Icon(
-                imageVector = Icons.Filled.Settings,
-                contentDescription = stringResource(R.string.settings),
-                tint = MaterialTheme.colorScheme.primary
+                painter = painterResource(CoreR.drawable.settingsicon),
+                contentDescription = stringResource(CoreR.string.settings),
+                tint = Color.Unspecified
             )
         }
 
@@ -190,9 +186,9 @@ fun TransactionsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_speed_vector),
+                            painter = painterResource(CoreR.drawable.walleticon),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = Color.Unspecified,
                             modifier = Modifier.size(24.dp)
                         )
                             Spacer(modifier = Modifier.width(8.dp))
@@ -212,8 +208,8 @@ fun TransactionsScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         QuickActionPill(
-                            label = stringResource(R.string.add_income_button),
-                            icon = painterResource(R.drawable.ic_income_vector),
+                            label = stringResource(CoreR.string.add_income_button),
+                            icon = painterResource(CoreR.drawable.ic_income_vector),
                             positive = true,
                             modifier = Modifier.weight(1f),
                             onClick = {
@@ -222,8 +218,8 @@ fun TransactionsScreen(
                             }
                         )
                         QuickActionPill(
-                            label = stringResource(R.string.add_expense_button),
-                            icon = painterResource(R.drawable.ic_expense_vector),
+                            label = stringResource(CoreR.string.add_expense_button),
+                            icon = painterResource(CoreR.drawable.ic_expense_vector),
                             positive = false,
                             modifier = Modifier.weight(1f),
                             onClick = {
@@ -239,7 +235,7 @@ fun TransactionsScreen(
                     ) {
                         QuickActionPill(
                             label = "Bildirimler",
-                            icon = painterResource(R.drawable.ic_notifications_vector),
+                            icon = painterResource(CoreR.drawable.ic_notifications_vector),
                             positive = true,
                             modifier = Modifier.weight(1f),
                             onClick = onNotifications
@@ -247,8 +243,8 @@ fun TransactionsScreen(
 
                         QuickActionPill(
                             label = "Başarımlar",
-                            icon = painterResource(R.drawable.ic_trophy_vector),
-                            positive = true,
+                            icon = painterResource(CoreR.drawable.ic_trophy_vector),
+                            positive = false,
                             modifier = Modifier.weight(1f),
                             onClick = onAchievements
                         )
@@ -270,14 +266,14 @@ fun TransactionsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_bar_chart_vector),
+                                painter = painterResource(CoreR.drawable.statisticicon),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = Color.Unspecified,
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = stringResource(R.string.transaction_statistics),
+                                text = stringResource(CoreR.string.transaction_statistics),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -285,7 +281,7 @@ fun TransactionsScreen(
                         }
 
                         TextButton(onClick = onReports) {
-                            Text(stringResource(R.string.reports))
+                            Text(stringResource(CoreR.string.reports))
                         }
 
                     }
@@ -294,16 +290,16 @@ fun TransactionsScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         StatCard(
-                            title = stringResource(R.string.this_month),
-                            value = "${items.size} ${stringResource(R.string.transactions_count)}",
-                            icon = painterResource(R.drawable.ic_calendar_month_vector),
+                            title = stringResource(CoreR.string.this_month),
+                            value = "${items.size} ${stringResource(CoreR.string.transactions_count)}",
+                            icon = painterResource(CoreR.drawable.calendericon),
                             color = Color(0xFF667EEA),
                             modifier = Modifier.weight(1f)
                         )
                         StatCard(
-                            title = stringResource(R.string.average),
+                            title = stringResource(CoreR.string.average),
                             value = if (items.isNotEmpty()) formatMinor(totalAmount / items.size) else "₺0",
-                            icon = painterResource(R.drawable.ic_analytics_vector),
+                            icon = painterResource(CoreR.drawable.rangeicon),
                             color = Color(0xFFF093FB),
                             modifier = Modifier.weight(1f)
                         )
@@ -324,20 +320,20 @@ fun TransactionsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_history_vector),
+                            painter = painterResource(CoreR.drawable.reloadicon),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = Color.Unspecified,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = stringResource(R.string.recent_transactions),
+                            text = stringResource(CoreR.string.recent_transactions),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    TextButton(onClick = onAllTransactions) { Text(stringResource(R.string.view_all)) }
+                    TextButton(onClick = onAllTransactions) { Text(stringResource(CoreR.string.view_all)) }
                 }
             }
 
@@ -359,14 +355,14 @@ fun TransactionsScreen(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = stringResource(R.string.no_transactions_yet),
+                                text = stringResource(CoreR.string.no_transactions_yet),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = stringResource(R.string.start_adding_transactions),
+                                text = stringResource(CoreR.string.start_adding_transactions),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = Color.White.copy(alpha = 0.9f)
                             )
@@ -422,13 +418,12 @@ private fun QuickActionPill(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    val bg = if (positive) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-    else MaterialTheme.colorScheme.error.copy(alpha = 0.12f)
+    val bg = if (positive) Color(0xFF34D399).copy(alpha = 0.18f) else Color(0xFFEF4444).copy(alpha = 0.14f)
 
     val border = if (positive)
-        Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary))
+        Brush.linearGradient(listOf(Color(0xFF10B981), Color(0xFF34D399)))
     else
-        Brush.linearGradient(listOf(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.outline))
+        Brush.linearGradient(listOf(Color(0xFFEF4444), Color(0xFFF87171)))
 
     Row(
         modifier = modifier
@@ -459,91 +454,104 @@ private fun GradientAccountsSection(
 ) {
     val account = data.getOrNull(selectedIndex) ?: return
 
-    // Hero’daki hissi veren geçiş: mor->mavi (dark’ta hoş durur)
+    // Kredi kartı hissi veren açık tema gradienti
     val gradient = Brush.linearGradient(
-        listOf(Color(0xFF6A5AE0), Color(0xFF4C8DFF))
+        listOf(
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
+            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.85f)
+        )
     )
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(22.dp))
+            .clip(RoundedCornerShape(24.dp))
             .background(gradient)
             .border(
                 1.dp,
                 Brush.linearGradient(
                     listOf(
-                        Color.White.copy(alpha = 0.35f),
-                        Color.White.copy(alpha = 0.1f)
+                        Color.White.copy(alpha = 0.25f),
+                        Color.White.copy(alpha = 0.08f)
                     )
                 ),
-                RoundedCornerShape(22.dp)
+                RoundedCornerShape(24.dp)
             )
-            .padding(16.dp)
+            .height(180.dp)
+            .padding(18.dp)
     ) {
-        Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_account_balance_vector),
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = account.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
-                IconButton(onClick = { onEdit(selectedIndex) }) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "Düzenle",
-                        tint = Color.White
-                    )
-                }
-            }
-            Spacer(Modifier.height(6.dp))
+        // Dekor: EMV çip ve marka
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Sol üstte kart adı
+            Text(
+                text = "Paratik",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.White.copy(alpha = 0.95f)
+            )
+        }
+
+        // Kart numarası kaldırıldı
+
+        // Bakiye
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+        ) {
+            Text(
+                text = "Bakiye",
+                style = MaterialTheme.typography.labelLarge,
+                color = Color.White.copy(alpha = 0.9f)
+            )
             Text(
                 text = account.balance,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.ExtraBold,
                 color = Color.White
             )
-            Spacer(Modifier.height(12.dp))
-
-            // Kapsüller: Gelir / Gider
+            Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Capsule(text = "↑ ${account.income}", positive = true)
                 Capsule(text = "↓ ${account.expenses}", positive = false)
             }
+        }
 
-            // Altında küçük hesap seçicisi (dot tarzı)
-            if (data.size > 1) {
-                Spacer(Modifier.height(12.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    data.forEachIndexed { i, _ ->
-                        val selected = i == selectedIndex
-                        Box(
-                            modifier = Modifier
-                                .size(if (selected) 10.dp else 8.dp)
-                                .clip(RoundedCornerShape(999.dp))
-                                .background(
-                                    if (selected) Color.White
-                                    else Color.White.copy(alpha = 0.35f)
-                                )
-                                .clickable { onSelect(i) }
-                        )
-                    }
+        // Edit butonu
+        IconButton(
+            onClick = { onEdit(selectedIndex) },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Edit,
+                contentDescription = "Düzenle",
+                tint = Color.White
+            )
+        }
+
+        // Sayfa göstergesi (dot)
+        if (data.size > 1) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                data.forEachIndexed { i, _ ->
+                    val selected = i == selectedIndex
+                    Box(
+                        modifier = Modifier
+                            .size(if (selected) 8.dp else 6.dp)
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(
+                                if (selected) Color.White else Color.White.copy(alpha = 0.5f)
+                            )
+                            .clickable { onSelect(i) }
+                    )
                 }
             }
         }
@@ -695,7 +703,7 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(if (isIncome) R.drawable.ic_income_vector else R.drawable.ic_expense_vector),
+                        painter = painterResource(if (isIncome) CoreR.drawable.ic_income_vector else CoreR.drawable.ic_expense_vector),
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier.size(24.dp)
@@ -704,12 +712,12 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = if (isIncome) stringResource(R.string.income) else stringResource(R.string.expense),
+                        text = if (isIncome) stringResource(CoreR.string.income) else stringResource(CoreR.string.expense),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = tx.note ?: stringResource(R.string.no_description),
+                        text = tx.note ?: stringResource(CoreR.string.no_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -727,7 +735,7 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
                 IconButton(onClick = onDelete, modifier = Modifier.size(34.dp)) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = stringResource(R.string.delete),
+                        contentDescription = stringResource(CoreR.string.delete),
                         tint = MaterialTheme.colorScheme.error
                     )
                 }

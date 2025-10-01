@@ -58,8 +58,8 @@ fun AppScaffold(
                 title = { 
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.ExtraBold
                     ) 
                 },
                 navigationIcon = {
@@ -70,7 +70,7 @@ fun AppScaffold(
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack, 
                                     contentDescription = "Geri",
-                                    tint = MaterialTheme.colorScheme.onSurface
+                                    tint = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -178,8 +178,8 @@ fun ModernCard(
             .shadow(
                 elevation = elevation.dp,
                 shape = RoundedCornerShape(20.dp),
-                ambientColor = Color.Black.copy(alpha = 0.08f),
-                spotColor = Color.Black.copy(alpha = 0.12f)
+                ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -191,7 +191,8 @@ fun ModernCard(
                 }
             },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
         shape = RoundedCornerShape(20.dp)
     ) {
@@ -232,6 +233,8 @@ fun StatCard(
             .scale(scale)
             .rotate(rotation)
             .clickable { isHovered = !isHovered }
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+            .shadow(4.dp, RoundedCornerShape(20.dp)),
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -243,7 +246,7 @@ fun StatCard(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Icon(
@@ -256,7 +259,7 @@ fun StatCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = value,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )

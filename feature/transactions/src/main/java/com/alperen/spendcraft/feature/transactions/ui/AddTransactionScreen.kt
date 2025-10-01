@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
 import androidx.compose.ui.res.stringResource
-import com.alperen.spendcraft.core.ui.R
+import com.alperen.spendcraft.core.ui.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +36,7 @@ fun AddTransactionScreen(
     var expanded by remember { mutableStateOf(false) }
 
     AppScaffold(
-        title = "💳 ${stringResource(R.string.add_transaction)}",
+        title = "💳 ${stringResource(CoreR.string.add_transaction)}",
         onBack = onBack
     ) {
         Column(
@@ -55,7 +55,7 @@ fun AddTransactionScreen(
                         modifier = Modifier.padding(12.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.transaction_type),
+                            text = stringResource(CoreR.string.transaction_type),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurface
@@ -94,7 +94,7 @@ fun AddTransactionScreen(
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
-                                        text = stringResource(R.string.income),
+                                        text = stringResource(CoreR.string.income),
                                         style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Medium,
                                         color = if (isIncome) 
@@ -132,7 +132,7 @@ fun AddTransactionScreen(
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
-                                        text = stringResource(R.string.expense),
+                                        text = stringResource(CoreR.string.expense),
                                         style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Medium,
                                         color = if (!isIncome) 
@@ -154,7 +154,7 @@ fun AddTransactionScreen(
                         modifier = Modifier.padding(8.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.amount),
+                            text = stringResource(CoreR.string.amount),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -174,7 +174,7 @@ fun AddTransactionScreen(
                                 },
                                 label = { 
                                     Text(
-                                        stringResource(R.string.amount),
+                                        stringResource(CoreR.string.amount),
                                         style = MaterialTheme.typography.bodyMedium
                                     ) 
                                 },
@@ -228,7 +228,7 @@ fun AddTransactionScreen(
                         modifier = Modifier.padding(8.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.note),
+                            text = stringResource(CoreR.string.note),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -239,7 +239,7 @@ fun AddTransactionScreen(
                             onValueChange = { note = it },
                             label = { 
                                 Text(
-                                    stringResource(R.string.note_optional),
+                                    stringResource(CoreR.string.note_optional),
                                     style = MaterialTheme.typography.bodyMedium
                                 ) 
                             },
@@ -265,7 +265,7 @@ fun AddTransactionScreen(
                         modifier = Modifier.padding(8.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.category),
+                            text = stringResource(CoreR.string.category),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -276,12 +276,12 @@ fun AddTransactionScreen(
                             onExpandedChange = { expanded = !expanded }
                         ) {
                             OutlinedTextField(
-                                value = cats.firstOrNull { it.id == selectedCategoryId }?.name ?: stringResource(R.string.select_category),
+                                value = cats.firstOrNull { it.id == selectedCategoryId }?.name ?: stringResource(CoreR.string.select_category),
                                 onValueChange = {},
                                 readOnly = true,
                                 label = { 
                                     Text(
-                                        stringResource(R.string.category),
+                                        stringResource(CoreR.string.category),
                                         style = MaterialTheme.typography.bodyMedium
                                     ) 
                                 },
@@ -338,7 +338,7 @@ fun AddTransactionScreen(
                 shape = MaterialTheme.shapes.medium
             ) {
                 Text(
-                    text = stringResource(R.string.save),
+                    text = stringResource(CoreR.string.save),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(vertical = 4.dp)

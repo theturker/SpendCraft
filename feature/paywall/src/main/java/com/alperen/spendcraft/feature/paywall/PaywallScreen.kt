@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alperen.spendcraft.core.ui.AppScaffold
@@ -84,17 +85,17 @@ fun PaywallScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "🚀 SpendCraft Premium",
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            text = "SpendCraft Premium",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         Text(
                             text = "Tüm özelliklerin kilidini açın",
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
                         )
@@ -234,13 +235,13 @@ fun PaywallScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         
                         val productOptions = listOf(
-                            "premium_monthly" to "Aylık",
-                            "premium_yearly" to "Yıllık (En Popüler)",
-                            "premium_lifetime" to "Yaşam Boyu",
-                            "ai_weekly" to "AI Haftalık Raporlar"
+                            Triple("premium_monthly", "Aylık", painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_plan_month)),
+                            Triple("premium_yearly", "Yıllık (En Popüler)", painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_plan_year)),
+                            Triple("premium_lifetime", "Yaşam Boyu", painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_plan_lifetime)),
+                            Triple("ai_weekly", "AI Haftalık Raporlar", painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_plan_ai))
                         )
                         
-                        productOptions.forEach { (productId, title) ->
+                        productOptions.forEach { (productId, title, iconPainter) ->
                             val isSelected = selectedProduct == productId
                             val isPopular = productId == "premium_yearly"
                             
@@ -270,6 +271,12 @@ fun PaywallScreen(
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(
+                                                painter = iconPainter,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.primary
+                                            )
+                                            Spacer(Modifier.width(6.dp))
                                             Text(
                                                 text = title,
                                                 style = MaterialTheme.typography.titleMedium,
@@ -280,14 +287,16 @@ fun PaywallScreen(
                                             if (isPopular) {
                                                 Spacer(modifier = Modifier.width(8.dp))
                                                 Card(
+                                                    shape = RoundedCornerShape(999.dp),
                                                     colors = CardDefaults.cardColors(
-                                                        containerColor = MaterialTheme.colorScheme.primary
-                                                    )
+                                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                                    ),
+                                                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                                                 ) {
                                                     Text(
                                                         text = "POPÜLER",
                                                         style = MaterialTheme.typography.labelSmall,
-                                                        color = MaterialTheme.colorScheme.onPrimary,
                                                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                                     )
                                                 }

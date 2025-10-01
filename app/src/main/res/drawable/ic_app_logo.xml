@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Background circle (light orange) -->
+    <path
+        android:fillColor="#FFF3D4"
+        android:pathData="M54,54m-48,0a48,48 0 1,0 96,0a48,48 0 1,0 -96,0"/>
+    <!-- Yellow pie shape -->
+    <path
+        android:fillColor="#FACC15"
+        android:pathData="M54,54L54,10A44,44 0 0,1 94,80Z"/>
+    <!-- Green pie shape -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M54,54L94,80A44,44 0 0,1 30,96Z"/>
+    <!-- Check mark -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M38,58l12,12l24,-28"/>
+</vector>
+
+

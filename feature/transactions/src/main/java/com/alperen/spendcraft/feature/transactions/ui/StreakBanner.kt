@@ -1,20 +1,23 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import com.alperen.spendcraft.core.model.Streak
 import com.alperen.spendcraft.core.ui.ModernCard
-import com.alperen.spendcraft.core.ui.R
+import com.alperen.spendcraft.core.ui.R as CoreR
 
 @Composable
 fun StreakBanner(
@@ -23,9 +26,9 @@ fun StreakBanner(
     modifier: Modifier = Modifier
 ) {
     val badgeText = when {
-        streak.current >= 30 -> stringResource(R.string.gold_badge)
-        streak.current >= 7 -> stringResource(R.string.silver_badge)
-        streak.current >= 3 -> stringResource(R.string.bronze_badge)
+        streak.current >= 30 -> stringResource(CoreR.string.gold_badge)
+        streak.current >= 7 -> stringResource(CoreR.string.silver_badge)
+        streak.current >= 3 -> stringResource(CoreR.string.bronze_badge)
         else -> null
     }
 
@@ -33,6 +36,8 @@ fun StreakBanner(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() }
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+            .shadow(4.dp, RoundedCornerShape(20.dp))
     ) {
         Row(
             modifier = Modifier
@@ -54,13 +59,13 @@ fun StreakBanner(
                 
                 Column {
                     Text(
-                        text = "🔥 ${streak.current} ${stringResource(R.string.day_streak)}",
+                        text = "🔥 ${streak.current} ${stringResource(CoreR.string.day_streak)}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "${stringResource(R.string.best_streak)} ${streak.best}",
+                        text = "${stringResource(CoreR.string.best_streak)} ${streak.best}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -78,7 +79,7 @@ fun ReportsScreen(
         .sortedByDescending { it.third }
 
     AppScaffold(
-        title = "📊 ${stringResource(R.string.reports)}",
+        title = stringResource(R.string.reports),
         onBack = onBack,
         showBannerAd = true,
         isPremium = isPremium,
@@ -130,7 +131,11 @@ fun ReportsScreen(
 
             // Net Bakiye Kartı
             item {
-                ModernCard {
+                ModernCard(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+                        .shadow(4.dp, RoundedCornerShape(20.dp))
+                ) {
                     Column(
                         modifier = Modifier.padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -178,7 +183,7 @@ fun ReportsScreen(
                 item {
                     ModernCard {
                         Column(
-                            modifier = Modifier.padding(24.dp),
+                            modifier = Modifier.padding(20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Row(
@@ -198,7 +203,7 @@ fun ReportsScreen(
                                     )
                                     Text(
                                         text = stringResource(R.string.expense_distribution),
-                                        style = MaterialTheme.typography.titleLarge,
+                                        style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )

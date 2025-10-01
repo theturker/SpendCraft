@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
             
             var currentAuthScreen by remember { mutableStateOf("login") }
             var showOnboarding by remember { mutableStateOf(false) }
-            var showSplash by remember { mutableStateOf(true) }
+            var showSplash by remember { mutableStateOf(false) }
             
             // Google Auth Service'i initialize et
             LaunchedEffect(Unit) {
@@ -117,13 +117,6 @@ class MainActivity : ComponentActivity() {
             SpendCraftTheme(darkTheme = isDarkMode) {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     when {
-                        showSplash -> {
-                            SplashScreen(
-                                onLoadingComplete = {
-                                    showSplash = false
-                                }
-                            )
-                        }
                         isFirstLaunch -> {
                             WelcomeScreen(
                                 onStart = { 

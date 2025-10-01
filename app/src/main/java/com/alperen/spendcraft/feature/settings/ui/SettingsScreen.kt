@@ -112,7 +112,7 @@ fun SettingsScreen(
             item {
                 Column {
                     Text(
-                        text = "💰 ${stringResource(R.string.budget_management)}",
+                        text = stringResource(R.string.budget_management),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -146,7 +146,7 @@ fun SettingsScreen(
                                 }
                                 IconButton(onClick = onNavigateToBudgets) {
                                     Icon(
-                                        imageVector = Icons.Filled.Settings,
+                                        painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_wallet_vector),
                                         contentDescription = stringResource(R.string.budget_management),
                                         tint = MaterialTheme.colorScheme.primary
                                     )
@@ -161,7 +161,7 @@ fun SettingsScreen(
             item {
                 Column {
                     Text(
-                        text = "📂 ${stringResource(CoreR.string.category_management)}",
+                        text = stringResource(CoreR.string.category_management),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -195,7 +195,7 @@ fun SettingsScreen(
                                 }
                                 IconButton(onClick = onNavigateToCategories) {
                                     Icon(
-                                        imageVector = Icons.Filled.Settings,
+                                        painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_category_vector),
                                         contentDescription = stringResource(CoreR.string.category_management),
                                         tint = MaterialTheme.colorScheme.primary
                                     )
@@ -210,7 +210,7 @@ fun SettingsScreen(
             item {
                 Column {
                     Text(
-                        text = "💰 ${stringResource(CoreR.string.currency_selection)}",
+                        text = stringResource(CoreR.string.currency_selection),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -278,27 +278,22 @@ fun SettingsScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "🤖 AI Özellikleri",
+                            text = "AI Özellikleri",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(Modifier.height(12.dp))
                         
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        Button(
+                            onClick = onNavigateToAISuggestions,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Button(
-                                onClick = onNavigateToAISuggestions,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Star,
-                                    contentDescription = null
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text("AI Önerileri")
-                            }
+                            Icon(
+                                painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_ai_vector),
+                                contentDescription = null
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text("AI Önerileri")
                         }
                     }
                 }
