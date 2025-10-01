@@ -48,7 +48,6 @@ fun TransactionsScreen(
     onReports: () -> Unit,
     onSettings: () -> Unit,
     onAllTransactions: () -> Unit,
-    onDashboard: () -> Unit = {},
     onNotifications: () -> Unit = {},
     onAchievements: () -> Unit = {},
     currentUserName: String? = null,
@@ -239,25 +238,13 @@ fun TransactionsScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         QuickActionPill(
-                            label = "Dashboard",
-                            icon = painterResource(R.drawable.ic_dashboard_vector),
-                            positive = true,
-                            modifier = Modifier.weight(1f),
-                            onClick = onDashboard
-                        )
-                        QuickActionPill(
                             label = "Bildirimler",
                             icon = painterResource(R.drawable.ic_notifications_vector),
                             positive = true,
                             modifier = Modifier.weight(1f),
                             onClick = onNotifications
                         )
-                    }
-                    Spacer(Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
+
                         QuickActionPill(
                             label = "Başarımlar",
                             icon = painterResource(R.drawable.ic_trophy_vector),
@@ -265,13 +252,7 @@ fun TransactionsScreen(
                             modifier = Modifier.weight(1f),
                             onClick = onAchievements
                         )
-                        QuickActionPill(
-                            label = "Raporlar",
-                            icon = painterResource(R.drawable.ic_analytics_vector),
-                            positive = true,
-                            modifier = Modifier.weight(1f),
-                            onClick = onReports
-                        )
+
                     }
                     Spacer(Modifier.height(10.dp))
                 }
@@ -302,9 +283,11 @@ fun TransactionsScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
+
                         TextButton(onClick = onReports) {
                             Text(stringResource(R.string.reports))
                         }
+
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),

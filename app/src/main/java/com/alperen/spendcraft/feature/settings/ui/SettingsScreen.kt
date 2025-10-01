@@ -38,7 +38,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.unit.sp
-import com.alperen.spendcraft.LocaleHelper
 import com.alperen.spendcraft.CurrencyHelper
 import com.alperen.spendcraft.ThemeHelper
 import com.alperen.spendcraft.core.model.Category
@@ -47,6 +46,10 @@ import com.alperen.spendcraft.R
 import com.alperen.spendcraft.core.ui.R as CoreR
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,18 +62,16 @@ fun SettingsScreen(
     onNavigateToBudgets: () -> Unit = {},
     onNavigateToPremiumDebug: () -> Unit = {},
     onNavigateToAISuggestions: () -> Unit = {},
-    onNavigateToAISettings: () -> Unit = {},
     onNavigateToAccounts: () -> Unit = {},
     onNavigateToRecurring: () -> Unit = {},
     onNavigateToSharing: () -> Unit = {},
-    onNavigateToDashboard: () -> Unit = {},
     onNavigateToNotifications: () -> Unit = {},
     onNavigateToAchievements: () -> Unit = {},
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = false)
+    val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = true)
     
     // Premium state - TODO: Implement premium state integration
     val isPremium = false
@@ -81,18 +82,7 @@ fun SettingsScreen(
     // Para birimleri ve sembolleri
     val currencies = remember { CurrencyHelper.currencies.toList() }
     
-    // Dil seçenekleri
-    val languages = remember { 
-        listOf(
-            "🇹🇷 Türkçe" to "tr", 
-            "🇺🇸 English" to "en"
-        ) 
-    }
-    
-    val currentLanguage = LocaleHelper.getLanguage(context)
-    var selectedLanguage by rememberSaveable { 
-        mutableStateOf(languages.find { it.second == currentLanguage }?.first ?: "🇺🇸 English")
-    }
+    // Dil seçimi şimdilik devre dışı
 
     Scaffold(
         topBar = {
@@ -116,63 +106,7 @@ fun SettingsScreen(
                 com.alperen.spendcraft.core.ui.AdMobBannerWithPadding(isPremium = isPremium)
             }
             
-            // Language Selection
-            item {
-                Column {
-                    Text(
-                        text = "🌍 ${stringResource(R.string.language_selection)}",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(8.dp))
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = "${stringResource(CoreR.string.current_settings)}: $selectedLanguage",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Spacer(Modifier.height(8.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                languages.forEach { (displayName, languageCode) ->
-                                    Button(
-                                        onClick = {
-                                            selectedLanguage = displayName
-                                            LocaleHelper.setLocale(context, languageCode)
-                                            // Restart activity to apply language change
-                                            (context as? android.app.Activity)?.recreate()
-                                        },
-                                        modifier = Modifier.weight(1f),
-                                        colors = if (selectedLanguage == displayName) {
-                                            ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.primary
-                                            )
-                                        } else {
-                                            ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.surfaceVariant
-                                            )
-                                        }
-                                    ) {
-                                        Text(displayName)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            // Dil seçimi şimdilik kaldırıldı
 
             // Budget Management
             item {
@@ -298,33 +232,30 @@ fun SettingsScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(Modifier.height(8.dp))
-                            Row(
+                            LazyRow(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                currencies.forEach { (currencyCode, symbol) ->
-                                    Button(
+                                items(currencies) { (currencyCode, symbol) ->
+                                    val selected = currency == currencyCode
+                                    FilterChip(
+                                        selected = selected,
                                         onClick = {
                                             currency = currencyCode
                                             CurrencyHelper.setCurrency(context, currencyCode)
                                         },
-                                        modifier = Modifier.weight(1f),
-                                        colors = if (currency == currencyCode) {
-                                            ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.primary
-                                            )
-                                        } else {
-                                            ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.surfaceVariant
-                                            )
-                                        }
-                                    ) {
-                                        Text(
-                                            text = "$symbol $currencyCode",
-                                            fontSize = 12.sp,
-                                            maxLines = 1
+                                        label = {
+                                            Text(text = "$symbol $currencyCode")
+                                        },
+                                        leadingIcon = if (selected) {
+                                            { Icon(Icons.Default.Check, contentDescription = null) }
+                                        } else null,
+                                        colors = FilterChipDefaults.filterChipColors(
+                                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer
                                         )
-                                    }
+                                    )
                                 }
                             }
                         }
@@ -332,46 +263,7 @@ fun SettingsScreen(
                 }
             }
 
-            // Dark Mode
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("🌙", fontSize = 24.sp)
-                        Spacer(Modifier.width(12.dp))
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = stringResource(CoreR.string.dark_mode),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Text(
-                                text = stringResource(CoreR.string.switch_to_dark_theme),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Switch(
-                            checked = isDarkMode,
-                            onCheckedChange = { 
-                                coroutineScope.launch {
-                                    ThemeHelper.setDarkMode(context, it)
-                                }
-                            }
-                        )
-                    }
-                }
-            }
+            // Dark Mode seçimi şimdilik kaldırıldı
 
             // AI Features
             item {
@@ -407,18 +299,6 @@ fun SettingsScreen(
                                 Spacer(Modifier.width(8.dp))
                                 Text("AI Önerileri")
                             }
-                            
-                            Button(
-                                onClick = onNavigateToAISettings,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Settings,
-                                    contentDescription = null
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text("AI Ayarları")
-                            }
                         }
                     }
                 }
@@ -445,38 +325,7 @@ fun SettingsScreen(
                             modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            // Dashboard
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_dashboard_vector),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Dashboard",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = "Finansal durumunuzu görün",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                IconButton(onClick = onNavigateToDashboard) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowForward,
-                                        contentDescription = "Dashboard",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
+                            // Dashboard kaldırıldı
 
                             // Accounts
                             Row(

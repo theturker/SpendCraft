@@ -27,7 +27,6 @@ import com.alperen.spendcraft.feature.recurrence.RecurringListScreen
 import com.alperen.spendcraft.feature.recurrence.AddRecurringRuleScreen
 import com.alperen.spendcraft.feature.recurrence.RecurringEditorScreen
 import com.alperen.spendcraft.feature.sharing.SharingScreen
-import com.alperen.spendcraft.feature.dashboard.DashboardScreen
 import com.alperen.spendcraft.feature.notifications.NotificationsScreen
 import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
 import com.alperen.spendcraft.feature.achievements.AchievementsScreen
@@ -54,7 +53,6 @@ object Routes {
     const val ADD_RECURRING_RULE = "add_recurring_rule"
     const val EDIT_RECURRING_RULE = "edit_recurring_rule"
     const val SHARING = "sharing"
-    const val DASHBOARD = "dashboard"
     const val NOTIFICATIONS = "notifications"
     const val ONBOARDING = "onboarding"
     const val ACHIEVEMENTS = "achievements"
@@ -100,7 +98,6 @@ fun AppNavHost(
                 onReports = { navController.navigate(Routes.REPORTS) },
                 onSettings = { navController.navigate(Routes.SETTINGS) },
                 onAllTransactions = { navController.navigate(Routes.ALL_TRANSACTIONS) },
-                onDashboard = { navController.navigate(Routes.DASHBOARD) },
                 onNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
                 onAchievements = { navController.navigate(Routes.ACHIEVEMENTS) },
                 isPremium = isPremium
@@ -190,7 +187,6 @@ fun AppNavHost(
                 onNavigateToAISuggestions = {
                     navController.navigate(Routes.AI_SUGGESTIONS)
                 },
-                // AI Settings removed - API key is hardcoded
                 onNavigateToAccounts = {
                     navController.navigate(Routes.ACCOUNTS)
                 },
@@ -199,9 +195,6 @@ fun AppNavHost(
                 },
                 onNavigateToSharing = {
                     navController.navigate(Routes.SHARING)
-                },
-                onNavigateToDashboard = {
-                    navController.navigate(Routes.DASHBOARD)
                 },
                 onNavigateToNotifications = {
                     navController.navigate(Routes.NOTIFICATIONS)
@@ -376,19 +369,7 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() }
             )
         }
-        composable(Routes.DASHBOARD) {
-            val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
-            val isPremium by paywallVm.isPremium.collectAsState()
-            DashboardScreen(
-                transactionsFlow = vm.items,
-                categoriesFlow = vm.categories,
-                onNavigateToReports = { navController.navigate(Routes.REPORTS) },
-                onNavigateToSettings = { navController.navigate(Routes.SETTINGS) },
-                onNavigateToAI = { navController.navigate(Routes.AI_SUGGESTIONS) },
-                onNavigateToAccounts = { navController.navigate(Routes.ACCOUNTS) },
-                onBack = { navController.popBackStack() }
-            )
-        }
+        // Dashboard route removed
         composable(Routes.NOTIFICATIONS) {
             val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = hiltViewModel()
             NotificationsScreen(
