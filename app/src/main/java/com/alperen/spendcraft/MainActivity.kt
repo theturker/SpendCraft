@@ -49,6 +49,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var googleAuthService: com.alperen.spendcraft.auth.GoogleAuthService
     
+    @Inject
+    lateinit var billingRepository: com.alperen.spendcraft.core.billing.BillingRepository
+    
     private var googleSignInResult by mutableStateOf<GoogleSignInAccount?>(null)
     
     private val googleSignInLauncher = registerForActivityResult(
@@ -91,6 +94,16 @@ class MainActivity : ComponentActivity() {
             // Google Auth Service'i initialize et
             LaunchedEffect(Unit) {
                 googleAuthService.initialize(context)
+            }
+            
+            // BillingRepository'yi initialize et
+            LaunchedEffect(Unit) {
+                try {
+                    billingRepository.initialize()
+                    android.util.Log.d("MainActivity", "Billing initialized successfully")
+                } catch (e: Exception) {
+                    android.util.Log.e("MainActivity", "Billing initialization failed", e)
+                }
             }
             
             // Google Sign-In result'u handle et

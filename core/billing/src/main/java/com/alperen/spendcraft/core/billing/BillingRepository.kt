@@ -37,45 +37,62 @@ class BillingRepository @Inject constructor(
     
     suspend fun initialize(): Result<Unit> {
         return try {
+            android.util.Log.d("BillingRepository", "Initializing billing...")
+            
             // Connect to billing
+            android.util.Log.d("BillingRepository", "Connecting to billing service...")
             billingManager.connect()
+            android.util.Log.d("BillingRepository", "Connected to billing service")
             
             // Query products
+            android.util.Log.d("BillingRepository", "Querying products: $productIds")
             billingManager.queryProducts(productIds)
+            android.util.Log.d("BillingRepository", "Products queried")
             
             // Validate products
             val products = billingManager.productDetailsFlow.first()
+            android.util.Log.d("BillingRepository", "Received ${products.size} products from flow")
+            
             val validationResult = productValidator.validateProducts(products)
             
             if (!validationResult.isValid) {
                 android.util.Log.w("BillingRepository", "Product validation failed: $validationResult")
+            } else {
+                android.util.Log.d("BillingRepository", "Product validation successful")
             }
             
             // Log product details for debugging
             productValidator.logProductDetails(products)
             
             // Refresh purchases to check current state
+            android.util.Log.d("BillingRepository", "Refreshing purchases...")
             refreshPurchases()
             
+            android.util.Log.d("BillingRepository", "Billing initialization complete")
             Result.success(Unit)
         } catch (e: Exception) {
+            android.util.Log.e("BillingRepository", "Billing initialization failed", e)
             Result.failure(e)
         }
     }
     
     suspend fun buyMonthly(activity: Activity): Result<Unit> {
+        android.util.Log.d("BillingRepository", "buyMonthly called")
         return performPurchase(activity, "premium_monthly")
     }
     
     suspend fun buyYearly(activity: Activity): Result<Unit> {
+        android.util.Log.d("BillingRepository", "buyYearly called")
         return performPurchase(activity, "premium_yearly")
     }
     
     suspend fun buyLifetime(activity: Activity): Result<Unit> {
+        android.util.Log.d("BillingRepository", "buyLifetime called")
         return performPurchase(activity, "premium_lifetime")
     }
     
     suspend fun buyAIWeekly(activity: Activity): Result<Unit> {
+        android.util.Log.d("BillingRepository", "buyAIWeekly called")
         return performPurchase(activity, "ai_weekly")
     }
     
@@ -88,33 +105,38 @@ class BillingRepository @Inject constructor(
     
     private suspend fun performPurchase(activity: Activity, productId: String): Result<Unit> {
         return try {
+            android.util.Log.d("BillingRepository", "performPurchase called for: $productId")
+            
             val products = billingManager.productDetailsFlow.first()
+            android.util.Log.d("BillingRepository", "Available products: ${products.map { it.productId }}")
+            
             val product = products.find { it.productId == productId }
-                ?: return Result.failure(Exception("Product not found: $productId"))
-            
-            // Set up purchase result listener
-            var purchaseResult: Result<Unit>? = null
-            
-            billingManager.setPurchaseResultListener { billingResult, purchases ->
-                purchaseResult = if (billingResult.responseCode == com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
-                    // Handle successful purchase
-                    purchases?.let { 
-                        // Note: In real implementation, this should be handled in a coroutine
-                        // For now, we'll just return success and handle premium status elsewhere
-                    }
-                    Result.success(Unit)
-                } else {
-                    Result.failure(Exception(BillingResultMapper.mapErrorCode(billingResult.responseCode)))
-                }
+            if (product == null) {
+                android.util.Log.e("BillingRepository", "Product not found: $productId")
+                return Result.failure(Exception("Ürün bulunamadı: $productId. Lütfen internet bağlantınızı kontrol edin."))
             }
             
-            // Launch purchase flow
-            billingManager.launchPurchase(activity, product, null)
+            android.util.Log.d("BillingRepository", "Product found: ${product.productId}")
             
-            // Wait for result (in real implementation, this would be handled via callbacks)
-            // For now, we'll return success and let the callback handle the actual result
+            // Get offer token for subscriptions
+            val offerToken = if (productId.contains("monthly") || productId.contains("yearly") || productId.contains("weekly")) {
+                product.subscriptionOfferDetails?.firstOrNull()?.offerToken
+            } else {
+                null
+            }
+            
+            android.util.Log.d("BillingRepository", "Offer token: $offerToken")
+            
+            // Launch purchase flow
+            billingManager.launchPurchase(activity, product, offerToken)
+            
+            android.util.Log.d("BillingRepository", "Purchase flow launched successfully")
+            
+            // Purchase flow started successfully
+            // Result will be handled by onPurchasesUpdated callback
             Result.success(Unit)
         } catch (e: Exception) {
+            android.util.Log.e("BillingRepository", "Purchase error", e)
             Result.failure(e)
         }
     }

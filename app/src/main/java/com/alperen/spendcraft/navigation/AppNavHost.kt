@@ -3,6 +3,7 @@ package com.alperen.spendcraft.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -209,17 +210,24 @@ fun AppNavHost(
         }
         composable(Routes.BUDGET_MANAGEMENT) {
             val budgetViewModel: com.alperen.spendcraft.feature.budget.BudgetViewModel = hiltViewModel()
+            val paywallViewModel: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
+            val isPremium by paywallViewModel.isPremium.collectAsState()
+            
+            android.util.Log.d("AppNavHost", "Budget Management - isPremium: $isPremium")
             
             com.alperen.spendcraft.feature.budget.ui.BudgetManagementScreen(
                 budgets = budgetViewModel.budgets.collectAsState().value,
                 categories = budgetViewModel.categories.collectAsState().value,
                 spentAmounts = budgetViewModel.spentAmounts.collectAsState().value,
-                isPremium = true, // Geçici olarak true yapıyoruz - gerçek premium kontrolü için billing repository gerekli
+                isPremium = isPremium,
                 onAddBudget = { budget -> budgetViewModel.addBudget(budget) },
                 onUpdateBudget = { budget -> budgetViewModel.updateBudget(budget) },
                 onDeleteBudget = { categoryId -> budgetViewModel.deleteBudget(categoryId) },
                 onBack = { navController.popBackStack() },
-                onNavigateToPaywall = { navController.navigate(Routes.PAYWALL) },
+                onNavigateToPaywall = { 
+                    android.util.Log.d("AppNavHost", "Navigating to paywall from Budget Management")
+                    navController.navigate(Routes.PAYWALL) 
+                },
                 onCalculateSpentAmounts = { budgetViewModel.calculateSpentAmounts() }
             )
         }
@@ -337,13 +345,18 @@ fun AppNavHost(
             val sharingViewModel: com.alperen.spendcraft.feature.sharing.SharingViewModel = hiltViewModel()
             val isPremium = sharingViewModel.billingRepository.isPremium.collectAsState(initial = false).value
             
+            android.util.Log.d("AppNavHost", "Sharing - isPremium: $isPremium")
+            
             SharingScreen(
                 membersFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
                 onInviteMember = { /* TODO: Implement */ },
                 onUpdateRole = { _, _ -> /* TODO: Implement */ },
                 onRemoveMember = { /* TODO: Implement */ },
                 isPremium = isPremium,
-                onUpgrade = { navController.navigate(Routes.PAYWALL) },
+                onUpgrade = { 
+                    android.util.Log.d("AppNavHost", "Sharing - Premium'a Geç button clicked, navigating to paywall")
+                    navController.navigate(Routes.PAYWALL) 
+                },
                 onBack = { navController.popBackStack() }
             )
         }

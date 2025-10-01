@@ -91,7 +91,10 @@ fun BudgetManagementScreen(
                 },
                 freeContent = {
                     FloatingActionButton(
-                        onClick = { onNavigateToPaywall() },
+                        onClick = { 
+                            android.util.Log.d("BudgetManagementScreen", "Lock button clicked, navigating to paywall")
+                            onNavigateToPaywall() 
+                        },
                         containerColor = MaterialTheme.colorScheme.surfaceVariant
                     ) {
                         Icon(

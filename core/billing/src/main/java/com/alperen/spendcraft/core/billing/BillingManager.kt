@@ -60,52 +60,126 @@ class BillingManagerImpl @Inject constructor(
     override val isConnected: StateFlow<Boolean> = _isConnected.asStateFlow()
     
     private var onPurchaseResult: ((BillingResult, List<Purchase>?) -> Unit)? = null
+    private var connectionContinuation: kotlin.coroutines.Continuation<Unit>? = null
     
     override suspend fun connect() {
         suspendCancellableCoroutine { continuation ->
-            if (!billingClient.isReady) {
-                billingClient.startConnection(this)
-            } else {
+            if (billingClient.isReady) {
                 continuation.resume(Unit)
                 return@suspendCancellableCoroutine
             }
             
+            // Store continuation to resume when connection is ready
+            connectionContinuation = continuation
+            billingClient.startConnection(this)
+            
             continuation.invokeOnCancellation {
-                billingClient.endConnection()
+                connectionContinuation = null
             }
         }
     }
     
     override suspend fun queryProducts(productIds: List<String>) {
         suspendCancellableCoroutine { continuation ->
+            android.util.Log.d("BillingManager", "queryProducts called with: $productIds")
+            android.util.Log.d("BillingManager", "isConnected: ${_isConnected.value}")
+            
             if (!_isConnected.value) {
+                android.util.Log.e("BillingManager", "Billing client not connected, cannot query products")
                 continuation.resume(Unit)
                 return@suspendCancellableCoroutine
             }
             
-            val productList = productIds.map { productId ->
-                QueryProductDetailsParams.Product.newBuilder()
-                    .setProductId(productId)
-                    .setProductType(
-                        when {
-                            productId.contains("lifetime") || productId == "ai_weekly" -> BillingClient.ProductType.INAPP
-                            else -> BillingClient.ProductType.SUBS
-                        }
-                    )
-                    .build()
+            // Ürünleri tipine göre ayır
+            val subsProducts = mutableListOf<String>()
+            val inappProducts = mutableListOf<String>()
+            
+            productIds.forEach { productId ->
+                if (productId.contains("lifetime")) {
+                    inappProducts.add(productId)
+                } else {
+                    subsProducts.add(productId)
+                }
             }
             
-            val params = QueryProductDetailsParams.newBuilder()
-                .setProductList(productList)
-                .build()
+            android.util.Log.d("BillingManager", "SUBS products: $subsProducts")
+            android.util.Log.d("BillingManager", "INAPP products: $inappProducts")
             
-            billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
-                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    _productDetailsFlow.value = productDetailsList ?: emptyList()
-                    continuation.resume(Unit)
-                } else {
+            val allProducts = mutableListOf<ProductDetails>()
+            var queriesCompleted = 0
+            val totalQueries = (if (subsProducts.isNotEmpty()) 1 else 0) + (if (inappProducts.isNotEmpty()) 1 else 0)
+            
+            fun checkCompletion() {
+                queriesCompleted++
+                if (queriesCompleted == totalQueries) {
+                    android.util.Log.d("BillingManager", "All queries completed. Total products: ${allProducts.size}")
+                    allProducts.forEach { product ->
+                        android.util.Log.d("BillingManager", "  - ${product.productId}: ${product.title}")
+                    }
+                    _productDetailsFlow.value = allProducts
                     continuation.resume(Unit)
                 }
+            }
+            
+            // Query SUBS products
+            if (subsProducts.isNotEmpty()) {
+                val subsList = subsProducts.map { productId ->
+                    android.util.Log.d("BillingManager", "Adding SUBS product: $productId")
+                    QueryProductDetailsParams.Product.newBuilder()
+                        .setProductId(productId)
+                        .setProductType(BillingClient.ProductType.SUBS)
+                        .build()
+                }
+                
+                val subsParams = QueryProductDetailsParams.newBuilder()
+                    .setProductList(subsList)
+                    .build()
+                
+                android.util.Log.d("BillingManager", "Querying SUBS products...")
+                billingClient.queryProductDetailsAsync(subsParams) { billingResult, productDetailsList ->
+                    android.util.Log.d("BillingManager", "SUBS query result: ${billingResult.responseCode} - ${billingResult.debugMessage}")
+                    
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                        android.util.Log.d("BillingManager", "SUBS products found: ${productDetailsList?.size ?: 0}")
+                        productDetailsList?.let { allProducts.addAll(it) }
+                    } else {
+                        android.util.Log.e("BillingManager", "SUBS query failed: ${billingResult.debugMessage}")
+                    }
+                    checkCompletion()
+                }
+            }
+            
+            // Query INAPP products
+            if (inappProducts.isNotEmpty()) {
+                val inappList = inappProducts.map { productId ->
+                    android.util.Log.d("BillingManager", "Adding INAPP product: $productId")
+                    QueryProductDetailsParams.Product.newBuilder()
+                        .setProductId(productId)
+                        .setProductType(BillingClient.ProductType.INAPP)
+                        .build()
+                }
+                
+                val inappParams = QueryProductDetailsParams.newBuilder()
+                    .setProductList(inappList)
+                    .build()
+                
+                android.util.Log.d("BillingManager", "Querying INAPP products...")
+                billingClient.queryProductDetailsAsync(inappParams) { billingResult, productDetailsList ->
+                    android.util.Log.d("BillingManager", "INAPP query result: ${billingResult.responseCode} - ${billingResult.debugMessage}")
+                    
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                        android.util.Log.d("BillingManager", "INAPP products found: ${productDetailsList?.size ?: 0}")
+                        productDetailsList?.let { allProducts.addAll(it) }
+                    } else {
+                        android.util.Log.e("BillingManager", "INAPP query failed: ${billingResult.debugMessage}")
+                    }
+                    checkCompletion()
+                }
+            }
+            
+            if (totalQueries == 0) {
+                android.util.Log.w("BillingManager", "No products to query")
+                continuation.resume(Unit)
             }
             
             continuation.invokeOnCancellation {
@@ -119,7 +193,12 @@ class BillingManagerImpl @Inject constructor(
         productDetails: ProductDetails, 
         offerToken: String?
     ) {
+        android.util.Log.d("BillingManager", "launchPurchase called for: ${productDetails.productId}")
+        android.util.Log.d("BillingManager", "isConnected: ${_isConnected.value}")
+        android.util.Log.d("BillingManager", "offerToken: $offerToken")
+        
         if (!_isConnected.value) {
+            android.util.Log.e("BillingManager", "Billing client not connected!")
             onPurchaseResult?.invoke(
                 BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.SERVICE_DISCONNECTED).build(),
                 null
@@ -138,7 +217,9 @@ class BillingManagerImpl @Inject constructor(
             .setProductDetailsParamsList(productDetailsParamsList)
             .build()
         
-        billingClient.launchBillingFlow(activity, billingFlowParams)
+        android.util.Log.d("BillingManager", "Launching billing flow...")
+        val result = billingClient.launchBillingFlow(activity, billingFlowParams)
+        android.util.Log.d("BillingManager", "Billing flow result: ${result.responseCode} - ${result.debugMessage}")
     }
     
     override suspend fun refreshPurchases(): Result<List<Purchase>> {
@@ -210,12 +291,24 @@ class BillingManagerImpl @Inject constructor(
     }
     
     override fun onBillingSetupFinished(billingResult: BillingResult) {
+        android.util.Log.d("BillingManager", "onBillingSetupFinished: ${billingResult.responseCode} - ${billingResult.debugMessage}")
+        
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            android.util.Log.d("BillingManager", "Billing client connected successfully")
             _isConnected.value = true
+            connectionContinuation?.resume(Unit)
+            connectionContinuation = null
+        } else {
+            android.util.Log.e("BillingManager", "Billing setup failed: ${billingResult.debugMessage}")
+            connectionContinuation?.resumeWithException(
+                Exception("Billing setup failed: ${billingResult.debugMessage}")
+            )
+            connectionContinuation = null
         }
     }
     
     override fun onBillingServiceDisconnected() {
+        android.util.Log.d("BillingManager", "Billing service disconnected")
         _isConnected.value = false
     }
     

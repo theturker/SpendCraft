@@ -322,10 +322,16 @@ fun PaywallScreen(
             item {
                 Button(
                     onClick = {
-                        when (selectedProduct) {
-                            "premium_monthly" -> viewModel.buyMonthly(context as android.app.Activity)
-                            "premium_yearly" -> viewModel.buyYearly(context as android.app.Activity)
-                            "ai_weekly" -> viewModel.buyAIWeekly(context as android.app.Activity)
+                        val activity = context as? android.app.Activity
+                        if (activity != null) {
+                            android.util.Log.d("PaywallScreen", "Launching purchase for: $selectedProduct")
+                            when (selectedProduct) {
+                                "premium_monthly" -> viewModel.buyMonthly(activity)
+                                "premium_yearly" -> viewModel.buyYearly(activity)
+                                "ai_weekly" -> viewModel.buyAIWeekly(activity)
+                            }
+                        } else {
+                            android.util.Log.e("PaywallScreen", "Context is not an Activity!")
                         }
                     },
                     enabled = !isLoading,

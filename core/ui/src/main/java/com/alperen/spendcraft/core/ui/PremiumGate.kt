@@ -52,7 +52,10 @@ fun PremiumGate(
             Spacer(modifier = Modifier.height(20.dp))
             
             Button(
-                onClick = onUpgrade,
+                onClick = { 
+                    android.util.Log.d("PremiumGate", "Premium'a Geç button clicked")
+                    onUpgrade() 
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(
