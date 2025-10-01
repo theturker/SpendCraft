@@ -15,12 +15,13 @@ class BillingProductValidator @Inject constructor() {
         // Expected product IDs from Play Console
         private const val PREMIUM_MONTHLY = "premium_monthly"
         private const val PREMIUM_YEARLY = "premium_yearly"
+        private const val PREMIUM_LIFETIME = "premium_lifetime"
         private const val AI_WEEKLY = "ai_weekly"
     }
     
     fun validateProducts(products: List<ProductDetails>): BillingValidationResult {
         val foundProducts = products.map { it.productId }.toSet()
-        val expectedProducts = setOf(PREMIUM_MONTHLY, PREMIUM_YEARLY, AI_WEEKLY)
+        val expectedProducts = setOf(PREMIUM_MONTHLY, PREMIUM_YEARLY, PREMIUM_LIFETIME, AI_WEEKLY)
         
         val missingProducts = expectedProducts - foundProducts
         val extraProducts = foundProducts - expectedProducts
@@ -53,8 +54,8 @@ class BillingProductValidator @Inject constructor() {
                 }
             }
             
-            // For in-app products, log price
-            if (product.productId == AI_WEEKLY) {
+            // For in-app products, log price (ai_weekly, premium_lifetime vs.)
+            if (product.productType == com.android.billingclient.api.BillingClient.ProductType.INAPP) {
                 product.oneTimePurchaseOfferDetails?.let { offer ->
                     Log.d(TAG, "  Price: ${offer.priceAmountMicros / 1_000_000} ${offer.priceCurrencyCode}")
                 }

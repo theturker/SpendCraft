@@ -236,6 +236,7 @@ fun PaywallScreen(
                         val productOptions = listOf(
                             "premium_monthly" to "Aylık",
                             "premium_yearly" to "Yıllık (En Popüler)",
+                            "premium_lifetime" to "Yaşam Boyu",
                             "ai_weekly" to "AI Haftalık Raporlar"
                         )
                         
@@ -328,6 +329,7 @@ fun PaywallScreen(
                             when (selectedProduct) {
                                 "premium_monthly" -> viewModel.buyMonthly(activity)
                                 "premium_yearly" -> viewModel.buyYearly(activity)
+                                "premium_lifetime" -> viewModel.buyLifetime(activity)
                                 "ai_weekly" -> viewModel.buyAIWeekly(activity)
                             }
                         } else {

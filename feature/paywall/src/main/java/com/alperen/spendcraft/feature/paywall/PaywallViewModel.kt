@@ -107,6 +107,30 @@ class PaywallViewModel @Inject constructor(
         }
     }
     
+    fun buyLifetime(activity: Activity) {
+        _isLoading.value = true
+        _errorMessage.value = null
+        
+        viewModelScope.launch {
+            try {
+                val result = billingRepository.buyLifetime(activity)
+                result.fold(
+                    onSuccess = {
+                        _successMessage.value = "Yaşam boyu premium aktif!"
+                        _isLoading.value = false
+                    },
+                    onFailure = { exception ->
+                        _errorMessage.value = exception.message ?: "Satın alma başarısız"
+                        _isLoading.value = false
+                    }
+                )
+            } catch (e: Exception) {
+                _errorMessage.value = "Beklenmeyen hata: ${e.message}"
+                _isLoading.value = false
+            }
+        }
+    }
+    
     fun buyAIWeekly(activity: Activity) {
         _isLoading.value = true
         _errorMessage.value = null
@@ -143,6 +167,7 @@ class PaywallViewModel @Inject constructor(
         return when (productId) {
             "premium_monthly" -> "₺29.99/ay"
             "premium_yearly" -> "₺299.99/yıl"
+            "premium_lifetime" -> "₺999.99"
             "ai_weekly" -> "₺9.99/hafta"
             else -> "Fiyat yükleniyor..."
         }
@@ -152,6 +177,7 @@ class PaywallViewModel @Inject constructor(
         return when (productId) {
             "premium_monthly" -> "Aylık Premium"
             "premium_yearly" -> "Yıllık Premium"
+            "premium_lifetime" -> "Yaşam Boyu Premium"
             "ai_weekly" -> "AI Haftalık Raporlar"
             else -> "Premium"
         }
@@ -161,6 +187,7 @@ class PaywallViewModel @Inject constructor(
         return when (productId) {
             "premium_monthly" -> "Tüm premium özellikler"
             "premium_yearly" -> "En iyi değer - %50 tasarruf"
+            "premium_lifetime" -> "Tek seferlik ödeme – ömür boyu premium"
             "ai_weekly" -> "Haftalık AI analiz raporları"
             else -> "Premium özellikler"
         }
