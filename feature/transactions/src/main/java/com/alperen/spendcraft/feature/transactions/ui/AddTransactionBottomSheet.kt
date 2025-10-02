@@ -1,5 +1,7 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.material3.DatePicker
@@ -21,6 +24,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.ui.draw.clip
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
 import androidx.compose.ui.res.painterResource
@@ -51,13 +55,34 @@ fun AddTransactionBottomSheet(
     val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
+    val fieldShape = RoundedCornerShape(12.dp)
+    val fieldBg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+    val fieldBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = false
         ),
         containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        dragHandle = {
+            // Modern drag handle
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp, bottom = 2.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(4.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f))
+                )
+            }
+        }
     ) {
         Column(
             modifier = Modifier
@@ -66,12 +91,10 @@ fun AddTransactionBottomSheet(
                 .padding(20.dp)
         ) {
             
-            // Title
-            Text(
-                text = if (isIncome) "💰 Gelir Ekle" else "💸 Gider Ekle",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
+            // Segmented Gelir/Gider toggle
+            IncomeExpenseSegmented(
+                isIncome = isIncome,
+                onChange = { isIncome = it },
                 modifier = Modifier.padding(bottom = 20.dp)
             )
             
@@ -79,7 +102,7 @@ fun AddTransactionBottomSheet(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                // Kategori Seçimi - Kompakt grid
+                // Kategori Seçimi - 3 satır gözükecek şekilde grid (daha fazla ise scroll)
                 item {
                     Column {
                         Text(
@@ -90,20 +113,29 @@ fun AddTransactionBottomSheet(
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                         
-                        // Kategorileri kompakt grid halinde göster
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(3),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.height(120.dp) // Sabit yükseklik
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .clip(fieldShape)
+                                .background(fieldBg)
+                                .border(1.dp, fieldBorderColor, fieldShape)
+                                .padding(8.dp)
                         ) {
-                            items(cats.size) { index ->
-                                val category = cats[index]
-                                CompactCategoryChip(
-                                    text = category.name,
-                                    isSelected = selectedCategoryId == category.id,
-                                    onClick = { selectedCategoryId = category.id }
-                                )
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(3),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                items(cats.size) { index ->
+                                    val category = cats[index]
+                                    CompactCategoryChip(
+                                        text = category.name,
+                                        isSelected = selectedCategoryId == category.id,
+                                        onClick = { selectedCategoryId = category.id }
+                                    )
+                                }
                             }
                         }
                     }
@@ -131,156 +163,91 @@ fun AddTransactionBottomSheet(
                             )
                         }
                         
-                        ModernCard(
-                            modifier = Modifier.fillMaxWidth()
+                        // Büyük, merkezli tutar alanı
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(fieldBg)
+                                .border(1.dp, fieldBorderColor, RoundedCornerShape(20.dp))
+                                .padding(vertical = 6.dp, horizontal = 12.dp)
                         ) {
-                            Row(
+                            OutlinedTextField(
+                                value = amount,
+                                onValueChange = { newValue ->
+                                    val cleanValue = newValue.replace(Regex("[^0-9.,]"), "")
+                                    if (cleanValue.length <= 10) amount = cleanValue
+                                },
+                                placeholder = {
+                                    Text(
+                                        "0,00",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                                    .height(60.dp), // Yüksekliği azalttık
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "₺",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                                
-                                OutlinedTextField(
-                                    value = amount,
-                                    onValueChange = { newValue ->
-                                        val cleanValue = newValue.replace(Regex("[^0-9.,]"), "")
-                                        if (cleanValue.length <= 10) {
-                                            amount = cleanValue
-                                        }
-                                    },
-                                    placeholder = { 
-                                        Text(
-                                            "0,00",
-                                            style = MaterialTheme.typography.titleLarge,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        ) 
-                                    },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                                    modifier = Modifier.weight(1f),
-                                    textStyle = MaterialTheme.typography.titleLarge,
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        focusedBorderColor = Color.Transparent,
-                                        unfocusedBorderColor = Color.Transparent,
-                                        focusedContainerColor = Color.Transparent,
-                                        unfocusedContainerColor = Color.Transparent
-                                    ),
-                                    shape = RoundedCornerShape(0.dp)
-                                )
-                            }
+                                    .fillMaxWidth(),
+                                textStyle = MaterialTheme.typography.titleLarge.copy(textAlign = TextAlign.Center),
+                                trailingIcon = {
+                                    Text(
+                                        text = "₺",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                },
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Transparent,
+                                    unfocusedBorderColor = Color.Transparent,
+                                    focusedContainerColor = Color.Transparent,
+                                    unfocusedContainerColor = Color.Transparent,
+                                    cursorColor = MaterialTheme.colorScheme.primary
+                                ),
+                                shape = RoundedCornerShape(0.dp)
+                            )
                         }
                     }
                 }
                 
-                // Tarih ve Saat - Tıklanabilir
+                // Tarih ve Saat - Chip'lerle
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        // Tarih
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_calendar),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(16.dp)
+                        AssistChip(
+                            onClick = { showDatePicker = true },
+                            label = { Text(dateFormatter.format(selectedDate)) },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_calendar),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            },
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onSecondaryContainer
                             )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "Tarih",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
+                        )
+                        AssistChip(
+                            onClick = { showTimePicker = true },
+                            label = { Text(timeFormatter.format(selectedTime)) },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_clock),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            },
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
                             )
-                        }
-                            
-                            ModernCard(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable { showDatePicker = true }
-                                        .padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        text = dateFormatter.format(selectedDate),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_calendar),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        }
-                        
-                        // Saat
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_clock),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "Saat",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                            
-                            ModernCard(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable { showTimePicker = true }
-                                        .padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        text = timeFormatter.format(selectedTime),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_clock),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        }
+                        )
                     }
                 }
                 
@@ -309,27 +276,36 @@ fun AddTransactionBottomSheet(
                         ModernCard(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            OutlinedTextField(
-                                value = note,
-                                onValueChange = { note = it },
-                                placeholder = { 
-                                    Text(
-                                        "İşlem hakkında not ekleyin...",
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    ) 
-                                },
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(16.dp),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    focusedBorderColor = Color.Transparent,
-                                    unfocusedBorderColor = Color.Transparent,
-                                    focusedContainerColor = Color.Transparent,
-                                    unfocusedContainerColor = Color.Transparent
-                                ),
-                                shape = RoundedCornerShape(0.dp),
-                                maxLines = 2
-                            )
+                                    .clip(fieldShape)
+                                    .background(fieldBg)
+                                    .border(1.dp, fieldBorderColor, fieldShape)
+                                    .padding(8.dp)
+                            ) {
+                                OutlinedTextField(
+                                    value = note,
+                                    onValueChange = { note = it },
+                                    placeholder = {
+                                        Text(
+                                            "İşlem hakkında not ekleyin...",
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                        unfocusedBorderColor = Color.Transparent,
+                                        focusedContainerColor = Color.Transparent,
+                                        unfocusedContainerColor = Color.Transparent
+                                    ),
+                                    shape = RoundedCornerShape(0.dp),
+                                    maxLines = 2
+                                )
+                            }
                         }
                     }
                 }
@@ -349,16 +325,23 @@ fun AddTransactionBottomSheet(
                     .height(56.dp)
                     .padding(top = 16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isIncome) Color(0xFF4CAF50) else Color(0xFFF44336),
-                    contentColor = Color.White
+                    containerColor = if (isIncome) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Text(
-                    text = if (isIncome) "💰 Gelir Ekle" else "💸 Gider Ekle",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Icon(
+                        painter = painterResource(if (isIncome) com.alperen.spendcraft.core.ui.R.drawable.ic_income_vector else com.alperen.spendcraft.core.ui.R.drawable.ic_expense_vector),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Text(
+                        text = if (isIncome) "Gelir Ekle" else "Gider Ekle",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
@@ -382,6 +365,87 @@ fun AddTransactionBottomSheet(
                 showTimePicker = false
             },
             onDismiss = { showTimePicker = false }
+        )
+    }
+}
+
+@Composable
+private fun IncomeExpenseSegmented(
+    isIncome: Boolean,
+    onChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val shape = RoundedCornerShape(12.dp)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), shape)
+            .padding(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        SegmentedItem(
+            text = "Gelir",
+            selected = isIncome,
+            onClick = { onChange(true) },
+            leading = {
+                Icon(
+                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_income_vector),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+            },
+            modifier = Modifier.weight(1f)
+        )
+        SegmentedItem(
+            text = "Gider",
+            selected = !isIncome,
+            onClick = { onChange(false) },
+            leading = {
+                Icon(
+                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_expense_vector),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+            },
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun SegmentedItem(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    leading: @Composable (() -> Unit)? = null,
+    modifier: Modifier = Modifier
+) {
+    val shape = RoundedCornerShape(10.dp)
+    val container = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
+    val content = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+    Row(
+        modifier = modifier
+            .clip(shape)
+            .background(container)
+            .clickable { onClick() }
+            .padding(vertical = 10.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (leading != null) {
+            CompositionLocalProvider(LocalContentColor provides content) {
+                leading()
+            }
+            Spacer(modifier = Modifier.width(6.dp))
+        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+            color = content,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }

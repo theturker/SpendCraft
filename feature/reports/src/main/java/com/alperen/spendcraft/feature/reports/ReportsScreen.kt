@@ -40,7 +40,6 @@ import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.StatCard
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.R
-import com.alperen.spendcraft.core.ui.charts.*
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,6 +47,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import kotlin.math.PI
 import kotlin.math.sqrt
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun ReportsScreen(
@@ -233,55 +234,28 @@ fun ReportsScreen(
                             Spacer(modifier = Modifier.height(18.dp))
 
                             if (showBarChart) {
-                                // Bar Chart
-                                val barData = expenseByCategory.take(8).mapIndexed { index, (categoryId, categoryName, amount) ->
-                                    val colors = listOf(
-                                        MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.secondary,
-                                        MaterialTheme.colorScheme.tertiary,
-                                        MaterialTheme.colorScheme.error,
-                                        MaterialTheme.colorScheme.outline
-                                    )
-                                    BarData(
-                                        id = categoryId.toString(),
-                                        value = amount.toFloat(),
-                                        label = categoryName.take(8), // Kısa etiket
-                                        color = colors[index % colors.size]
-                                    )
-                                }
-                                
-                                BarChart(
-                                    data = barData,
-                                    onBarClick = { barId ->
-                                        val index = barData.indexOfFirst { it.id == barId }
-                                        selectedIndex = if (selectedIndex == index) -1 else index
-                                    }
+                                ExpenseBarChart(
+                                    data = expenseByCategory.take(8),
+                                    selectedIndex = selectedIndex,
+                                    onSelectedIndexChanged = { idx -> selectedIndex = idx },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(220.dp)
                                 )
                             } else {
-                                // Donut Chart stili (daha modern görünüm)
-                                val pieData = expenseByCategory.mapIndexed { index, (categoryId, categoryName, amount) ->
-                                    val colors = listOf(
-                                        MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.secondary,
-                                        MaterialTheme.colorScheme.tertiary,
-                                        MaterialTheme.colorScheme.error,
-                                        MaterialTheme.colorScheme.outline
-                                    )
-                                    PieSlice(
-                                        id = categoryId.toString(),
-                                        value = amount.toFloat(),
-                                        label = categoryName,
-                                        color = colors[index % colors.size]
-                                    )
-                                }
-                                
-                                PieChart(
-                                    data = pieData,
-                                    onSliceClick = { sliceId ->
-                                        val index = pieData.indexOfFirst { it.id == sliceId }
-                                        selectedIndex = if (selectedIndex == index) -1 else index
-                                    },
-                                    modifier = Modifier.size(240.dp)
+                                ExpensePieChart(
+                                    expenseByCategory = expenseByCategory,
+                                    totalExpense = totalExpense,
+                                    selectedIndex = selectedIndex,
+                                    onSelectedIndexChanged = { idx -> selectedIndex = idx },
+                                    modifier = Modifier.size(260.dp)
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                ExpenseLegend(
+                                    expenseByCategory = expenseByCategory,
+                                    totalExpense = totalExpense,
+                                    selectedIndex = selectedIndex,
+                                    onSelectedIndexChanged = { idx -> selectedIndex = idx }
                                 )
                             }
                         }
@@ -289,60 +263,7 @@ fun ReportsScreen(
                 }
             }
 
-            // Bar Chart - Kategori Harcamaları
-            if (expenseByCategory.isNotEmpty()) {
-                item {
-                    ModernCard {
-                        Column(
-                            modifier = Modifier.padding(24.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_analytics_vector),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Text(
-                                    text = "Kategori Harcamaları",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(18.dp))
-
-                            val barData = expenseByCategory.take(8).mapIndexed { index, (categoryId, categoryName, amount) ->
-                                val colors = listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.secondary,
-                                    MaterialTheme.colorScheme.tertiary,
-                                    MaterialTheme.colorScheme.error,
-                                    MaterialTheme.colorScheme.outline
-                                )
-                                BarData(
-                                    id = categoryId.toString(),
-                                    value = amount.toFloat(),
-                                    label = categoryName.take(8), // Kısa etiket
-                                    color = colors[index % colors.size]
-                                )
-                            }
-                            
-                            BarChart(
-                                data = barData,
-                                onBarClick = { barId ->
-                                    val index = barData.indexOfFirst { it.id == barId }
-                                    selectedIndex = if (selectedIndex == index) -1 else index
-                                }
-                            )
-                        }
-                    }
-                }
-            }
+            // Kategori harcamaları ikinci kartı kaldırıldı (üstte bar chart zaten var)
 
             // Harcama Dağılımı – İlk 5
             if (expenseByCategory.isNotEmpty()) {
@@ -566,6 +487,8 @@ private fun ExpensePieChart(
                 )
         )
 
+        val bgColor = MaterialTheme.colorScheme.background
+
         Canvas(
             modifier = Modifier
                 .size(200.dp)
@@ -609,23 +532,16 @@ private fun ExpensePieChart(
                 val sweepAngle = (amount.toFloat() / totalExpense.toFloat()) * 360f
                 val color = colors[index % colors.size]
                 val isSelected = selectedIndex == index
-                val radiusOffset = if (isSelected) 20.dp.toPx() else 0f
-
-                // Seçili dilimi dışarı itme ofseti
-                val midAngle = startAngle + sweepAngle / 2f
-                val offsetX = cos(midAngle * PI / 180.0).toFloat() * radiusOffset
-                val offsetY = sin(midAngle * PI / 180.0).toFloat() * radiusOffset
-                val offsetCenter = Offset(center.x + offsetX, center.y + offsetY)
 
                 // 1) Seçiliyse arka glow
                 if (isSelected) {
                     drawArc(
-                        color = color.copy(alpha = 0.30f),
+                        color = color.copy(alpha = 0.25f),
                         startAngle = startAngle,
                         sweepAngle = sweepAngle,
                         useCenter = true,
-                        topLeft = Offset(offsetCenter.x - radius - 10.dp.toPx(), offsetCenter.y - radius - 10.dp.toPx()),
-                        size = Size((radius + 10.dp.toPx()) * 2, (radius + 10.dp.toPx()) * 2),
+                        topLeft = Offset(center.x - radius - 6.dp.toPx(), center.y - radius - 6.dp.toPx()),
+                        size = Size((radius + 6.dp.toPx()) * 2, (radius + 6.dp.toPx()) * 2),
                         style = Fill
                     )
                 }
@@ -636,7 +552,7 @@ private fun ExpensePieChart(
                     startAngle = startAngle,
                     sweepAngle = sweepAngle,
                     useCenter = true,
-                    topLeft = Offset(offsetCenter.x - radius, offsetCenter.y - radius),
+                    topLeft = Offset(center.x - radius, center.y - radius),
                     size = Size(radius * 2, radius * 2),
                     style = Fill
                 )
@@ -647,14 +563,90 @@ private fun ExpensePieChart(
                         color = color.copy(alpha = 0.9f),
                         startAngle = startAngle,
                         sweepAngle = sweepAngle,
-                        useCenter = true,
-                        topLeft = Offset(offsetCenter.x - radius, offsetCenter.y - radius),
+                        useCenter = false,
+                        topLeft = Offset(center.x - radius, center.y - radius),
                         size = Size(radius * 2, radius * 2),
-                        style = Stroke(width = 2.dp.toPx())
+                        style = Stroke(width = 3.dp.toPx())
                     )
                 }
 
                 startAngle += sweepAngle
+            }
+
+            // Donut iç boşluk
+            drawCircle(
+                color = bgColor,
+                radius = radius * 0.55f,
+                center = center,
+                style = Fill
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExpenseBarChart(
+    data: List<Triple<Long?, String, Long>>,
+    selectedIndex: Int,
+    onSelectedIndexChanged: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val maxValue = (data.maxOfOrNull { it.third } ?: 1).toFloat()
+    val barColors = listOf(
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.tertiary,
+        MaterialTheme.colorScheme.error,
+        MaterialTheme.colorScheme.outline
+    )
+
+    Row(
+        modifier = modifier
+            .padding(horizontal = 12.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.Bottom
+    ) {
+        data.forEachIndexed { index, (_, label, value) ->
+            val isSelected = selectedIndex == index
+            val barHeightFraction = if (maxValue > 0f) value / maxValue else 0f
+            val barColor = barColors[index % barColors.size]
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onSelectedIndexChanged(if (isSelected) -1 else index) },
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f))
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(barHeightFraction.coerceIn(0f, 1f))
+                            .align(Alignment.BottomCenter)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(barColor.copy(alpha = if (isSelected) 1f else 0.9f))
+                            .border(
+                                width = if (isSelected) 2.dp else 0.dp,
+                                color = barColor,
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = label.take(10),
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
