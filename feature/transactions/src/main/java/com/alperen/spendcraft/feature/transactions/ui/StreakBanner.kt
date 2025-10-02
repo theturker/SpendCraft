@@ -5,7 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,49 +48,75 @@ fun StreakBanner(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.AccountBox,
-                    contentDescription = null,
-                    tint = if (streak.current > 0) Color(0xFFFF6B35) else MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(24.dp)
-                )
-                
-                Column {
-                    Text(
-                        text = "🔥 ${streak.current} ${stringResource(CoreR.string.day_streak)}",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = "${stringResource(CoreR.string.best_streak)} ${streak.best}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                // Alev ikonlu rozet
+                Surface(
+                    color = if (streak.current > 0) Color(0xFFFFEDD5) else MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(CoreR.drawable.ic_fire_vector),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Text(
+                            text = "${streak.current} ${stringResource(CoreR.string.day_streak)}",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // En iyi seri için madalya
+                Surface(
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(CoreR.drawable.ic_medal_vector),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = "${stringResource(CoreR.string.best_streak)} ${streak.best}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
             }
             
             badgeText?.let { badge ->
-                Surface(
-                    color = when {
-                        badge.contains("Altın") || badge.contains("Gold") -> Color(0xFFFFD700)
-                        badge.contains("Gümüş") || badge.contains("Silver") -> Color(0xFFC0C0C0)
-                        badge.contains("Bronz") || badge.contains("Bronze") -> Color(0xFFCD7F32)
-                        else -> MaterialTheme.colorScheme.primaryContainer
+                AssistChip(
+                    onClick = onClick,
+                    label = { Text(badge) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(CoreR.drawable.ic_medal_vector),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(16.dp)
+                        )
                     },
-                    shape = MaterialTheme.shapes.small,
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Text(
-                        text = badge,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                    colors = AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        labelColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
-                }
+                )
             }
         }
     }

@@ -189,7 +189,7 @@ fun TransactionsScreen(
                             painter = painterResource(CoreR.drawable.walleticon),
                             contentDescription = null,
                             tint = Color.Unspecified,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(28.dp)
                         )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
@@ -238,7 +238,9 @@ fun TransactionsScreen(
                             icon = painterResource(CoreR.drawable.ic_notifications_vector),
                             positive = true,
                             modifier = Modifier.weight(1f),
-                            onClick = onNotifications
+                            onClick = onNotifications,
+                            backgroundColor = Color(0xFF3B82F6).copy(alpha = 0.16f),
+                            borderBrush = Brush.linearGradient(listOf(Color(0xFF60A5FA), Color(0xFF3B82F6)))
                         )
 
                         QuickActionPill(
@@ -246,7 +248,9 @@ fun TransactionsScreen(
                             icon = painterResource(CoreR.drawable.ic_trophy_vector),
                             positive = false,
                             modifier = Modifier.weight(1f),
-                            onClick = onAchievements
+                            onClick = onAchievements,
+                            backgroundColor = Color(0xFFF59E0B).copy(alpha = 0.18f),
+                            borderBrush = Brush.linearGradient(listOf(Color(0xFFF59E0B), Color(0xFFFBBF24)))
                         )
 
                     }
@@ -265,12 +269,12 @@ fun TransactionsScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                painter = painterResource(CoreR.drawable.statisticicon),
-                                contentDescription = null,
-                                tint = Color.Unspecified,
-                                modifier = Modifier.size(24.dp)
-                            )
+                        Icon(
+                            painter = painterResource(CoreR.drawable.statisticicon),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(28.dp)
+                        )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = stringResource(CoreR.string.transaction_statistics),
@@ -280,9 +284,22 @@ fun TransactionsScreen(
                             )
                         }
 
-                        TextButton(onClick = onReports) {
-                            Text(stringResource(CoreR.string.reports))
-                        }
+                        AssistChip(
+                            onClick = onReports,
+                            label = { Text(stringResource(CoreR.string.reports)) },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(CoreR.drawable.statisticicon),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            },
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        )
 
                     }
                     Row(
@@ -323,7 +340,7 @@ fun TransactionsScreen(
                             painter = painterResource(CoreR.drawable.reloadicon),
                             contentDescription = null,
                             tint = Color.Unspecified,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(28.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
@@ -333,7 +350,22 @@ fun TransactionsScreen(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    TextButton(onClick = onAllTransactions) { Text(stringResource(CoreR.string.view_all)) }
+                    AssistChip(
+                        onClick = onAllTransactions,
+                        label = { Text(stringResource(CoreR.string.view_all)) },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(CoreR.drawable.reloadicon),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    )
                 }
             }
 
@@ -416,11 +448,13 @@ private fun QuickActionPill(
     icon: androidx.compose.ui.graphics.painter.Painter,
     positive: Boolean,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    backgroundColor: Color? = null,
+    borderBrush: Brush? = null
 ) {
-    val bg = if (positive) Color(0xFF34D399).copy(alpha = 0.18f) else Color(0xFFEF4444).copy(alpha = 0.14f)
+    val bg = backgroundColor ?: if (positive) Color(0xFF34D399).copy(alpha = 0.18f) else Color(0xFFEF4444).copy(alpha = 0.14f)
 
-    val border = if (positive)
+    val border = borderBrush ?: if (positive)
         Brush.linearGradient(listOf(Color(0xFF10B981), Color(0xFF34D399)))
     else
         Brush.linearGradient(listOf(Color(0xFFEF4444), Color(0xFFF87171)))
@@ -486,13 +520,31 @@ private fun GradientAccountsSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Sol üstte kart adı
+            // Sol üstte hesap adı
             Text(
-                text = "Paratik",
+                text = account.name,
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.ExtraBold,
                 color = Color.White.copy(alpha = 0.95f)
             )
+            // Sağ üstte marka
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Icon(
+                    painter = painterResource(CoreR.drawable.ic_app_mark),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(18.dp)
+                )
+                Text(
+                    text = "Paratik",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.White.copy(alpha = 0.9f)
+                )
+            }
         }
 
         // Kart numarası kaldırıldı
