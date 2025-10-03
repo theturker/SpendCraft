@@ -1,5 +1,11 @@
 package com.alperen.spendcraft.feature.paywall
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,6 +31,45 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
+
+@Composable
+private fun BenefitItem(
+    leading: @Composable () -> Unit,
+    title: String,
+    desc: String,
+    color: Color
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(color.copy(alpha = 0.08f))
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Surface(
+            color = color,
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Box(modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center) {
+                leading()
+            }
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = desc,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
 
 /**
  * Paywall UI (Compose)
@@ -80,75 +125,155 @@ fun PaywallScreen(
             // Header
             item {
                 ModernCard {
-                    Column(
-                        modifier = Modifier.padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                Brush.linearGradient(
+                                    listOf(
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
+                                        MaterialTheme.colorScheme.tertiary.copy(alpha = 0.85f)
+                                    )
+                                )
+                            )
+                            .clip(RoundedCornerShape(20.dp))
+                            .padding(24.dp)
                     ) {
-                        Text(
-                            text = "SpendCraft Premium",
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        
-                        Spacer(modifier = Modifier.height(8.dp))
-                        
-                        Text(
-                            text = "Tüm özelliklerin kilidini açın",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                        )
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_premium_crown),
+                                contentDescription = null,
+                                tint = Color.Unspecified,
+                                modifier = Modifier.size(56.dp)
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = "Paratik Premium",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color.White
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = "Tüm özelliklerin kilidini açın",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White.copy(alpha = 0.9f),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }
             
-            // Benefits
+            // Benefits (richer visuals)
             item {
                 ModernCard {
-                    Column(
-                        modifier = Modifier.padding(20.dp)
-                    ) {
-                        Text(
-                            text = "✨ Premium Avantajları",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        // subtle shine overlay
+                        val infinite = rememberInfiniteTransition(label = "benefits-shine")
+                        val x = infinite.animateFloat(
+                            initialValue = -120f,
+                            targetValue = 520f,
+                            animationSpec = infiniteRepeatable(animation = tween(2600, easing = LinearEasing)),
+                            label = "x"
                         )
-                        
-                        Spacer(modifier = Modifier.height(16.dp))
-                        
-                        val benefits = listOf(
-                            "🚫 Reklamsız deneyim" to "Hiç reklam görmeden kullanın",
-                            "🔄 Tekrarlayan işlemler" to "Otomatik gelir/gider ekleme",
-                            "💰 Bütçe & limit uyarıları" to "Akıllı harcama takibi",
-                            "📊 CSV/Excel/PDF dışa aktarım" to "Sınırsız veri aktarımı",
-                            "👨‍👩‍👧‍👦 Aile/Ortak bütçe" to "Birlikte finansal hedefler"
-                        )
-                        
-                        benefits.forEach { (title, description) ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = title,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(14.dp)
+                        ) {
+                            Text(
+                                text = "✨ Premium Avantajları",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                BenefitItem(
+                                    leading = {
+                                        Icon(
+                                            painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_eye_off_vector),
+                                            contentDescription = null,
+                                            tint = Color.White
+                                        )
+                                    },
+                                    title = "Reklamsız deneyim",
+                                    desc = "Hiç reklam görmeden kullanın",
                                     color = MaterialTheme.colorScheme.primary
                                 )
-                                
-                                Spacer(modifier = Modifier.width(12.dp))
-                                
-                                Text(
-                                    text = description,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.weight(1f)
+                                BenefitItem(
+                                    leading = {
+                                        Icon(
+                                            painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_repeat_vector),
+                                            contentDescription = null,
+                                            tint = Color.White
+                                        )
+                                    },
+                                    title = "Tekrarlayan işlemler",
+                                    desc = "Otomatik gelir/gider ekleme",
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                                BenefitItem(
+                                    leading = {
+                                        Icon(
+                                            painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_notifications_vector),
+                                            contentDescription = null,
+                                            tint = Color.White
+                                        )
+                                    },
+                                    title = "Bütçe & limit uyarıları",
+                                    desc = "Akıllı harcama takibi",
+                                    color = MaterialTheme.colorScheme.tertiary
+                                )
+                                BenefitItem(
+                                    leading = {
+                                        Icon(
+                                            painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_assignment_vector),
+                                            contentDescription = null,
+                                            tint = Color.White
+                                        )
+                                    },
+                                    title = "Dışa aktarım",
+                                    desc = "CSV/Excel/PDF aktarımı",
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                BenefitItem(
+                                    leading = {
+                                        Icon(
+                                            painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_group_vector),
+                                            contentDescription = null,
+                                            tint = Color.White
+                                        )
+                                    },
+                                    title = "Aile/Ortak bütçe",
+                                    desc = "Birlikte finansal hedefler",
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(60.dp)
+                                    .offset(x = x.value.dp)
+                                    .background(
+                                        Brush.linearGradient(
+                                            listOf(
+                                                Color.Transparent,
+                                                Color.White.copy(alpha = 0.14f),
+                                                Color.Transparent
+                                            )
+                                        )
+                                    )
+                            )
                         }
                     }
                 }
@@ -194,7 +319,7 @@ fun PaywallScreen(
                         ) {
                             Column {
                                 Text(
-                                    text = "₺9,99/hafta",
+                                    text = "TRY 10,99/hafta",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.primary
@@ -263,64 +388,88 @@ fun PaywallScreen(
                                 else null,
                                 onClick = { selectedProduct = productId }
                             ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Icon(
-                                                painter = iconPainter,
-                                                contentDescription = null,
-                                                tint = MaterialTheme.colorScheme.primary
-                                            )
-                                            Spacer(Modifier.width(6.dp))
-                                            Text(
-                                                text = title,
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = MaterialTheme.colorScheme.onSurface
-                                            )
-                                            
-                                            if (isPopular) {
-                                                Spacer(modifier = Modifier.width(8.dp))
-                                                Card(
-                                                    shape = RoundedCornerShape(999.dp),
-                                                    colors = CardDefaults.cardColors(
-                                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                                    ),
-                                                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-                                                ) {
-                                                    Text(
-                                                        text = "POPÜLER",
-                                                        style = MaterialTheme.typography.labelSmall,
-                                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                                    )
+                                Box(modifier = Modifier.fillMaxWidth()) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                                Icon(
+                                                    painter = iconPainter,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                                Spacer(Modifier.width(6.dp))
+                                                Text(
+                                                    text = title,
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    color = MaterialTheme.colorScheme.onSurface
+                                                )
+                                                if (isPopular) {
+                                                    Spacer(modifier = Modifier.width(8.dp))
+                                                    Card(
+                                                        shape = RoundedCornerShape(999.dp),
+                                                        colors = CardDefaults.cardColors(
+                                                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                                        ),
+                                                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                                                    ) {
+                                                        Text(
+                                                            text = "POPÜLER",
+                                                            style = MaterialTheme.typography.labelSmall,
+                                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                                        )
+                                                    }
                                                 }
                                             }
+                                            Text(
+                                                text = viewModel.getProductDescription(productId),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            Text(
+                                                text = viewModel.getProductPrice(productId),
+                                                style = MaterialTheme.typography.titleLarge,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.primary
+                                            )
                                         }
-                                        
-                                        Text(
-                                            text = viewModel.getProductDescription(productId),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                        
-                                        Text(
-                                            text = viewModel.getProductPrice(productId),
-                                            style = MaterialTheme.typography.titleLarge,
-                                            fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary
+                                        RadioButton(
+                                            selected = isSelected,
+                                            onClick = { selectedProduct = productId }
                                         )
                                     }
-                                    
-                                    RadioButton(
-                                        selected = isSelected,
-                                        onClick = { selectedProduct = productId }
-                                    )
+                                    if (isPopular) {
+                                        val infinite = rememberInfiniteTransition(label = "popular-shine")
+                                        val x = infinite.animateFloat(
+                                            initialValue = -120f,
+                                            targetValue = 520f,
+                                            animationSpec = infiniteRepeatable(animation = tween(2000, easing = LinearEasing)),
+                                            label = "x"
+                                        )
+                                        Box(modifier = Modifier.matchParentSize()) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxHeight()
+                                                    .width(60.dp)
+                                                    .offset(x = x.value.dp)
+                                                    .background(
+                                                        Brush.linearGradient(
+                                                            listOf(
+                                                                Color.Transparent,
+                                                                Color.White.copy(alpha = 0.25f),
+                                                                Color.Transparent
+                                                            )
+                                                        )
+                                                    )
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -330,8 +479,23 @@ fun PaywallScreen(
             
             // CTA Button
             item {
-                Button(
-                    onClick = {
+                val shape = RoundedCornerShape(16.dp)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .clip(shape)
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    MaterialTheme.colorScheme.primary,
+                                    MaterialTheme.colorScheme.tertiary
+                                )
+                            )
+                        )
+                ) {
+                    Button(
+                        onClick = {
                         val activity = context as? android.app.Activity
                         if (activity != null) {
                             android.util.Log.d("PaywallScreen", "Launching purchase for: $selectedProduct")
@@ -344,26 +508,33 @@ fun PaywallScreen(
                         } else {
                             android.util.Log.e("PaywallScreen", "Context is not an Activity!")
                         }
-                    },
-                    enabled = !isLoading,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
-                            color = MaterialTheme.colorScheme.onPrimary
+                        },
+                        enabled = !isLoading,
+                        modifier = Modifier.fillMaxSize(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.White
                         )
-                    } else {
-                        Text(
-                            text = "⭐ Premium'a Yükselt",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
+                    ) {
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = Color.White
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_premium_crown),
+                                contentDescription = null,
+                                tint = Color.Unspecified,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = "Premium'a Yükselt",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }

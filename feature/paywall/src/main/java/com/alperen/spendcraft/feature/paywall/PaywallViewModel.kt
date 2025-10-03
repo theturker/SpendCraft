@@ -165,10 +165,10 @@ class PaywallViewModel @Inject constructor(
     
     fun getProductPrice(productId: String): String {
         return when (productId) {
-            "premium_monthly" -> "₺29.99/ay"
-            "premium_yearly" -> "₺299.99/yıl"
-            "premium_lifetime" -> "₺999.99"
-            "ai_weekly" -> "₺9.99/hafta"
+            "premium_monthly" -> "TRY 35,99/ay"
+            "premium_yearly" -> "TRY 99,00/yıl"
+            "premium_lifetime" -> "TRY 169,00"
+            "ai_weekly" -> "TRY 10,99/hafta"
             else -> "Fiyat yükleniyor..."
         }
     }
