@@ -50,7 +50,27 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import kotlinx.coroutines.launch
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import com.alperen.spendcraft.core.ui.ModernCard
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.border
+import androidx.compose.ui.draw.scale
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.foundation.Canvas
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.rotate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +87,13 @@ fun SettingsScreen(
     onNavigateToSharing: () -> Unit = {},
     onNavigateToNotifications: () -> Unit = {},
     onNavigateToAchievements: () -> Unit = {},
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    // Yeni: header iyileştirmeleri için
+    userName: String? = null,
+    userAvatar: androidx.compose.ui.graphics.painter.Painter? = null,
+    defaultAccountName: String? = null,
+    defaultAccountBalance: String? = null,
+    onChangeThemeStyle: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -106,49 +132,151 @@ fun SettingsScreen(
                 com.alperen.spendcraft.core.ui.AdMobBannerWithPadding(isPremium = isPremium)
             }
             
-            // Dil seçimi şimdilik kaldırıldı
-
-            // Budget Management
+            // Gradient Header + Quick Actions
             item {
-                Column {
-                    Text(
-                        text = stringResource(R.string.budget_management),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(8.dp))
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ModernCard(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    androidx.compose.foundation.layout.Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        colorScheme.primary.copy(alpha = 0.85f),
+                                        colorScheme.tertiary.copy(alpha = 0.85f)
+                                    )
+                                )
+                            )
+                            .padding(20.dp)
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = stringResource(R.string.set_budget_limits),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.monthly_budget),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                                val infinite = rememberInfiniteTransition(label = "avatar-pulse")
+                                val pulse = infinite.animateFloat(
+                                    initialValue = 0.96f,
+                                    targetValue = 1.04f,
+                                    animationSpec = infiniteRepeatable(
+                                        animation = tween(1400, easing = LinearEasing),
+                                        repeatMode = androidx.compose.animation.core.RepeatMode.Reverse
+                                    ),
+                                    label = "pulse"
+                                )
+                                androidx.compose.foundation.layout.Box(
+                                    modifier = Modifier
+                                        .size(72.dp)
+                                        .scale(pulse.value)
+                                        .border(
+                                            width = 2.dp,
+                                            brush = Brush.linearGradient(
+                                                listOf(
+                                                    colorScheme.primary,
+                                                    colorScheme.tertiary
+                                                )
+                                            ),
+                                            shape = CircleShape
+                                        )
+                                        .padding(4.dp)
+                                ) {
+                                    // Cam arkaplan + logo ve ışın efektleri
+                                    androidx.compose.material3.Surface(
+                                        shape = CircleShape,
+                                        color = colorScheme.surface.copy(alpha = 0.65f)
+                                    ) {
+                                        androidx.compose.foundation.layout.Box(
+                                            modifier = Modifier.size(64.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            // Basit ışın efekti
+                                            val rays = rememberInfiniteTransition(label = "rays")
+                                            val angle = rays.animateFloat(
+                                                initialValue = 0f,
+                                                targetValue = 360f,
+                                                animationSpec = infiniteRepeatable(
+                                                    animation = tween(8000, easing = LinearEasing)
+                                                ),
+                                                label = "angle"
+                                            )
+                                            val rayColor = colorScheme.primary.copy(alpha = 0.18f)
+                                            Canvas(modifier = Modifier.matchParentSize().padding(6.dp)) {
+                                                val c = center
+                                                val r = size.minDimension / 2f
+                                                rotate(degrees = angle.value) {
+                                                    for (i in 0 until 12) {
+                                                        val t = i / 12f
+                                                        drawLine(
+                                                            color = rayColor,
+                                                            start = c,
+                                                            end = androidx.compose.ui.geometry.Offset(
+                                                                x = c.x + r * 0.9f * kotlin.math.cos(2 * Math.PI * t).toFloat(),
+                                                                y = c.y + r * 0.9f * kotlin.math.sin(2 * Math.PI * t).toFloat()
+                                                            ),
+                                                            strokeWidth = 8f,
+                                                            cap = StrokeCap.Round
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                            Icon(
+                                                painter = androidx.compose.ui.res.painterResource(R.drawable.ic_app_logo),
+                                                contentDescription = null,
+                                                tint = Color.Unspecified,
+                                                modifier = Modifier.size(36.dp)
+                                            )
+                                        }
+                                    }
                                 }
-                                IconButton(onClick = onNavigateToBudgets) {
+                                Column {
+                                    Text(
+                                        text = userName ?: stringResource(R.string.settings),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = colorScheme.onPrimary
+                                    )
+                                    if (defaultAccountName != null) {
+                                        AssistChip(
+                                            onClick = onNavigateToAccounts,
+                                            label = { Text("Varsayılan: ${defaultAccountName} • ${defaultAccountBalance ?: ""}") },
+                                            leadingIcon = {
+                                                Icon(
+                                                    painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_account_balance_vector),
+                                                    contentDescription = null
+                                                )
+                                            },
+                                            colors = AssistChipDefaults.assistChipColors(
+                                                containerColor = colorScheme.surface.copy(alpha = 0.85f)
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Üst kart: sadece profil + varsayılan/para birimi özeti
+                            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                item {
+                                    AssistChip(
+                                        onClick = {},
+                                        enabled = false,
+                                        label = {
+                                            val current = currencies.find { it.first == currency }
+                                            Text("Para birimi: ${current?.second ?: ""} ${current?.first ?: currency}")
+                                        },
+                                        leadingIcon = {
                                     Icon(
                                         painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_wallet_vector),
-                                        contentDescription = stringResource(R.string.budget_management),
-                                        tint = MaterialTheme.colorScheme.primary
+                                                contentDescription = null
+                                            )
+                                        },
+                                        colors = AssistChipDefaults.assistChipColors(
+                                            containerColor = colorScheme.surface.copy(alpha = 0.85f)
+                                        )
                                     )
                                 }
                             }
@@ -157,103 +285,108 @@ fun SettingsScreen(
                 }
             }
 
-            // Category Management
+            // Hızlı Ayarlar Izgara (tamamen yeni görünüm)
             item {
-                Column {
-                    Text(
-                        text = stringResource(CoreR.string.category_management),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(8.dp))
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = stringResource(CoreR.string.manage_categories),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = "${categories.size} ${stringResource(CoreR.string.categories_available)}",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                IconButton(onClick = onNavigateToCategories) {
-                                    Icon(
-                                        painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_category_vector),
-                                        contentDescription = stringResource(CoreR.string.category_management),
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        }
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        SettingTile(
+                            title = "Hesaplar",
+                            subtitle = "Hesapları yönetin",
+                            icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_account_balance_vector),
+                            onClick = onNavigateToAccounts,
+                            modifier = Modifier.weight(1f)
+                        )
+                        SettingTile(
+                            title = "Bütçeler",
+                            subtitle = "Limitleri ayarlayın",
+                            icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_wallet_vector),
+                            onClick = onNavigateToBudgets,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        SettingTile(
+                            title = "Kategoriler",
+                            subtitle = "Kategorileri düzenleyin",
+                            icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_category_vector),
+                            onClick = onNavigateToCategories,
+                            modifier = Modifier.weight(1f)
+                        )
+                        SettingTile(
+                            title = "Tekrarlayan",
+                            subtitle = "Otomatik işlemler",
+                            icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_repeat_vector),
+                            onClick = onNavigateToRecurring,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        SettingTile(
+                            title = "Bildirimler",
+                            subtitle = "Uyarıları yönetin",
+                            icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_notifications_vector),
+                            onClick = onNavigateToNotifications,
+                            modifier = Modifier.weight(1f)
+                        )
+                        SettingTile(
+                            title = "Başarımlar",
+                            subtitle = "Rozetleriniz",
+                            icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_trophy_vector),
+                            onClick = onNavigateToAchievements,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        SettingTile(
+                            title = "Paylaşım",
+                            subtitle = "Aile bütçesi",
+                            icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_share_vector),
+                            onClick = onNavigateToSharing,
+                            modifier = Modifier.weight(1f)
+                        )
+                        SettingTile(
+                            title = "AI Önerileri",
+                            subtitle = "İçgörüler",
+                            icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_ai_spark),
+                            onClick = onNavigateToAISuggestions,
+                            modifier = Modifier.weight(1f)
+                        )
                     }
                 }
             }
 
-            // Currency Selection
+            // Eski kategori/bütçe kartları kaldırıldı
+            item { Spacer(Modifier.height(0.dp)) }
+
+            // Para Birimi (inline, tek kart) - Tema stili kaldırıldı
             item {
-                Column {
+                ModernCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        text = stringResource(CoreR.string.currency_selection),
+                            text = "Para Birimi",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(Modifier.height(8.dp))
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
+                        // Para Birimi
+                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            val current = currencies.find { it.first == currency }
                             Text(
-                                text = "${stringResource(CoreR.string.current_settings)}: ${currencies.find { it.first == currency }?.let { "${it.second} ${it.first}" } ?: currency}",
+                                text = "Seçili: ${current?.second ?: ""} ${current?.first ?: currency}",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = colorScheme.onSurfaceVariant
                             )
-                            Spacer(Modifier.height(8.dp))
-                            LazyRow(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
+                            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 items(currencies) { (currencyCode, symbol) ->
                                     val selected = currency == currencyCode
-                                    FilterChip(
-                                        selected = selected,
+                                    AssistChip(
                                         onClick = {
                                             currency = currencyCode
                                             CurrencyHelper.setCurrency(context, currencyCode)
                                         },
-                                        label = {
-                                            Text(text = "$symbol $currencyCode")
-                                        },
-                                        leadingIcon = if (selected) {
-                                            { Icon(Icons.Default.Check, contentDescription = null) }
-                                        } else null,
-                                        colors = FilterChipDefaults.filterChipColors(
-                                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                        label = { Text(text = "$symbol $currencyCode") },
+                                        leadingIcon = if (selected) { { Icon(Icons.Default.Check, contentDescription = null) } } else null,
+                                        colors = AssistChipDefaults.assistChipColors(
+                                            containerColor = if (selected) colorScheme.primaryContainer else colorScheme.surface
                                         )
                                     )
                                 }
@@ -265,264 +398,21 @@ fun SettingsScreen(
 
             // Dark Mode seçimi şimdilik kaldırıldı
 
-            // AI Features
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text = "AI Özellikleri",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.height(12.dp))
-                        
-                        Button(
-                            onClick = onNavigateToAISuggestions,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(
-                                painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_ai_vector),
-                                contentDescription = null
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text("AI Önerileri")
-                        }
-                    }
-                }
-            }
+            // Eski AI kartı kaldırıldı
+            item { Spacer(Modifier.height(0.dp)) }
 
-            // New Features Section
-            item {
-                Column {
-                    Text(
-                        text = "🚀 Yeni Özellikler",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(8.dp))
+            // Eski "Yeni Özellikler" bölümü kaldırıldı
+            item { Spacer(Modifier.height(0.dp)) }
 
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            // Dashboard kaldırıldı
-
-                            // Accounts
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_account_balance_vector),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Hesaplar",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = "Çoklu hesap yönetimi",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                IconButton(onClick = onNavigateToAccounts) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowForward,
-                                        contentDescription = "Hesaplar",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-
-                            // Recurring Transactions
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_repeat_vector),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Tekrarlayan İşlemler",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = "Otomatik işlem oluşturma",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                IconButton(onClick = onNavigateToRecurring) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowForward,
-                                        contentDescription = "Tekrarlayan İşlemler",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-
-                            // Sharing (Premium)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_share_vector),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = if (isPremium) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Spacer(Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Aile/Ortak Bütçe",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = if (isPremium) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                    Text(
-                                        text = if (isPremium) "Bütçeyi paylaşın" else "Premium özellik",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                IconButton(onClick = onNavigateToSharing) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowForward,
-                                        contentDescription = "Paylaşım",
-                                        tint = if (isPremium) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Notifications & Achievements
-            item {
-                Column {
-                    Text(
-                        text = "🔔 Bildirimler & Başarımlar",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(8.dp))
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            // Notifications
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_notifications_vector),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Bildirimler",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = "Uyarılar ve hatırlatmalar",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                IconButton(onClick = onNavigateToNotifications) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowForward,
-                                        contentDescription = "Bildirimler",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-
-                            // Achievements
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_trophy_vector),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Başarımlar",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = "Rozetler ve seviyeler",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                IconButton(onClick = onNavigateToAchievements) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowForward,
-                                        contentDescription = "Başarımlar",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            // Eski bildirimler/başarımlar kartları kaldırıldı
+            item { Spacer(Modifier.height(0.dp)) }
 
             // Debug Section
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer
+                        containerColor = colorScheme.errorContainer
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
@@ -539,25 +429,74 @@ fun SettingsScreen(
                                 text = "Premium Debug",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onErrorContainer
+                                color = colorScheme.onErrorContainer
                             )
                             Text(
                                 text = "Premium durumunu test et",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onErrorContainer
+                                color = colorScheme.onErrorContainer
                             )
                         }
                         IconButton(onClick = onNavigateToPremiumDebug) {
                             Icon(
                                 imageVector = Icons.Filled.Settings,
                                 contentDescription = "Premium Debug",
-                                tint = MaterialTheme.colorScheme.onErrorContainer
+                                tint = colorScheme.onErrorContainer
                             )
                         }
                     }
                 }
             }
 
+        }
+    }
+}
+
+@Composable
+private fun SettingTile(
+    title: String,
+    subtitle: String,
+    icon: Painter,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    ModernCard(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                painter = icon,
+                contentDescription = null,
+                tint = colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colorScheme.onSurfaceVariant,
+                    maxLines = 1
+                )
+            }
+            Icon(
+                imageVector = Icons.Filled.ArrowForward,
+                contentDescription = null,
+                tint = colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp)
+            )
         }
     }
 }
