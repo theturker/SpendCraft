@@ -66,6 +66,9 @@ fun AppNavHost(
     deepLinkUri: android.net.Uri? = null
 ) {
     val vm: TransactionsViewModel = hiltViewModel()
+    val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
+    val isPremium by paywallVm.isPremium.collectAsState(initial = false)
+    val hasAIWeekly by paywallVm.aiWeekly.collectAsState(initial = false)
     
     // Handle deep links
     val context = LocalContext.current
@@ -90,9 +93,6 @@ fun AppNavHost(
     
     NavHost(navController = navController, startDestination = Routes.LIST) {
         composable(Routes.LIST) {
-            val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
-            val isPremium by paywallVm.isPremium.collectAsState(initial = false)
-            val hasAIWeekly by paywallVm.aiWeekly.collectAsState(initial = false)
             TransactionsScreen(
                 viewModel = vm,
                 onAdd = { /* Bottom sheet will handle this */ },
@@ -141,8 +141,6 @@ fun AppNavHost(
             )
         }
         composable(Routes.REPORTS) {
-            val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
-            val isPremium by paywallVm.isPremium.collectAsState(initial = false)
             ReportsScreen(
                 transactionsFlow = vm.items,
                 categoriesFlow = vm.categories,
@@ -174,8 +172,6 @@ fun AppNavHost(
             )
         }
         composable(Routes.SETTINGS) {
-            val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
-            val isPremium by paywallVm.isPremium.collectAsState(initial = false)
             SettingsScreen(
                 categories = vm.categories.collectAsState().value,
                 onAddCategory = { name -> 
@@ -237,8 +233,6 @@ fun AppNavHost(
         }
         composable(Routes.BUDGET_MANAGEMENT) {
             val budgetViewModel: com.alperen.spendcraft.feature.budget.BudgetViewModel = hiltViewModel()
-            val paywallViewModel: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
-            val isPremium by paywallViewModel.isPremium.collectAsState()
             
             android.util.Log.d("AppNavHost", "Budget Management - isPremium: $isPremium")
             
@@ -281,7 +275,6 @@ fun AppNavHost(
         }
         composable(Routes.AI_SUGGESTIONS) {
             val aiViewModel: com.alperen.spendcraft.feature.ai.AIViewModel = hiltViewModel()
-            val isPremium = aiViewModel.billingRepository.isPremium.collectAsState(initial = false).value
             
             // Get transaction data for AI analysis
             val transactions = vm.items.collectAsState(initial = emptyList()).value

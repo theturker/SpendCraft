@@ -169,8 +169,9 @@ class BillingRepository @Inject constructor(
                 }
             }
             
-            // Update premium status
-            premiumStateDataStore.setPremium(hasActivePremium)
+            // Merge with stored state to prevent false drops during transient failures
+            val storedPremium = premiumStateDataStore.isPremium.first()
+            premiumStateDataStore.setPremium(hasActivePremium || storedPremium)
             
             Result.success(Unit)
         } catch (e: Exception) {
