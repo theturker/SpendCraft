@@ -160,7 +160,7 @@ fun StreakBanner(
                         label = "streak-progress"
                     )
                     LinearProgressIndicator(
-                        progress = progress.value,
+                        progress = { progress.value },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(8.dp)

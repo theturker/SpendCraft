@@ -131,7 +131,7 @@ fun RegisterScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = if (isTr) "Geri" else "Back",
                             tint = if (isDarkMode) Color.White else Color(0xFF374151),
                             modifier = Modifier.size(24.dp)

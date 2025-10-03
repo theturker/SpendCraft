@@ -91,19 +91,8 @@ fun AppNavHost(
     NavHost(navController = navController, startDestination = Routes.LIST) {
         composable(Routes.LIST) {
             val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
-            val isPremium by paywallVm.isPremium.collectAsState()
-            val hasAIWeeklyState = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-            androidx.compose.runtime.LaunchedEffect(isPremium) {
-                // Başlangıçta ve premium durumu değiştiğinde kontrol et
-                hasAIWeeklyState.value = paywallVm.hasAIWeeklyEntitlement()
-            }
-            // Periyodik yenileme (3 dakikada bir)
-            androidx.compose.runtime.LaunchedEffect(true) {
-                while (true) {
-                    hasAIWeeklyState.value = paywallVm.hasAIWeeklyEntitlement()
-                    delay(180_000)
-                }
-            }
+            val isPremium by paywallVm.isPremium.collectAsState(initial = false)
+            val hasAIWeekly by paywallVm.aiWeekly.collectAsState(initial = false)
             TransactionsScreen(
                 viewModel = vm,
                 onAdd = { /* Bottom sheet will handle this */ },
@@ -115,7 +104,7 @@ fun AppNavHost(
                 onNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
                 onAchievements = { navController.navigate(Routes.ACHIEVEMENTS) },
                 isPremium = isPremium,
-                hasAIWeekly = hasAIWeeklyState.value
+                hasAIWeekly = hasAIWeekly
             )
         }
         composable(Routes.ADD) {
@@ -152,11 +141,14 @@ fun AppNavHost(
             )
         }
         composable(Routes.REPORTS) {
+            val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
+            val isPremium by paywallVm.isPremium.collectAsState(initial = false)
             ReportsScreen(
                 transactionsFlow = vm.items,
                 categoriesFlow = vm.categories,
                 onBack = { navController.popBackStack() },
-                onExport = { navController.navigate(Routes.EXPORT_REPORT) }
+                onExport = { navController.navigate(Routes.EXPORT_REPORT) },
+                isPremium = isPremium
             )
         }
         composable(Routes.EXPORT_REPORT) {
@@ -182,6 +174,8 @@ fun AppNavHost(
             )
         }
         composable(Routes.SETTINGS) {
+            val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
+            val isPremium by paywallVm.isPremium.collectAsState(initial = false)
             SettingsScreen(
                 categories = vm.categories.collectAsState().value,
                 onAddCategory = { name -> 
@@ -217,7 +211,16 @@ fun AppNavHost(
                 onNavigateToAchievements = {
                     navController.navigate(Routes.ACHIEVEMENTS)
                 },
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                // header bilgileri örnek doldurma
+                userName = null,
+                userAvatar = null,
+                defaultAccountName = vm.accounts.collectAsState().value.firstOrNull()?.name,
+                defaultAccountBalance = null,
+                onChangeThemeStyle = {},
+                isPremium = isPremium,
+                // premium ile üst banner ve kilitler
+                // (SettingsScreen içinde AdMobBanner zaten isPremium ile devre dışı bırakılıyor)
             )
         }
         composable(Routes.CATEGORY_MANAGEMENT) {
@@ -371,11 +374,13 @@ fun AppNavHost(
         }
         composable("${Routes.EDIT_RECURRING_RULE}/{ruleId}") { backStackEntry ->
             val ruleId = backStackEntry.arguments?.getString("ruleId")?.toLongOrNull() ?: 0L
+            val recurringViewModel: com.alperen.spendcraft.feature.recurrence.RecurringViewModel = hiltViewModel()
+            val isPremium = recurringViewModel.billingRepository.isPremium.collectAsState(initial = false).value
             RecurringEditorScreen(
                 templateTransaction = null, // TODO: Get transaction from ViewModel
                 onSave = { /* TODO: Implement save functionality */ },
                 onCancel = { navController.popBackStack() },
-                isPremium = false // TODO: Get premium state from ViewModel
+                isPremium = isPremium
             )
         }
         composable(Routes.SHARING) {

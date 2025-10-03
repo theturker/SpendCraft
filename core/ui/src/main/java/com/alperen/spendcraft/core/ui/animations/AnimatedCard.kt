@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,7 +68,7 @@ fun AnimatedModernCard(
 fun AnimatedStatCard(
     title: String,
     value: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: androidx.compose.ui.graphics.painter.Painter,
     color: Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
@@ -111,7 +112,7 @@ fun AnimatedStatCard(
             horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
         ) {
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = null,
                 tint = color,
                 modifier = Modifier.size(24.dp)
@@ -178,7 +179,7 @@ fun AnimatedBalanceCard(
                 AnimatedStatCard(
                     title = "Gelir",
                     value = "₺${formatCurrency(income)}",
-                    icon = Icons.Filled.TrendingUp,
+                    icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_trending_up),
                     color = MaterialTheme.colorScheme.primary,
                     onClick = onIncomeClick
                 )
@@ -186,7 +187,7 @@ fun AnimatedBalanceCard(
                 AnimatedStatCard(
                     title = "Gider",
                     value = "₺${formatCurrency(expense)}",
-                    icon = Icons.Filled.TrendingDown,
+                    icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_trending_down),
                     color = MaterialTheme.colorScheme.error,
                     onClick = onExpenseClick
                 )

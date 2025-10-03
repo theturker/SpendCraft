@@ -41,7 +41,7 @@ import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity
         AIUsageEntity::class
     ],
     version = 7,
-    exportSchema = true
+    exportSchema = false
 )
 @TypeConverters()
 abstract class AppDatabase : RoomDatabase() {

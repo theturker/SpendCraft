@@ -5,6 +5,7 @@ import com.alperen.spendcraft.core.premium.PremiumStateDataStore
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -194,4 +195,12 @@ class BillingRepository @Inject constructor(
     }
     
     fun getCurrentPurchases(): Flow<List<Purchase>> = billingManager.purchasesFlow
+
+    // Reactive AI weekly entitlement, so UI modules don't depend on Billing types
+    val aiWeekly: Flow<Boolean> = getCurrentPurchases().map { purchases ->
+        purchases.any { p ->
+            p.products.contains("ai_weekly") &&
+            p.purchaseState == Purchase.PurchaseState.PURCHASED
+        }
+    }
 }

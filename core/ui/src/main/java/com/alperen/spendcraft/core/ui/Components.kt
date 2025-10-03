@@ -37,7 +37,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import com.alperen.spendcraft.core.ui.R
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -270,7 +273,7 @@ fun StatCard(
 fun ActionButton(
     text: String,
     onClick: () -> Unit,
-    icon: ImageVector? = null,
+    icon: Painter? = null,
     modifier: Modifier = Modifier,
     colors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.primary
@@ -284,7 +287,7 @@ fun ActionButton(
     ) {
         if (icon != null) {
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = null,
                 modifier = Modifier.size(18.dp)
             )
@@ -308,7 +311,7 @@ fun IncomeExpenseButton(
     ActionButton(
         text = text,
         onClick = onClick,
-        icon = if (isIncome) Icons.Filled.TrendingUp else Icons.Filled.TrendingDown,
+        icon = if (isIncome) androidx.compose.ui.res.painterResource(R.drawable.ic_trending_up) else androidx.compose.ui.res.painterResource(R.drawable.ic_trending_down),
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isIncome) 

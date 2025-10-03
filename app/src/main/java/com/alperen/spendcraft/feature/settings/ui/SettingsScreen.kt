@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -93,14 +94,14 @@ fun SettingsScreen(
     userAvatar: androidx.compose.ui.graphics.painter.Painter? = null,
     defaultAccountName: String? = null,
     defaultAccountBalance: String? = null,
-    onChangeThemeStyle: (String) -> Unit = {}
+    onChangeThemeStyle: (String) -> Unit = {},
+    isPremium: Boolean = false
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = true)
     
-    // Premium state - TODO: Implement premium state integration
-    val isPremium = false
+    // Premium durumu parent'tan gelir
     var currency by rememberSaveable { mutableStateOf(CurrencyHelper.getCurrency(context)) }
     var expanded by rememberSaveable { mutableStateOf(false) }
     var languageExpanded by rememberSaveable { mutableStateOf(false) }
@@ -492,7 +493,7 @@ private fun SettingTile(
                 )
             }
             Icon(
-                imageVector = Icons.Filled.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
                 tint = colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(18.dp)

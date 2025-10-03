@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat
 import androidx.compose.ui.platform.LocalContext
 import com.alperen.spendcraft.core.ui.CurrencyFormatter
 import java.util.*
+import androidx.compose.ui.res.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +62,7 @@ fun AllTransactionsScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.List,
+                                painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_assignment_vector),
                                 contentDescription = null,
                                 modifier = Modifier.size(64.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant

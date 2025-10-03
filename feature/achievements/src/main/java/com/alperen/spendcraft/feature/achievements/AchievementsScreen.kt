@@ -99,7 +99,7 @@ fun AchievementsScreen(
                     )
                     Spacer(Modifier.height(8.dp))
                     LinearProgressIndicator(
-                        progress = (rewardPercent / 100f).coerceIn(0f, 1f),
+                        progress = { (rewardPercent / 100f).coerceIn(0f, 1f) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(6.dp))

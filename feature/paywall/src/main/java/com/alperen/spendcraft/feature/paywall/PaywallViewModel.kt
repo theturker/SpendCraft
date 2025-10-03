@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,9 +45,16 @@ class PaywallViewModel @Inject constructor(
     
     val isPremium = billingRepository.isPremium.stateIn(
         scope = viewModelScope,
-        started = kotlinx.coroutines.flow.SharingStarted.Lazily,
+        started = kotlinx.coroutines.flow.SharingStarted.Eagerly,
         initialValue = false
     )
+
+    val aiWeekly = billingRepository.aiWeekly
+        .stateIn(
+            scope = viewModelScope,
+            started = kotlinx.coroutines.flow.SharingStarted.Lazily,
+            initialValue = false
+        )
     
     init {
         // Initialize billing when ViewModel is created

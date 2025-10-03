@@ -62,7 +62,8 @@ fun ReportsScreen(
     transactionsFlow: StateFlow<List<Transaction>>,
     categoriesFlow: StateFlow<List<com.alperen.spendcraft.core.model.Category>>,
     onBack: () -> Unit = {},
-    onExport: () -> Unit = {}
+    onExport: () -> Unit = {},
+    isPremium: Boolean = false
 ) {
     var selectedIndex by remember { mutableStateOf(-1) }
     var showBarChart by remember { mutableStateOf(false) }
@@ -74,8 +75,7 @@ fun ReportsScreen(
     val netAmount = totalIncome - totalExpense
     val context = LocalContext.current
     
-    // Premium state - Get from parameter
-    val isPremium = false // TODO: Pass from parent
+    // Premium state artık parametreden geliyor
 
     // Kategori bazında harcama analizi - kategori isimleri ile
     val filteredItems = remember(items, range) {
