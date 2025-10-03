@@ -58,6 +58,10 @@ class PaywallViewModel @Inject constructor(
             }
         }
     }
+
+    suspend fun hasAIWeeklyEntitlement(): Boolean {
+        return billingRepository.hasAIWeeklyEntitlement()
+    }
     
     fun buyMonthly(activity: Activity) {
         _isLoading.value = true

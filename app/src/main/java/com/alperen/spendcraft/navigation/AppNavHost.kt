@@ -32,6 +32,7 @@ import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
 import com.alperen.spendcraft.feature.achievements.AchievementsScreen
 import com.alperen.spendcraft.navigation.DeepLinkHandler
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.delay
 
 object Routes {
     const val LIST = "list"
@@ -91,6 +92,18 @@ fun AppNavHost(
         composable(Routes.LIST) {
             val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
             val isPremium by paywallVm.isPremium.collectAsState()
+            val hasAIWeeklyState = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+            androidx.compose.runtime.LaunchedEffect(isPremium) {
+                // Başlangıçta ve premium durumu değiştiğinde kontrol et
+                hasAIWeeklyState.value = paywallVm.hasAIWeeklyEntitlement()
+            }
+            // Periyodik yenileme (3 dakikada bir)
+            androidx.compose.runtime.LaunchedEffect(true) {
+                while (true) {
+                    hasAIWeeklyState.value = paywallVm.hasAIWeeklyEntitlement()
+                    delay(180_000)
+                }
+            }
             TransactionsScreen(
                 viewModel = vm,
                 onAdd = { /* Bottom sheet will handle this */ },
@@ -101,7 +114,8 @@ fun AppNavHost(
                 onAllTransactions = { navController.navigate(Routes.ALL_TRANSACTIONS) },
                 onNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
                 onAchievements = { navController.navigate(Routes.ACHIEVEMENTS) },
-                isPremium = isPremium
+                isPremium = isPremium,
+                hasAIWeekly = hasAIWeeklyState.value
             )
         }
         composable(Routes.ADD) {

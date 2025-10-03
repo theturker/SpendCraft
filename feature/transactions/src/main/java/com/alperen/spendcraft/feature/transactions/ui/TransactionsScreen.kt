@@ -49,7 +49,8 @@ fun TransactionsScreen(
     onNotifications: () -> Unit = {},
     onAchievements: () -> Unit = {},
     currentUserName: String? = null,
-    isPremium: Boolean = false
+    isPremium: Boolean = false,
+    hasAIWeekly: Boolean = false
 ) {
     val context = LocalContext.current
     val items by viewModel.items.collectAsState()
@@ -136,7 +137,7 @@ fun TransactionsScreen(
             onAdFailedToLoad = { isAdLoaded = false }
         )
 
-        // Sağ-üst ayarlar
+        // Sağ-üst ayarlar + üyelik rozeti
         IconButton(
             onClick = onSettings,
             modifier = Modifier
@@ -148,6 +149,47 @@ fun TransactionsScreen(
                 contentDescription = stringResource(CoreR.string.settings),
                 tint = Color.Unspecified
             )
+        }
+
+        // Üyelik durumu rozeti
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(12.dp)
+        ) {
+            val label = when {
+                isPremium -> "Premium"
+                hasAIWeekly -> "Rapor Üyeliği"
+                else -> "Standart"
+            }
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(999.dp))
+                    .background(
+                        if (isPremium) Color(0xFF10B981).copy(alpha = 0.2f)
+                        else if (hasAIWeekly) Color(0xFF6366F1).copy(alpha = 0.2f)
+                        else Color(0xFFF59E0B).copy(alpha = 0.2f)
+                    )
+                    .border(
+                        1.dp,
+                        if (isPremium) Brush.linearGradient(listOf(Color(0xFF34D399), Color(0xFF10B981)))
+                        else if (hasAIWeekly) Brush.linearGradient(listOf(Color(0xFF818CF8), Color(0xFF6366F1)))
+                        else Brush.linearGradient(listOf(Color(0xFFFBBF24), Color(0xFFF59E0B))),
+                        RoundedCornerShape(999.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = when {
+                        isPremium -> Color(0xFF065F46)
+                        hasAIWeekly -> Color(0xFF312E81)
+                        else -> Color(0xFF7C2D12)
+                    }
+                )
+            }
         }
 
         // İçerik listesi — üstte reklam + altta FAB için padding

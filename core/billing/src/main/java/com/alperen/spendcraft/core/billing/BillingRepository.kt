@@ -176,6 +176,18 @@ class BillingRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun hasAIWeeklyEntitlement(): Boolean {
+        return try {
+            val purchases = billingManager.refreshPurchases().getOrThrow()
+            purchases.any { purchase ->
+                purchase.products.contains("ai_weekly") &&
+                purchase.purchaseState == Purchase.PurchaseState.PURCHASED
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
     
     suspend fun getProductDetails(productId: String): ProductDetails? {
         return billingManager.productDetailsFlow.first().find { it.productId == productId }
