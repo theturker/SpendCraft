@@ -31,6 +31,7 @@ import com.alperen.spendcraft.feature.notifications.NotificationsScreen
 import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
 import com.alperen.spendcraft.feature.achievements.AchievementsScreen
 import com.alperen.spendcraft.navigation.DeepLinkHandler
+import kotlinx.coroutines.flow.map
 
 object Routes {
     const val LIST = "list"
@@ -298,13 +299,26 @@ fun AppNavHost(
         }
         // AI Settings removed - API key is hardcoded
         composable(Routes.ACCOUNTS) {
-            // Mock implementation - gerçek uygulamada repository'den veri gelecek
+            val context = androidx.compose.ui.platform.LocalContext.current
+            val accountsFlow = vm.accounts
+                .map { list ->
+                    list.map { acc ->
+                        com.alperen.spendcraft.data.db.entities.AccountEntity(
+                            id = acc.id ?: 0,
+                            name = acc.name,
+                            type = "CASH",
+                            currency = com.alperen.spendcraft.core.ui.CurrencyFormatter.getCurrencySymbol(context),
+                            isDefault = false,
+                            archived = false
+                        )
+                    }
+                }
             AccountsScreen(
-                accountsFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
-                onAddAccount = { /* TODO: Implement */ },
-                onEditAccount = { /* TODO: Implement */ },
-                onArchiveAccount = { /* TODO: Implement */ },
-                onSetDefaultAccount = { /* TODO: Implement */ },
+                accountsFlow = accountsFlow,
+                onAddAccount = { vm.addAccount("Yeni Hesap") },
+                onEditAccount = { account -> vm.updateAccountName(account.id, account.name) },
+                onArchiveAccount = { account -> vm.removeAccount(account.id) },
+                onSetDefaultAccount = { _ -> /* TODO: implement set default when repo supports */ },
                 onBack = { navController.popBackStack() }
             )
         }

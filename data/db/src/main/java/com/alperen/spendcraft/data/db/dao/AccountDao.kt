@@ -27,4 +27,13 @@ interface AccountDao {
     
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(accounts: List<AccountEntity>)
+
+    @Query("UPDATE accounts SET isDefault = 0")
+    suspend fun clearDefault()
+
+    @Query("UPDATE accounts SET isDefault = 1 WHERE id = :id")
+    suspend fun setDefault(id: Long)
+
+    @Query("UPDATE accounts SET archived = 1 WHERE id = :id")
+    suspend fun archive(id: Long)
 }

@@ -19,6 +19,8 @@ import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.ActionButton
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.StatCard
+import androidx.compose.ui.platform.LocalContext
+import com.alperen.spendcraft.core.ui.CurrencyFormatter
 import com.alperen.spendcraft.core.premium.PremiumGate
 import com.alperen.spendcraft.core.premium.PremiumLockScreen
 
@@ -176,6 +178,7 @@ fun BudgetManagementScreen(
 
 @Composable
 private fun BudgetSummaryCard(budgets: List<Budget>) {
+    val context = LocalContext.current
     ModernCard(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -206,7 +209,7 @@ private fun BudgetSummaryCard(budgets: List<Budget>) {
                 
                 StatCard(
                     title = stringResource(R.string.monthly_limit),
-                    value = formatCurrency(budgets.sumOf { it.monthlyLimitMinor }),
+                    value = CurrencyFormatter.format(context, budgets.sumOf { it.monthlyLimitMinor }),
                     icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_calendar_month_vector),
                     modifier = Modifier.weight(1f)
                 )
@@ -309,13 +312,13 @@ private fun BudgetItemCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = formatCurrency(spentAmount),
+                        text = CurrencyFormatter.format(LocalContext.current, spentAmount),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = formatCurrency(budget.monthlyLimitMinor),
+                        text = CurrencyFormatter.format(LocalContext.current, budget.monthlyLimitMinor),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -475,6 +478,4 @@ private fun BudgetDialog(
     )
 }
 
-private fun formatCurrency(amountMinor: Long): String {
-    return "₺${amountMinor / 100}.${(amountMinor % 100).toString().padStart(2, '0')}"
-}
+// removed: using CurrencyFormatter

@@ -13,6 +13,8 @@ import com.alperen.spendcraft.domain.usecase.InsertCategoryUseCase
 import com.alperen.spendcraft.domain.usecase.DeleteCategoryUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveAccountsUseCase
 import com.alperen.spendcraft.domain.usecase.UpdateAccountUseCase
+import com.alperen.spendcraft.domain.usecase.InsertAccountUseCase
+import com.alperen.spendcraft.domain.usecase.DeleteAccountUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveTransactionsByAccountUseCase
 import com.alperen.spendcraft.domain.usecase.MarkTodayLoggedUseCase
 import com.alperen.spendcraft.domain.usecase.ObserveStreakUseCase
@@ -43,6 +45,8 @@ class TransactionsViewModel @Inject constructor(
     private val insertCategory: InsertCategoryUseCase,
     private val deleteCategory: DeleteCategoryUseCase,
     private val updateAccount: UpdateAccountUseCase,
+    private val insertAccount: InsertAccountUseCase,
+    private val deleteAccount: DeleteAccountUseCase,
     private val markTodayLogged: MarkTodayLoggedUseCase,
     observeStreak: ObserveStreakUseCase,
     private val notificationTester: NotificationTester,
@@ -121,6 +125,16 @@ class TransactionsViewModel @Inject constructor(
             )
             updateAccount(account)
         }
+    }
+
+    fun addAccount(name: String) {
+        viewModelScope.launch {
+            insertAccount(com.alperen.spendcraft.core.model.Account(id = null, name = name))
+        }
+    }
+
+    fun removeAccount(accountId: Long) {
+        viewModelScope.launch { deleteAccount(accountId) }
     }
     
     fun getTransactionsByAccount(accountId: Long): StateFlow<List<Transaction>> {

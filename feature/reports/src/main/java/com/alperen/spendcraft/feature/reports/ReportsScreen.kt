@@ -458,7 +458,7 @@ private fun ExpenseCategoryItem(
 
             // Fiyat tek satırda
             Text(
-                text = formatCurrency(amount),
+                text = com.alperen.spendcraft.core.ui.CurrencyFormatter.format(androidx.compose.ui.platform.LocalContext.current, amount),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.error
@@ -807,7 +807,7 @@ private fun ExpenseLegend(
 
                     Column(horizontalAlignment = Alignment.End) {
                         Text(
-                            text = formatCurrency(amount),
+                            text = CurrencyFormatter.format(LocalContext.current, amount),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -819,17 +819,4 @@ private fun ExpenseLegend(
     }
 }
 
-private fun formatCurrency(amount: Long): String {
-    val sign = if (amount < 0) "-" else ""
-    val abs = kotlin.math.abs(amount)
-    val major = abs / 100
-    val cents = abs % 100
-
-    val majorFormatted = major.toString().reversed().chunked(3).joinToString(".").reversed()
-
-    return if (cents > 0) {
-        "$sign₺$majorFormatted,${cents.toString().padStart(2, '0')}"
-    } else {
-        "$sign₺$majorFormatted"
-    }
-}
+// removed: use CurrencyFormatter in UI where needed

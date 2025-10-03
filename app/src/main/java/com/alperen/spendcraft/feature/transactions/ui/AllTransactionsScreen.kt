@@ -18,6 +18,8 @@ import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.R
 import java.text.SimpleDateFormat
+import androidx.compose.ui.platform.LocalContext
+import com.alperen.spendcraft.core.ui.CurrencyFormatter
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,6 +109,7 @@ private fun TransactionItemCard(
     categories: List<com.alperen.spendcraft.core.model.Category>,
     onAddCategory: (Long) -> Unit
 ) {
+    val context = LocalContext.current
     var showCategoryDialog by remember { mutableStateOf(false) }
     ModernCard(
         modifier = Modifier.fillMaxWidth()
@@ -180,7 +183,7 @@ private fun TransactionItemCard(
             }
             
             Text(
-                text = formatAmount(transaction.amount.minorUnits, transaction.type),
+                text = CurrencyFormatter.format(context, if (transaction.type == TransactionType.INCOME) transaction.amount.minorUnits else -transaction.amount.minorUnits),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = if (transaction.type == TransactionType.INCOME) {
@@ -231,10 +234,7 @@ private fun TransactionItemCard(
     }
 }
 
-private fun formatAmount(amountMinor: Long, type: TransactionType): String {
-    val sign = if (type == TransactionType.INCOME) "+" else "-"
-    return "$sign₺${amountMinor / 100}.${(amountMinor % 100).toString().padStart(2, '0')}"
-}
+// removed: now using CurrencyFormatter in UI
 
 private fun formatDate(timestampUtcMillis: Long): String {
     val date = Date(timestampUtcMillis)

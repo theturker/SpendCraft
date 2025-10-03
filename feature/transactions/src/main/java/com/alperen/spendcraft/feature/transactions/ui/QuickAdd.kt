@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.ModernCard
 import androidx.compose.ui.res.stringResource
 import com.alperen.spendcraft.core.ui.R
+import androidx.compose.ui.platform.LocalContext
+import com.alperen.spendcraft.core.ui.CurrencyFormatter
 
 @Composable
 fun QuickAddCard(
@@ -26,6 +28,7 @@ fun QuickAddCard(
     modifier: Modifier = Modifier
 ) {
     var amount by remember { mutableStateOf("") }
+    val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -109,7 +112,7 @@ fun QuickAddCard(
             if (amount.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "₺${amount}",
+                    text = CurrencyFormatter.format(context, (amount.toLongOrNull() ?: 0L) * 100),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

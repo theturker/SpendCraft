@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import com.alperen.spendcraft.core.ui.CurrencyFormatter
 import com.alperen.spendcraft.core.ui.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,6 +31,7 @@ fun AddTransactionScreen(
     onBack: () -> Unit
 ) {
     val cats by categories.collectAsState()
+    val context = LocalContext.current
     var amount by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     var selectedCategoryId by remember { mutableStateOf<Long?>(cats.firstOrNull()?.id) }
@@ -189,9 +192,9 @@ fun AddTransactionScreen(
                                 },
                                 supportingText = {
                                     if (amount.isNotEmpty()) {
-                                        val formattedAmount = formatCurrencyDisplay(amount.toLongOrNull() ?: 0)
+                                        val minor = amount.toLongOrNull()?.times(100) ?: 0
                                         Text(
-                                            "₺$formattedAmount",
+                                            CurrencyFormatter.format(context, minor),
                                             style = MaterialTheme.typography.bodyMedium
                                         )
                                     }

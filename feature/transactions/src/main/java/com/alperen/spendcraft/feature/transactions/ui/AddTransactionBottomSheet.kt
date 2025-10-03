@@ -40,6 +40,7 @@ fun AddTransactionBottomSheet(
     onSave: (amountMinor: Long, note: String?, categoryId: Long?, isIncome: Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val cats by categories.collectAsState()
     var amount by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
@@ -47,6 +48,7 @@ fun AddTransactionBottomSheet(
     var isIncome by remember { mutableStateOf(initialTransactionType ?: false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
+    var paymentMethod by remember { mutableStateOf<PaymentMethod?>(null) }
     
     // Date ve time için state'ler
     var selectedDate by remember { mutableStateOf(Date()) }
@@ -54,6 +56,7 @@ fun AddTransactionBottomSheet(
     
     val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+    val currencySymbol = com.alperen.spendcraft.core.ui.CurrencyFormatter.getCurrencySymbol(context)
 
     val fieldShape = RoundedCornerShape(12.dp)
     val fieldBg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
@@ -163,14 +166,14 @@ fun AddTransactionBottomSheet(
                             )
                         }
                         
-                        // Büyük, merkezli tutar alanı
+                        // Büyük, merkezli tutar alanı (normal yükseklik)
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(20.dp))
                                 .background(fieldBg)
                                 .border(1.dp, fieldBorderColor, RoundedCornerShape(20.dp))
-                                .padding(vertical = 6.dp, horizontal = 12.dp)
+                                .padding(vertical = 4.dp, horizontal = 12.dp)
                         ) {
                             OutlinedTextField(
                                 value = amount,
@@ -181,7 +184,7 @@ fun AddTransactionBottomSheet(
                                 placeholder = {
                                     Text(
                                         "0,00",
-                                        style = MaterialTheme.typography.titleLarge,
+                                        style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 },
@@ -189,11 +192,11 @@ fun AddTransactionBottomSheet(
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                textStyle = MaterialTheme.typography.titleLarge.copy(textAlign = TextAlign.Center),
+                                textStyle = MaterialTheme.typography.titleMedium.copy(textAlign = TextAlign.Center),
                                 trailingIcon = {
                                     Text(
-                                        text = "₺",
-                                        style = MaterialTheme.typography.titleLarge,
+                                        text = currencySymbol,
+                                        style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.primary
                                     )
                                 },
@@ -309,6 +312,36 @@ fun AddTransactionBottomSheet(
                         }
                     }
                 }
+
+                // Ödeme Yöntemi
+                item {
+                    Column {
+                        Text(
+                            text = "Ödeme Yöntemi",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        androidx.compose.foundation.lazy.LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(horizontal = 2.dp)
+                        ) {
+                            items(PaymentMethod.values().size) { idx ->
+                                val method = PaymentMethod.values()[idx]
+                                FilterChip(
+                                    selected = paymentMethod == method,
+                                    onClick = { paymentMethod = if (paymentMethod == method) null else method },
+                                    label = { Text(method.label, maxLines = 1) },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
             }
             
             // Kaydet Butonu
@@ -316,7 +349,14 @@ fun AddTransactionBottomSheet(
                 onClick = {
                     val amountValue = amount.replace(",", ".").toDoubleOrNull() ?: 0.0
                     val amountMinor = (amountValue * 100).toLong()
-                    onSave(amountMinor, note.ifBlank { null }, selectedCategoryId, isIncome)
+                    val mergedNote = buildString {
+                        if (!note.isNullOrBlank()) append(note.trim())
+                        paymentMethod?.let {
+                            if (this.isNotEmpty()) append(" • ")
+                            append(it.label)
+                        }
+                    }.ifBlank { null }
+                    onSave(amountMinor, mergedNote, selectedCategoryId, isIncome)
                     onDismiss()
                 },
                 enabled = amount.isNotEmpty() && selectedCategoryId != null,
@@ -367,6 +407,10 @@ fun AddTransactionBottomSheet(
             onDismiss = { showTimePicker = false }
         )
     }
+}
+
+private enum class PaymentMethod(val label: String) {
+    CASH("Nakit"), CARD("Kredi Kartı"), DEBIT_CARD("Banka Kartı"), TRANSFER("Havale/EFT")
 }
 
 @Composable

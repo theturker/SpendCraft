@@ -183,12 +183,11 @@ fun ModernCard(
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null
+                indication = null,
+                enabled = onClick != null
             ) {
-                if (onClick != null) {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onClick()
-                }
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                onClick?.invoke()
             },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
