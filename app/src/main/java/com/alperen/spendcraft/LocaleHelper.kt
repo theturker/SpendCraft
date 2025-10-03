@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
-import java.util.*
+import java.util.Locale
 
 object LocaleHelper {
     
@@ -21,7 +21,7 @@ object LocaleHelper {
     }
     
     private fun updateResources(context: Context, language: String): Context {
-        val locale = Locale(language)
+        val locale = Locale.forLanguageTag(language)
         Locale.setDefault(locale)
         
         val config = Configuration(context.resources.configuration)
@@ -31,6 +31,7 @@ object LocaleHelper {
         } else {
             @Suppress("DEPRECATION")
             config.locale = locale
+            @Suppress("DEPRECATION")
             context.resources.updateConfiguration(config, context.resources.displayMetrics)
             return context
         }

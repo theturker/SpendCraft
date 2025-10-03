@@ -39,6 +39,9 @@ import com.alperen.spendcraft.ThemeHelper
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun WelcomeScreen(
@@ -46,6 +49,7 @@ fun WelcomeScreen(
 ) {
     val context = LocalContext.current
     var animationTriggered by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     
     LaunchedEffect(Unit) {
         animationTriggered = true
@@ -279,7 +283,7 @@ fun WelcomeScreen(
         // Elegant button with glass morphism
         Card(
             onClick = {
-                kotlinx.coroutines.GlobalScope.launch {
+                scope.launch(Dispatchers.IO) {
                     firstLaunchHelper.setFirstLaunchCompleted()
                 }
                 onStart()

@@ -515,7 +515,7 @@ private fun AchievementCard(
                         Spacer(modifier = Modifier.height(4.dp))
                         
                         LinearProgressIndicator(
-                            progress = achievement.progress,
+                            progress = { achievement.progress.coerceIn(0f, 1f) },
                             modifier = Modifier.fillMaxWidth(),
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)

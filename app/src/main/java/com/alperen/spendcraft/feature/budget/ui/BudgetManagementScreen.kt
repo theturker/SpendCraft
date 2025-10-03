@@ -296,7 +296,7 @@ private fun BudgetItemCard(
                 Spacer(modifier = Modifier.height(4.dp))
                 
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress.coerceIn(0f, 1f) },
                     modifier = Modifier.fillMaxWidth(),
                     color = when {
                         progress >= 1f -> MaterialTheme.colorScheme.error

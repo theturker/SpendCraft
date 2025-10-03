@@ -3,7 +3,7 @@ package com.alperen.spendcraft.analytics
 import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.analytics.ktx.logEvent
+import android.os.Bundle
 import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,11 +15,11 @@ class FirebaseAnalyticsService @Inject constructor(
     private val analytics: FirebaseAnalytics = Firebase.analytics
     
     fun logEvent(eventName: String, parameters: Map<String, Any> = emptyMap()) {
-        analytics.logEvent(eventName) {
-            parameters.forEach { (key, value) ->
-                param(key, value.toString())
-            }
+        val bundle = Bundle()
+        parameters.forEach { (key, value) ->
+            bundle.putString(key, value.toString())
         }
+        analytics.logEvent(eventName, bundle)
     }
     
     fun logTransactionAdded(amount: Long, category: String, isIncome: Boolean) {

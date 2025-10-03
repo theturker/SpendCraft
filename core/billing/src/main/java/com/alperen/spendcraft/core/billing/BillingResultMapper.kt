@@ -7,6 +7,7 @@ import com.android.billingclient.api.BillingClient
  */
 object BillingResultMapper {
     
+    @Suppress("DEPRECATION")
     fun mapErrorCode(responseCode: Int): String {
         return when (responseCode) {
             BillingClient.BillingResponseCode.OK -> "İşlem başarılı"
@@ -26,6 +27,7 @@ object BillingResultMapper {
         }
     }
     
+    @Suppress("DEPRECATION")
     fun isRetryableError(responseCode: Int): Boolean {
         return when (responseCode) {
             BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,

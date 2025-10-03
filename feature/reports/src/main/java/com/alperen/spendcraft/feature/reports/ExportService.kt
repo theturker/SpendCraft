@@ -77,7 +77,8 @@ class ExportService(private val context: Context) {
                 val outputStream: OutputStream? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     context.contentResolver.openOutputStream(uri)
                 } else {
-                    FileOutputStream(File(uri.path))
+                    val path = uri.path ?: return null
+                    FileOutputStream(File(path))
                 }
                 
                 outputStream?.use { stream ->
@@ -146,7 +147,8 @@ class ExportService(private val context: Context) {
                 val outputStream: OutputStream? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     resolver.openOutputStream(uri)
                 } else {
-                    FileOutputStream(File(uri.path))
+                    val path = uri.path ?: return null
+                    FileOutputStream(File(path))
                 }
 
                 outputStream?.use { stream ->

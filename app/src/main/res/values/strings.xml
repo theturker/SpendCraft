@@ -112,6 +112,7 @@
     <string name="quick_add_title">Hızlı Ekle</string>
     
     <!-- Onboarding -->
+    <string name="welcome_subtitle_splash">Akıllı harcama takibi ile finanslarınızı kontrol altına alın</string>
     <string name="welcome_subtitle">Akıllı harcama takibi ile finanslarınızı kontrol altına alın</string>
     <string name="feature_tracking">Akıllı Takip</string>
     <string name="feature_tracking_desc">Harcamalarınızı kategoriler ve notlarla takip edin</string>
