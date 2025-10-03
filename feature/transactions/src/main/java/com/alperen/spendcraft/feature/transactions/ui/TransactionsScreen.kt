@@ -34,6 +34,7 @@ import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
+import com.alperen.spendcraft.core.ui.CurrencyFormatter
 import com.alperen.spendcraft.core.ui.R as CoreR
 
 @Composable
@@ -77,9 +78,9 @@ fun TransactionsScreen(
                 AccountData(
                     null,
                     "💰 ${context.getString(CoreR.string.total_balance)}",
-                    formatMinor(totalAmount),
-                    formatMinor(incomeAmount),
-                    formatMinor(expenseAmount)
+                    CurrencyFormatter.format(context, totalAmount),
+                    CurrencyFormatter.format(context, incomeAmount),
+                    CurrencyFormatter.format(context, expenseAmount)
                 )
             )
         } else {
@@ -91,9 +92,9 @@ fun TransactionsScreen(
                 AccountData(
                     id = account.id,
                     name = if (index == 0) "💰 ${account.name}" else "🏠 ${account.name}",
-                    balance = formatMinor(accountBalance),
-                    income = formatMinor(accountIncome),
-                    expenses = formatMinor(accountExpense)
+                    balance = CurrencyFormatter.format(context, accountBalance),
+                    income = CurrencyFormatter.format(context, accountIncome),
+                    expenses = CurrencyFormatter.format(context, accountExpense)
                 )
             }
         }
@@ -778,7 +779,7 @@ private fun ModernTransactionRow(tx: Transaction, onDelete: () -> Unit) {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = formatMinor(amount),
+                    text = CurrencyFormatter.format(LocalContext.current, amount),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = if (isIncome) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error

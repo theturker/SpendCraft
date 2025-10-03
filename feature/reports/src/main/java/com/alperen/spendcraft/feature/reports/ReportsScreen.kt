@@ -49,6 +49,13 @@ import kotlin.math.PI
 import kotlin.math.sqrt
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalContext
+import com.alperen.spendcraft.core.ui.CurrencyFormatter
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
+// Move enum to top-level to avoid compiler issues with local enums
+enum class TimeRange(val label: String) { DAILY("Günlük"), WEEKLY("Haftalık"), MONTHLY("Aylık") }
 
 @Composable
 fun ReportsScreen(
@@ -60,16 +67,28 @@ fun ReportsScreen(
     var selectedIndex by remember { mutableStateOf(-1) }
     var showBarChart by remember { mutableStateOf(false) }
     val items by transactionsFlow.collectAsState()
+    var range by remember { mutableStateOf(TimeRange.MONTHLY) }
     val categories by categoriesFlow.collectAsState()
     val totalExpense = items.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
     val totalIncome = items.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
     val netAmount = totalIncome - totalExpense
+    val context = LocalContext.current
     
     // Premium state - Get from parameter
     val isPremium = false // TODO: Pass from parent
 
     // Kategori bazında harcama analizi - kategori isimleri ile
-    val expenseByCategory = items
+    val filteredItems = remember(items, range) {
+        val now = System.currentTimeMillis()
+        val start = when (range) {
+            TimeRange.DAILY -> now - 24L * 60L * 60L * 1000L
+            TimeRange.WEEKLY -> now - 7L * 24L * 60L * 60L * 1000L
+            TimeRange.MONTHLY -> now - 30L * 24L * 60L * 60L * 1000L
+        }
+        items.filter { it.timestampUtcMillis in start..now }
+    }
+
+    val expenseByCategory = filteredItems
         .filter { it.type == TransactionType.EXPENSE }
         .groupBy { it.categoryId }
         .mapValues { (_, transactions) -> transactions.sumOf { it.amount.minorUnits } }
@@ -107,6 +126,18 @@ fun ReportsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            // Zaman Araligi Chipleri
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TimeRange.values().forEach { r ->
+                        FilterChip(
+                            selected = range == r,
+                            onClick = { range = r },
+                            label = { Text(r.label) }
+                        )
+                    }
+                }
+            }
             // Özet Kartları
             item {
                 Row(
@@ -115,14 +146,14 @@ fun ReportsScreen(
                 ) {
                     StatCard(
                         title = stringResource(R.string.total_income),
-                        value = formatCurrency(totalIncome),
+                        value = CurrencyFormatter.format(context, totalIncome),
                         icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_income_vector),
                         color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
                         title = stringResource(R.string.total_expense),
-                        value = formatCurrency(totalExpense),
+                        value = CurrencyFormatter.format(context, totalExpense),
                         icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_expense_vector),
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.weight(1f)
@@ -162,7 +193,7 @@ fun ReportsScreen(
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = formatCurrency(netAmount),
+                            text = CurrencyFormatter.format(context, netAmount),
                             style = MaterialTheme.typography.displaySmall,
                             fontWeight = FontWeight.Bold,
                             color = if (netAmount >= 0)
