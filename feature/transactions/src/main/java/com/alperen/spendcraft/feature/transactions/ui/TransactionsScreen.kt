@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
@@ -126,6 +129,7 @@ fun TransactionsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(bgGradient)
+            .consumeWindowInsets(WindowInsets.systemBars)
     ) {
         // Reklam: EN ÜSTTE SABİT - ayarlar butonu altında
         AdMobBanner(
@@ -198,7 +202,7 @@ fun TransactionsScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
                 .padding(top = adHeight + 60.dp), // reklam üstte + FAB altta
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
             // Hesap kartı (gradient + kapsüller)
@@ -242,10 +246,7 @@ fun TransactionsScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        Spacer(Modifier.height(8.dp))
                     }
-                    // Başlık ile kartlar arasında ekstra boşluk
-                    Spacer(Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -271,7 +272,7 @@ fun TransactionsScreen(
                             }
                         )
                     }
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(4.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -453,7 +454,7 @@ fun TransactionsScreen(
                 }
             }
 
-            item { Spacer(Modifier.height(8.dp)) }
+            item { Spacer(Modifier.height(4.dp)) }
         }
 
     }

@@ -1,0 +1,28 @@
+CREATE TABLE CategoryEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    color TEXT NOT NULL,
+    icon TEXT
+);
+
+selectAll:
+SELECT * FROM CategoryEntity;
+
+selectById:
+SELECT * FROM CategoryEntity WHERE id = ?;
+
+insert:
+INSERT INTO CategoryEntity(name, color, icon)
+VALUES (?, ?, ?);
+
+update:
+UPDATE CategoryEntity
+SET name = ?, color = ?, icon = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM CategoryEntity WHERE id = ?;
+
+getLastInsertRowId:
+SELECT last_insert_rowid();
+

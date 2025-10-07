@@ -6,6 +6,18 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         
+        <!-- Edge-to-edge display için ayarlar -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        
+        <!-- Screen size ve density ayarları -->
+        <item name="android:windowMinWidthMajor">320dp</item>
+        <item name="android:windowMinWidthMinor">320dp</item>
+        
         <!-- Android 12+ native splash: sade beyaz arka plan, ikon yok; Compose Splash tam ekran gösterir -->
         <item name="android:windowSplashScreenBackground">@android:color/white</item>
         <item name="android:windowSplashScreenAnimatedIcon">@null</item>

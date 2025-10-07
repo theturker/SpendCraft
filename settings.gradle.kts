@@ -16,6 +16,7 @@ dependencyResolutionManagement {
 rootProject.name = "SpendCraft"
 
 include(":app")
+include(":shared")
 
 include(":core:common")
 include(":core:model")

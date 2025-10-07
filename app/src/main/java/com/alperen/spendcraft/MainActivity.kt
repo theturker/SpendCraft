@@ -21,6 +21,22 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowInsetsCompat
+import androidx.activity.enableEdgeToEdge
+import android.content.res.Configuration
 import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
 import com.alperen.spendcraft.core.ui.SplashScreen
@@ -78,6 +94,26 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // Modern edge-to-edge display için enableEdgeToEdge kullan
+        enableEdgeToEdge()
+        
+        // Window ayarları
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        // Status bar ve navigation bar'ı şeffaf yap
+        window.statusBarColor = Color.Transparent.toArgb()
+        window.navigationBarColor = Color.Transparent.toArgb()
+        
+        // System UI controller'ı ayarla
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        
+        // Screen size ve density ayarları
+        window.setFlags(
+            android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+        
         // Splash screen'i hemen başlat - Android native splash'i bypass et
         setContent {
             val context = LocalContext.current
@@ -115,7 +151,12 @@ class MainActivity : ComponentActivity() {
             }
 
             SpendCraftTheme(darkTheme = isDarkMode) {
-                Surface(color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .consumeWindowInsets(WindowInsets.systemBars),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     when {
                         isFirstLaunch -> {
                             WelcomeScreen(
@@ -188,6 +229,26 @@ class MainActivity : ComponentActivity() {
                 } else {
                     ReminderScheduler.scheduleDaily(context as MainActivity)
                 }
+            }
+        }
+    }
+    
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        
+        // Screen size değişikliklerini handle et
+        when (newConfig.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) {
+            Configuration.SCREENLAYOUT_SIZE_SMALL -> {
+                // Küçük ekran
+            }
+            Configuration.SCREENLAYOUT_SIZE_NORMAL -> {
+                // Normal ekran
+            }
+            Configuration.SCREENLAYOUT_SIZE_LARGE -> {
+                // Büyük ekran
+            }
+            Configuration.SCREENLAYOUT_SIZE_XLARGE -> {
+                // Çok büyük ekran
             }
         }
     }

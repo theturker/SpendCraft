@@ -49,7 +49,7 @@ fun AddTransactionScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
             // Transaction Type Selection
             item {

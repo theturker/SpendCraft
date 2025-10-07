@@ -1,0 +1,18 @@
+CREATE TABLE StreakEntity (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    current INTEGER NOT NULL DEFAULT 0,
+    best INTEGER NOT NULL DEFAULT 0,
+    lastLoggedDate TEXT
+);
+
+-- Initialize with a single row
+INSERT OR IGNORE INTO StreakEntity(id, current, best) VALUES (1, 0, 0);
+
+select:
+SELECT * FROM StreakEntity WHERE id = 1;
+
+update:
+UPDATE StreakEntity
+SET current = ?, best = ?, lastLoggedDate = ?
+WHERE id = 1;
+

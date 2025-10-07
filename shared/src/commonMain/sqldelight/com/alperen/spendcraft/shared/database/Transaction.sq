@@ -1,0 +1,45 @@
+CREATE TABLE TransactionEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    amountMinorUnits INTEGER NOT NULL,
+    timestampUtcMillis INTEGER NOT NULL,
+    note TEXT,
+    categoryId INTEGER,
+    accountId INTEGER,
+    type TEXT NOT NULL,
+    FOREIGN KEY (categoryId) REFERENCES CategoryEntity(id) ON DELETE SET NULL,
+    FOREIGN KEY (accountId) REFERENCES AccountEntity(id) ON DELETE SET NULL
+);
+
+selectAll:
+SELECT * FROM TransactionEntity ORDER BY timestampUtcMillis DESC;
+
+selectAllAscending:
+SELECT * FROM TransactionEntity ORDER BY timestampUtcMillis ASC;
+
+selectById:
+SELECT * FROM TransactionEntity WHERE id = ?;
+
+selectByAccount:
+SELECT * FROM TransactionEntity WHERE accountId = ? ORDER BY timestampUtcMillis DESC;
+
+insert:
+INSERT INTO TransactionEntity(amountMinorUnits, timestampUtcMillis, note, categoryId, accountId, type)
+VALUES (?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE TransactionEntity
+SET amountMinorUnits = ?, timestampUtcMillis = ?, note = ?, categoryId = ?, accountId = ?, type = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM TransactionEntity WHERE id = ?;
+
+getSpentByCategory:
+SELECT categoryId, SUM(amountMinorUnits) AS totalAmount
+FROM TransactionEntity
+WHERE type = 'EXPENSE' AND categoryId IS NOT NULL
+GROUP BY categoryId;
+
+getLastInsertRowId:
+SELECT last_insert_rowid();
+

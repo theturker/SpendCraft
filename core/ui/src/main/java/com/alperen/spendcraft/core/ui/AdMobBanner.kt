@@ -92,15 +92,28 @@ fun AdMobBannerWithPadding(
     onAdLoaded: (() -> Unit)? = null,
     onAdFailedToLoad: ((String) -> Unit)? = null
 ) {
+    // Premium kullanıcılar için hiçbir boşluk bırakma
+    if (isPremium) return
+
+    var loaded by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
         AdMobBanner(
             adUnitId = adUnitId,
-            isPremium = isPremium,
-            onAdLoaded = onAdLoaded,
-            onAdFailedToLoad = onAdFailedToLoad
+            isPremium = false,
+            onAdLoaded = {
+                loaded = true
+                onAdLoaded?.invoke()
+            },
+            onAdFailedToLoad = { msg ->
+                loaded = false
+                onAdFailedToLoad?.invoke(msg)
+            }
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        if (loaded) {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
     }
 }

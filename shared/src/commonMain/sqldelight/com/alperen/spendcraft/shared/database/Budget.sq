@@ -1,0 +1,18 @@
+CREATE TABLE BudgetEntity (
+    categoryId TEXT PRIMARY KEY NOT NULL,
+    monthlyLimitMinor INTEGER NOT NULL
+);
+
+selectAll:
+SELECT * FROM BudgetEntity;
+
+selectById:
+SELECT * FROM BudgetEntity WHERE categoryId = ?;
+
+insert:
+INSERT OR REPLACE INTO BudgetEntity(categoryId, monthlyLimitMinor)
+VALUES (?, ?);
+
+delete:
+DELETE FROM BudgetEntity WHERE categoryId = ?;
+

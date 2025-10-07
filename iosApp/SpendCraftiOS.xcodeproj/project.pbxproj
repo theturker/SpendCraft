@@ -1,0 +1,399 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */; };
+		2152FB062600AC8F00CF470E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB052600AC8F00CF470E /* ContentView.swift */; };
+		908773C32E95857B00AB0783 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908773A62E95857B00AB0783 /* CoreDataStack.swift */; };
+		90AB66CF2E9599890063F8A7 /* AccountEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66CE2E9599880063F8A7 /* AccountEntity.swift */; };
+		90AB66D12E9599890063F8A7 /* CategoryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66D02E9599890063F8A7 /* CategoryEntity.swift */; };
+		90AB66D32E95998A0063F8A7 /* TransactionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66D22E95998A0063F8A7 /* TransactionEntity.swift */; };
+		90AB66D52E95998A0063F8A7 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66D42E95998A0063F8A7 /* DashboardView.swift */; };
+		90AB66D72E95998A0063F8A7 /* TransactionsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66D62E95998A0063F8A7 /* TransactionsTabView.swift */; };
+		90AB66D92E95998A0063F8A7 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66D82E95998A0063F8A7 /* ReportsView.swift */; };
+		90AB66DB2E95998B0063F8A7 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66DA2E95998B0063F8A7 /* CategoriesView.swift */; };
+		90AB66DD2E95998B0063F8A7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66DC2E95998B0063F8A7 /* SettingsView.swift */; };
+		90AB66DF2E95998B0063F8A7 /* TransactionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66DE2E95998B0063F8A7 /* TransactionsViewModel.swift */; };
+		90AB66E12E95998C0063F8A7 /* AchievementsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66E02E95998C0063F8A7 /* AchievementsViewModel.swift */; };
+		90AB66E32E95998C0063F8A7 /* BudgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66E22E95998C0063F8A7 /* BudgetViewModel.swift */; };
+		90AB66E52E95998C0063F8A7 /* RecurringViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66E42E95998C0063F8A7 /* RecurringViewModel.swift */; };
+		90AB66E72E9599920063F8A7 /* AccountsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66E62E9599920063F8A7 /* AccountsViewModel.swift */; };
+		90AB66E82E9599930063F8A7 /* DailyEntryEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66E92E9599930063F8A7 /* DailyEntryEntity+CoreDataClass.swift */; };
+		90AB66EA2E9599930063F8A7 /* DailyEntryEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66EB2E9599930063F8A7 /* DailyEntryEntity+CoreDataProperties.swift */; };
+		90AB66EC2E9599940063F8A7 /* BudgetEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66ED2E9599940063F8A7 /* BudgetEntity+CoreDataClass.swift */; };
+		90AB66EE2E9599940063F8A7 /* BudgetEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66EF2E9599940063F8A7 /* BudgetEntity+CoreDataProperties.swift */; };
+		90AB66F02E9599950063F8A7 /* RecurringTransactionEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F12E9599950063F8A7 /* RecurringTransactionEntity+CoreDataClass.swift */; };
+		90AB66F22E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F32E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift */; };
+		90AB66F42E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F52E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift */; };
+		90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */; };
+		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
+		90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendCraftiOSApp.swift; sourceTree = "<group>"; };
+		2152FB052600AC8F00CF470E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7555FF8C242A565900829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		908773A62E95857B00AB0783 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		90AB66CE2E9599880063F8A7 /* AccountEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountEntity.swift; sourceTree = "<group>"; };
+		90AB66D02E9599890063F8A7 /* CategoryEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntity.swift; sourceTree = "<group>"; };
+		90AB66D22E95998A0063F8A7 /* TransactionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEntity.swift; sourceTree = "<group>"; };
+		90AB66D42E95998A0063F8A7 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		90AB66D62E95998A0063F8A7 /* TransactionsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTabView.swift; sourceTree = "<group>"; };
+		90AB66D82E95998A0063F8A7 /* ReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsView.swift; sourceTree = "<group>"; };
+		90AB66DA2E95998B0063F8A7 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
+		90AB66DC2E95998B0063F8A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		90AB66DE2E95998B0063F8A7 /* TransactionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsViewModel.swift; sourceTree = "<group>"; };
+		90AB66E02E95998C0063F8A7 /* AchievementsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsViewModel.swift; sourceTree = "<group>"; };
+		90AB66E22E95998C0063F8A7 /* BudgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetViewModel.swift; sourceTree = "<group>"; };
+		90AB66E42E95998C0063F8A7 /* RecurringViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecurringViewModel.swift; sourceTree = "<group>"; };
+		90AB66E62E9599920063F8A7 /* AccountsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsViewModel.swift; sourceTree = "<group>"; };
+		90AB66E92E9599930063F8A7 /* DailyEntryEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DailyEntryEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		90AB66EB2E9599930063F8A7 /* DailyEntryEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DailyEntryEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		90AB66ED2E9599940063F8A7 /* BudgetEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		90AB66EF2E9599940063F8A7 /* BudgetEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		90AB66F12E9599950063F8A7 /* RecurringTransactionEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecurringTransactionEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		90AB66F32E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecurringTransactionEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		90AB66F52E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpendCraft.xcdatamodeld; sourceTree = "<group>"; };
+		90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
+			isa = PBXGroup;
+			children = (
+				908773A62E95857B00AB0783 /* CoreDataStack.swift */,
+				2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */,
+				2152FB052600AC8F00CF470E /* ContentView.swift */,
+				7555FF8C242A565900829871 /* Info.plist */,
+				90AB66CE2E9599880063F8A7 /* AccountEntity.swift */,
+				90AB66D02E9599890063F8A7 /* CategoryEntity.swift */,
+				90AB66D22E95998A0063F8A7 /* TransactionEntity.swift */,
+				90AB66D42E95998A0063F8A7 /* DashboardView.swift */,
+				90AB66D62E95998A0063F8A7 /* TransactionsTabView.swift */,
+				90AB66D82E95998A0063F8A7 /* ReportsView.swift */,
+				90AB66DA2E95998B0063F8A7 /* CategoriesView.swift */,
+				90AB66DC2E95998B0063F8A7 /* SettingsView.swift */,
+				90AB66DE2E95998B0063F8A7 /* TransactionsViewModel.swift */,
+				90AB66E02E95998C0063F8A7 /* AchievementsViewModel.swift */,
+				90AB66E22E95998C0063F8A7 /* BudgetViewModel.swift */,
+				90AB66E42E95998C0063F8A7 /* RecurringViewModel.swift */,
+				90AB66E62E9599920063F8A7 /* AccountsViewModel.swift */,
+				90AB66E92E9599930063F8A7 /* DailyEntryEntity+CoreDataClass.swift */,
+				90AB66EB2E9599930063F8A7 /* DailyEntryEntity+CoreDataProperties.swift */,
+				90AB66ED2E9599940063F8A7 /* BudgetEntity+CoreDataClass.swift */,
+				90AB66EF2E9599940063F8A7 /* BudgetEntity+CoreDataProperties.swift */,
+				90AB66F12E9599950063F8A7 /* RecurringTransactionEntity+CoreDataClass.swift */,
+				90AB66F32E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift */,
+				90AB66F52E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift */,
+				90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */,
+				908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */,
+				90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */,
+			);
+			path = SpendCraftiOS;
+			sourceTree = "<group>";
+		};
+		7555FF72242A565900829871 = {
+			isa = PBXGroup;
+			children = (
+				2152FB012600AC8F00CF470E /* SpendCraftiOS */,
+				908773A52E95787500AB0783 /* SpendCraftiOS.app */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7555FF7A242A565900829871 /* SpendCraftiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "SpendCraftiOS" */;
+			buildPhases = (
+				7555FF77242A565900829871 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpendCraftiOS;
+			productName = SpendCraftiOS;
+			productReference = 908773A52E95787500AB0783 /* SpendCraftiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7555FF73242A565900829871 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 7555FF76242A565900829871 /* Build configuration list for PBXProject "SpendCraftiOS" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7555FF72242A565900829871;
+			productRefGroup = 7555FF72242A565900829871;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7555FF7A242A565900829871 /* SpendCraftiOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7555FF77242A565900829871 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90AB66E52E95998C0063F8A7 /* RecurringViewModel.swift in Sources */,
+				90AB66E32E95998C0063F8A7 /* BudgetViewModel.swift in Sources */,
+				90AB66E72E9599920063F8A7 /* AccountsViewModel.swift in Sources */,
+				90AB66CF2E9599890063F8A7 /* AccountEntity.swift in Sources */,
+				90AB66D52E95998A0063F8A7 /* DashboardView.swift in Sources */,
+				2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */,
+				908773C32E95857B00AB0783 /* (null) in Sources */,
+				908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */,
+				90AB66D32E95998A0063F8A7 /* TransactionEntity.swift in Sources */,
+				90AB66E12E95998C0063F8A7 /* AchievementsViewModel.swift in Sources */,
+				90AB66D92E95998A0063F8A7 /* ReportsView.swift in Sources */,
+				90AB66D12E9599890063F8A7 /* CategoryEntity.swift in Sources */,
+				90AB66DF2E95998B0063F8A7 /* TransactionsViewModel.swift in Sources */,
+				90AB66DB2E95998B0063F8A7 /* CategoriesView.swift in Sources */,
+				90AB66DD2E95998B0063F8A7 /* SettingsView.swift in Sources */,
+				2152FB062600AC8F00CF470E /* ContentView.swift in Sources */,
+				90AB66D72E95998A0063F8A7 /* TransactionsTabView.swift in Sources */,
+				90AB66E82E9599930063F8A7 /* DailyEntryEntity+CoreDataClass.swift in Sources */,
+				90AB66EA2E9599930063F8A7 /* DailyEntryEntity+CoreDataProperties.swift in Sources */,
+				90AB66EC2E9599940063F8A7 /* BudgetEntity+CoreDataClass.swift in Sources */,
+				90AB66EE2E9599940063F8A7 /* BudgetEntity+CoreDataProperties.swift in Sources */,
+				90AB66F02E9599950063F8A7 /* RecurringTransactionEntity+CoreDataClass.swift in Sources */,
+				90AB66F22E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift in Sources */,
+				90AB66F42E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift in Sources */,
+				90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */,
+				908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */,
+				90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		7555FFA3242A565B00829871 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 2Q3L38SWD8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SpendCraftiOS/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alperen.spendcraft.SpendCraftiOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7555FFA4242A565B00829871 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 2Q3L38SWD8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SpendCraftiOS/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alperen.spendcraft.SpendCraftiOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7555FFA6242A565B00829871 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7555FFA7242A565B00829871 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7555FF76242A565900829871 /* Build configuration list for PBXProject "SpendCraftiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7555FFA6242A565B00829871 /* Debug */,
+				7555FFA7242A565B00829871 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "SpendCraftiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7555FFA3242A565B00829871 /* Debug */,
+				7555FFA4242A565B00829871 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7555FF73242A565900829871 /* Project object */;
+}

@@ -10,6 +10,19 @@
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
         android:maxSdkVersion="32" />
+    
+    <!-- Screen size support -->
+    <supports-screens 
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true"
+        android:anyDensity="true"
+        android:requiresSmallestWidthDp="320"
+        android:compatibleWidthLimitDp="480"
+        android:largestWidthLimitDp="840" />
+    
     <application
         android:name=".SpendCraftApplication"
         android:allowBackup="true"
@@ -17,7 +30,9 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/appicontwo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:resizeableActivity="true"
+        android:supportsPictureInPicture="false">
         
         <!-- AdMob App ID -->
         <meta-data
@@ -33,7 +48,10 @@
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
