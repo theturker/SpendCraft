@@ -23,10 +23,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "shared"
             isStatic = true
-            
-            // Export dependencies to iOS
-            export(libs.kotlinx.coroutines.core)
-            export(libs.kotlinx.datetime)
         }
     }
     
@@ -44,14 +40,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // Coroutines
-            implementation(libs.kotlinx.coroutines.core)
+            // Coroutines - API çünkü use case'lerde Flow dönüyoruz
+            api(libs.kotlinx.coroutines.core)
             
             // Serialization
             implementation(libs.kotlinx.serialization.json)
             
-            // DateTime
-            implementation(libs.kotlinx.datetime)
+            // DateTime - API çünkü domain model'lerde kullanılıyor
+            api(libs.kotlinx.datetime)
             
             // SQLDelight
             implementation(libs.sqldelight.runtime)

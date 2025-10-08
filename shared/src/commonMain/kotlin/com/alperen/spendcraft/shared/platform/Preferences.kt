@@ -21,5 +21,5 @@ interface Preferences {
     fun contains(key: String): Boolean
 }
 
-expect class PreferencesImpl() : Preferences
+// PreferencesImpl her platformda kendi module'ünde tanımlanacak
 

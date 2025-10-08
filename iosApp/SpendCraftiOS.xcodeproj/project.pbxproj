@@ -9,8 +9,18 @@
 /* Begin PBXBuildFile section */
 		2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */; };
 		2152FB062600AC8F00CF470E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB052600AC8F00CF470E /* ContentView.swift */; };
-		908773C32E95857B00AB0783 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
 		908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908773A62E95857B00AB0783 /* CoreDataStack.swift */; };
+		90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BBB2E9666EC005C595F /* OnboardingView.swift */; };
+		90A11BC02E966712005C595F /* AISettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BBE2E966712005C595F /* AISettingsView.swift */; };
+		90A11BC12E966712005C595F /* AISuggestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BBF2E966712005C595F /* AISuggestionsView.swift */; };
+		90A11BC22E966712005C595F /* AIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BBD2E966712005C595F /* AIManager.swift */; };
+		90A11BC42E966725005C595F /* ExportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BC32E966725005C595F /* ExportManager.swift */; };
+		90A11BC62E966743005C595F /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BC52E966743005C595F /* ExportView.swift */; };
+		90A11BCA2E966756005C595F /* NotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BC92E966756005C595F /* NotificationsViewModel.swift */; };
+		90A11BCB2E966756005C595F /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BC72E966756005C595F /* NotificationItem.swift */; };
+		90A11BCC2E966756005C595F /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BC82E966756005C595F /* NotificationsView.swift */; };
+		90A11BCE2E966760005C595F /* RecurringAutomationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BCD2E966760005C595F /* RecurringAutomationManager.swift */; };
 		90AB66CF2E9599890063F8A7 /* AccountEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66CE2E9599880063F8A7 /* AccountEntity.swift */; };
 		90AB66D12E9599890063F8A7 /* CategoryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66D02E9599890063F8A7 /* CategoryEntity.swift */; };
 		90AB66D32E95998A0063F8A7 /* TransactionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66D22E95998A0063F8A7 /* TransactionEntity.swift */; };
@@ -32,7 +42,6 @@
 		90AB66F22E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F32E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift */; };
 		90AB66F42E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F52E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift */; };
 		90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */; };
-		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
 		90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +51,17 @@
 		7555FF8C242A565900829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		908773A62E95857B00AB0783 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpendCraft.xcdatamodeld; sourceTree = "<group>"; };
+		90A11BBB2E9666EC005C595F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		90A11BBD2E966712005C595F /* AIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIManager.swift; sourceTree = "<group>"; };
+		90A11BBE2E966712005C595F /* AISettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AISettingsView.swift; sourceTree = "<group>"; };
+		90A11BBF2E966712005C595F /* AISuggestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AISuggestionsView.swift; sourceTree = "<group>"; };
+		90A11BC32E966725005C595F /* ExportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportManager.swift; sourceTree = "<group>"; };
+		90A11BC52E966743005C595F /* ExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportView.swift; sourceTree = "<group>"; };
+		90A11BC72E966756005C595F /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
+		90A11BC82E966756005C595F /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
+		90A11BC92E966756005C595F /* NotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewModel.swift; sourceTree = "<group>"; };
+		90A11BCD2E966760005C595F /* RecurringAutomationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecurringAutomationManager.swift; sourceTree = "<group>"; };
 		90AB66CE2E9599880063F8A7 /* AccountEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountEntity.swift; sourceTree = "<group>"; };
 		90AB66D02E9599890063F8A7 /* CategoryEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntity.swift; sourceTree = "<group>"; };
 		90AB66D22E95998A0063F8A7 /* TransactionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEntity.swift; sourceTree = "<group>"; };
@@ -63,7 +83,6 @@
 		90AB66F32E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecurringTransactionEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		90AB66F52E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpendCraft.xcdatamodeld; sourceTree = "<group>"; };
 		90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,6 +117,16 @@
 				90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */,
 				908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */,
 				90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */,
+				90A11BBB2E9666EC005C595F /* OnboardingView.swift */,
+				90A11BBD2E966712005C595F /* AIManager.swift */,
+				90A11BBE2E966712005C595F /* AISettingsView.swift */,
+				90A11BBF2E966712005C595F /* AISuggestionsView.swift */,
+				90A11BC32E966725005C595F /* ExportManager.swift */,
+				90A11BC52E966743005C595F /* ExportView.swift */,
+				90A11BC72E966756005C595F /* NotificationItem.swift */,
+				90A11BC82E966756005C595F /* NotificationsView.swift */,
+				90A11BC92E966756005C595F /* NotificationsViewModel.swift */,
+				90A11BCD2E966760005C595F /* RecurringAutomationManager.swift */,
 			);
 			path = SpendCraftiOS;
 			sourceTree = "<group>";
@@ -166,27 +195,37 @@
 				90AB66CF2E9599890063F8A7 /* AccountEntity.swift in Sources */,
 				90AB66D52E95998A0063F8A7 /* DashboardView.swift in Sources */,
 				2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */,
-				908773C32E95857B00AB0783 /* (null) in Sources */,
+				908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */,
+				90A11BCA2E966756005C595F /* NotificationsViewModel.swift in Sources */,
+				90A11BCB2E966756005C595F /* NotificationItem.swift in Sources */,
+				90A11BCC2E966756005C595F /* NotificationsView.swift in Sources */,
 				908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */,
 				90AB66D32E95998A0063F8A7 /* TransactionEntity.swift in Sources */,
 				90AB66E12E95998C0063F8A7 /* AchievementsViewModel.swift in Sources */,
 				90AB66D92E95998A0063F8A7 /* ReportsView.swift in Sources */,
+				90A11BC42E966725005C595F /* ExportManager.swift in Sources */,
 				90AB66D12E9599890063F8A7 /* CategoryEntity.swift in Sources */,
 				90AB66DF2E95998B0063F8A7 /* TransactionsViewModel.swift in Sources */,
+				90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */,
 				90AB66DB2E95998B0063F8A7 /* CategoriesView.swift in Sources */,
 				90AB66DD2E95998B0063F8A7 /* SettingsView.swift in Sources */,
 				2152FB062600AC8F00CF470E /* ContentView.swift in Sources */,
 				90AB66D72E95998A0063F8A7 /* TransactionsTabView.swift in Sources */,
 				90AB66E82E9599930063F8A7 /* DailyEntryEntity+CoreDataClass.swift in Sources */,
 				90AB66EA2E9599930063F8A7 /* DailyEntryEntity+CoreDataProperties.swift in Sources */,
+				90A11BC02E966712005C595F /* AISettingsView.swift in Sources */,
+				90A11BC12E966712005C595F /* AISuggestionsView.swift in Sources */,
+				90A11BC22E966712005C595F /* AIManager.swift in Sources */,
 				90AB66EC2E9599940063F8A7 /* BudgetEntity+CoreDataClass.swift in Sources */,
 				90AB66EE2E9599940063F8A7 /* BudgetEntity+CoreDataProperties.swift in Sources */,
+				90A11BC62E966743005C595F /* ExportView.swift in Sources */,
 				90AB66F02E9599950063F8A7 /* RecurringTransactionEntity+CoreDataClass.swift in Sources */,
 				90AB66F22E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift in Sources */,
 				90AB66F42E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift in Sources */,
 				90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */,
 				908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */,
 				90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */,
+				90A11BCE2E966760005C595F /* RecurringAutomationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,12 @@ struct SettingsView: View {
     @EnvironmentObject var budgetViewModel: BudgetViewModel
     @EnvironmentObject var recurringViewModel: RecurringViewModel
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
+    @EnvironmentObject var notificationsViewModel: NotificationsViewModel
+    
+    @State private var showAISettings = false
+    @State private var showAISuggestions = false
+    @State private var showExport = false
+    @State private var showNotifications = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -31,6 +37,41 @@ struct SettingsView: View {
                     }
                 } header: {
                     Text("Finans")
+                }
+                
+                // AI Features Section
+                Section {
+                    Button {
+                        showAISuggestions = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(.purple)
+                            Text("AI Önerileri")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .foregroundColor(.primary)
+                    
+                    Button {
+                        showAISettings = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "gear")
+                                .foregroundColor(.blue)
+                            Text("AI Ayarları")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .foregroundColor(.primary)
+                } header: {
+                    Text("🤖 Yapay Zeka")
                 }
                 
                 // Features Section
@@ -60,8 +101,53 @@ struct SettingsView: View {
                                 .foregroundColor(.secondary)
                         }
                     }
+                    
+                    Button {
+                        showNotifications = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "bell.fill")
+                                .foregroundColor(.red)
+                            Text("Bildirimler")
+                            Spacer()
+                            if notificationsViewModel.unreadCount > 0 {
+                                Text("\(notificationsViewModel.unreadCount)")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 2)
+                                    .background(Color.red)
+                                    .cornerRadius(10)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .foregroundColor(.primary)
                 } header: {
                     Text("Özellikler")
+                }
+                
+                // Data Management
+                Section {
+                    Button {
+                        showExport = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(.green)
+                            Text("Dışa/İçe Aktar")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .foregroundColor(.primary)
+                } header: {
+                    Text("Veri Yönetimi")
                 }
                 
                 // App Info
@@ -95,6 +181,21 @@ struct SettingsView: View {
         }
         .navigationTitle("Ayarlar")
         .navigationBarTitleDisplayMode(.large)
+        .sheet(isPresented: $showAISuggestions) {
+            AISuggestionsView()
+                .environmentObject(transactionsViewModel)
+        }
+        .sheet(isPresented: $showAISettings) {
+            AISettingsView()
+        }
+        .sheet(isPresented: $showExport) {
+            ExportView()
+                .environmentObject(transactionsViewModel)
+        }
+        .sheet(isPresented: $showNotifications) {
+            NotificationsView()
+                .environmentObject(notificationsViewModel)
+        }
     }
 }
 

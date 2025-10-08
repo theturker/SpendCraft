@@ -6,10 +6,13 @@ struct ContentView: View {
     @StateObject private var budgetViewModel = BudgetViewModel(transactionsViewModel: TransactionsViewModel())
     @StateObject private var recurringViewModel = RecurringViewModel(transactionsViewModel: TransactionsViewModel())
     @StateObject private var accountsViewModel = AccountsViewModel()
+    @StateObject private var notificationsViewModel = NotificationsViewModel()
 
     @State private var selectedTab = 0
+    @State private var showNotifications = false
 
     var body: some View {
+        ZStack(alignment: .topTrailing) {
         TabView(selection: $selectedTab) {
             NavigationStack {
                 DashboardView()
@@ -59,11 +62,46 @@ struct ContentView: View {
                     .environmentObject(budgetViewModel)
                     .environmentObject(recurringViewModel)
                     .environmentObject(achievementsViewModel)
+                    .environmentObject(notificationsViewModel)
             }
             .tabItem {
                 Label("Ayarlar", systemImage: "gearshape.fill")
             }
             .tag(4)
+        }
+            
+            // Floating notification button
+            Button {
+                showNotifications = true
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(Color.blue)
+                        .frame(width: 50, height: 50)
+                        .shadow(color: .black.opacity(0.2), radius: 5)
+                    
+                    Image(systemName: "bell.fill")
+                        .foregroundColor(.white)
+                        .font(.title3)
+                    
+                    if notificationsViewModel.unreadCount > 0 {
+                        Text("\(notificationsViewModel.unreadCount)")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .frame(width: 18, height: 18)
+                            .background(Color.red)
+                            .clipShape(Circle())
+                            .offset(x: 15, y: -15)
+                    }
+                }
+            }
+            .padding(.top, 60)
+            .padding(.trailing, 20)
+        }
+        .sheet(isPresented: $showNotifications) {
+            NotificationsView()
+                .environmentObject(notificationsViewModel)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .onAppear {

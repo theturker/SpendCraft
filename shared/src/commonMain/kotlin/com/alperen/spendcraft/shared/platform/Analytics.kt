@@ -9,5 +9,5 @@ interface Analytics {
     fun setUserProperty(name: String, value: String)
 }
 
-expect class AnalyticsImpl() : Analytics
+// AnalyticsImpl her platformda kendi module'ünde tanımlanacak
 
