@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */; };
 		2152FB062600AC8F00CF470E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB052600AC8F00CF470E /* ContentView.swift */; };
-		5E1700ADEB755EC11B1C5ED7 /* Pods_SpendCraftiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340FAB2821C094930C9EA0AE /* Pods_SpendCraftiOS.framework */; };
+		7663757A7372818DB3C16F18 /* Pods_SpendCraftiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */; };
 		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
 		908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908773A62E95857B00AB0783 /* CoreDataStack.swift */; };
 		90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BBB2E9666EC005C595F /* OnboardingView.swift */; };
@@ -47,12 +47,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1A718B199E28DB6A16E6E114 /* Pods-SpendCraftiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.release.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.release.xcconfig"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendCraftiOSApp.swift; sourceTree = "<group>"; };
 		2152FB052600AC8F00CF470E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		340FAB2821C094930C9EA0AE /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E1180A2A1DA42FAE7FEF34C /* Pods-SpendCraftiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.release.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.release.xcconfig"; sourceTree = "<group>"; };
+		5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF8C242A565900829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7DAA08AF50D30B72AF1CBD4C /* Pods-SpendCraftiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.debug.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		908773A62E95857B00AB0783 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpendCraft.xcdatamodeld; sourceTree = "<group>"; };
@@ -88,6 +87,7 @@
 		90AB66F52E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
+		9B8BF21B3EEC7B6D4820D8C8 /* Pods-SpendCraftiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.debug.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,7 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E1700ADEB755EC11B1C5ED7 /* Pods_SpendCraftiOS.framework in Frameworks */,
+				7663757A7372818DB3C16F18 /* Pods_SpendCraftiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,14 +146,12 @@
 			path = SpendCraftiOS;
 			sourceTree = "<group>";
 		};
-		2726EDDF630C150BC4380CD0 /* Pods */ = {
+		6507AB0AEB3092A2ECE32113 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7DAA08AF50D30B72AF1CBD4C /* Pods-SpendCraftiOS.debug.xcconfig */,
-				1A718B199E28DB6A16E6E114 /* Pods-SpendCraftiOS.release.xcconfig */,
+				5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */,
 			);
-			name = Pods;
-			path = Pods;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		7555FF72242A565900829871 = {
@@ -161,17 +159,19 @@
 			children = (
 				2152FB012600AC8F00CF470E /* SpendCraftiOS */,
 				908773A52E95787500AB0783 /* SpendCraftiOS.app */,
-				2726EDDF630C150BC4380CD0 /* Pods */,
-				B1C344597F73365EEA2DC139 /* Frameworks */,
+				D629DB3496C39056FDDA95CE /* Pods */,
+				6507AB0AEB3092A2ECE32113 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		B1C344597F73365EEA2DC139 /* Frameworks */ = {
+		D629DB3496C39056FDDA95CE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				340FAB2821C094930C9EA0AE /* Pods_SpendCraftiOS.framework */,
+				9B8BF21B3EEC7B6D4820D8C8 /* Pods-SpendCraftiOS.debug.xcconfig */,
+				2E1180A2A1DA42FAE7FEF34C /* Pods-SpendCraftiOS.release.xcconfig */,
 			);
-			name = Frameworks;
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,7 +181,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "SpendCraftiOS" */;
 			buildPhases = (
-				F3EB662A5869401BD798CC08 /* [CP] Check Pods Manifest.lock */,
+				549A7D25D06DED8FBAF407FD /* [CP] Check Pods Manifest.lock */,
 				7555FF77242A565900829871 /* Sources */,
 				D5CB89385649D0445ECD4AC9 /* Frameworks */,
 			);
@@ -222,7 +222,7 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		F3EB662A5869401BD798CC08 /* [CP] Check Pods Manifest.lock */ = {
+		549A7D25D06DED8FBAF407FD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -296,7 +296,7 @@
 /* Begin XCBuildConfiguration section */
 		7555FFA3242A565B00829871 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7DAA08AF50D30B72AF1CBD4C /* Pods-SpendCraftiOS.debug.xcconfig */;
+			baseConfigurationReference = 9B8BF21B3EEC7B6D4820D8C8 /* Pods-SpendCraftiOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -317,11 +317,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lsqlite3",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alperen.spendcraft.SpendCraftiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -332,7 +332,7 @@
 		};
 		7555FFA4242A565B00829871 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A718B199E28DB6A16E6E114 /* Pods-SpendCraftiOS.release.xcconfig */;
+			baseConfigurationReference = 2E1180A2A1DA42FAE7FEF34C /* Pods-SpendCraftiOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -353,11 +353,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lsqlite3",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alperen.spendcraft.SpendCraftiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
