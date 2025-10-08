@@ -622,3 +622,4 @@ iOS uygulamanız artık:
 **Son Güncelleme:** 8 Ekim 2025  
 **Versiyon:** 2.0  
 **Geliştirici:** AI Assistant (Alperen için)
+

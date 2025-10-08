@@ -36,6 +36,9 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
+        
+        // SQLite linking için
+        extraSpecAttributes["libraries"] = "sqlite3"
     }
 
     sourceSets {

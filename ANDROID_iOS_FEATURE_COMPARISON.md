@@ -686,3 +686,4 @@ Sorularınız için:
 **Son Güncelleme:** 8 Ekim 2025  
 **Versiyon:** 1.0  
 **Hazırlayan:** AI Assistant (Alperen için)
+

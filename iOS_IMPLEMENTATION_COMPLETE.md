@@ -369,3 +369,4 @@ TOPLAM:              18/24  (75%)  ✅
 **Tarih:** 8 Ekim 2025  
 **Proje:** SpendCraft / Paratik  
 **Platform:** iOS 14.0+
+

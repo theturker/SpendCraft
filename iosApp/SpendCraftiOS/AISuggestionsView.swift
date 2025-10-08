@@ -295,3 +295,4 @@ struct FinancialStatCard: View {
     AISuggestionsView()
         .environmentObject(TransactionsViewModel())
 }
+

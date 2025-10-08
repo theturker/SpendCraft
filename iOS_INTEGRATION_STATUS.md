@@ -153,3 +153,4 @@ df -h
 ---
 
 **Not:** Android tarafı Room ile çalışmaya devam ediyor. iOS tarafı CoreData ile çalışıyor. Her iki platform da shared module'deki business logic'i kullanıyor.
+

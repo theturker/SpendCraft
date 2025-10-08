@@ -350,3 +350,4 @@ Sorularınız için:
 **Platform:** iOS 14.0+  
 **Date:** 8 Ekim 2025  
 **Status:** ✅ COMPLETE
+

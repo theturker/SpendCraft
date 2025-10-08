@@ -301,3 +301,4 @@ Artık:
 **Hazırlayan:** AI Assistant  
 **Tarih:** 8 Ekim 2025  
 **Versiyon:** 2.0
+

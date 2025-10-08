@@ -170,3 +170,4 @@ class NotificationsViewModel: ObservableObject {
         UNUserNotificationCenter.current().add(request)
     }
 }
+

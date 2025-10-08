@@ -407,3 +407,4 @@ iOS uygulamanız **temel özellikleri var** ama:
 
 **Son Güncelleme:** 8 Ekim 2025  
 **Hazırlayan:** AI Assistant
+
