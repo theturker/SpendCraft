@@ -509,12 +509,13 @@ struct SplashView: View {
                 endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
-            
-            VStack {
-                Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
-                    .font(.system(size: 100))
-                    .foregroundColor(.white)
-                
+
+            VStack(spacing: 20) {
+                Image("splash_icon") // Assets.xcassets içindeki ad
+                    .resizable()
+                    .frame(width: 180, height: 180) 
+                    .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 6)
+
                 Text("Paratik")
                     .font(.system(size: 42, weight: .bold))
                     .foregroundColor(.white)

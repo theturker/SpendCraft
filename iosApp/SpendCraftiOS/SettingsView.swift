@@ -217,11 +217,7 @@ struct SettingsView: View {
             NotificationsView()
                 .environmentObject(notificationsViewModel)
         }
-        .confirmationDialog(
-            "Çıkış yapılsın mı?",
-            isPresented: $showSignOutConfirm,
-            titleVisibility: .visible
-        ) {
+        .alert("Çıkış yapılsın mı?", isPresented: $showSignOutConfirm) {
             Button("Çıkış Yap", role: .destructive) {
                 Task {
                     await signOut()
