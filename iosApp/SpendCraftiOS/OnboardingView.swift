@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 // MARK: - AuthViewModel
 
@@ -24,19 +25,38 @@ class AuthViewModel: ObservableObject {
         let isEmailVerified: Bool
     }
     
+    private var authStateHandle: AuthStateDidChangeListenerHandle?
+    
     init() {
         // Uygulama başlangıcında auth durumunu kontrol et
         checkAuthState()
     }
     
+    deinit {
+        if let handle = authStateHandle {
+            Auth.auth().removeStateDidChangeListener(handle)
+        }
+    }
+    
     // MARK: - Auth State Management
     
     private func checkAuthState() {
-        // Basit local storage kontrolü
-        if let userData = UserDefaults.standard.data(forKey: "current_user"),
-           let user = try? JSONDecoder().decode(UserModel.self, from: userData) {
-            currentUser = user
-            isAuthenticated = true
+        // Firebase auth state listener
+        authStateHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            guard let self = self else { return }
+            if let user = user {
+                let model = UserModel(
+                    id: user.uid,
+                    email: user.email ?? "",
+                    displayName: user.displayName ?? (user.email?.components(separatedBy: "@").first ?? "Kullanıcı"),
+                    isEmailVerified: user.isEmailVerified
+                )
+                self.currentUser = model
+                self.isAuthenticated = true
+            } else {
+                self.currentUser = nil
+                self.isAuthenticated = false
+            }
         }
     }
     
@@ -45,9 +65,6 @@ class AuthViewModel: ObservableObject {
     func signIn(email: String, password: String) async throws {
         isLoading = true
         errorMessage = nil
-        
-        // Simulated delay
-        try await Task.sleep(nanoseconds: 1_000_000_000)
         
         // Basit validation
         guard !email.isEmpty, !password.isEmpty else {
@@ -68,30 +85,21 @@ class AuthViewModel: ObservableObject {
             throw AuthError.weakPassword
         }
         
-        // Demo için basit kullanıcı oluştur
-        let user = UserModel(
-            id: UUID().uuidString,
-            email: email,
-            displayName: email.components(separatedBy: "@").first ?? "Kullanıcı",
-            isEmailVerified: true
-        )
-        
-        // Local storage'a kaydet
-        if let userData = try? JSONEncoder().encode(user) {
-            UserDefaults.standard.set(userData, forKey: "current_user")
+        do {
+            try await Auth.auth().signIn(withEmail: email, password: password)
+            // Listener isAuthenticated'i güncelleyecek
+            isLoading = false
+        } catch {
+            isLoading = false
+            let mapped = mapFirebaseError(error)
+            errorMessage = mapped.localizedDescription
+            throw mapped
         }
-        
-        currentUser = user
-        isAuthenticated = true
-        isLoading = false
     }
     
     func register(name: String, email: String, password: String) async throws {
         isLoading = true
         errorMessage = nil
-        
-        // Simulated delay
-        try await Task.sleep(nanoseconds: 1_500_000_000)
         
         // Basit validation
         guard !name.isEmpty, !email.isEmpty, !password.isEmpty else {
@@ -112,30 +120,29 @@ class AuthViewModel: ObservableObject {
             throw AuthError.weakPassword
         }
         
-        // Demo için basit kullanıcı oluştur
-        let user = UserModel(
-            id: UUID().uuidString,
-            email: email,
-            displayName: name,
-            isEmailVerified: false
-        )
-        
-        // Local storage'a kaydet
-        if let userData = try? JSONEncoder().encode(user) {
-            UserDefaults.standard.set(userData, forKey: "current_user")
+        do {
+            let result = try await Auth.auth().createUser(withEmail: email, password: password)
+            // Display name güncelle
+            let changeRequest = result.user.createProfileChangeRequest()
+            changeRequest.displayName = name
+            try await changeRequest.commitChanges()
+            
+            // İsteğe bağlı: e-posta doğrulama göndermek istersen aç
+            // try await result.user.sendEmailVerification()
+            
+            // Listener güncelleyecek
+            isLoading = false
+        } catch {
+            isLoading = false
+            let mapped = mapFirebaseError(error)
+            errorMessage = mapped.localizedDescription
+            throw mapped
         }
-        
-        currentUser = user
-        isAuthenticated = true
-        isLoading = false
     }
     
     func sendPasswordReset(email: String) async throws {
         isLoading = true
         errorMessage = nil
-        
-        // Simulated delay
-        try await Task.sleep(nanoseconds: 1_000_000_000)
         
         guard !email.isEmpty, email.contains("@") else {
             isLoading = false
@@ -143,17 +150,27 @@ class AuthViewModel: ObservableObject {
             throw AuthError.invalidEmail
         }
         
-        // Demo için başarılı mesaj
-        isLoading = false
-        print("Password reset email sent to: \(email)")
+        do {
+            try await Auth.auth().sendPasswordReset(withEmail: email)
+            isLoading = false
+        } catch {
+            isLoading = false
+            let mapped = mapFirebaseError(error)
+            errorMessage = mapped.localizedDescription
+            throw mapped
+        }
     }
     
     func signOut() async throws {
-        // Local storage'dan kullanıcıyı kaldır
-        UserDefaults.standard.removeObject(forKey: "current_user")
-        
-        currentUser = nil
-        isAuthenticated = false
+        do {
+            try Auth.auth().signOut()
+            currentUser = nil
+            isAuthenticated = false
+        } catch {
+            let mapped = mapFirebaseError(error)
+            errorMessage = mapped.localizedDescription
+            throw mapped
+        }
     }
     
     // MARK: - User Info
@@ -174,6 +191,39 @@ class AuthViewModel: ObservableObject {
     
     func clearError() {
         errorMessage = nil
+    }
+    
+    private func mapFirebaseError(_ error: Error) -> Error {
+        if let err = error as NSError?, err.domain == AuthErrorDomain,
+           let code = AuthErrorCode(rawValue: err.code) {
+            switch code {
+            case .invalidEmail:
+                return AuthError.invalidEmail
+            case .weakPassword:
+                return AuthError.weakPassword
+            case .emailAlreadyInUse:
+                return LocalMappedError("Bu e-posta adresi zaten kullanımda")
+            case .userNotFound:
+                return AuthError.userNotFound
+            case .wrongPassword:
+                return LocalMappedError("E-posta veya şifre hatalı")
+            case .networkError:
+                return AuthError.networkError
+            case .tooManyRequests:
+                return LocalMappedError("Çok fazla deneme yapıldı. Lütfen sonra tekrar deneyin.")
+            case .userDisabled:
+                return LocalMappedError("Bu kullanıcı devre dışı bırakılmış.")
+            default:
+                return LocalMappedError(err.localizedDescription)
+            }
+        }
+        return error
+    }
+    
+    struct LocalMappedError: LocalizedError {
+        let message: String
+        init(_ message: String) { self.message = message }
+        var errorDescription: String? { message }
     }
 }
 
@@ -544,7 +594,7 @@ struct LoginView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var email = ""
     @State private var password = ""
-    @State private var showError = false
+       @State private var showError = false
     @State private var errorMessage = ""
     
     let onLoginSuccess: () -> Void
