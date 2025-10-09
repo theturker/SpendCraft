@@ -24,185 +24,181 @@ struct SettingsView: View {
     @State private var signOutError: String?
 
     var body: some View {
-        GeometryReader { geometry in
-            List {
-                // Accounts Section
-                Section {
-                    NavigationLink {
-                        AccountsListView()
-                            .environmentObject(accountsViewModel)
-                    } label: {
-                        HStack {
-                            Image(systemName: "creditcard.fill")
-                                .foregroundColor(.blue)
-                            Text("Hesaplar")
-                        }
+        List {
+            // Accounts Section
+            Section {
+                NavigationLink {
+                    AccountsListView()
+                        .environmentObject(accountsViewModel)
+                } label: {
+                    HStack {
+                        Image(systemName: "creditcard.fill")
+                            .foregroundColor(.blue)
+                        Text("Hesaplar")
                     }
-                } header: {
-                    Text("Finans")
                 }
-                
-                // AI Features Section
-                Section {
-                    Button {
-                        showAISuggestions = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "sparkles")
-                                .foregroundColor(.purple)
-                            Text("AI Önerileri")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .foregroundColor(.primary)
-                    
-                    Button {
-                        showAISettings = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "gear")
-                                .foregroundColor(.blue)
-                            Text("AI Ayarları")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .foregroundColor(.primary)
-                } header: {
-                    Text("🤖 Yapay Zeka")
-                }
-                
-                // Features Section
-                Section {
-                    NavigationLink {
-                        RecurringTransactionsListView()
-                            .environmentObject(recurringViewModel)
-                            .environmentObject(transactionsViewModel)
-                    } label: {
-                        HStack {
-                            Image(systemName: "repeat.circle.fill")
-                                .foregroundColor(.orange)
-                            Text("Tekrarlayan İşlemler")
-                        }
-                    }
-                    
-                    NavigationLink {
-                        AchievementsListView()
-                            .environmentObject(achievementsViewModel)
-                    } label: {
-                        HStack {
-                            Image(systemName: "trophy.fill")
-                                .foregroundColor(.yellow)
-                            Text("Başarılar")
-                            Spacer()
-                            Text("\(achievementsViewModel.totalPoints)")
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    
-                    Button {
-                        showNotifications = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "bell.fill")
-                                .foregroundColor(.red)
-                            Text("Bildirimler")
-                            Spacer()
-                            if notificationsViewModel.unreadCount > 0 {
-                                Text("\(notificationsViewModel.unreadCount)")
-                                    .font(.caption)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 2)
-                                    .background(Color.red)
-                                    .cornerRadius(10)
-                            }
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .foregroundColor(.primary)
-                } header: {
-                    Text("Özellikler")
-                }
-                
-                // Data Management
-                Section {
-                    Button {
-                        showExport = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundColor(.green)
-                            Text("Dışa/İçe Aktar")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .foregroundColor(.primary)
-                } header: {
-                    Text("Veri Yönetimi")
-                }
-                
-                // Account Section - Sign Out
-                Section {
-                    Button(role: .destructive) {
-                        showSignOutConfirm = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "rectangle.portrait.and.arrow.right")
-                                .foregroundColor(.red)
-                            Text("Çıkış Yap")
-                                .foregroundColor(.red)
-                        }
-                    }
-                } header: {
-                    Text("Hesap")
-                } footer: {
-                    if let error = signOutError {
-                        Text(error)
+            } header: {
+                Text("Finans")
+            }
+            
+            // AI Features Section
+            Section {
+                Button {
+                    showAISuggestions = true
+                } label: {
+                    HStack {
+                        Image(systemName: "sparkles")
+                            .foregroundColor(.purple)
+                        Text("AI Önerileri")
+                        Spacer()
+                        Image(systemName: "chevron.right")
                             .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .foregroundColor(.primary)
+                
+                Button {
+                    showAISettings = true
+                } label: {
+                    HStack {
+                        Image(systemName: "gear")
+                            .foregroundColor(.blue)
+                        Text("AI Ayarları")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .foregroundColor(.primary)
+            } header: {
+                Text("🤖 Yapay Zeka")
+            }
+            
+            // Features Section
+            Section {
+                NavigationLink {
+                    RecurringTransactionsListView()
+                        .environmentObject(recurringViewModel)
+                        .environmentObject(transactionsViewModel)
+                } label: {
+                    HStack {
+                        Image(systemName: "repeat.circle.fill")
+                            .foregroundColor(.orange)
+                        Text("Tekrarlayan İşlemler")
+                    }
+                }
+                
+                NavigationLink {
+                    AchievementsListView()
+                        .environmentObject(achievementsViewModel)
+                } label: {
+                    HStack {
+                        Image(systemName: "trophy.fill")
+                            .foregroundColor(.yellow)
+                        Text("Başarılar")
+                        Spacer()
+                        Text("\(achievementsViewModel.totalPoints)")
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Button {
+                    showNotifications = true
+                } label: {
+                    HStack {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(.red)
+                        Text("Bildirimler")
+                        Spacer()
+                        if notificationsViewModel.unreadCount > 0 {
+                            Text("\(notificationsViewModel.unreadCount)")
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 2)
+                                .background(Color.red)
+                                .cornerRadius(10)
+                        }
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .foregroundColor(.primary)
+            } header: {
+                Text("Özellikler")
+            }
+            
+            // Data Management
+            Section {
+                Button {
+                    showExport = true
+                } label: {
+                    HStack {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundColor(.green)
+                        Text("Dışa/İçe Aktar")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .foregroundColor(.primary)
+            } header: {
+                Text("Veri Yönetimi")
+            }
+            
+            // Account Section - Sign Out
+            Section {
+                Button(role: .destructive) {
+                    showSignOutConfirm = true
+                } label: {
+                    HStack {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .foregroundColor(.red)
+                        Text("Çıkış Yap")
                             .foregroundColor(.red)
                     }
                 }
-                
-                // App Info
-                Section {
-                    HStack {
-                        Text("Versiyon")
-                        Spacer()
-                        Text("1.0.0")
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    HStack {
-                        Text("Toplam İşlem")
-                        Spacer()
-                        Text("\(transactionsViewModel.transactions.count)")
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    HStack {
-                        Text("Toplam Kategori")
-                        Spacer()
-                        Text("\(transactionsViewModel.categories.count)")
-                            .foregroundColor(.secondary)
-                    }
-                } header: {
-                    Text("Uygulama")
+            } header: {
+                Text("Hesap")
+            } footer: {
+                if let error = signOutError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
                 }
             }
-            .padding(.top, geometry.safeAreaInsets.top)
-            .padding(.bottom, geometry.safeAreaInsets.bottom)
+            
+            // App Info
+            Section {
+                HStack {
+                    Text("Versiyon")
+                    Spacer()
+                    Text("1.0.0")
+                        .foregroundColor(.secondary)
+                }
+                
+                HStack {
+                    Text("Toplam İşlem")
+                    Spacer()
+                    Text("\(transactionsViewModel.transactions.count)")
+                        .foregroundColor(.secondary)
+                }
+                
+                HStack {
+                    Text("Toplam Kategori")
+                    Spacer()
+                    Text("\(transactionsViewModel.categories.count)")
+                        .foregroundColor(.secondary)
+                }
+            } header: {
+                Text("Uygulama")
+            }
         }
         .navigationTitle("Ayarlar")
         .navigationBarTitleDisplayMode(.large)
@@ -241,9 +237,6 @@ struct SettingsView: View {
         signOutError = nil
         do {
             try await authViewModel.signOut()
-            // İsteğe bağlı: Onboarding'i de sıfırlamak isterseniz:
-            // UserDefaults.standard.set(false, forKey: "hasCompletedOnboarding")
-            // RootView auth değişimini dinlediği için login ekranına düşecektir.
         } catch {
             signOutError = error.localizedDescription
         }

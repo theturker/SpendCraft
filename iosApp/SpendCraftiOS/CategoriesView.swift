@@ -15,8 +15,7 @@ struct CategoriesView: View {
     @State private var selectedCategory: CategoryEntity?
     
     var body: some View {
-        GeometryReader { geometry in
-            List {
+        List {
             ForEach(transactionsViewModel.categories, id: \.id) { category in
                 CategoryRow(
                     category: category,
@@ -29,9 +28,6 @@ struct CategoriesView: View {
                     showAddBudget = true
                 }
             }
-            }
-            .padding(.top, geometry.safeAreaInsets.top)
-            .padding(.bottom, geometry.safeAreaInsets.bottom)
         }
         .navigationTitle("Kategoriler")
         .navigationBarTitleDisplayMode(.large)

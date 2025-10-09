@@ -17,216 +17,213 @@ struct DashboardView: View {
     @State private var initialTransactionType: Bool? = nil
     
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
+        ScrollView {
+            VStack(spacing: 12) {
+                // Balance Card
                 VStack(spacing: 12) {
-                    // Balance Card
-                    VStack(spacing: 12) {
-                        Text("Toplam Bakiye")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        Text(String(format: "%.2f ₺", transactionsViewModel.currentBalance))
-                            .font(.system(size: 42, weight: .bold))
-                            .foregroundColor(transactionsViewModel.currentBalance >= 0 ? .green : .red)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(LinearGradient(
-                                colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ))
-                    )
-                    .padding(.horizontal, 16)
+                    Text("Toplam Bakiye")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                     
-                    // Quick Action Buttons
-                    HStack(spacing: 16) {
-                        Button {
-                            initialTransactionType = true // true = income
-                            showAddTransaction = true
-                        } label: {
-                            HStack {
-                                Image(systemName: "arrow.down.circle.fill")
-                                    .foregroundColor(.white)
-                                Text("Gelir")
-                                    .foregroundColor(.white)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.green)
-                            .cornerRadius(15)
-                        }
-                        
-                        Button {
-                            initialTransactionType = false // false = expense
-                            showAddTransaction = true
-                        } label: {
-                            HStack {
-                                Image(systemName: "arrow.up.circle.fill")
-                                    .foregroundColor(.white)
-                                Text("Gider")
-                                    .foregroundColor(.white)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.red)
-                            .cornerRadius(15)
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    
-                    // Income & Expense Summary Cards
-                    HStack(spacing: 16) {
-                        // Income Summary
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Image(systemName: "arrow.down.circle.fill")
-                                    .foregroundColor(.green)
-                                Text("Gelir")
-                                    .font(.subheadline)
-                            }
-                            Text(String(format: "%.2f ₺", transactionsViewModel.totalIncome))
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .fill(Color.green.opacity(0.1))
-                        )
-                        
-                        // Expense Summary
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Image(systemName: "arrow.up.circle.fill")
-                                    .foregroundColor(.red)
-                                Text("Gider")
-                                    .font(.subheadline)
-                            }
-                            Text(String(format: "%.2f ₺", transactionsViewModel.totalExpense))
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .fill(Color.red.opacity(0.1))
-                        )
-                    }
-                    .padding(.horizontal, 16)
-                    
-                    // Streak Card
-                    VStack(alignment: .leading, spacing: 12) {
+                    Text(String(format: "%.2f ₺", transactionsViewModel.currentBalance))
+                        .font(.system(size: 42, weight: .bold))
+                        .foregroundColor(transactionsViewModel.currentBalance >= 0 ? .green : .red)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(LinearGradient(
+                            colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ))
+                )
+                .padding(.horizontal, 16)
+                .padding(.top, 8) // başlık ile kart arası makul boşluk
+                
+                // Quick Action Buttons
+                HStack(spacing: 16) {
+                    Button {
+                        initialTransactionType = true // true = income
+                        showAddTransaction = true
+                    } label: {
                         HStack {
-                            Image(systemName: "flame.fill")
-                                .foregroundColor(.orange)
-                                .font(.title2)
-                            Text("Günlük Seri")
-                                .font(.headline)
-                            Spacer()
+                            Image(systemName: "arrow.down.circle.fill")
+                                .foregroundColor(.white)
+                            Text("Gelir")
+                                .foregroundColor(.white)
                         }
-                        
-                        HStack(spacing: 20) {
-                            VStack {
-                                Text("\(achievementsViewModel.currentStreak)")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                Text("Güncel")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            Divider()
-                                .frame(height: 40)
-                            
-                            VStack {
-                                Text("\(achievementsViewModel.longestStreak)")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                Text("En Uzun")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(15)
                     }
+                    
+                    Button {
+                        initialTransactionType = false // false = expense
+                        showAddTransaction = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .foregroundColor(.white)
+                            Text("Gider")
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(15)
+                    }
+                }
+                .padding(.horizontal, 16)
+                
+                // Income & Expense Summary Cards
+                HStack(spacing: 16) {
+                    // Income Summary
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "arrow.down.circle.fill")
+                                .foregroundColor(.green)
+                            Text("Gelir")
+                                .font(.subheadline)
+                        }
+                        Text(String(format: "%.2f ₺", transactionsViewModel.totalIncome))
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.orange.opacity(0.1))
+                            .fill(Color.green.opacity(0.1))
                     )
-                    .padding(.horizontal, 16)
                     
-                    // Budget Overview
-                    if !budgetViewModel.budgets.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Bütçe Durumu")
-                                .font(.headline)
-                                .padding(.horizontal, 16)
-                            
-                            ForEach(budgetViewModel.budgets.prefix(3), id: \.id) { budget in
-                                if let category = budget.category {
-                                    BudgetProgressRow(
-                                        budget: budget,
-                                        category: category,
-                                        spent: budgetViewModel.spentForCategory(category),
-                                        progress: budgetViewModel.budgetProgress(budget)
-                                    )
-                                }
-                            }
+                    // Expense Summary
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .foregroundColor(.red)
+                            Text("Gider")
+                                .font(.subheadline)
                         }
-                        .padding(.vertical, 8)
+                        Text(String(format: "%.2f ₺", transactionsViewModel.totalExpense))
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.red.opacity(0.1))
+                    )
+                }
+                .padding(.horizontal, 16)
+                
+                // Streak Card
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Image(systemName: "flame.fill")
+                            .foregroundColor(.orange)
+                            .font(.title2)
+                        Text("Günlük Seri")
+                            .font(.headline)
+                        Spacer()
                     }
                     
-                    // Achievements
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Text("Başarılar")
-                                .font(.headline)
-                            Spacer()
-                            Text("\(achievementsViewModel.totalPoints) Puan")
-                                .font(.subheadline)
+                    HStack(spacing: 20) {
+                        VStack {
+                            Text("\(achievementsViewModel.currentStreak)")
+                                .font(.title)
+                                .fontWeight(.bold)
+                            Text("Güncel")
+                                .font(.caption)
                                 .foregroundColor(.secondary)
                         }
-                        .padding(.horizontal, 16)
                         
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(achievementsViewModel.achievements.prefix(5), id: \.id) { achievement in
-                                    AchievementCard(achievement: achievement)
-                                }
-                            }
-                            .padding(.horizontal, 16)
+                        Divider()
+                            .frame(height: 40)
+                        
+                        VStack {
+                            Text("\(achievementsViewModel.longestStreak)")
+                                .font(.title)
+                                .fontWeight(.bold)
+                            Text("En Uzun")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
                     }
-                    .padding(.vertical, 8)
-                    
-                    // Recent Transactions
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.orange.opacity(0.1))
+                )
+                .padding(.horizontal, 16)
+                
+                // Budget Overview
+                if !budgetViewModel.budgets.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Son İşlemler")
+                        Text("Bütçe Durumu")
                             .font(.headline)
                             .padding(.horizontal, 16)
                         
-                        ForEach(transactionsViewModel.transactions.prefix(5), id: \.id) { transaction in
-                            TransactionRow(transaction: transaction)
+                        ForEach(budgetViewModel.budgets.prefix(3), id: \.id) { budget in
+                            if let category = budget.category {
+                                BudgetProgressRow(
+                                    budget: budget,
+                                    category: category,
+                                    spent: budgetViewModel.spentForCategory(category),
+                                    progress: budgetViewModel.budgetProgress(budget)
+                                )
+                            }
                         }
                     }
                     .padding(.vertical, 8)
                 }
-                .padding(.top, geometry.safeAreaInsets.top)
-                .padding(.bottom, geometry.safeAreaInsets.bottom + 20)
+                
+                // Achievements
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Başarılar")
+                            .font(.headline)
+                        Spacer()
+                        Text("\(achievementsViewModel.totalPoints) Puan")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 16)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(achievementsViewModel.achievements.prefix(5), id: \.id) { achievement in
+                                AchievementCard(achievement: achievement)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                }
+                .padding(.vertical, 8)
+                
+                // Recent Transactions
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Son İşlemler")
+                        .font(.headline)
+                        .padding(.horizontal, 16)
+                    
+                    ForEach(transactionsViewModel.transactions.prefix(5), id: \.id) { transaction in
+                        TransactionRow(transaction: transaction)
+                    }
+                }
+                .padding(.vertical, 8)
             }
-            .navigationTitle("Ana Sayfa")
-            .navigationBarTitleDisplayMode(.large)
-            .sheet(isPresented: $showAddTransaction) {
-                AddTransactionView(initialIsIncome: initialTransactionType)
-                    .environmentObject(transactionsViewModel)
-                    .environmentObject(achievementsViewModel)
-            }
+        }
+        .navigationTitle("Ana Sayfa")
+        .navigationBarTitleDisplayMode(.large)
+        .sheet(isPresented: $showAddTransaction) {
+            AddTransactionView(initialIsIncome: initialTransactionType)
+                .environmentObject(transactionsViewModel)
+                .environmentObject(achievementsViewModel)
         }
     }
 }

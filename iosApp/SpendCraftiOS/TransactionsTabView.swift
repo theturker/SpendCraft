@@ -33,8 +33,7 @@ struct TransactionsTabView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
             // Filter Pills
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
@@ -49,7 +48,7 @@ struct TransactionsTabView: View {
                 }
                 .padding(.horizontal, 16)
             }
-            .padding(.vertical, 4)
+            .padding(.vertical, 8)
             .background(Color(UIColor.systemBackground))
             
             // Transactions List
@@ -88,9 +87,6 @@ struct TransactionsTabView: View {
                 }
                 .listStyle(.insetGrouped)
             }
-            }
-            .padding(.top, geometry.safeAreaInsets.top)
-            .padding(.bottom, geometry.safeAreaInsets.bottom)
         }
         .navigationTitle("İşlemler")
         .navigationBarTitleDisplayMode(.large)
