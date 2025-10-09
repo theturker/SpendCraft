@@ -14,12 +14,15 @@ struct SettingsView: View {
     @EnvironmentObject var recurringViewModel: RecurringViewModel
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
     @EnvironmentObject var notificationsViewModel: NotificationsViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     @State private var showAISettings = false
     @State private var showAISuggestions = false
     @State private var showExport = false
     @State private var showNotifications = false
-    
+    @State private var showSignOutConfirm = false
+    @State private var signOutError: String?
+
     var body: some View {
         GeometryReader { geometry in
             List {
@@ -150,6 +153,28 @@ struct SettingsView: View {
                     Text("Veri Yönetimi")
                 }
                 
+                // Account Section - Sign Out
+                Section {
+                    Button(role: .destructive) {
+                        showSignOutConfirm = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                                .foregroundColor(.red)
+                            Text("Çıkış Yap")
+                                .foregroundColor(.red)
+                        }
+                    }
+                } header: {
+                    Text("Hesap")
+                } footer: {
+                    if let error = signOutError {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundColor(.red)
+                    }
+                }
+                
                 // App Info
                 Section {
                     HStack {
@@ -195,6 +220,32 @@ struct SettingsView: View {
         .sheet(isPresented: $showNotifications) {
             NotificationsView()
                 .environmentObject(notificationsViewModel)
+        }
+        .confirmationDialog(
+            "Çıkış yapılsın mı?",
+            isPresented: $showSignOutConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("Çıkış Yap", role: .destructive) {
+                Task {
+                    await signOut()
+                }
+            }
+            Button("İptal", role: .cancel) {}
+        } message: {
+            Text("Hesabınızdan çıkış yapacaksınız.")
+        }
+    }
+    
+    private func signOut() async {
+        signOutError = nil
+        do {
+            try await authViewModel.signOut()
+            // İsteğe bağlı: Onboarding'i de sıfırlamak isterseniz:
+            // UserDefaults.standard.set(false, forKey: "hasCompletedOnboarding")
+            // RootView auth değişimini dinlediği için login ekranına düşecektir.
+        } catch {
+            signOutError = error.localizedDescription
         }
     }
 }

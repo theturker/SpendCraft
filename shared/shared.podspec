@@ -50,7 +50,5 @@ Pod::Spec.new do |spec|
             SCRIPT
         }
     ]
-    
-    # SQLite linking için
-    spec.libraries = ['sqlite3']
+    spec.libraries = sqlite3
 end
