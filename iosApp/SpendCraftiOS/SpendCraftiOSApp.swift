@@ -1,11 +1,15 @@
 import SwiftUI
 import BackgroundTasks
+import Firebase
 
 @main
 struct SpendCraftiOSApp: App {
     let persistenceController = CoreDataStack.shared
     
     init() {
+        // Configure Firebase
+        FirebaseApp.configure()
+        
         // Seed initial data on first launch
         CoreDataStack.shared.seedInitialData()
         

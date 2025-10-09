@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import FirebaseAuth
 
 @MainActor
 class AuthViewModel: ObservableObject {
@@ -17,29 +18,32 @@ class AuthViewModel: ObservableObject {
     }
     
     init() {
-        // Uygulama başlangıcında auth durumunu kontrol et
-        checkAuthState()
+        // Firebase auth state listener
+        Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            DispatchQueue.main.async {
+                if let user = user {
+                    self?.currentUser = UserModel(
+                        id: user.uid,
+                        email: user.email ?? "",
+                        displayName: user.displayName ?? user.email?.components(separatedBy: "@").first ?? "Kullanıcı",
+                        isEmailVerified: user.isEmailVerified
+                    )
+                    self?.isAuthenticated = true
+                } else {
+                    self?.currentUser = nil
+                    self?.isAuthenticated = false
+                }
+            }
+        }
     }
     
     // MARK: - Auth State Management
-    
-    private func checkAuthState() {
-        // Basit local storage kontrolü
-        if let userData = UserDefaults.standard.data(forKey: "current_user"),
-           let user = try? JSONDecoder().decode(UserModel.self, from: userData) {
-            currentUser = user
-            isAuthenticated = true
-        }
-    }
     
     // MARK: - Authentication Methods
     
     func signIn(email: String, password: String) async throws {
         isLoading = true
         errorMessage = nil
-        
-        // Simulated delay
-        try await Task.sleep(nanoseconds: 1_000_000_000)
         
         // Basit validation
         guard !email.isEmpty, !password.isEmpty else {
@@ -60,30 +64,21 @@ class AuthViewModel: ObservableObject {
             throw AuthError.weakPassword
         }
         
-        // Demo için basit kullanıcı oluştur
-        let user = UserModel(
-            id: UUID().uuidString,
-            email: email,
-            displayName: email.components(separatedBy: "@").first ?? "Kullanıcı",
-            isEmailVerified: true
-        )
-        
-        // Local storage'a kaydet
-        if let userData = try? JSONEncoder().encode(user) {
-            UserDefaults.standard.set(userData, forKey: "current_user")
+        // Firebase ile giriş yap
+        do {
+            let result = try await Auth.auth().signIn(withEmail: email, password: password)
+            // Firebase auth state listener otomatik olarak güncelleyecek
+            isLoading = false
+        } catch {
+            isLoading = false
+            errorMessage = error.localizedDescription
+            throw AuthError.networkError
         }
-        
-        currentUser = user
-        isAuthenticated = true
-        isLoading = false
     }
     
     func register(name: String, email: String, password: String) async throws {
         isLoading = true
         errorMessage = nil
-        
-        // Simulated delay
-        try await Task.sleep(nanoseconds: 1_500_000_000)
         
         // Basit validation
         guard !name.isEmpty, !email.isEmpty, !password.isEmpty else {
@@ -104,30 +99,30 @@ class AuthViewModel: ObservableObject {
             throw AuthError.weakPassword
         }
         
-        // Demo için basit kullanıcı oluştur
-        let user = UserModel(
-            id: UUID().uuidString,
-            email: email,
-            displayName: name,
-            isEmailVerified: false
-        )
-        
-        // Local storage'a kaydet
-        if let userData = try? JSONEncoder().encode(user) {
-            UserDefaults.standard.set(userData, forKey: "current_user")
+        // Firebase ile kayıt ol
+        do {
+            let result = try await Auth.auth().createUser(withEmail: email, password: password)
+            
+            // Kullanıcı adını güncelle
+            let changeRequest = result.user.createProfileChangeRequest()
+            changeRequest.displayName = name
+            try await changeRequest.commitChanges()
+            
+            // Email doğrulama gönder
+            try await result.user.sendEmailVerification()
+            
+            // Firebase auth state listener otomatik olarak güncelleyecek
+            isLoading = false
+        } catch {
+            isLoading = false
+            errorMessage = error.localizedDescription
+            throw AuthError.networkError
         }
-        
-        currentUser = user
-        isAuthenticated = true
-        isLoading = false
     }
     
     func sendPasswordReset(email: String) async throws {
         isLoading = true
         errorMessage = nil
-        
-        // Simulated delay
-        try await Task.sleep(nanoseconds: 1_000_000_000)
         
         guard !email.isEmpty, email.contains("@") else {
             isLoading = false
@@ -135,17 +130,26 @@ class AuthViewModel: ObservableObject {
             throw AuthError.invalidEmail
         }
         
-        // Demo için başarılı mesaj
-        isLoading = false
-        print("Password reset email sent to: \(email)")
+        // Firebase ile şifre sıfırlama gönder
+        do {
+            try await Auth.auth().sendPasswordReset(withEmail: email)
+            isLoading = false
+        } catch {
+            isLoading = false
+            errorMessage = error.localizedDescription
+            throw AuthError.networkError
+        }
     }
     
     func signOut() async throws {
-        // Local storage'dan kullanıcıyı kaldır
-        UserDefaults.standard.removeObject(forKey: "current_user")
-        
-        currentUser = nil
-        isAuthenticated = false
+        // Firebase'den çıkış yap
+        do {
+            try Auth.auth().signOut()
+            // Firebase auth state listener otomatik olarak güncelleyecek
+        } catch {
+            errorMessage = error.localizedDescription
+            throw AuthError.networkError
+        }
     }
     
     // MARK: - User Info
