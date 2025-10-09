@@ -10,6 +10,7 @@
 		2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */; };
 		2152FB062600AC8F00CF470E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB052600AC8F00CF470E /* ContentView.swift */; };
 		7663757A7372818DB3C16F18 /* Pods_SpendCraftiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */; };
+		905181052E98529900F81AAC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 905181042E98529900F81AAC /* Media.xcassets */; };
 		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
 		908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908773A62E95857B00AB0783 /* CoreDataStack.swift */; };
 		90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BBB2E9666EC005C595F /* OnboardingView.swift */; };
@@ -57,6 +58,7 @@
 		2E1180A2A1DA42FAE7FEF34C /* Pods-SpendCraftiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.release.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.release.xcconfig"; sourceTree = "<group>"; };
 		5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF8C242A565900829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		905181042E98529900F81AAC /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		908773A62E95857B00AB0783 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpendCraft.xcdatamodeld; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
+				905181042E98529900F81AAC /* Media.xcassets */,
 				2152FB012600AC8F00CF470E /* SpendCraftiOS */,
 				908773A52E95787500AB0783 /* SpendCraftiOS.app */,
 				D629DB3496C39056FDDA95CE /* Pods */,
@@ -240,6 +243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				905181052E98529900F81AAC /* Media.xcassets in Resources */,
 				90F10A812E97E9490068F54E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -332,6 +336,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SpendCraftiOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Paratik;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -368,6 +373,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SpendCraftiOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Paratik;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
