@@ -57,6 +57,30 @@ class TransactionsViewModel: ObservableObject {
         }
     }
     
+    func addCategory(name: String, icon: String, color: Color) {
+        let category = CategoryEntity(context: context)
+        category.id = Int64.random(in: 1...1000000)
+        category.name = name
+        category.icon = icon
+        
+        // Convert SwiftUI Color to hex string for storage
+        let uiColor = UIColor(color)
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        let hexString = String(format: "#%02X%02X%02X",
+                              Int(red * 255),
+                              Int(green * 255),
+                              Int(blue * 255))
+        category.color = hexString
+        
+        CoreDataStack.shared.saveContext()
+        loadCategories()
+    }
+    
     func loadAccounts() {
         let fetchRequest: NSFetchRequest<AccountEntity> = AccountEntity.fetchRequest() as! NSFetchRequest<AccountEntity>
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \AccountEntity.name, ascending: true)]

@@ -115,6 +115,10 @@ struct AddTransactionView: View {
             }
         }
         .onAppear {
+            // Reload data to get fresh categories and accounts
+            transactionsViewModel.loadCategories()
+            transactionsViewModel.loadAccounts()
+            
             // Set initial transaction type
             if let initialType = initialIsIncome {
                 isIncome = initialType

@@ -65,6 +65,32 @@ class RecurringViewModel: ObservableObject {
         loadRecurringTransactions()
     }
     
+    func addRecurringTransaction(name: String, amount: Double, category: CategoryEntity, frequency: String, startDate: Date, isIncome: Bool, isActive: Bool) {
+        let recurring = RecurringTransactionEntity(context: context)
+        recurring.id = Int64.random(in: 1...1000000)
+        recurring.name = name
+        recurring.amount = Int64(amount * 100)
+        recurring.categoryId = category.id
+        recurring.accountId = transactionsViewModel.accounts.first?.id ?? 0
+        recurring.isIncome = isIncome
+        recurring.frequency = frequency
+        recurring.startDate = Int64(startDate.timeIntervalSince1970 * 1000)
+        recurring.endDate = 0
+        recurring.isActive = isActive
+        recurring.lastExecuted = 0
+        recurring.nextExecution = Int64(startDate.timeIntervalSince1970 * 1000)
+        recurring.note = nil
+        
+        CoreDataStack.shared.saveContext()
+        loadRecurringTransactions()
+    }
+    
+    func toggleRecurringTransaction(_ recurring: RecurringTransactionEntity) {
+        recurring.isActive.toggle()
+        CoreDataStack.shared.saveContext()
+        loadRecurringTransactions()
+    }
+    
     func deactivateRecurringTransaction(_ recurring: RecurringTransactionEntity) {
         recurring.isActive.toggle()
         CoreDataStack.shared.saveContext()

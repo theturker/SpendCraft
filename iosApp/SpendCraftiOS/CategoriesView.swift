@@ -12,6 +12,7 @@ struct CategoriesView: View {
     @EnvironmentObject var budgetViewModel: BudgetViewModel
     
     @State private var showAddBudget = false
+    @State private var showAddCategory = false
     @State private var selectedCategory: CategoryEntity?
     
     var body: some View {
@@ -31,11 +32,24 @@ struct CategoriesView: View {
         }
         .navigationTitle("Kategoriler")
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showAddCategory = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+        }
         .sheet(isPresented: $showAddBudget) {
             if let category = selectedCategory {
                 AddBudgetView(category: category)
                     .environmentObject(budgetViewModel)
             }
+        }
+        .sheet(isPresented: $showAddCategory) {
+            AddCategoryView()
+                .environmentObject(transactionsViewModel)
         }
     }
 }
@@ -177,6 +191,133 @@ struct AddBudgetView: View {
     func saveBudget() {
         guard let amount = Double(budgetAmount) else { return }
         budgetViewModel.upsertBudget(category: category, monthlyLimit: amount)
+        dismiss()
+    }
+}
+
+struct AddCategoryView: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var transactionsViewModel: TransactionsViewModel
+    
+    @State private var categoryName: String = ""
+    @State private var selectedIcon: String = "circle.fill"
+    @State private var selectedColor: Color = .blue
+    
+    let categoryIcons = [
+        "cart.fill", "fork.knife", "house.fill", "car.fill", "tram.fill",
+        "airplane", "bolt.fill", "bag.fill", "gift.fill", "book.fill",
+        "gamecontroller.fill", "film.fill", "heart.fill", "creditcard.fill",
+        "pills.fill", "briefcase.fill", "graduationcap.fill", "phone.fill"
+    ]
+    
+    let categoryColors: [(String, Color)] = [
+        ("Mavi", .blue), ("Yeşil", .green), ("Kırmızı", .red),
+        ("Turuncu", .orange), ("Mor", .purple), ("Pembe", .pink),
+        ("Sarı", .yellow), ("Kahverengi", .brown), ("İndigo", .indigo),
+        ("Cyan", .cyan), ("Mint", .mint), ("Teal", .teal)
+    ]
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Kategori Bilgileri") {
+                    TextField("Kategori Adı", text: $categoryName)
+                        .font(.body)
+                }
+                
+                Section("İkon Seç") {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 12) {
+                        ForEach(categoryIcons, id: \.self) { icon in
+                            Button {
+                                selectedIcon = icon
+                            } label: {
+                                Image(systemName: icon)
+                                    .font(.title2)
+                                    .foregroundColor(selectedIcon == icon ? .white : selectedColor)
+                                    .frame(width: 50, height: 50)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(selectedIcon == icon ? selectedColor : selectedColor.opacity(0.2))
+                                    )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                }
+                
+                Section("Renk Seç") {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))], spacing: 12) {
+                        ForEach(categoryColors, id: \.0) { colorItem in
+                            Button {
+                                selectedColor = colorItem.1
+                            } label: {
+                                VStack(spacing: 6) {
+                                    Circle()
+                                        .fill(colorItem.1)
+                                        .frame(width: 40, height: 40)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.white, lineWidth: selectedColor == colorItem.1 ? 3 : 0)
+                                        )
+                                        .shadow(color: selectedColor == colorItem.1 ? colorItem.1.opacity(0.5) : .clear, radius: 5)
+                                    
+                                    Text(colorItem.0)
+                                        .font(.caption2)
+                                        .foregroundColor(.primary)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                }
+                
+                Section("Önizleme") {
+                    HStack(spacing: 12) {
+                        Image(systemName: selectedIcon)
+                            .font(.title2)
+                            .foregroundColor(selectedColor)
+                            .frame(width: 50, height: 50)
+                            .background(selectedColor.opacity(0.2))
+                            .cornerRadius(12)
+                        
+                        Text(categoryName.isEmpty ? "Kategori Adı" : categoryName)
+                            .font(.headline)
+                    }
+                    .padding(.vertical, 8)
+                }
+                
+                Section {
+                    Button {
+                        saveCategory()
+                    } label: {
+                        Text("Kategori Ekle")
+                            .frame(maxWidth: .infinity)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                    }
+                    .disabled(categoryName.isEmpty)
+                }
+            }
+            .navigationTitle("Yeni Kategori")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("İptal") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+    
+    func saveCategory() {
+        transactionsViewModel.addCategory(
+            name: categoryName,
+            icon: selectedIcon,
+            color: selectedColor
+        )
         dismiss()
     }
 }

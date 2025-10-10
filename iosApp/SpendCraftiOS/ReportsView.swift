@@ -14,6 +14,7 @@ struct ReportsView: View {
     
     @State private var selectedPeriod: Period = .month
     @State private var selectedChartType: ChartType = .trend
+    @State private var showAISuggestions = false
     
     enum Period: String, CaseIterable {
         case week = "Hafta"
@@ -90,6 +91,40 @@ struct ReportsView: View {
                 }
                 .padding(.horizontal, 16)
                 
+                // AI Suggestions Button
+                Button {
+                    showAISuggestions = true
+                } label: {
+                    HStack {
+                        Image(systemName: "sparkles")
+                            .font(.title3)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("AI Önerileri")
+                                .font(.headline)
+                            Text("Harcama alışkanlıklarınız hakkında öneriler alın")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.purple.opacity(0.2), Color.blue.opacity(0.2)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                    )
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+                
                 // Category Breakdown
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Kategoriye Göre Harcamalar")
@@ -145,6 +180,10 @@ struct ReportsView: View {
         }
         .navigationTitle("Raporlar")
         .navigationBarTitleDisplayMode(.large)
+        .sheet(isPresented: $showAISuggestions) {
+            AISuggestionsView()
+                .environmentObject(transactionsViewModel)
+        }
     }
     
     func topCategories() -> [(CategoryEntity, Double)] {
@@ -458,7 +497,18 @@ struct CategoryPieChartView: View {
                         .foregroundStyle(item.0.uiColor)
                         .opacity(0.9)
                     } else {
-                        // Fallback on earlier versions
+                        // iOS 16 fallback - SectorMark without cornerRadius
+                        if #available(iOS 17.0, *) {
+                            SectorMark(
+                                angle: .value("Tutar", item.1),
+                                innerRadius: .ratio(0.5),
+                                angularInset: 1.5
+                            )
+                            .foregroundStyle(item.0.uiColor)
+                            .opacity(0.9)
+                        } else {
+                            // Fallback on earlier versions
+                        }
                     }
                 }
                 .frame(height: 280)

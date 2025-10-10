@@ -365,6 +365,7 @@ struct AddAccountView: View {
 struct RecurringTransactionsListView: View {
     @EnvironmentObject var recurringViewModel: RecurringViewModel
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
+    @State private var showAddRecurring = false
     
     var body: some View {
         List {
@@ -376,6 +377,10 @@ struct RecurringTransactionsListView: View {
                     Text("Henüz tekrarlayan işlem yok")
                         .font(.headline)
                         .foregroundColor(.secondary)
+                    Text("Sağ üst köşedeki + butonuna basarak ekleyin")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -390,7 +395,7 @@ struct RecurringTransactionsListView: View {
                             }
                             
                             Button {
-                                recurringViewModel.deactivateRecurringTransaction(recurring)
+                                recurringViewModel.toggleRecurringTransaction(recurring)
                             } label: {
                                 Label(recurring.isActive ? "Duraklat" : "Aktifleştir", 
                                       systemImage: recurring.isActive ? "pause" : "play")
@@ -402,6 +407,20 @@ struct RecurringTransactionsListView: View {
         }
         .navigationTitle("Tekrarlayan İşlemler")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showAddRecurring = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+        }
+        .sheet(isPresented: $showAddRecurring) {
+            AddRecurringTransactionView()
+                .environmentObject(recurringViewModel)
+                .environmentObject(transactionsViewModel)
+        }
     }
 }
 
@@ -533,5 +552,130 @@ struct AchievementCardLarge: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(achievement.isUnlocked ? Color.yellow : Color.clear, lineWidth: 2)
         )
+    }
+}
+
+struct AddRecurringTransactionView: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var recurringViewModel: RecurringViewModel
+    @EnvironmentObject var transactionsViewModel: TransactionsViewModel
+    
+    @State private var name: String = ""
+    @State private var amount: String = ""
+    @State private var isIncome: Bool = false
+    @State private var frequency: String = "MONTHLY"
+    @State private var selectedCategory: CategoryEntity?
+    @State private var startDate: Date = Date()
+    @State private var isActive: Bool = true
+    
+    let frequencies = [
+        ("Günlük", "DAILY"),
+        ("Haftalık", "WEEKLY"),
+        ("Aylık", "MONTHLY"),
+        ("Yıllık", "YEARLY")
+    ]
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("İşlem Bilgileri") {
+                    TextField("İşlem Adı", text: $name)
+                    
+                    HStack {
+                        TextField("0.00", text: $amount)
+                            .keyboardType(.decimalPad)
+                        Text("₺")
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Picker("Tip", selection: $isIncome) {
+                        Text("Gider").tag(false)
+                        Text("Gelir").tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                
+                Section("Kategori") {
+                    if let category = selectedCategory {
+                        HStack {
+                            Image(systemName: category.icon ?? "circle.fill")
+                                .foregroundColor(category.uiColor)
+                            Text(category.name ?? "")
+                            
+                            Spacer()
+                            
+                            Button("Değiştir") {
+                                selectedCategory = nil
+                            }
+                            .font(.caption)
+                        }
+                    } else {
+                        Picker("Kategori Seç", selection: $selectedCategory) {
+                            Text("Seçiniz").tag(nil as CategoryEntity?)
+                            ForEach(transactionsViewModel.categories, id: \.id) { category in
+                                HStack {
+                                    Image(systemName: category.icon ?? "circle.fill")
+                                    Text(category.name ?? "")
+                                }
+                                .tag(category as CategoryEntity?)
+                            }
+                        }
+                    }
+                }
+                
+                Section("Tekrar Sıklığı") {
+                    Picker("Sıklık", selection: $frequency) {
+                        ForEach(frequencies, id: \.1) { freq in
+                            Text(freq.0).tag(freq.1)
+                        }
+                    }
+                    
+                    DatePicker("Başlangıç Tarihi",
+                              selection: $startDate,
+                              displayedComponents: .date)
+                }
+                
+                Section("Durum") {
+                    Toggle("Aktif", isOn: $isActive)
+                }
+                
+                Section {
+                    Button {
+                        saveRecurringTransaction()
+                    } label: {
+                        Text("Kaydet")
+                            .frame(maxWidth: .infinity)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                    }
+                    .disabled(name.isEmpty || amount.isEmpty || Double(amount) == nil || selectedCategory == nil)
+                }
+            }
+            .navigationTitle("Tekrarlayan İşlem Ekle")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("İptal") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+    
+    func saveRecurringTransaction() {
+        guard let amountValue = Double(amount),
+              let category = selectedCategory else { return }
+        
+        recurringViewModel.addRecurringTransaction(
+            name: name,
+            amount: amountValue,
+            category: category,
+            frequency: frequency,
+            startDate: startDate,
+            isIncome: isIncome,
+            isActive: isActive
+        )
+        dismiss()
     }
 }

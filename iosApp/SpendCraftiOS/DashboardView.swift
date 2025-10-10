@@ -266,35 +266,53 @@ struct BudgetProgressRow: View {
 
 struct AchievementCard: View {
     let achievement: AchievementEntity
+    @State private var showDetailDialog = false
     
     var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: achievement.icon ?? "star.fill")
-                .font(.system(size: 32))
-                .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
-            
-            Text(achievement.name ?? "")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-            
-            if achievement.isUnlocked {
-                Text("\(achievement.points) Puan")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            } else {
-                Text("\(achievement.progress)/\(achievement.maxProgress)")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+        Button {
+            showDetailDialog = true
+        } label: {
+            VStack(spacing: 8) {
+                Image(systemName: achievement.icon ?? "star.fill")
+                    .font(.system(size: 32))
+                    .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
+                
+                Text(achievement.name ?? "")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
+                
+                if achievement.isUnlocked {
+                    Text("\(achievement.points) Puan")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                } else {
+                    Text("\(achievement.progress)/\(achievement.maxProgress)")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .frame(width: 100, height: 120)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(achievement.isUnlocked ? Color.yellow.opacity(0.1) : Color.gray.opacity(0.1))
+            )
+        }
+        .buttonStyle(.plain)
+        .alert(achievement.name ?? "Başarı", isPresented: $showDetailDialog) {
+            Button("Tamam", role: .cancel) {}
+        } message: {
+            VStack(spacing: 8) {
+                if achievement.isUnlocked {
+                    Text("🎉 Bu başarıyı kazandınız!\n\n\(achievement.achievementDescription ?? "")\n\nKazanılan Puan: \(achievement.points)")
+                } else {
+                    let remaining = achievement.maxProgress - achievement.progress
+                    Text("\(achievement.achievementDescription ?? "")\n\nİlerleme: \(achievement.progress) / \(achievement.maxProgress)\n\nKalan: \(remaining)")
+                }
             }
         }
-        .frame(width: 100, height: 120)
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(achievement.isUnlocked ? Color.yellow.opacity(0.1) : Color.gray.opacity(0.1))
-        )
     }
 }
 

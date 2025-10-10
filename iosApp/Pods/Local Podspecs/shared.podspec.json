@@ -10,7 +10,7 @@
   "summary": "SpendCraft Shared Module",
   "vendored_frameworks": "build/cocoapods/framework/shared.framework",
   "platforms": {
-    "ios": "16.0"
+    "ios": "14.0"
   },
   "xcconfig": {
     "ENABLE_USER_SCRIPT_SANDBOXING": "NO"
