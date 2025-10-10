@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications
 
 struct MainAppView: View {
     @StateObject private var authViewModel = AuthViewModel()
@@ -46,7 +47,9 @@ struct MainAppView: View {
 
 struct AuthenticatedAppView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var notificationManager = NotificationManager.shared
     @State private var selectedTab = 0
+    @State private var hasRequestedNotifications = false
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -91,6 +94,17 @@ struct AuthenticatedAppView: View {
             
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
+            
+            // Request notification permission and schedule notifications
+            if !hasRequestedNotifications {
+                hasRequestedNotifications = true
+                Task {
+                    let granted = await notificationManager.requestAuthorization()
+                    if granted {
+                        notificationManager.scheduleAllNotifications()
+                    }
+                }
+            }
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct SettingsView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
@@ -15,11 +16,13 @@ struct SettingsView: View {
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
     @EnvironmentObject var notificationsViewModel: NotificationsViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var notificationManager = NotificationManager.shared
     
     @State private var showAISettings = false
     @State private var showAISuggestions = false
     @State private var showExport = false
     @State private var showNotifications = false
+    @State private var showNotificationSettings = false
     @State private var showSignOutConfirm = false
     @State private var signOutError: String?
 
@@ -128,6 +131,26 @@ struct SettingsView: View {
                     }
                 }
                 .foregroundColor(.primary)
+                
+                Button {
+                    showNotificationSettings = true
+                } label: {
+                    HStack {
+                        Image(systemName: "bell.badge.fill")
+                            .foregroundColor(.blue)
+                        Text("Bildirim Ayarları")
+                        Spacer()
+                        if notificationManager.isAuthorized {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                                .font(.caption)
+                        }
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .foregroundColor(.primary)
             } header: {
                 Text("Özellikler")
             }
@@ -216,6 +239,10 @@ struct SettingsView: View {
         .sheet(isPresented: $showNotifications) {
             NotificationsView()
                 .environmentObject(notificationsViewModel)
+        }
+        .sheet(isPresented: $showNotificationSettings) {
+            NotificationSettingsView()
+                .environmentObject(transactionsViewModel)
         }
         .alert("Çıkış yapılsın mı?", isPresented: $showSignOutConfirm) {
             Button("Çıkış Yap", role: .destructive) {
@@ -552,6 +579,299 @@ struct AchievementCardLarge: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(achievement.isUnlocked ? Color.yellow : Color.clear, lineWidth: 2)
         )
+    }
+}
+
+struct NotificationSettingsView: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var transactionsViewModel: TransactionsViewModel
+    @StateObject private var notificationManager = NotificationManager.shared
+    @State private var pendingNotifications: [UNNotificationRequest] = []
+    @State private var showTestAlert = false
+    @State private var testMessage = ""
+    
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Bildirim Durumu")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Text(notificationManager.isAuthorized ? "Aktif" : "Kapalı")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        if notificationManager.isAuthorized {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                                .font(.title2)
+                        } else {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.red)
+                                .font(.title2)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    
+                    if !notificationManager.isAuthorized {
+                        Button {
+                            openSettings()
+                        } label: {
+                            HStack {
+                                Image(systemName: "gear")
+                                Text("Ayarlarda Bildirimleri Aç")
+                                Spacer()
+                                Image(systemName: "arrow.right")
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Durum")
+                } footer: {
+                    Text("SpendCraft, harcamalarınızı takip etmenize yardımcı olmak için bildirimler gönderir.")
+                }
+                
+                Section {
+                    NotificationInfoRow(
+                        icon: "sun.max.fill",
+                        color: .orange,
+                        title: "Sabah Hatırlatması",
+                        time: "09:00",
+                        description: "Günaydın! Harcamalarınızı kaydetmeyi unutmayın"
+                    )
+                    
+                    NotificationInfoRow(
+                        icon: "sun.min.fill",
+                        color: .yellow,
+                        title: "Öğlen Hatırlatması",
+                        time: "13:00",
+                        description: "Harcamalarınızı takip ediyor musunuz?"
+                    )
+                    
+                    NotificationInfoRow(
+                        icon: "moon.fill",
+                        color: .indigo,
+                        title: "Akşam Özeti",
+                        time: "20:00",
+                        description: "Bugünkü harcamalarınızı gözden geçirin"
+                    )
+                } header: {
+                    Text("Günlük Hatırlatmalar (3 adet)")
+                } footer: {
+                    Text("Her gün 3 defa harcama girişi hatırlatması alırsınız.")
+                }
+                
+                Section {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "calendar.badge.clock")
+                                    .foregroundColor(.green)
+                                Text("Aylık Gelir Hatırlatması")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                            }
+                            
+                            Text("Her ayın 1-5. günleri arasında, saat 10:00'da")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            
+                            Text("\"Gelirlerinizi girmeyi unutmayın!\"")
+                                .font(.caption)
+                                .italic()
+                                .foregroundColor(.green)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                } header: {
+                    Text("Gelir Hatırlatmaları")
+                } footer: {
+                    Text("Maaş ve düzenli gelirlerinizi takip etmeniz için ayın başında 5 gün boyunca hatırlatma alırsınız.")
+                }
+                
+                Section {
+                    Button {
+                        sendTestNotification()
+                    } label: {
+                        HStack {
+                            Image(systemName: "bell.badge.waveform.fill")
+                                .foregroundColor(.purple)
+                                .font(.title3)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Test Bildirimi Gönder")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                Text("3 saniye sonra bildirim alacaksınız")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!notificationManager.isAuthorized)
+                } header: {
+                    Text("Test")
+                } footer: {
+                    Text("Bildirimlerin nasıl göründüğünü görmek için test bildirimi gönderin. Uygulamayı arka plana alın.")
+                }
+                
+                Section {
+                    HStack {
+                        Text("Zamanlanmış Bildirimler")
+                            .font(.subheadline)
+                        Spacer()
+                        Text("\(pendingNotifications.count)")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                    }
+                    
+                    Button {
+                        Task {
+                            pendingNotifications = await notificationManager.getPendingNotifications()
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.clockwise")
+                            Text("Bildirimleri Yenile")
+                        }
+                    }
+                    
+                    Button(role: .destructive) {
+                        notificationManager.cancelAllNotifications()
+                        pendingNotifications = []
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash")
+                            Text("Tüm Bildirimleri İptal Et")
+                        }
+                    }
+                    
+                    Button {
+                        notificationManager.scheduleAllNotifications()
+                        Task {
+                            try? await Task.sleep(nanoseconds: 500_000_000)
+                            pendingNotifications = await notificationManager.getPendingNotifications()
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: "bell.badge.fill")
+                            Text("Bildirimleri Yeniden Planla")
+                        }
+                    }
+                    .disabled(!notificationManager.isAuthorized)
+                } header: {
+                    Text("Yönetim")
+                }
+            }
+            .navigationTitle("Bildirim Ayarları")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Tamam") {
+                        dismiss()
+                    }
+                }
+            }
+            .onAppear {
+                Task {
+                    pendingNotifications = await notificationManager.getPendingNotifications()
+                }
+            }
+            .alert(testMessage, isPresented: $showTestAlert) {
+                Button("Tamam", role: .cancel) {}
+            }
+        }
+    }
+    
+    func openSettings() {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    func sendTestNotification() {
+        // Önce izin kontrolü yap
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                if settings.authorizationStatus != .authorized {
+                    self.testMessage = "Bildirim izni verilmemiş. Lütfen ayarlardan bildirimleri açın."
+                    self.showTestAlert = true
+                    return
+                }
+                
+                let content = UNMutableNotificationContent()
+                content.title = "✅ Test Bildirimi"
+                content.body = "SpendCraft bildirimleri başarıyla çalışıyor! 🎉"
+                content.sound = .default
+                content.badge = 1
+                
+                // 3 saniye sonra gönder
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+                
+                let request = UNNotificationRequest(
+                    identifier: "test_notification_\(UUID().uuidString)",
+                    content: content,
+                    trigger: trigger
+                )
+                
+                UNUserNotificationCenter.current().add(request) { error in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            self.testMessage = "Bildirim gönderilemedi: \(error.localizedDescription)"
+                            self.showTestAlert = true
+                        } else {
+                            self.testMessage = "✅ Test bildirimi gönderildi!\n\n3 saniye içinde bildirim alacaksınız.\n\nBildirimi görmek için uygulamayı arka plana alın (home tuşuna basın)."
+                            self.showTestAlert = true
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct NotificationInfoRow: View {
+    let icon: String
+    let color: Color
+    let title: String
+    let time: String
+    let description: String
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(color)
+                .frame(width: 40, height: 40)
+                .background(color.opacity(0.2))
+                .cornerRadius(8)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                
+                Text(time)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.blue)
+                
+                Text(description)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+        }
+        .padding(.vertical, 4)
     }
 }
 

@@ -301,16 +301,169 @@ struct AchievementCard: View {
             )
         }
         .buttonStyle(.plain)
-        .alert(achievement.name ?? "Başarı", isPresented: $showDetailDialog) {
-            Button("Tamam", role: .cancel) {}
-        } message: {
-            VStack(spacing: 8) {
-                if achievement.isUnlocked {
-                    Text("🎉 Bu başarıyı kazandınız!\n\n\(achievement.achievementDescription ?? "")\n\nKazanılan Puan: \(achievement.points)")
-                } else {
-                    let remaining = achievement.maxProgress - achievement.progress
-                    Text("\(achievement.achievementDescription ?? "")\n\nİlerleme: \(achievement.progress) / \(achievement.maxProgress)\n\nKalan: \(remaining)")
+        .sheet(isPresented: $showDetailDialog) {
+            AchievementDetailSheet(achievement: achievement)
+                .presentationDetents([.height(400)])
+        }
+    }
+}
+
+struct AchievementDetailSheet: View {
+    @Environment(\.dismiss) var dismiss
+    let achievement: AchievementEntity
+    
+    var progressPercentage: Double {
+        guard achievement.maxProgress > 0 else { return 0 }
+        return Double(achievement.progress) / Double(achievement.maxProgress)
+    }
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header with close button
+            HStack {
+                Spacer()
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.gray)
                 }
+            }
+            .padding()
+            
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Icon and Status
+                    VStack(spacing: 16) {
+                        ZStack {
+                            Circle()
+                                .fill(achievement.isUnlocked ? 
+                                     LinearGradient(colors: [.yellow.opacity(0.3), .orange.opacity(0.3)], 
+                                                   startPoint: .topLeading, 
+                                                   endPoint: .bottomTrailing) :
+                                     LinearGradient(colors: [.gray.opacity(0.2), .gray.opacity(0.1)], 
+                                                   startPoint: .topLeading, 
+                                                   endPoint: .bottomTrailing))
+                                .frame(width: 120, height: 120)
+                            
+                            Image(systemName: achievement.icon ?? "star.fill")
+                                .font(.system(size: 60))
+                                .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
+                        }
+                        
+                        if achievement.isUnlocked {
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.seal.fill")
+                                    .foregroundColor(.green)
+                                Text("Tamamlandı!")
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.green)
+                            }
+                            .font(.headline)
+                        }
+                    }
+                    
+                    // Title
+                    Text(achievement.name ?? "Başarı")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                    
+                    // Description
+                    Text(achievement.achievementDescription ?? "")
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    
+                    // Progress or Points
+                    if achievement.isUnlocked {
+                        VStack(spacing: 12) {
+                            HStack {
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(.yellow)
+                                Text("\(achievement.points) Puan Kazandınız!")
+                                    .font(.headline)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.yellow.opacity(0.15))
+                            )
+                        }
+                        .padding(.horizontal)
+                    } else {
+                        VStack(spacing: 16) {
+                            // Progress Bar
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text("İlerleme")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                    Spacer()
+                                    Text("\(achievement.progress) / \(achievement.maxProgress)")
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.blue)
+                                }
+                                
+                                GeometryReader { geometry in
+                                    ZStack(alignment: .leading) {
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color.gray.opacity(0.2))
+                                            .frame(height: 12)
+                                        
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [.blue, .purple],
+                                                    startPoint: .leading,
+                                                    endPoint: .trailing
+                                                )
+                                            )
+                                            .frame(width: geometry.size.width * CGFloat(progressPercentage), height: 12)
+                                    }
+                                }
+                                .frame(height: 12)
+                                
+                                HStack {
+                                    Text("\(Int(progressPercentage * 100))% Tamamlandı")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                    Text("Kalan: \(achievement.maxProgress - achievement.progress)")
+                                        .font(.caption)
+                                        .foregroundColor(.orange)
+                                        .fontWeight(.medium)
+                                }
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.blue.opacity(0.05))
+                            )
+                            
+                            // Reward info
+                            HStack {
+                                Image(systemName: "gift.fill")
+                                    .foregroundColor(.purple)
+                                Text("Kazanacağınız: \(achievement.points) Puan")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.purple.opacity(0.1))
+                            )
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+                .padding(.vertical)
             }
         }
     }
