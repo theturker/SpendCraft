@@ -13,6 +13,7 @@ struct ReportsView: View {
     @EnvironmentObject var budgetViewModel: BudgetViewModel
     
     @State private var selectedPeriod: Period = .month
+    @State private var selectedChartType: ChartType = .trend
     
     enum Period: String, CaseIterable {
         case week = "Hafta"
@@ -20,9 +21,15 @@ struct ReportsView: View {
         case year = "Yıl"
     }
     
+    enum ChartType: String, CaseIterable {
+        case trend = "Trend"
+        case category = "Kategori"
+        case comparison = "Karşılaştırma"
+    }
+    
     var body: some View {
         ScrollView {
-            VStack(spacing: 12) {
+            VStack(spacing: 16) {
                 // Period Selector
                 Picker("Dönem", selection: $selectedPeriod) {
                     ForEach(Period.allCases, id: \.self) { period in
@@ -51,6 +58,37 @@ struct ReportsView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 4)
+                
+                // Chart Type Selector
+                Picker("Grafik Tipi", selection: $selectedChartType) {
+                    ForEach(ChartType.allCases, id: \.self) { type in
+                        Text(type.rawValue).tag(type)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+                
+                // Charts Section
+                VStack(spacing: 16) {
+                    switch selectedChartType {
+                    case .trend:
+                        TrendChartView(
+                            viewModel: transactionsViewModel,
+                            period: selectedPeriod
+                        )
+                    case .category:
+                        CategoryPieChartView(
+                            viewModel: transactionsViewModel
+                        )
+                    case .comparison:
+                        ComparisonBarChartView(
+                            viewModel: transactionsViewModel,
+                            period: selectedPeriod
+                        )
+                    }
+                }
+                .padding(.horizontal, 16)
                 
                 // Category Breakdown
                 VStack(alignment: .leading, spacing: 12) {
@@ -260,5 +298,283 @@ struct TopCategoryRow: View {
                 .fontWeight(.semibold)
         }
         .padding(.horizontal)
+    }
+}
+
+// MARK: - Chart Views
+
+/// Zaman bazlı trend grafiği (Line Chart)
+struct TrendChartView: View {
+    let viewModel: TransactionsViewModel
+    let period: ReportsView.Period
+    
+    var trendData: [(Date, Double, Double)] {
+        switch period {
+        case .week:
+            return viewModel.dailyTrendData(days: 7)
+        case .month:
+            return viewModel.dailyTrendData(days: 30)
+        case .year:
+            return viewModel.monthlyTrendData(months: 12)
+        }
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Gelir & Gider Trendi")
+                .font(.headline)
+            
+            if trendData.isEmpty {
+                Text("Henüz veri yok")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 60)
+            } else {
+                Chart {
+                    // Gelir çizgisi
+                    ForEach(trendData, id: \.0) { item in
+                        LineMark(
+                            x: .value("Tarih", item.0, unit: period == .year ? .month : .day),
+                            y: .value("Gelir", item.1)
+                        )
+                        .foregroundStyle(.green)
+                        .interpolationMethod(.catmullRom)
+                        
+                        AreaMark(
+                            x: .value("Tarih", item.0, unit: period == .year ? .month : .day),
+                            y: .value("Gelir", item.1)
+                        )
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.green.opacity(0.3), .green.opacity(0.0)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .interpolationMethod(.catmullRom)
+                    }
+                    
+                    // Gider çizgisi
+                    ForEach(trendData, id: \.0) { item in
+                        LineMark(
+                            x: .value("Tarih", item.0, unit: period == .year ? .month : .day),
+                            y: .value("Gider", item.2)
+                        )
+                        .foregroundStyle(.red)
+                        .interpolationMethod(.catmullRom)
+                        
+                        AreaMark(
+                            x: .value("Tarih", item.0, unit: period == .year ? .month : .day),
+                            y: .value("Gider", item.2)
+                        )
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.red.opacity(0.3), .red.opacity(0.0)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .interpolationMethod(.catmullRom)
+                    }
+                }
+                .frame(height: 220)
+                .chartXAxis {
+                    AxisMarks(values: .stride(by: period == .year ? .month : (period == .month ? .day : .day), count: period == .year ? 2 : (period == .month ? 5 : 1))) { _ in
+                        AxisGridLine()
+                        AxisTick()
+                        AxisValueLabel(format: period == .year ? .dateTime.month(.abbreviated) : .dateTime.day())
+                    }
+                }
+                .chartYAxis {
+                    AxisMarks { value in
+                        AxisGridLine()
+                        AxisValueLabel {
+                            if let doubleValue = value.as(Double.self) {
+                                Text(String(format: "%.0f₺", doubleValue))
+                            }
+                        }
+                    }
+                }
+                .padding(.vertical, 8)
+                
+                // Legend
+                HStack(spacing: 20) {
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(.green)
+                            .frame(width: 10, height: 10)
+                        Text("Gelir")
+                            .font(.caption)
+                    }
+                    
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(.red)
+                            .frame(width: 10, height: 10)
+                        Text("Gider")
+                            .font(.caption)
+                    }
+                }
+                .padding(.top, 4)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(UIColor.secondarySystemBackground))
+        )
+    }
+}
+
+/// Kategorilere göre harcama dağılımı (Pie Chart)
+struct CategoryPieChartView: View {
+    let viewModel: TransactionsViewModel
+    
+    var categoryData: [(CategoryEntity, Double)] {
+        viewModel.categorySpendingData()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Kategori Dağılımı")
+                .font(.headline)
+            
+            if categoryData.isEmpty {
+                Text("Henüz harcama yok")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 60)
+            } else {
+                Chart(categoryData, id: \.0.id) { item in
+                    if #available(iOS 17.0, *) {
+                        SectorMark(
+                            angle: .value("Tutar", item.1),
+                            innerRadius: .ratio(0.5),
+                            angularInset: 1.5
+                        )
+                        .cornerRadius(5)
+                        .foregroundStyle(item.0.uiColor)
+                        .opacity(0.9)
+                    } else {
+                        // Fallback on earlier versions
+                    }
+                }
+                .frame(height: 280)
+                .padding(.vertical, 8)
+                
+                // Category List
+                VStack(spacing: 12) {
+                    ForEach(categoryData.prefix(6), id: \.0.id) { item in
+                        HStack(spacing: 12) {
+                            Circle()
+                                .fill(item.0.uiColor)
+                                .frame(width: 12, height: 12)
+                            
+                            Image(systemName: item.0.icon ?? "circle.fill")
+                                .foregroundColor(item.0.uiColor)
+                                .frame(width: 24)
+                            
+                            Text(item.0.name ?? "")
+                                .font(.subheadline)
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .trailing, spacing: 2) {
+                                Text(String(format: "%.2f ₺", item.1))
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                
+                                Text(String(format: "%.1f%%", (item.1 / viewModel.totalExpense) * 100))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                }
+                .padding(.top, 8)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(UIColor.secondarySystemBackground))
+        )
+    }
+}
+
+/// Kategorilere göre karşılaştırma (Bar Chart)
+struct ComparisonBarChartView: View {
+    let viewModel: TransactionsViewModel
+    let period: ReportsView.Period
+    
+    var categoryData: [(CategoryEntity, Double)] {
+        viewModel.categorySpendingData().prefix(8).map { $0 }
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Kategori Karşılaştırması")
+                .font(.headline)
+            
+            if categoryData.isEmpty {
+                Text("Henüz harcama yok")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 60)
+            } else {
+                Chart(categoryData, id: \.0.id) { item in
+                    BarMark(
+                        x: .value("Tutar", item.1),
+                        y: .value("Kategori", item.0.name ?? "")
+                    )
+                    .foregroundStyle(item.0.uiColor.gradient)
+                    .cornerRadius(6)
+                    .annotation(position: .trailing, alignment: .leading) {
+                        Text(String(format: "%.0f₺", item.1))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.leading, 4)
+                    }
+                }
+                .frame(height: CGFloat(max(categoryData.count * 45, 200)))
+                .chartXAxis {
+                    AxisMarks { value in
+                        AxisGridLine()
+                        AxisValueLabel {
+                            if let doubleValue = value.as(Double.self) {
+                                Text(String(format: "%.0f₺", doubleValue))
+                            }
+                        }
+                    }
+                }
+                .chartYAxis {
+                    AxisMarks { value in
+                        AxisValueLabel {
+                            if let stringValue = value.as(String.self) {
+                                // Kategori için icon göster
+                                if let category = categoryData.first(where: { $0.0.name == stringValue })?.0 {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: category.icon ?? "circle.fill")
+                                            .font(.caption)
+                                            .foregroundColor(category.uiColor)
+                                        Text(stringValue)
+                                            .font(.caption)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(.vertical, 8)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(UIColor.secondarySystemBackground))
+        )
     }
 }

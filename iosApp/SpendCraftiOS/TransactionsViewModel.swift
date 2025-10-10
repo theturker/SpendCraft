@@ -112,4 +112,97 @@ class TransactionsViewModel: ObservableObject {
             .filter { !$0.isIncome }
             .reduce(0) { $0 + $1.amount }
     }
+    
+    // MARK: - Chart Data Helpers
+    
+    /// Kategoriye göre harcama verilerini döndürür (Pie Chart için)
+    func categorySpendingData() -> [(CategoryEntity, Double)] {
+        let categorySpending: [(CategoryEntity, Double)] = categories.compactMap { category in
+            let spent = totalSpentForCategory(category)
+            return spent > 0 ? (category, spent) : nil
+        }
+        return categorySpending.sorted { $0.1 > $1.1 }
+    }
+    
+    /// Günlük bazda gelir/gider trendini döndürür (Line Chart için)
+    func dailyTrendData(days: Int = 30) -> [(Date, Double, Double)] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let startDate = calendar.date(byAdding: .day, value: -days, to: today)!
+        
+        var dailyData: [(Date, Double, Double)] = []
+        
+        for dayOffset in 0..<days {
+            if let date = calendar.date(byAdding: .day, value: dayOffset, to: startDate) {
+                let dayStart = calendar.startOfDay(for: date)
+                let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+                
+                let dayTransactions = transactions.filter { transaction in
+                    let transactionDate = Date(timeIntervalSince1970: TimeInterval(transaction.timestampUtcMillis) / 1000)
+                    return transactionDate >= dayStart && transactionDate < dayEnd
+                }
+                
+                let income = dayTransactions.filter { $0.isIncome }.reduce(0.0) { $0 + $1.amount }
+                let expense = dayTransactions.filter { !$0.isIncome }.reduce(0.0) { $0 + $1.amount }
+                
+                dailyData.append((dayStart, income, expense))
+            }
+        }
+        
+        return dailyData
+    }
+    
+    /// Haftalık bazda gelir/gider trendini döndürür
+    func weeklyTrendData(weeks: Int = 12) -> [(Date, Double, Double)] {
+        let calendar = Calendar.current
+        let today = Date()
+        let startDate = calendar.date(byAdding: .weekOfYear, value: -weeks, to: today)!
+        
+        var weeklyData: [(Date, Double, Double)] = []
+        
+        for weekOffset in 0..<weeks {
+            if let weekStart = calendar.date(byAdding: .weekOfYear, value: weekOffset, to: startDate) {
+                let weekEnd = calendar.date(byAdding: .weekOfYear, value: 1, to: weekStart)!
+                
+                let weekTransactions = transactions.filter { transaction in
+                    let transactionDate = Date(timeIntervalSince1970: TimeInterval(transaction.timestampUtcMillis) / 1000)
+                    return transactionDate >= weekStart && transactionDate < weekEnd
+                }
+                
+                let income = weekTransactions.filter { $0.isIncome }.reduce(0.0) { $0 + $1.amount }
+                let expense = weekTransactions.filter { !$0.isIncome }.reduce(0.0) { $0 + $1.amount }
+                
+                weeklyData.append((weekStart, income, expense))
+            }
+        }
+        
+        return weeklyData
+    }
+    
+    /// Aylık bazda gelir/gider trendini döndürür
+    func monthlyTrendData(months: Int = 12) -> [(Date, Double, Double)] {
+        let calendar = Calendar.current
+        let today = Date()
+        let startDate = calendar.date(byAdding: .month, value: -months, to: today)!
+        
+        var monthlyData: [(Date, Double, Double)] = []
+        
+        for monthOffset in 0..<months {
+            if let monthStart = calendar.date(byAdding: .month, value: monthOffset, to: startDate) {
+                let monthEnd = calendar.date(byAdding: .month, value: 1, to: monthStart)!
+                
+                let monthTransactions = transactions.filter { transaction in
+                    let transactionDate = Date(timeIntervalSince1970: TimeInterval(transaction.timestampUtcMillis) / 1000)
+                    return transactionDate >= monthStart && transactionDate < monthEnd
+                }
+                
+                let income = monthTransactions.filter { $0.isIncome }.reduce(0.0) { $0 + $1.amount }
+                let expense = monthTransactions.filter { !$0.isIncome }.reduce(0.0) { $0 + $1.amount }
+                
+                monthlyData.append((monthStart, income, expense))
+            }
+        }
+        
+        return monthlyData
+    }
 }
