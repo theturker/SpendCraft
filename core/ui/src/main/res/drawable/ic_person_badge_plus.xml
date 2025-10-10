@@ -1,0 +1,13 @@
+<!-- iOS SF Symbol: person.badge.plus -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#000000"
+        android:pathData="M9,12c2.21,0 4,-1.79 4,-4s-1.79,-4 -4,-4S5,5.79 5,8S6.79,12 9,12zM9,14c-2.67,0 -8,1.34 -8,4v2h16v-2C17,15.34 11.67,14 9,14z"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M20,10V7h-2v3h-3v2h3v3h2v-3h3v-2H20z"/>
+</vector>

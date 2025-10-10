@@ -1,0 +1,13 @@
+<!-- iOS SF Symbol: repeat.circle.fill -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#000000"
+        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10s10,-4.48 10,-10S17.52,2 12,2zM17,13h-4v4l-1,-1l-1,-1l-1,-1l-1,-1h4V9l1,1l1,1l1,1L17,13z"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M7,11h4V7l1,1l1,1l1,1l1,1H11v4l-1,-1l-1,-1l-1,-1L7,11z"/>
+</vector>

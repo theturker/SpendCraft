@@ -1,0 +1,13 @@
+<!-- iOS SF Symbol: sparkles -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#000000"
+        android:pathData="M12,2L9.5,9.5L2,12l7.5,2.5L12,22l2.5,-7.5L22,12l-7.5,-2.5L12,2z"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M17,2l-1.5,3.5L12,7l3.5,1.5L17,12l1.5,-3.5L22,7l-3.5,-1.5L17,2z"/>
+</vector>

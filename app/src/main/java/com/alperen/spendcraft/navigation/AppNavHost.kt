@@ -35,7 +35,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.delay
 
 object Routes {
-    const val LIST = "list"
+    const val MAIN_TABS = "main_tabs" // iOS-style tab navigation
+    const val LIST = "list" // Legacy route - redirects to MAIN_TABS
     const val ADD = "add"
     const val ADD_INCOME = "add_income"
     const val ADD_EXPENSE = "add_expense"
@@ -91,53 +92,72 @@ fun AppNavHost(
         }
     }
     
-    NavHost(navController = navController, startDestination = Routes.LIST) {
-        composable(Routes.LIST) {
-            TransactionsScreen(
-                viewModel = vm,
-                onAdd = { /* Bottom sheet will handle this */ },
-                onAddIncome = { /* Bottom sheet will handle this */ },
-                onAddExpense = { /* Bottom sheet will handle this */ },
-                onReports = { navController.navigate(Routes.REPORTS) },
-                onSettings = { navController.navigate(Routes.SETTINGS) },
-                onAllTransactions = { navController.navigate(Routes.ALL_TRANSACTIONS) },
-                onNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
-                onAchievements = { navController.navigate(Routes.ACHIEVEMENTS) },
-                isPremium = isPremium,
-                hasAIWeekly = hasAIWeekly
+    NavHost(navController = navController, startDestination = Routes.MAIN_TABS) {
+        // Main Tab Navigation (iOS-style 5 tabs)
+        composable(Routes.MAIN_TABS) {
+            MainTabNavigation(
+                onNavigateToAddTransaction = { isIncome ->
+                    when (isIncome) {
+                        true -> navController.navigate(Routes.ADD_INCOME)
+                        false -> navController.navigate(Routes.ADD_EXPENSE)
+                        null -> navController.navigate(Routes.ADD)
+                    }
+                },
+                onNavigateToNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
+                onNavigateToAchievements = { navController.navigate(Routes.ACHIEVEMENTS) },
+                onNavigateToAISettings = { navController.navigate(Routes.AI_SUGGESTIONS) },
+                onNavigateToCategoryManagement = { navController.navigate(Routes.CATEGORY_MANAGEMENT) },
+                onNavigateToBudgetManagement = { navController.navigate(Routes.BUDGET_MANAGEMENT) },
+                onNavigateToAccounts = { navController.navigate(Routes.ACCOUNTS) },
+                onNavigateToRecurring = { navController.navigate(Routes.RECURRING) },
+                onNavigateToSharing = { navController.navigate(Routes.SHARING) },
+                isPremium = isPremium
             )
         }
+        
+        // Keep old route for backward compatibility
+        composable(Routes.LIST) {
+            // Redirect to main tabs
+            LaunchedEffect(Unit) {
+                navController.navigate(Routes.MAIN_TABS) {
+                    popUpTo(Routes.LIST) { inclusive = true }
+                }
+            }
+        }
         composable(Routes.ADD) {
-            AddTransactionScreen(
-                categories = vm.categories,
+            val categories by vm.categories.collectAsState()
+            com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
+                categories = categories,
                 initialTransactionType = null,
                 onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome) // null = default account
+                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
                     navController.popBackStack()
                 },
-                onBack = { navController.popBackStack() }
+                onDismiss = { navController.popBackStack() }
             )
         }
         composable(Routes.ADD_INCOME) {
-            AddTransactionScreen(
-                categories = vm.categories,
+            val categories by vm.categories.collectAsState()
+            com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
+                categories = categories,
                 initialTransactionType = true,
                 onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome) // null = default account
+                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
                     navController.popBackStack()
                 },
-                onBack = { navController.popBackStack() }
+                onDismiss = { navController.popBackStack() }
             )
         }
         composable(Routes.ADD_EXPENSE) {
-            AddTransactionScreen(
-                categories = vm.categories,
+            val categories by vm.categories.collectAsState()
+            com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
+                categories = categories,
                 initialTransactionType = false,
                 onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome) // null = default account
+                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
                     navController.popBackStack()
                 },
-                onBack = { navController.popBackStack() }
+                onDismiss = { navController.popBackStack() }
             )
         }
         composable(Routes.REPORTS) {
