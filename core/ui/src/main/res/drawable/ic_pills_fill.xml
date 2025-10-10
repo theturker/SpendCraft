@@ -1,0 +1,14 @@
+<!-- iOS SF Symbol: pills.fill -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#000000"
+        android:pathData="M4.22,11.29l7.07,7.07c1.17,1.17 3.07,1.17 4.24,0l2.12,-2.12c1.17,-1.17 1.17,-3.07 0,-4.24l-7.07,-7.07c-1.17,-1.17 -3.07,-1.17 -4.24,0L4.22,7.05C3.05,8.22 3.05,10.12 4.22,11.29zM16.34,17.66c-0.59,0.59 -1.54,0.59 -2.12,0l-5.66,-5.66l4.24,-4.24 5.66,5.66C19.05,14.01 19.05,14.96 16.34,17.66z"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M18.5,3c-1.79,0 -3.41,0.74 -4.57,1.93l3.07,3.07C18.17,6.83 19.77,6 21.5,6c0.28,0 0.5,-0.22 0.5,-0.5s-0.22,-0.5 -0.5,-0.5h-0.09C20.89,3.82 19.79,3 18.5,3zM21.5,8c-2.79,0 -5,2.21 -5,5s2.21,5 5,5 5,-2.21 5,-5S24.29,8 21.5,8z"/>
+</vector>
+

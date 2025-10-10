@@ -42,11 +42,12 @@ fun IOSCategoriesScreen(
     categories: List<Category>,
     budgets: Map<Long, Double> = emptyMap(), // categoryId to budget limit
     spent: Map<Long, Double> = emptyMap(), // categoryId to spent amount
-    onAddCategory: () -> Unit,
+    onAddCategory: (name: String, icon: String, color: String) -> Unit,
     onCategoryClick: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showAddBudgetDialog by remember { mutableStateOf(false) }
+    var showAddCategoryDialog by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     
     Scaffold(
@@ -60,7 +61,7 @@ fun IOSCategoriesScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = onAddCategory) {
+                    IconButton(onClick = { showAddCategoryDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "Kategori Ekle"
@@ -108,6 +109,17 @@ fun IOSCategoriesScreen(
                 // TODO: Save budget
                 showAddBudgetDialog = false
                 selectedCategory = null
+            }
+        )
+    }
+    
+    // Add Category Dialog - iOS AddCategoryView
+    if (showAddCategoryDialog) {
+        AddCategoryDialog(
+            onDismiss = { showAddCategoryDialog = false },
+            onSave = { name, icon, color ->
+                onAddCategory(name, icon, color)
+                showAddCategoryDialog = false
             }
         )
     }

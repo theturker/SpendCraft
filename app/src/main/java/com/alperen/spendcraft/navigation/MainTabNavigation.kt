@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.alperen.spendcraft.core.ui.IOSColors
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -183,7 +187,9 @@ fun MainTabNavigation(
                     categories = categories,
                     budgets = emptyMap(), // TODO: Add budget data
                     spent = emptyMap(), // TODO: Add spent data
-                    onAddCategory = { /* TODO: Navigate to add category */ },
+                    onAddCategory = { name, icon, color ->
+                        transactionsViewModel.addCategory(name)
+                    },
                     onCategoryClick = { category ->
                         // TODO: Show add/edit budget dialog
                     }
@@ -214,7 +220,7 @@ fun MainTabNavigation(
 }
 
 /**
- * iOS-style Bottom Navigation Bar
+ * iOS-style Bottom Navigation Bar - Birebir iOS Tab Bar tasarımı
  */
 @Composable
 private fun TabNavigationBar(
@@ -226,7 +232,8 @@ private fun TabNavigationBar(
     
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = 0.dp
+        tonalElevation = 0.dp,
+        modifier = Modifier.height(80.dp) // iOS tab bar height
     ) {
         tabs.forEach { screen ->
             val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
@@ -234,40 +241,36 @@ private fun TabNavigationBar(
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = painterResource(
-                            id = if (selected) screen.selectedIcon else screen.icon
-                        ),
-                        contentDescription = screen.title
+                        painter = painterResource(id = screen.icon),
+                        contentDescription = screen.title,
+                        modifier = Modifier.size(24.dp) // iOS icon size
                     )
                 },
                 label = {
                     Text(
                         text = screen.title,
-                        style = MaterialTheme.typography.labelSmall
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 10.sp,
+                            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+                        )
                     )
                 },
                 selected = selected,
                 onClick = {
                     navController.navigate(screen.route) {
-                        // Pop up to the start destination of the graph to
-                        // avoid building up a large stack of destinations
-                        // on the back stack as users select items
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
-                        // Avoid multiple copies of the same destination when
-                        // reselecting the same item
                         launchSingleTop = true
-                        // Restore state when reselecting a previously selected item
                         restoreState = true
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                    selectedIconColor = IOSColors.Blue, // iOS Blue
+                    selectedTextColor = IOSColors.Blue,
+                    unselectedIconColor = Color(0xFF8E8E93), // iOS gray
+                    unselectedTextColor = Color(0xFF8E8E93),
+                    indicatorColor = Color.Transparent // iOS'ta indicator yok
                 )
             )
         }

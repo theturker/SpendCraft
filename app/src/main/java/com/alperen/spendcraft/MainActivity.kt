@@ -159,16 +159,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     when {
                         isFirstLaunch -> {
-                            WelcomeScreen(
-                                onStart = { 
-                                    showOnboarding = true
-                                }
-                            )
-                        }
-                        showOnboarding -> {
+                            // iOS'ta welcome screen yok, doğrudan onboarding göster
                             OnboardingScreen(
                                 onFinish = {
-                                    showOnboarding = false
                                     // Mark first launch as completed
                                     scope.launch {
                                         firstLaunchHelper.setFirstLaunchCompleted()

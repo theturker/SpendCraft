@@ -25,7 +25,11 @@ import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.CurrencyFormatter
+import com.alperen.spendcraft.core.ui.charts.*
 import com.alperen.spendcraft.core.ui.R as CoreR
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.groupBy
 
 /**
  * iOS ReportsView'in birebir Android karşılığı
@@ -290,6 +294,34 @@ private fun ChartContainer(
     categories: List<Category>,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    
+    // Prepare data based on period
+    val (incomeData, expenseData) = remember(transactions, period) {
+        prepareChartData(transactions, period)
+    }
+    
+    // Prepare category data
+    val categorySpendingData = remember(transactions, categories) {
+        val expenseTransactions = transactions.filter { it.type == TransactionType.EXPENSE }
+        categories.mapNotNull { category ->
+            val spent = expenseTransactions
+                .filter { it.categoryId == category.id }
+                .sumOf { it.amount.minorUnits / 100.0 }
+            
+            if (spent > 0) {
+                val categoryColor = try {
+                    Color(android.graphics.Color.parseColor(category.color))
+                } catch (e: Exception) {
+                    IOSColors.Blue
+                }
+                Triple(category.name, spent, categoryColor)
+            } else {
+                null
+            }
+        }.sortedByDescending { it.second }.take(8)
+    }
+    
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surfaceVariant,
@@ -309,79 +341,95 @@ private fun ChartContainer(
                 fontWeight = FontWeight.Bold
             )
             
-            // Chart Placeholder
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surface,
-                        RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = CoreR.drawable.ic_chart_bar_fill),
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "Grafik gösterimi yakında eklenecek",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+            // Actual Charts - iOS style
+            when (chartType) {
+                ChartType.TREND -> {
+                    IOSTrendLineChart(
+                        incomeData = incomeData,
+                        expenseData = expenseData
                     )
                 }
-            }
-            
-            // Legend (for trend chart)
-            if (chartType == ChartType.TREND) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(10.dp)
-                                .clip(CircleShape)
-                                .background(IOSColors.Green)
+                ChartType.CATEGORY -> {
+                    if (categorySpendingData.isNotEmpty()) {
+                        IOSCategoryPieChart(
+                            categoryData = categorySpendingData.map { it.first to it.second },
+                            categoryColors = categorySpendingData.map { it.third }
                         )
-                        Text(
-                            text = "Gelir",
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                    } else {
+                        EmptyChartState()
                     }
-                    
-                    Spacer(modifier = Modifier.width(20.dp))
-                    
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(10.dp)
-                                .clip(CircleShape)
-                                .background(IOSColors.Red)
+                }
+                ChartType.COMPARISON -> {
+                    if (categorySpendingData.isNotEmpty()) {
+                        IOSComparisonBarChart(
+                            categoryData = categorySpendingData
                         )
-                        Text(
-                            text = "Gider",
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                    } else {
+                        EmptyChartState()
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun EmptyChartState() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(220.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Henüz veri yok",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+private fun prepareChartData(
+    transactions: List<Transaction>,
+    period: ReportPeriod
+): Pair<List<Pair<String, Double>>, List<Pair<String, Double>>> {
+    val now = System.currentTimeMillis()
+    val daysBack = when (period) {
+        ReportPeriod.WEEK -> 7
+        ReportPeriod.MONTH -> 30
+        ReportPeriod.YEAR -> 365
+    }
+    
+    val dateFormat = SimpleDateFormat(
+        when (period) {
+            ReportPeriod.WEEK, ReportPeriod.MONTH -> "dd/MM"
+            ReportPeriod.YEAR -> "MMM"
+        },
+        Locale("tr")
+    )
+    
+    val incomeData = mutableListOf<Pair<String, Double>>()
+    val expenseData = mutableListOf<Pair<String, Double>>()
+    
+    for (i in 0 until daysBack step if (period == ReportPeriod.YEAR) 30 else 1) {
+        val dayMillis = now - (i * 24 * 60 * 60 * 1000L)
+        val dayLabel = dateFormat.format(Date(dayMillis))
+        
+        val dayIncome = transactions
+            .filter { it.type == TransactionType.INCOME }
+            .filter { kotlin.math.abs(it.timestampUtcMillis - dayMillis) < 24 * 60 * 60 * 1000 }
+            .sumOf { it.amount.minorUnits / 100.0 }
+        
+        val dayExpense = transactions
+            .filter { it.type == TransactionType.EXPENSE }
+            .filter { kotlin.math.abs(it.timestampUtcMillis - dayMillis) < 24 * 60 * 60 * 1000 }
+            .sumOf { it.amount.minorUnits / 100.0 }
+        
+        incomeData.add(0, dayLabel to dayIncome)
+        expenseData.add(0, dayLabel to dayExpense)
+    }
+    
+    return incomeData to expenseData
 }
 
 @Composable
