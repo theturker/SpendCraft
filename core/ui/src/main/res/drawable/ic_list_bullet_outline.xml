@@ -1,0 +1,50 @@
+<!-- iOS SF Symbol: list.bullet (outline) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M3,7 C2.45,7 2,6.55 2,6 C2,5.45 2.45,5 3,5 C3.55,5 4,5.45 4,6 C4,6.55 3.55,7 3,7 Z"/>
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M7,5 L21,5 C21.55,5 22,5.45 22,6 C22,6.55 21.55,7 21,7 L7,7 C6.45,7 6,6.55 6,6 C6,5.45 6.45,5 7,5 Z"/>
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M3,13 C2.45,13 2,12.55 2,12 C2,11.45 2.45,11 3,11 C3.55,11 4,11.45 4,12 C4,12.55 3.55,13 3,13 Z"/>
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M7,11 L21,11 C21.55,11 22,11.45 22,12 C22,12.55 21.55,13 21,13 L7,13 C6.45,13 6,12.55 6,12 C6,11.45 6.45,11 7,11 Z"/>
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M3,19 C2.45,19 2,18.55 2,18 C2,17.45 2.45,17 3,17 C3.55,17 4,17.45 4,18 C4,18.55 3.55,19 3,19 Z"/>
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M7,17 L21,17 C21.55,17 22,17.45 22,18 C22,18.55 21.55,19 21,19 L7,19 C6.45,19 6,18.55 6,18 C6,17.45 6.45,17 7,17 Z"/>
+</vector>
+

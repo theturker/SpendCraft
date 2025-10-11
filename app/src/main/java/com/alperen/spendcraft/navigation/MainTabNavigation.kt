@@ -45,35 +45,35 @@ sealed class TabScreen(
     object Dashboard : TabScreen(
         route = "dashboard_tab",
         title = "Ana Sayfa",
-        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill,
+        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_house_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill
     )
     
     object Transactions : TabScreen(
         route = "transactions_tab",
         title = "İşlemler",
-        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_list_bullet,
+        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_list_bullet_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_list_bullet
     )
     
     object Reports : TabScreen(
         route = "reports_tab",
         title = "Raporlar",
-        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill,
+        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
     )
     
     object Categories : TabScreen(
         route = "categories_tab",
         title = "Kategoriler",
-        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill,
+        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_folder_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill
     )
     
     object Settings : TabScreen(
         route = "settings_tab",
         title = "Ayarlar",
-        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_gearshape_fill,
+        icon = com.alperen.spendcraft.core.ui.R.drawable.ic_gearshape_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_gearshape_fill
     )
 }
@@ -245,7 +245,7 @@ private fun TabNavigationBar(
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = painterResource(id = screen.icon),
+                        painter = painterResource(id = if (selected) screen.selectedIcon else screen.icon),
                         contentDescription = screen.title,
                         modifier = Modifier.size(24.dp) // iOS icon size
                     )

@@ -83,7 +83,7 @@ fun DashboardScreen(
                     // Bildirim ikonu
                     IconButton(onClick = onNotifications) {
                         Icon(
-                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell),
+                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_fill),
                             contentDescription = "Bildirimler",
                             tint = MaterialTheme.colorScheme.onBackground
                         )
@@ -939,14 +939,14 @@ private fun getAchievementIconResource(sfSymbol: String): Int {
     return when (sfSymbol) {
         "checkmark.circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
         "flame.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
-        "star.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_vector
+        "star.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
         "crown.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector
         "folder.badge.plus" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill
         "chart.bar.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
         "shield.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_shield_vector
         "banknote.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_monetization_on_vector
         "trophy.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill
-        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_vector // Default
+        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill // Default
     }
 }
 

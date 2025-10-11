@@ -67,8 +67,9 @@ fun IOSCategoriesScreen(
                 actions = {
                     IconButton(onClick = { showAddCategoryDialog = true }) {
                         Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Kategori Ekle"
+                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_plus_circle_fill),
+                            contentDescription = "Kategori Ekle",
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
@@ -169,7 +170,7 @@ private fun CategoryRow(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Category Icon
+                // Category Icon - iOS'taki category.icon kullanımı
                 Box(
                     modifier = Modifier
                         .size(44.dp)
@@ -178,7 +179,7 @@ private fun CategoryRow(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(id = CoreR.drawable.ic_category_vector),
+                        painter = painterResource(id = getCategoryIconResource(category.icon ?: "circle.fill")),
                         contentDescription = null,
                         tint = categoryColor,
                         modifier = Modifier.size(24.dp)
@@ -536,6 +537,34 @@ private fun Color.toHexString(): String {
     val green = (this.green * 255).toInt()
     val blue = (this.blue * 255).toInt()
     return String.format("#%02X%02X%02X", red, green, blue)
+}
+
+/**
+ * iOS SF Symbol to Android Drawable mapping for categories
+ */
+private fun getCategoryIconResource(sfSymbol: String): Int {
+    return when (sfSymbol) {
+        "cart.fill" -> CoreR.drawable.ic_cart_fill
+        "fork.knife" -> CoreR.drawable.ic_fork_knife
+        "house.fill" -> CoreR.drawable.ic_house_fill
+        "car.fill" -> CoreR.drawable.ic_car_fill
+        "tram.fill" -> CoreR.drawable.ic_tram_fill
+        "airplane" -> CoreR.drawable.ic_airplane
+        "bolt.fill" -> CoreR.drawable.ic_bolt_fill
+        "bag.fill" -> CoreR.drawable.ic_bag_fill
+        "gift.fill" -> CoreR.drawable.ic_gift_fill
+        "book.fill" -> CoreR.drawable.ic_book_fill
+        "gamecontroller.fill" -> CoreR.drawable.ic_gamecontroller_fill
+        "film.fill" -> CoreR.drawable.ic_film_fill
+        "heart.fill" -> CoreR.drawable.ic_heart_fill
+        "creditcard.fill" -> CoreR.drawable.ic_creditcard_fill
+        "pills.fill" -> CoreR.drawable.ic_pills_fill
+        "briefcase.fill" -> CoreR.drawable.ic_briefcase_fill
+        "graduationcap.fill" -> CoreR.drawable.ic_graduationcap_fill
+        "phone.fill" -> CoreR.drawable.ic_phone_fill
+        "circle.fill" -> CoreR.drawable.ic_circle_fill
+        else -> CoreR.drawable.ic_circle_fill
+    }
 }
 
 @Composable
