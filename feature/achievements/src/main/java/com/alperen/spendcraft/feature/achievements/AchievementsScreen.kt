@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
+import com.alperen.spendcraft.core.ui.IOSColors
 
 data class Achievement(
     val id: String,
@@ -57,6 +58,10 @@ enum class AchievementRarity {
     LEGENDARY
 }
 
+/**
+ * iOS'taki AchievementsListView'in birebir aynısı
+ * ScrollView + VStack + Total Points Card + LazyVGrid (2 column) + AchievementCardLarge
+ */
 @Composable
 fun AchievementsScreen(
     onBack: () -> Unit = {},
@@ -74,46 +79,6 @@ fun AchievementsScreen(
     val unlockedCount by (viewModel?.unlockedCount ?: remember { 
         kotlinx.coroutines.flow.MutableStateFlow(0) 
     }).collectAsState(initial = 0)
-    val rewardPercent by (viewModel?.rewardProgressPercent ?: remember { 
-        kotlinx.coroutines.flow.MutableStateFlow(0) 
-    }).collectAsState(initial = 0)
-    val rewardXp by (viewModel?.rewardXpCurrent ?: remember { 
-        kotlinx.coroutines.flow.MutableStateFlow(0) 
-    }).collectAsState(initial = 0)
-    val rewardXpTarget by (viewModel?.rewardXpTarget ?: remember { 
-        kotlinx.coroutines.flow.MutableStateFlow(0) 
-    }).collectAsState(initial = 0)
-    
-    // Üst bilgilendirme kartı: Premium deneme ödül ilerlemesi
-    androidx.compose.foundation.lazy.LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        item {
-            com.alperen.spendcraft.core.ui.ModernCard {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "🎁 1 Aylık Premium Deneme Ödülü",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    LinearProgressIndicator(
-                        progress = { (rewardPercent / 100f).coerceIn(0f, 1f) },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(6.dp))
-                    Text(
-                        text = "%$rewardPercent • XP: $rewardXp / $rewardXpTarget",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-    }
 
     // Mock data - gerçek uygulamada repository'den gelecek
     val mockAchievements = listOf(
@@ -304,244 +269,189 @@ fun AchievementsScreen(
         mockAchievements
     }
 
-    val unlockedAchievements = displayAchievements.filter { it.isUnlocked }
-    val lockedAchievements = displayAchievements.filter { !it.isUnlocked }
-    
+    // iOS'taki AchievementsListView yapısı
     AppScaffold(
-        title = "Başarımlar",
+        title = "Başarılar",
         onBack = onBack
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Progress Summary
+            // Total Points Card - iOS'taki gibi crown icon ile
             item {
-                ModernCard {
-                    Column(
-                        modifier = Modifier.padding(20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Başarım İlerlemesi",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            AchievementStat(
-                                value = unlockedCount.toString(),
-                                label = "Kazanılan",
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                            AchievementStat(
-                                value = displayAchievements.size.toString(),
-                                label = "Toplam",
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            AchievementStat(
-                                value = "${(unlockedCount * 100 / displayAchievements.size)}%",
-                                label = "Tamamlama",
-                                color = MaterialTheme.colorScheme.tertiary
-                            )
-                        }
-                    }
-                }
-            }
-
-            // Unlocked Achievements
-            if (unlockedAchievements.isNotEmpty()) {
-                item {
-                    Text(
-                        text = "🏆 Kazanılan Başarımlar",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(IOSColors.Yellow.copy(alpha = 0.1f))
+                        .padding(vertical = 30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    // Crown icon - iOS'taki gibi 50dp
+                    Icon(
+                        painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector),
+                        contentDescription = null,
+                        modifier = Modifier.size(50.dp),
+                        tint = IOSColors.Yellow
                     )
-                }
-
-                items(unlockedAchievements) { achievement ->
-                    AchievementCard(
-                        achievement = achievement,
-                        isUnlocked = true
-                    )
-                }
-            }
-
-            // Locked Achievements
-            if (lockedAchievements.isNotEmpty()) {
-                item {
+                    
+                    // Total points - iOS'taki .title, .bold
                     Text(
-                        text = "🔒 Henüz Kazanılmayan",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
+                        text = "$totalPoints Puan",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    
+                    // Achievement count - iOS'taki .subheadline, .secondary
+                    Text(
+                        text = "$unlockedCount / ${displayAchievements.size} Başarı",
+                        style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            }
 
-                items(lockedAchievements) { achievement ->
-                    AchievementCard(
-                        achievement = achievement,
-                        isUnlocked = false
-                    )
+            // Achievements Grid - iOS'taki LazyVGrid(columns: 2)
+            item {
+                // Grid layout with 2 columns
+                val chunkedAchievements = displayAchievements.chunked(2)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    chunkedAchievements.forEach { rowAchievements ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            rowAchievements.forEach { achievement ->
+                                AchievementCardLarge(
+                                    achievement = achievement,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            // Eğer tek achievement varsa, sağ tarafı boş bırak
+                            if (rowAchievements.size == 1) {
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
 
+/**
+ * iOS'taki AchievementCardLarge'ın birebir aynısı
+ * Grid layout için kullanılan büyük kart
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AchievementCard(
+private fun AchievementCardLarge(
     achievement: Achievement,
-    isUnlocked: Boolean
+    modifier: Modifier = Modifier
 ) {
     var showDetailSheet by remember { mutableStateOf(false) }
-    val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
-    val shimmerRotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "shimmer"
-    )
-
-    ModernCard(
-        modifier = Modifier
+    
+    Column(
+        modifier = modifier
             .fillMaxWidth()
+            .heightIn(min = 200.dp) // iOS'taki minHeight: 200
+            .clip(RoundedCornerShape(16.dp)) // iOS'taki cornerRadius: 16
+            .background(
+                if (achievement.isUnlocked)
+                    IOSColors.Yellow.copy(alpha = 0.1f)
+                else
+                    Color.Gray.copy(alpha = 0.1f)
+            )
+            .then(
+                // iOS'taki border - unlock olanlar için yellow, 2dp
+                if (achievement.isUnlocked) {
+                    Modifier.border(
+                        width = 2.dp,
+                        color = IOSColors.Yellow,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                } else {
+                    Modifier
+                }
+            )
             .clickable { showDetailSheet = true }
+            .padding(16.dp), // iOS'taki .padding()
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp) // iOS'taki spacing: 12
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Achievement Icon with rarity styling
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(64.dp)
-                    .background(
-                        if (isUnlocked) {
-                            Brush.radialGradient(
-                                colors = getRarityColors(achievement.rarity)
-                            )
-                        } else {
-                            Brush.radialGradient(
-                                colors = listOf(
-                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.1f),
-                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.05f)
-                                )
-                            )
-                        },
-                        CircleShape
-                    )
-                    .then(
-                        if (isUnlocked && achievement.rarity == AchievementRarity.LEGENDARY) {
-                            Modifier
-                                .border(
-                                    2.dp,
-                                    Brush.sweepGradient(getRarityColors(achievement.rarity)),
-                                    CircleShape
-                                )
-                                .rotate(shimmerRotation)
-                        } else {
-                            Modifier
-                        }
-                    )
+        // Icon - iOS'taki 40dp
+        Icon(
+            achievement.icon,
+            contentDescription = null,
+            modifier = Modifier.size(40.dp),
+            tint = if (achievement.isUnlocked) IOSColors.Yellow else Color.Gray
+        )
+        
+        // Title - iOS'taki .subheadline, .semibold
+        Text(
+            text = achievement.title,
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+        )
+        
+        // Description - iOS'taki .caption, .secondary
+        Text(
+            text = achievement.description,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+        )
+        
+        // Points or Progress - iOS'taki gibi
+        if (achievement.isUnlocked) {
+            // Star icon + points
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    achievement.icon,
+                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_star_vector),
                     contentDescription = null,
-                    modifier = Modifier.size(32.dp),
-                    tint = if (isUnlocked) {
-                        Color.White
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    }
+                    modifier = Modifier.size(12.dp), // iOS'taki .caption2 size
+                    tint = IOSColors.Yellow
+                )
+                Text(
+                    text = "${achievement.currentProgress} Puan",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium
                 )
             }
-
+        } else {
+            // Progress bar + progress text
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = achievement.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isUnlocked) {
-                            MaterialTheme.colorScheme.onSurface
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
-                    )
-                    
-                    RarityBadge(achievement.rarity)
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
+                LinearProgressIndicator(
+                    progress = { achievement.progress.coerceIn(0f, 1f) },
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xFF007AFF), // iOS blue
+                    trackColor = Color.Gray.copy(alpha = 0.2f)
+                )
                 Text(
-                    text = achievement.description,
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "${achievement.currentProgress}/${achievement.maxProgress}",
+                    style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
-                if (!isUnlocked && achievement.progress > 0f) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    Column {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "İlerleme",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = "${achievement.currentProgress}/${achievement.maxProgress}",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                        
-                        Spacer(modifier = Modifier.height(4.dp))
-                        
-                        LinearProgressIndicator(
-                            progress = { achievement.progress.coerceIn(0f, 1f) },
-                            modifier = Modifier.fillMaxWidth(),
-                            color = MaterialTheme.colorScheme.primary,
-                            trackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
-                        )
-                    }
-                }
-
-                achievement.reward?.let { reward ->
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Surface(
-                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = "🎁 $reward",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
-                    }
-                }
             }
         }
     }
@@ -555,65 +465,6 @@ private fun AchievementCard(
     }
 }
 
-@Composable
-private fun AchievementStat(
-    value: String,
-    label: String,
-    color: Color
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = value,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = color
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-private fun RarityBadge(rarity: AchievementRarity) {
-    val (text, colors) = when (rarity) {
-        AchievementRarity.COMMON -> "Ortak" to listOf(Color(0xFF9CA3AF), Color(0xFF6B7280))
-        AchievementRarity.RARE -> "Nadir" to listOf(Color(0xFF3B82F6), Color(0xFF1E40AF))
-        AchievementRarity.EPIC -> "Epik" to listOf(Color(0xFF8B5CF6), Color(0xFF7C3AED))
-        AchievementRarity.LEGENDARY -> "Efsane" to listOf(Color(0xFFF59E0B), Color(0xFFD97706))
-    }
-
-    Surface(
-        color = Color.Transparent,
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier
-            .background(
-                Brush.horizontalGradient(colors),
-                RoundedCornerShape(8.dp)
-            )
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-        )
-    }
-}
-
-private fun getRarityColors(rarity: AchievementRarity): List<Color> {
-    return when (rarity) {
-        AchievementRarity.COMMON -> listOf(Color(0xFF9CA3AF), Color(0xFF6B7280))
-        AchievementRarity.RARE -> listOf(Color(0xFF3B82F6), Color(0xFF1E40AF))
-        AchievementRarity.EPIC -> listOf(Color(0xFF8B5CF6), Color(0xFF7C3AED))
-        AchievementRarity.LEGENDARY -> listOf(Color(0xFFF59E0B), Color(0xFFD97706))
-    }
-}
 
 /**
  * iOS'taki AchievementDetailSheet'in birebir aynısı

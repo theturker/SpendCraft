@@ -484,51 +484,74 @@ private fun AchievementsSection(
             )
         }
         
-        // Horizontal Scroll Achievement Cards - iOS'taki gibi
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(horizontal = 0.dp)
-        ) {
-            // iOS'taki gibi ilk 5 achievement'ı göster
-            items((1..5).toList()) { index ->
-                AchievementCard(
-                    achievementName = when (index) {
-                        1 -> "İlk İşlem"
-                        2 -> "Haftalık Streak"
-                        3 -> "Bütçe Ustası"
-                        4 -> "Tasarrufçu"
-                        else -> "Kategori Ustası"
-                    },
-                    isUnlocked = index <= achievementsCount,
-                    points = when (index) {
-                        1 -> 10
-                        2 -> 25
-                        3 -> 50
-                        4 -> 75
-                        else -> 100
-                    },
-                    progress = when (index) {
-                        1 -> 100
-                        2 -> 75
-                        3 -> 50
-                        4 -> 25
-                        else -> 0
-                    },
-                    maxProgress = 100,
-                    onClick = onAchievements
-                )
-            }
-        }
+                // Horizontal Scroll Achievement Cards - iOS'taki gibi
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = 0.dp)
+                ) {
+                    // iOS'taki gibi ilk 5 achievement'ı göster - her birinin farklı iconu var
+                    items((1..5).toList()) { index ->
+                        AchievementCard(
+                            achievementName = when (index) {
+                                1 -> "İlk Adım"
+                                2 -> "Başlangıç"
+                                3 -> "Bütçe Bilinci"
+                                4 -> "Kategori Ustası"
+                                else -> "Uzman"
+                            },
+                            achievementDescription = when (index) {
+                                1 -> "İlk işleminizi kaydedin"
+                                2 -> "5 işlem kaydedin"
+                                3 -> "İlk bütçenizi oluşturun"
+                                4 -> "5 farklı kategori kullanın"
+                                else -> "50 işlem kaydedin"
+                            },
+                            achievementIcon = when (index) {
+                                1 -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
+                                2 -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
+                                3 -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
+                                4 -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill
+                                else -> com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector
+                            },
+                            isUnlocked = index <= achievementsCount,
+                            points = when (index) {
+                                1 -> 10
+                                2 -> 25
+                                3 -> 20
+                                4 -> 30
+                                else -> 100
+                            },
+                            progress = when (index) {
+                                1 -> 1
+                                2 -> 3
+                                3 -> 0
+                                4 -> 2
+                                else -> 35
+                            },
+                            maxProgress = when (index) {
+                                1 -> 1
+                                2 -> 5
+                                3 -> 1
+                                4 -> 5
+                                else -> 50
+                            },
+                            onClick = onAchievements
+                        )
+                    }
+                }
     }
 }
 
 /**
  * Achievement Card - iOS'taki AchievementCard'ın birebir kopyası
+ * Her başarının farklı iconu var (iOS'taki achievement.icon kullanımı)
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AchievementCard(
     achievementName: String,
+    achievementDescription: String,
+    achievementIcon: Int, // iOS'taki achievement.icon gibi dinamik icon
     isUnlocked: Boolean,
     points: Int,
     progress: Int,
@@ -555,9 +578,9 @@ private fun AchievementCard(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp) // iOS'taki spacing: 8
     ) {
-        // Icon - iOS'ta .system(size: 32)
+        // Icon - iOS'ta Image(systemName: achievement.icon ?? "star.fill")
         Icon(
-            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill),
+            painter = painterResource(id = achievementIcon),
             contentDescription = null,
             tint = if (isUnlocked) IOSColors.Yellow else Color.Gray, // iOS'taki .yellow : .gray
             modifier = Modifier.size(32.dp)
@@ -594,14 +617,8 @@ private fun AchievementCard(
     if (showDetailSheet) {
         DashboardAchievementDetailSheet(
             name = achievementName,
-            description = when (achievementName) {
-                "İlk İşlem" -> "İlk işleminizi kaydettiniz"
-                "Haftalık Streak" -> "7 gün üst üste işlem kaydettiniz"
-                "Bütçe Ustası" -> "Aylık bütçenizi aşmadınız"
-                "Tasarrufçu" -> "İlk defa aylık gelir > gider"
-                "Kategori Ustası" -> "5 farklı kategori kullandınız"
-                else -> "Bu başarıyı tamamladınız"
-            },
+            description = achievementDescription,
+            icon = achievementIcon,
             isUnlocked = isUnlocked,
             points = points,
             progress = progress,
@@ -619,6 +636,7 @@ private fun AchievementCard(
 private fun DashboardAchievementDetailSheet(
     name: String,
     description: String,
+    icon: Int,
     isUnlocked: Boolean,
     points: Int,
     progress: Int,
@@ -700,9 +718,9 @@ private fun DashboardAchievementDetailSheet(
                                     )
                             )
 
-                            // Icon
+                            // Icon - iOS'taki achievement.icon kullanımı
                             Icon(
-                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill),
+                                painter = painterResource(id = icon),
                                 contentDescription = null,
                                 modifier = Modifier.size(60.dp),
                                 tint = if (isUnlocked) {
