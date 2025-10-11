@@ -525,6 +525,7 @@ private fun AchievementsSection(
 /**
  * Achievement Card - iOS'taki AchievementCard'ın birebir kopyası
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AchievementCard(
     achievementName: String,
@@ -535,34 +536,37 @@ private fun AchievementCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showDetailSheet by remember { mutableStateOf(false) }
+    
+    // iOS'taki AchievementCard ile birebir aynı yapı
     Column(
         modifier = modifier
             .width(100.dp)
             .height(120.dp)
+            .clickable { showDetailSheet = true }
+            .padding(8.dp) // iOS'taki .padding() - içerde
             .clip(RoundedCornerShape(12.dp))
             .background(
                 if (isUnlocked) 
                     IOSColors.Yellow.copy(alpha = 0.1f) 
                 else 
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-            )
-            .clickable(onClick = onClick)
-            .padding(8.dp),
+                    Color.Gray.copy(alpha = 0.1f) // iOS'taki .gray ile aynı
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp) // iOS'taki spacing: 8
     ) {
-        // Icon
+        // Icon - iOS'ta .system(size: 32)
         Icon(
             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill),
             contentDescription = null,
-            tint = if (isUnlocked) IOSColors.Yellow else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+            tint = if (isUnlocked) IOSColors.Yellow else Color.Gray, // iOS'taki .yellow : .gray
             modifier = Modifier.size(32.dp)
         )
         
-        // Title
+        // Title - iOS'taki .caption, .semibold
         Text(
             text = achievementName,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelMedium, // iOS .caption karşılığı
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
@@ -570,19 +574,328 @@ private fun AchievementCard(
             overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
         )
         
-        // Progress or Points
+        // Progress or Points - iOS'taki .caption2
         if (isUnlocked) {
             Text(
                 text = "$points Puan",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelSmall, // iOS .caption2 karşılığı
+                color = MaterialTheme.colorScheme.onSurfaceVariant // iOS .secondary
             )
         } else {
             Text(
                 text = "$progress/$maxProgress",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelSmall, // iOS .caption2 karşılığı
+                color = MaterialTheme.colorScheme.onSurfaceVariant // iOS .secondary
             )
+        }
+    }
+    
+    // iOS'taki AchievementDetailSheet ile birebir aynı
+    if (showDetailSheet) {
+        DashboardAchievementDetailSheet(
+            name = achievementName,
+            description = when (achievementName) {
+                "İlk İşlem" -> "İlk işleminizi kaydettiniz"
+                "Haftalık Streak" -> "7 gün üst üste işlem kaydettiniz"
+                "Bütçe Ustası" -> "Aylık bütçenizi aşmadınız"
+                "Tasarrufçu" -> "İlk defa aylık gelir > gider"
+                "Kategori Ustası" -> "5 farklı kategori kullandınız"
+                else -> "Bu başarıyı tamamladınız"
+            },
+            isUnlocked = isUnlocked,
+            points = points,
+            progress = progress,
+            maxProgress = maxProgress,
+            onDismiss = { showDetailSheet = false }
+        )
+    }
+}
+
+/**
+ * iOS'taki AchievementDetailSheet'in birebir aynısı - Dashboard için
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DashboardAchievementDetailSheet(
+    name: String,
+    description: String,
+    isUnlocked: Boolean,
+    points: Int,
+    progress: Int,
+    maxProgress: Int,
+    onDismiss: () -> Unit
+) {
+    val progressPercentage = if (maxProgress > 0) {
+        progress.toFloat() / maxProgress.toFloat()
+    } else {
+        0f
+    }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
+        dragHandle = null,
+        containerColor = MaterialTheme.colorScheme.surface
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 400.dp, max = 500.dp)
+        ) {
+            // Header with close button - iOS'taki gibi
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(onClick = onDismiss) {
+                    Icon(
+                        painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_xmark_circle_fill),
+                        contentDescription = "Kapat",
+                        tint = Color.Gray,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                // Icon and Status
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // Icon with gradient background - iOS'taki gibi 120x120
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.size(120.dp)
+                        ) {
+                            // Background circle
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        if (isUnlocked) {
+                                            Brush.linearGradient(
+                                                colors = listOf(
+                                                    Color(0xFFFBBF24).copy(alpha = 0.3f),
+                                                    Color(0xFFF59E0B).copy(alpha = 0.3f)
+                                                )
+                                            )
+                                        } else {
+                                            Brush.linearGradient(
+                                                colors = listOf(
+                                                    Color.Gray.copy(alpha = 0.2f),
+                                                    Color.Gray.copy(alpha = 0.1f)
+                                                )
+                                            )
+                                        },
+                                        CircleShape
+                                    )
+                            )
+
+                            // Icon
+                            Icon(
+                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill),
+                                contentDescription = null,
+                                modifier = Modifier.size(60.dp),
+                                tint = if (isUnlocked) {
+                                    Color(0xFFFBBF24) // Yellow
+                                } else {
+                                    Color.Gray
+                                }
+                            )
+                        }
+
+                        // Status badge - iOS'taki "Tamamlandı!" yeşil badge
+                        if (isUnlocked) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill),
+                                    contentDescription = null,
+                                    tint = Color(0xFF34C759), // iOS green
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = "Tamamlandı!",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color(0xFF34C759)
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Title - iOS'taki title2, bold, center aligned
+                item {
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                // Description - iOS'taki body, secondary color, center aligned
+                item {
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                // Progress or Points
+                item {
+                    if (isUnlocked) {
+                        // Points card - iOS'taki sarı background
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(Color(0xFFFBBF24).copy(alpha = 0.15f))
+                                .padding(16.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_star_vector),
+                                    contentDescription = null,
+                                    tint = Color(0xFFFBBF24),
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = "$points Puan Kazandınız!",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                    } else {
+                        // Progress section - iOS'taki gibi
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            // Progress Bar - iOS'taki mavi-mor gradient
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(Color(0xFF007AFF).copy(alpha = 0.05f))
+                                    .padding(16.dp)
+                            ) {
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    // Progress header
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(
+                                            text = "İlerleme",
+                                            style = MaterialTheme.typography.titleSmall,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                        Text(
+                                            text = "$progress / $maxProgress",
+                                            style = MaterialTheme.typography.titleSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF007AFF)
+                                        )
+                                    }
+
+                                    // Progress bar
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(12.dp)
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(Color.Gray.copy(alpha = 0.2f))
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth(progressPercentage)
+                                                .fillMaxHeight()
+                                                .background(
+                                                    Brush.horizontalGradient(
+                                                        colors = listOf(
+                                                            Color(0xFF007AFF),
+                                                            Color(0xFFAF52DE)
+                                                        )
+                                                    )
+                                                )
+                                                .clip(RoundedCornerShape(8.dp))
+                                        )
+                                    }
+
+                                    // Progress footer
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(
+                                            text = "${(progressPercentage * 100).toInt()}% Tamamlandı",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = "Kalan: ${maxProgress - progress}",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = Color(0xFFFF9500), // iOS orange
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Reward info - iOS'taki mor background
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(Color(0xFFAF52DE).copy(alpha = 0.1f))
+                                    .padding(16.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_gift_fill),
+                                        contentDescription = null,
+                                        tint = Color(0xFFAF52DE),
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Text(
+                                        text = "Kazanacağınız: $points Puan",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
