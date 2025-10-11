@@ -1,24 +1,43 @@
 package com.alperen.spendcraft.feature.ai
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.alperen.spendcraft.core.ui.AppScaffold
-import com.alperen.spendcraft.core.ui.ModernCard
-import com.alperen.spendcraft.core.ui.PremiumGate
+import androidx.compose.ui.unit.sp
+import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.data.repository.AIRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
+/**
+ * iOS AISuggestionsView'in birebir Android karşılığı
+ * 
+ * Özellikler:
+ * - Gradient background
+ * - Sparkles icon (gradient renkli)
+ * - Advice type selection (card based)
+ * - Financial stats cards (4 tane)
+ * - AI advice display
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AISuggestionsScreen(
     aiRepository: AIRepository,
@@ -31,6 +50,7 @@ fun AISuggestionsScreen(
     onUpgrade: () -> Unit,
     onBack: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     var isLoading by remember { mutableStateOf(false) }
     var currentAdvice by remember { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -38,6 +58,7 @@ fun AISuggestionsScreen(
     val coroutineScope = rememberCoroutineScope()
     var weeklyQuota by remember { mutableStateOf(2) }
     var usedThisWeek by remember { mutableStateOf(0) }
+    
     LaunchedEffect(Unit) {
         aiRepository.getUsageInfo().collect { info ->
             weeklyQuota = info.weeklyQuota
@@ -45,86 +66,112 @@ fun AISuggestionsScreen(
         }
     }
     
-    AppScaffold(
-        title = "AI Önerileri",
-        onBack = onBack,
-        showBannerAd = true,
-        isPremium = isPremium,
-        bannerContent = {
-            com.alperen.spendcraft.core.ui.AdMobBanner(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                isPremium = isPremium
+    Scaffold(
+        topBar = {
+            LargeTopAppBar(
+                title = {
+                    Text(
+                        text = "AI Önerileri",
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
+                            contentDescription = "Geri"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                )
             )
         }
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            if (!isPremium) {
-                item {
-                    PremiumGate(
-                        title = "Premium Özellik",
-                        description = "AI önerileri Premium üyeler için sınırsız, diğer kullanıcılar için haftalık 1 öneri hakkı vardır.",
-                        onUpgrade = onUpgrade
+    ) { paddingValues ->
+        // iOS-style gradient background
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            IOSColors.Purple.copy(alpha = 0.1f),
+                            IOSColors.Blue.copy(alpha = 0.1f)
+                        )
                     )
-                }
-            }
-            
-            // Advice Type Selection
-            item {
-                ModernCard {
+                )
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentPadding = PaddingValues(vertical = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                // Header with Sparkles Icon
+                item {
                     Column(
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        // Gradient Sparkles Icon
+                        Icon(
+                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_sparkles),
+                            contentDescription = null,
+                            modifier = Modifier.size(60.dp),
+                            tint = IOSColors.Purple
+                        )
+                        
+                        Text(
+                            text = "AI Finansal Danışman",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                        
+                        Text(
+                            text = "Yapay zeka destekli kişiselleştirilmiş finansal öneriler",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+                
+                // Advice Type Selection - iOS Card Style
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
                             text = "Öneri Türü Seçin",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
                         
                         AdviceType.values().forEach { adviceType ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .selectable(
-                                        selected = selectedAdviceType == adviceType,
-                                        onClick = { selectedAdviceType = adviceType }
-                                    )
-                                    .padding(vertical = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = selectedAdviceType == adviceType,
-                                    onClick = { selectedAdviceType = adviceType }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Column {
-                                    Text(
-                                        text = adviceType.title,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                    Text(
-                                        text = adviceType.description,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                            }
+                            IOSAdviceTypeCard(
+                                adviceType = adviceType,
+                                isSelected = selectedAdviceType == adviceType,
+                                onClick = { selectedAdviceType = adviceType }
+                            )
                         }
                     }
                 }
-            }
             
-            // Generate Button
-            item {
-                Button(
-                    onClick = {
+                // Generate Button - iOS Style
+                item {
+                    Button(
+                        onClick = {
                         if (selectedAdviceType != null) {
                             isLoading = true
                             errorMessage = null
@@ -161,105 +208,310 @@ fun AISuggestionsScreen(
                             }
                         }
                     },
-                    enabled = selectedAdviceType != null && !isLoading && (isPremium || (weeklyQuota - usedThisWeek) > 0),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(16.dp),
-                            strokeWidth = 2.dp
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-                    val remaining = (weeklyQuota - usedThisWeek).coerceAtLeast(0)
-                    Text(text = if (isLoading) "Öneri oluşturuluyor..." else if (isPremium) "AI Önerisi Al (Sınırsız)" else "AI Önerisi Al ($remaining/$weeklyQuota)")
-                }
-            }
-            
-            // Error Message
-            errorMessage?.let { error ->
-                item {
-                    ModernCard {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Warning,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.error
+                        enabled = selectedAdviceType != null && !isLoading && (isPremium || (weeklyQuota - usedThisWeek) > 0),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (selectedAdviceType == null) Color.Gray else IOSColors.Blue,
+                            disabledContainerColor = Color.Gray
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp,
+                                color = Color.White
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = error,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.error
+                        } else {
+                            Icon(
+                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_sparkles),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = Color.White
                             )
                         }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (isLoading) "Öneri oluşturuluyor..." else "AI Önerisi Al",
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
                     }
                 }
-            }
             
-            // AI Advice
-            currentAdvice?.let { advice ->
-                item {
-                    ModernCard {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
+                // AI Advice Display - iOS Style
+                currentAdvice?.let { advice ->
+                    item {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(16.dp),
+                            tonalElevation = 2.dp
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            Column(
+                                modifier = Modifier.padding(20.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Icon(
-                                    Icons.Default.Star,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_lightbulb_fill),
+                                        contentDescription = null,
+                                        tint = IOSColors.Yellow,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Text(
+                                        text = "AI Önerisi",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                                
                                 Text(
-                                    text = "AI Önerisi",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold
+                                    text = advice,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    lineHeight = 24.sp
                                 )
                             }
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(
-                                text = advice,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
                         }
                     }
                 }
-            }
-            
-            // Usage Info
-            item {
-                ModernCard {
+                
+                // Error Message
+                errorMessage?.let { error ->
+                    item {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            color = IOSColors.Red.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Warning,
+                                    contentDescription = null,
+                                    tint = IOSColors.Red
+                                )
+                                Text(
+                                    text = error,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = IOSColors.Red
+                                )
+                            }
+                        }
+                    }
+                }
+                
+                // Financial Stats Cards - iOS Style (4 cards in 2x2 grid)
+                item {
                     Column(
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = "Kullanım Bilgisi",
+                            text = "Finansal Durum Özeti",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        if (isPremium) {
-                            Text(
-                                text = "Premium üyesiniz - Sınırsız AI önerisi",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                        
+                        // First Row
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            FinancialStatCard(
+                                title = "Gelir",
+                                value = "₺${income / 100}",
+                                icon = com.alperen.spendcraft.core.ui.R.drawable.ic_arrow_down_circle_fill,
+                                color = IOSColors.Green,
+                                modifier = Modifier.weight(1f)
                             )
-                        } else {
-                            Text(
-                                text = "Haftalık $weeklyQuota AI önerisi hakkınız var. Kalan: ${(weeklyQuota - usedThisWeek).coerceAtLeast(0)}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            
+                            FinancialStatCard(
+                                title = "Gider",
+                                value = "₺${expenses / 100}",
+                                icon = com.alperen.spendcraft.core.ui.R.drawable.ic_arrow_up_circle_fill,
+                                color = IOSColors.Red,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        
+                        // Second Row
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            FinancialStatCard(
+                                title = "Bakiye",
+                                value = "₺${(income - expenses) / 100}",
+                                icon = com.alperen.spendcraft.core.ui.R.drawable.ic_banknote,
+                                color = IOSColors.Blue,
+                                modifier = Modifier.weight(1f)
+                            )
+                            
+                            FinancialStatCard(
+                                title = "Kategori",
+                                value = "${categoryBreakdown.size}",
+                                icon = com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill,
+                                color = IOSColors.Orange,
+                                modifier = Modifier.weight(1f)
                             )
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+// iOS-style Advice Type Card
+@Composable
+private fun IOSAdviceTypeCard(
+    adviceType: AdviceType,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val gradientColors = when (adviceType) {
+        AdviceType.SPENDING_ANALYSIS -> listOf(IOSColors.Blue, IOSColors.Purple)
+        AdviceType.BUDGET_OPTIMIZATION -> listOf(IOSColors.Green, IOSColors.Blue)
+        AdviceType.SAVINGS_ADVICE -> listOf(IOSColors.Purple, IOSColors.Pink)
+    }
+    
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp)),
+        color = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(16.dp),
+        tonalElevation = if (isSelected) 4.dp else 1.dp,
+        shadowElevation = if (isSelected) 8.dp else 0.dp,
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Icon Circle with Gradient
+            Box(
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .background(
+                        if (isSelected) {
+                            Brush.linearGradient(colors = gradientColors)
+                        } else {
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    Color.Gray.copy(alpha = 0.2f),
+                                    Color.Gray.copy(alpha = 0.2f)
+                                )
+                            )
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(
+                        id = when (adviceType) {
+                            AdviceType.SPENDING_ANALYSIS -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
+                            AdviceType.BUDGET_OPTIMIZATION -> com.alperen.spendcraft.core.ui.R.drawable.ic_pie_chart_vector
+                            AdviceType.SAVINGS_ADVICE -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
+                        }
+                    ),
+                    contentDescription = null,
+                    tint = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            
+            // Text Content
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = adviceType.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                
+                Text(
+                    text = adviceType.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2
+                )
+            }
+            
+            // Checkmark
+            if (isSelected) {
+                Icon(
+                    painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill),
+                    contentDescription = null,
+                    tint = IOSColors.Blue,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+
+// iOS-style Financial Stat Card
+@Composable
+private fun FinancialStatCard(
+    title: String,
+    value: String,
+    icon: Int,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(12.dp),
+        tonalElevation = 1.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(28.dp)
+            )
+            
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+            
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -281,3 +533,4 @@ enum class AdviceType(
         "Daha fazla tasarruf yapmak için pratik öneriler sunar"
     )
 }
+

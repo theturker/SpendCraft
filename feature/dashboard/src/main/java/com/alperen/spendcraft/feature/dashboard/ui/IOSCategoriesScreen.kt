@@ -1,10 +1,12 @@
 package com.alperen.spendcraft.feature.dashboard.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -20,6 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.CurrencyFormatter
@@ -117,7 +121,7 @@ fun IOSCategoriesScreen(
     if (showAddCategoryDialog) {
         AddCategoryDialog(
             onDismiss = { showAddCategoryDialog = false },
-            onSave = { name, icon, color ->
+            onSave = { name: String, icon: String, color: String ->
                 onAddCategory(name, icon, color)
                 showAddCategoryDialog = false
             }
@@ -253,6 +257,285 @@ private fun CategoryRow(
             }
         }
     }
+}
+
+/**
+ * iOS AddCategoryView - Grid layout for icons and colors
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddCategoryDialog(
+    onDismiss: () -> Unit,
+    onSave: (String, String, String) -> Unit
+) {
+    var categoryName by remember { mutableStateOf("") }
+    var selectedIcon by remember { mutableStateOf("cart.fill") }
+    var selectedColor by remember { mutableStateOf(IOSColors.Blue) }
+    
+    // iOS'taki category icons - SF Symbol isimleri
+    val categoryIcons = listOf(
+        "cart.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_cart_fill,
+        "fork.knife" to com.alperen.spendcraft.core.ui.R.drawable.ic_fork_knife,
+        "house.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill,
+        "car.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_car_fill,
+        "airplane" to com.alperen.spendcraft.core.ui.R.drawable.ic_airplane,
+        "bolt.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_bolt_fill,
+        "bag.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_bag_fill,
+        "gift.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_gift_fill,
+        "book.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_book_fill,
+        "gamecontroller.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_gamecontroller_fill,
+        "film.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_film_fill,
+        "heart.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_heart_fill,
+        "creditcard.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector,
+        "pills.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_pills_fill,
+        "briefcase.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_briefcase_fill,
+        "graduationcap.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_graduationcap_fill,
+        "phone.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_phone_fill,
+        "tram.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_tram_fill
+    )
+    
+    // iOS'taki category colors
+    val categoryColors = listOf(
+        "Mavi" to IOSColors.Blue,
+        "Yeşil" to IOSColors.Green,
+        "Kırmızı" to IOSColors.Red,
+        "Turuncu" to IOSColors.Orange,
+        "Mor" to IOSColors.Purple,
+        "Pembe" to IOSColors.Pink,
+        "Sarı" to IOSColors.Yellow,
+        "Kahverengi" to Color(0xFF8D6E63),
+        "İndigo" to Color(0xFF5E35B1),
+        "Cyan" to IOSColors.Cyan,
+        "Mint" to IOSColors.Mint,
+        "Teal" to IOSColors.Teal
+    )
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.95f)
+                .fillMaxHeight(0.9f),
+            shape = RoundedCornerShape(20.dp),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp)
+            ) {
+                // Header
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("İptal")
+                    }
+                    
+                    Text(
+                        text = "Yeni Kategori",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    
+                    TextButton(
+                        onClick = {
+                            if (categoryName.isNotBlank()) {
+                                onSave(categoryName, selectedIcon, selectedColor.toHexString())
+                            }
+                        },
+                        enabled = categoryName.isNotBlank()
+                    ) {
+                        Text("Kaydet")
+                    }
+                }
+                
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                
+                // Scrollable Content
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    // Category Name
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(
+                                text = "Kategori Bilgileri",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            
+                            OutlinedTextField(
+                                value = categoryName,
+                                onValueChange = { categoryName = it },
+                                placeholder = { Text("Kategori Adı") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true
+                            )
+                        }
+                    }
+                    
+                    // Icon Selection - Grid Layout
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(
+                                text = "İkon Seç",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            
+                            // Grid of icons
+                            androidx.compose.foundation.layout.FlowRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                maxItemsInEachRow = 6
+                            ) {
+                                categoryIcons.forEach { (iconName, iconRes) ->
+                                    Box(
+                                        modifier = Modifier
+                                            .size(50.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .background(
+                                                if (selectedIcon == iconName) {
+                                                    selectedColor
+                                                } else {
+                                                    selectedColor.copy(alpha = 0.2f)
+                                                }
+                                            )
+                                            .clickable { selectedIcon = iconName },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = iconRes),
+                                            contentDescription = null,
+                                            tint = if (selectedIcon == iconName) {
+                                                Color.White
+                                            } else {
+                                                selectedColor
+                                            },
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Color Selection - Grid Layout
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(
+                                text = "Renk Seç",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            
+                            // Grid of colors
+                            androidx.compose.foundation.layout.FlowRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                maxItemsInEachRow = 6
+                            ) {
+                                categoryColors.forEach { (colorName, color) ->
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                                        modifier = Modifier.width(60.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(40.dp)
+                                                .clip(CircleShape)
+                                                .background(color)
+                                                .then(
+                                                    if (selectedColor == color) {
+                                                        Modifier.border(
+                                                            3.dp,
+                                                            Color.White,
+                                                            CircleShape
+                                                        )
+                                                    } else {
+                                                        Modifier
+                                                    }
+                                                )
+                                                .clickable { selectedColor = color }
+                                        )
+                                        
+                                        Text(
+                                            text = colorName,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            maxLines = 1,
+                                            fontSize = 10.sp
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Preview
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(
+                                text = "Önizleme",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            
+                            Surface(
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(50.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .background(selectedColor.copy(alpha = 0.2f)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(
+                                                id = categoryIcons.find { it.first == selectedIcon }?.second
+                                                    ?: com.alperen.spendcraft.core.ui.R.drawable.ic_category_vector
+                                            ),
+                                            contentDescription = null,
+                                            tint = selectedColor,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
+                                    
+                                    Text(
+                                        text = categoryName.ifBlank { "Kategori Adı" },
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Helper function to convert Color to hex string
+private fun Color.toHexString(): String {
+    val red = (this.red * 255).toInt()
+    val green = (this.green * 255).toInt()
+    val blue = (this.blue * 255).toInt()
+    return String.format("#%02X%02X%02X", red, green, blue)
 }
 
 @Composable

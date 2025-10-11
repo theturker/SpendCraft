@@ -159,7 +159,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     when {
                         isFirstLaunch -> {
-                            // iOS'ta welcome screen yok, doğrudan onboarding göster
+                            // iOS'taki gibi: Splash -> Onboarding (Welcome screen yok)
                             OnboardingScreen(
                                 onFinish = {
                                     // Mark first launch as completed
