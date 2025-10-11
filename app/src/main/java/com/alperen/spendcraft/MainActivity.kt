@@ -118,8 +118,13 @@ class MainActivity : ComponentActivity() {
             val authState by authViewModel.authState.collectAsState()
             
             var currentAuthScreen by remember { mutableStateOf("login") }
-            var showOnboarding by remember { mutableStateOf(false) }
-            var showSplash by remember { mutableStateOf(false) }
+            var showSplash by remember { mutableStateOf(true) } // iOS'taki gibi başlangıçta true
+            
+            // iOS'taki gibi splash 1.5 saniye göster
+            LaunchedEffect(Unit) {
+                kotlinx.coroutines.delay(1500)
+                showSplash = false
+            }
             
             // Google Auth Service'i initialize et
             LaunchedEffect(Unit) {
@@ -149,9 +154,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    // iOS'taki MainAppView akışının birebir aynısı
                     when {
+                        showSplash -> {
+                            // iOS SplashView - 1.5 saniye gradient background + icon
+                            SplashScreen()
+                        }
                         isFirstLaunch -> {
-                            // iOS'taki gibi: Splash -> Onboarding (Welcome screen yok)
+                            // iOS'taki OnboardingView
                             OnboardingScreen(
                                 onFinish = {
                                     // Mark first launch as completed

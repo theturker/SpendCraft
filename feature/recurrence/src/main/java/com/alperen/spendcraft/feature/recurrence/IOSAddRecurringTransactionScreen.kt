@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,20 +27,20 @@ import java.util.*
 
 /**
  * iOS AddRecurringTransactionView'in birebir aynısı
- * Form yapısı: İşlem Bilgileri, Kategori, Tekrar Sıklığı, Durum
+ * Form yapısı ile Material3 design
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddRecurringRuleScreen(
+fun IOSAddRecurringTransactionScreen(
     categories: List<Category>,
-    onSave: (RecurringRuleData) -> Unit,
+    onSave: (name: String, amount: Double, categoryId: Long, isIncome: Boolean, frequency: String, startDate: Long, isActive: Boolean) -> Unit,
     onCancel: () -> Unit,
-    viewModel: RecurringViewModel? = null
+    modifier: Modifier = Modifier
 ) {
     var name by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var isIncome by remember { mutableStateOf(false) }
-    var selectedFrequency by remember { mutableStateOf("MONTHLY") }
+    var frequency by remember { mutableStateOf("MONTHLY") }
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var startDate by remember { mutableStateOf(System.currentTimeMillis()) }
     var isActive by remember { mutableStateOf(true) }
@@ -56,7 +55,7 @@ fun AddRecurringRuleScreen(
         "Yıllık" to "YEARLY"
     )
     
-    val frequencyDisplay = frequencies.firstOrNull { it.second == selectedFrequency }?.first ?: "Aylık"
+    val frequencyDisplay = frequencies.firstOrNull { it.second == frequency }?.first ?: "Aylık"
     val dateFormat = remember { SimpleDateFormat("d MMMM yyyy", Locale("tr")) }
     
     AppScaffold(
@@ -69,8 +68,8 @@ fun AddRecurringRuleScreen(
         }
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
+            modifier = modifier.fillMaxSize(),
+            contentPadding = PaddingValues(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // İşlem Bilgileri Section
@@ -101,13 +100,7 @@ fun AddRecurringRuleScreen(
                             onValueChange = { amount = it },
                             label = { Text("Tutar") },
                             placeholder = { Text("0.00") },
-                            trailingIcon = { 
-                                Text(
-                                    "₺",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(end = 12.dp)
-                                )
-                            },
+                            trailingIcon = { Text("₺", color = MaterialTheme.colorScheme.onSurfaceVariant) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -177,7 +170,7 @@ fun AddRecurringRuleScreen(
                         Spacer(modifier = Modifier.height(12.dp))
                         
                         if (selectedCategory != null) {
-                            // Selected category display - iOS'taki gibi
+                            // Selected category display
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -190,11 +183,7 @@ fun AddRecurringRuleScreen(
                                     Icon(
                                         painter = painterResource(id = getCategoryIconResource(selectedCategory?.icon ?: "circle.fill")),
                                         contentDescription = null,
-                                        tint = try { 
-                                            Color(android.graphics.Color.parseColor(selectedCategory?.color ?: "#007AFF")) 
-                                        } catch (e: Exception) { 
-                                            IOSColors.Blue 
-                                        }
+                                        tint = try { Color(android.graphics.Color.parseColor(selectedCategory?.color ?: "#007AFF")) } catch (e: Exception) { IOSColors.Blue }
                                     )
                                     Text(selectedCategory?.name ?: "")
                                 }
@@ -289,42 +278,35 @@ fun AddRecurringRuleScreen(
             
             // Kaydet Button
             item {
+                ModernCard {
                 Button(
                     onClick = {
                         val amountValue = amount.toDoubleOrNull()
                         val category = selectedCategory
                         if (name.isNotEmpty() && amountValue != null && category != null && category.id != null) {
                             onSave(
-                                RecurringRuleData(
-                                    title = name,
-                                    amount = amountValue,
-                                    categoryId = category.id!!,
-                                    type = if (isIncome) TransactionType.INCOME else TransactionType.EXPENSE,
-                                    frequency = when (selectedFrequency) {
-                                        "DAILY" -> Frequency.DAILY
-                                        "WEEKLY" -> Frequency.WEEKLY
-                                        "MONTHLY" -> Frequency.MONTHLY
-                                        "YEARLY" -> Frequency.YEARLY
-                                        else -> Frequency.MONTHLY
-                                    },
-                                    interval = 1,
-                                    startDate = startDate,
-                                    endDate = null,
-                                    description = ""
+                                name,
+                                amountValue,
+                                category.id!!,
+                                    isIncome,
+                                    frequency,
+                                    startDate,
+                                    isActive
                                 )
-                            )
-                        }
-                    },
-                    enabled = name.isNotEmpty() && amount.toDoubleOrNull() != null && selectedCategory != null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                ) {
-                    Text(
-                        "Kaydet",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                            }
+                        },
+                        enabled = name.isNotEmpty() && amount.toDoubleOrNull() != null && selectedCategory != null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            "Kaydet",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 }
             }
         }
@@ -336,8 +318,9 @@ fun AddRecurringRuleScreen(
             onDismissRequest = { showCategoryPicker = false },
             title = { Text("Kategori Seç") },
             text = {
-                Column {
-                    categories.forEach { category ->
+                LazyColumn {
+                    items(categories.size) { index ->
+                        val category = categories[index]
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -352,11 +335,7 @@ fun AddRecurringRuleScreen(
                             Icon(
                                 painter = painterResource(id = getCategoryIconResource(category.icon ?: "circle.fill")),
                                 contentDescription = null,
-                                tint = try { 
-                                    Color(android.graphics.Color.parseColor(category.color)) 
-                                } catch (e: Exception) { 
-                                    IOSColors.Blue 
-                                }
+                                tint = try { Color(android.graphics.Color.parseColor(category.color)) } catch (e: Exception) { IOSColors.Blue }
                             )
                             Text(category.name)
                         }
@@ -383,7 +362,7 @@ fun AddRecurringRuleScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    selectedFrequency = value
+                                    frequency = value
                                     showFrequencyPicker = false
                                 }
                                 .padding(vertical = 12.dp)
@@ -455,27 +434,3 @@ private fun getCategoryIconResource(sfSymbol: String): Int {
     }
 }
 
-// Data classes
-enum class TransactionType(val displayName: String) {
-    INCOME("Gelir"),
-    EXPENSE("Gider")
-}
-
-enum class Frequency(val displayName: String, val unit: String) {
-    DAILY("Günlük", "gün"),
-    WEEKLY("Haftalık", "hafta"),
-    MONTHLY("Aylık", "ay"),
-    YEARLY("Yıllık", "yıl")
-}
-
-data class RecurringRuleData(
-    val title: String,
-    val amount: Double,
-    val categoryId: Long,
-    val type: TransactionType,
-    val frequency: Frequency,
-    val interval: Int,
-    val startDate: Long,
-    val endDate: Long?,
-    val description: String
-)

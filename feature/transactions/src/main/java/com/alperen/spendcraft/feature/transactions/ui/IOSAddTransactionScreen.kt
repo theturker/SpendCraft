@@ -362,7 +362,7 @@ private fun CategoryButton(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Icon Circle
+        // Icon Circle - iOS'taki gibi category.icon kullan
         Box(
             modifier = Modifier
                 .size(50.dp)
@@ -375,7 +375,7 @@ private fun CategoryButton(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_category_vector),
+                painter = painterResource(id = getCategoryIconResource(category.icon ?: "circle.fill")),
                 contentDescription = null,
                 tint = if (isSelected) Color.White else categoryColor,
                 modifier = Modifier.size(24.dp)
@@ -397,3 +397,31 @@ private fun CategoryButton(
     }
 }
 
+/**
+ * iOS SF Symbol to Android Drawable mapping for categories
+ * iOS'taki kategori icon isimlerini Android drawable resource'larına çevirir
+ */
+private fun getCategoryIconResource(sfSymbol: String): Int {
+    return when (sfSymbol) {
+        "cart.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_cart_fill
+        "fork.knife" -> com.alperen.spendcraft.core.ui.R.drawable.ic_fork_knife
+        "house.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill
+        "car.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_car_fill
+        "tram.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_tram_fill
+        "airplane" -> com.alperen.spendcraft.core.ui.R.drawable.ic_airplane
+        "bolt.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_bolt_fill
+        "bag.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_bag_fill
+        "gift.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_gift_fill
+        "book.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_book_fill
+        "gamecontroller.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_gamecontroller_fill
+        "film.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_film_fill
+        "heart.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_heart_fill
+        "creditcard.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_creditcard_fill
+        "pills.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_pills_fill
+        "briefcase.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_briefcase_fill
+        "graduationcap.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_graduationcap_fill
+        "phone.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_phone_fill
+        "circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_circle_fill
+        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_circle_fill // Default
+    }
+}
