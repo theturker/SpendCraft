@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
+import com.alperen.spendcraft.domain.achievements.AchievementManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val transactionsRepository: TransactionsRepository
+    private val transactionsRepository: TransactionsRepository,
+    private val achievementManager: AchievementManager
 ) : ViewModel() {
 
     // Transactions flow
@@ -65,9 +67,33 @@ class DashboardViewModel @Inject constructor(
     val currentStreak: StateFlow<Int> = MutableStateFlow(0)
     val longestStreak: StateFlow<Int> = MutableStateFlow(0)
 
-    // Achievements data (placeholder - gerçek achievements logic eklenecek)
-    val achievementsCount: StateFlow<Int> = MutableStateFlow(0)
-    val totalPoints: StateFlow<Int> = MutableStateFlow(0)
+    // Achievements data - gerçek veri ile çalışıyor (AchievementManager üzerinden)
+    val achievements: StateFlow<List<com.alperen.spendcraft.data.db.entities.AchievementEntity>> = 
+        achievementManager.allAchievements
+            .map { list ->
+                list.filterIsInstance<com.alperen.spendcraft.data.db.entities.AchievementEntity>()
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+    
+    val achievementsCount: StateFlow<Int> = achievements.map { list ->
+        list.count { it.isUnlocked }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0
+    )
+    
+    val totalPoints: StateFlow<Int> = achievements.map { list ->
+        list.filter { it.isUnlocked }.sumOf { it.points.toInt() }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0
+    )
 
     init {
         // Load initial data
@@ -76,8 +102,11 @@ class DashboardViewModel @Inject constructor(
 
     private fun loadDashboardData() {
         viewModelScope.launch {
+            // Initialize achievements
+            achievementManager.initializeAchievements()
+            // Check and update achievements
+            achievementManager.checkAchievements()
             // TODO: Load streak data
-            // TODO: Load achievements data
         }
     }
 }

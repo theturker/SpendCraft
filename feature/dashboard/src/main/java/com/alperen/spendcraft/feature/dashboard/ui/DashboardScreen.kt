@@ -54,6 +54,7 @@ fun DashboardScreen(
     longestStreak: Int = 0,
     achievementsCount: Int = 0,
     totalPoints: Int = 0,
+    achievements: List<com.alperen.spendcraft.data.db.entities.AchievementEntity> = emptyList(), // Gerçek achievement verisi
     onAddIncome: () -> Unit,
     onAddExpense: () -> Unit,
     onNotifications: () -> Unit = {},
@@ -145,6 +146,7 @@ fun DashboardScreen(
                 AchievementsSection(
                     achievementsCount = achievementsCount,
                     totalPoints = totalPoints,
+                    achievements = achievements, // Gerçek achievement verisi
                     onAchievements = onAchievements,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -454,11 +456,13 @@ private fun StreakCard(
 
 /**
  * Achievements Section - iOS'taki horizontal scroll ile birebir aynı
+ * Gerçek achievement verisi ile çalışıyor
  */
 @Composable
 private fun AchievementsSection(
     achievementsCount: Int,
     totalPoints: Int,
+    achievements: List<com.alperen.spendcraft.data.db.entities.AchievementEntity>,
     onAchievements: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -484,61 +488,59 @@ private fun AchievementsSection(
             )
         }
         
-                // Horizontal Scroll Achievement Cards - iOS'taki gibi
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(horizontal = 0.dp)
-                ) {
-                    // iOS'taki gibi ilk 5 achievement'ı göster - her birinin farklı iconu var
-                    items((1..5).toList()) { index ->
-                        AchievementCard(
-                            achievementName = when (index) {
-                                1 -> "İlk Adım"
-                                2 -> "Başlangıç"
-                                3 -> "Bütçe Bilinci"
-                                4 -> "Kategori Ustası"
-                                else -> "Uzman"
-                            },
-                            achievementDescription = when (index) {
-                                1 -> "İlk işleminizi kaydedin"
-                                2 -> "5 işlem kaydedin"
-                                3 -> "İlk bütçenizi oluşturun"
-                                4 -> "5 farklı kategori kullanın"
-                                else -> "50 işlem kaydedin"
-                            },
-                            achievementIcon = when (index) {
-                                1 -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
-                                2 -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
-                                3 -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
-                                4 -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill
-                                else -> com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector
-                            },
-                            isUnlocked = index <= achievementsCount,
-                            points = when (index) {
-                                1 -> 10
-                                2 -> 25
-                                3 -> 20
-                                4 -> 30
-                                else -> 100
-                            },
-                            progress = when (index) {
-                                1 -> 1
-                                2 -> 3
-                                3 -> 0
-                                4 -> 2
-                                else -> 35
-                            },
-                            maxProgress = when (index) {
-                                1 -> 1
-                                2 -> 5
-                                3 -> 1
-                                4 -> 5
-                                else -> 50
-                            },
-                            onClick = onAchievements
-                        )
-                    }
+        // Horizontal Scroll Achievement Cards - iOS'taki gibi
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 0.dp)
+        ) {
+            // Gerçek achievement verilerini kullan
+            if (achievements.isNotEmpty()) {
+                items(achievements.take(5)) { achievement ->
+                    AchievementCard(
+                        achievementName = achievement.name,
+                        achievementDescription = achievement.description, // iOS: achievementDescription, Android: description
+                        achievementIcon = getAchievementIconResource(achievement.icon),
+                        isUnlocked = achievement.isUnlocked,
+                        points = achievement.points,
+                        progress = achievement.progress,
+                        maxProgress = achievement.maxProgress,
+                        onClick = onAchievements
+                    )
                 }
+            } else {
+                // Fallback - eğer gerçek veri yoksa iOS'taki gibi placeholder göster
+                items((1..5).toList()) { index ->
+                    AchievementCard(
+                        achievementName = when (index) {
+                            1 -> "İlk Adım"
+                            2 -> "Başlangıç"
+                            3 -> "Bütçe Bilinci"
+                            4 -> "Kategori Ustası"
+                            else -> "Uzman"
+                        },
+                        achievementDescription = when (index) {
+                            1 -> "İlk işleminizi kaydedin"
+                            2 -> "5 işlem kaydedin"
+                            3 -> "İlk bütçenizi oluşturun"
+                            4 -> "5 farklı kategori kullanın"
+                            else -> "50 işlem kaydedin"
+                        },
+                        achievementIcon = when (index) {
+                            1 -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
+                            2 -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
+                            3 -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
+                            4 -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill
+                            else -> com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector
+                        },
+                        isUnlocked = false,
+                        points = 0,
+                        progress = 0,
+                        maxProgress = 1,
+                        onClick = onAchievements
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -562,54 +564,65 @@ private fun AchievementCard(
     var showDetailSheet by remember { mutableStateOf(false) }
     
     // iOS'taki AchievementCard ile birebir aynı yapı
-    Column(
+    Box(
         modifier = modifier
             .width(100.dp)
             .height(120.dp)
             .clickable { showDetailSheet = true }
-            .padding(8.dp) // iOS'taki .padding() - içerde
-            .clip(RoundedCornerShape(12.dp))
-            .background(
-                if (isUnlocked) 
-                    IOSColors.Yellow.copy(alpha = 0.1f) 
-                else 
-                    Color.Gray.copy(alpha = 0.1f) // iOS'taki .gray ile aynı
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp) // iOS'taki spacing: 8
+            .padding(8.dp), // iOS'taki .padding() - içerde
+        contentAlignment = Alignment.Center // İçeriği dikey ve yatay olarak ortala
     ) {
-        // Icon - iOS'ta Image(systemName: achievement.icon ?? "star.fill")
-        Icon(
-            painter = painterResource(id = achievementIcon),
-            contentDescription = null,
-            tint = if (isUnlocked) IOSColors.Yellow else Color.Gray, // iOS'taki .yellow : .gray
-            modifier = Modifier.size(32.dp)
-        )
-        
-        // Title - iOS'taki .caption, .semibold
-        Text(
-            text = achievementName,
-            style = MaterialTheme.typography.labelMedium, // iOS .caption karşılığı
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-        )
-        
-        // Progress or Points - iOS'taki .caption2
-        if (isUnlocked) {
-            Text(
-                text = "$points Puan",
-                style = MaterialTheme.typography.labelSmall, // iOS .caption2 karşılığı
-                color = MaterialTheme.colorScheme.onSurfaceVariant // iOS .secondary
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(12.dp))
+                .background(
+                    if (isUnlocked) 
+                        IOSColors.Yellow.copy(alpha = 0.1f) 
+                    else 
+                        Color.Gray.copy(alpha = 0.1f) // iOS'taki .gray ile aynı
+                )
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center // İçeriği dikey olarak ortala
+        ) {
+            // Icon - iOS'ta Image(systemName: achievement.icon ?? "star.fill")
+            Icon(
+                painter = painterResource(id = achievementIcon),
+                contentDescription = null,
+                tint = if (isUnlocked) IOSColors.Yellow else Color.Gray, // iOS'taki .yellow : .gray
+                modifier = Modifier.size(32.dp)
             )
-        } else {
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            // Title - iOS'taki .caption, .semibold
             Text(
-                text = "$progress/$maxProgress",
-                style = MaterialTheme.typography.labelSmall, // iOS .caption2 karşılığı
-                color = MaterialTheme.colorScheme.onSurfaceVariant // iOS .secondary
+                text = achievementName,
+                style = MaterialTheme.typography.labelMedium, // iOS .caption karşılığı
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            // Progress or Points - iOS'taki .caption2
+            if (isUnlocked) {
+                Text(
+                    text = "$points Puan",
+                    style = MaterialTheme.typography.labelSmall, // iOS .caption2 karşılığı
+                    color = MaterialTheme.colorScheme.onSurfaceVariant // iOS .secondary
+                )
+            } else {
+                Text(
+                    text = "$progress/$maxProgress",
+                    style = MaterialTheme.typography.labelSmall, // iOS .caption2 karşılığı
+                    color = MaterialTheme.colorScheme.onSurfaceVariant // iOS .secondary
+                )
+            }
         }
     }
     
@@ -915,6 +928,25 @@ private fun DashboardAchievementDetailSheet(
                 }
             }
         }
+    }
+}
+
+/**
+ * iOS SF Symbol to Android Drawable mapping
+ * iOS'taki icon isimlerini Android drawable resource'larına çevirir
+ */
+private fun getAchievementIconResource(sfSymbol: String): Int {
+    return when (sfSymbol) {
+        "checkmark.circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
+        "flame.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
+        "star.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_vector
+        "crown.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector
+        "folder.badge.plus" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill
+        "chart.bar.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
+        "shield.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_shield_vector
+        "banknote.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_monetization_on_vector
+        "trophy.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill
+        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_vector // Default
     }
 }
 

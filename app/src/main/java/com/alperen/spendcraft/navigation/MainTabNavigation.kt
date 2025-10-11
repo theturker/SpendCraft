@@ -127,6 +127,7 @@ fun MainTabNavigation(
                 val longestStreak by dashboardViewModel.longestStreak.collectAsState()
                 val achievementsCount by dashboardViewModel.achievementsCount.collectAsState()
                 val totalPoints by dashboardViewModel.totalPoints.collectAsState()
+                val achievements by dashboardViewModel.achievements.collectAsState() // Gerçek achievement verisi
                 
                 DashboardScreen(
                     transactions = transactions,
@@ -137,6 +138,7 @@ fun MainTabNavigation(
                     longestStreak = longestStreak,
                     achievementsCount = achievementsCount,
                     totalPoints = totalPoints,
+                    achievements = achievements, // Gerçek achievement verisi
                     onAddIncome = { onNavigateToAddTransaction(true) },
                     onAddExpense = { onNavigateToAddTransaction(false) },
                     onNotifications = onNavigateToNotifications,
