@@ -111,6 +111,7 @@ fun AppNavHost(
                 onNavigateToAccounts = { navController.navigate(Routes.ACCOUNTS) },
                 onNavigateToRecurring = { navController.navigate(Routes.RECURRING) },
                 onNavigateToSharing = { navController.navigate(Routes.SHARING) },
+                onNavigateToExport = { navController.navigate(Routes.EXPORT_REPORT) },
                 isPremium = isPremium
             )
         }

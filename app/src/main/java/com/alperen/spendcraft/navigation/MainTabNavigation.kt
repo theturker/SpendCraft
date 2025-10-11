@@ -97,11 +97,13 @@ fun MainTabNavigation(
     onNavigateToAccounts: () -> Unit = {},
     onNavigateToRecurring: () -> Unit = {},
     onNavigateToSharing: () -> Unit = {},
+    onNavigateToExport: () -> Unit = {},
     isPremium: Boolean = false
 ) {
     val navController = rememberNavController()
     
     Scaffold(
+        modifier = Modifier.systemBarsPadding(), // Safe area için
         bottomBar = {
             TabNavigationBar(
                 navController = navController,
@@ -209,7 +211,7 @@ fun MainTabNavigation(
                     onNavigateToAchievements = onNavigateToAchievements,
                     onNavigateToNotifications = onNavigateToNotifications,
                     onNavigateToNotificationSettings = { /* TODO: Create notification settings screen */ },
-                    onNavigateToExport = { /* TODO: Navigate to export screen */ },
+                    onNavigateToExport = onNavigateToExport,
                     onSignOut = { /* TODO: Implement sign out */ },
                     totalTransactions = transactions.size,
                     totalCategories = categories.size

@@ -97,22 +97,16 @@ class MainActivity : ComponentActivity() {
         // Modern edge-to-edge display için enableEdgeToEdge kullan
         enableEdgeToEdge()
         
-        // Window ayarları
+        // Window ayarları - Safe area için
         WindowCompat.setDecorFitsSystemWindows(window, false)
         
         // Status bar ve navigation bar'ı şeffaf yap
         window.statusBarColor = Color.Transparent.toArgb()
         window.navigationBarColor = Color.Transparent.toArgb()
         
-        // System UI controller'ı ayarla
+        // System UI controller'ı ayarla - Light/Dark mode için
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        
-        // Screen size ve density ayarları
-        window.setFlags(
-            android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
+        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
         
         // Splash screen'i hemen başlat - Android native splash'i bypass et
         setContent {
@@ -152,9 +146,7 @@ class MainActivity : ComponentActivity() {
 
             SpendCraftTheme(darkTheme = isDarkMode) {
                 Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .consumeWindowInsets(WindowInsets.systemBars),
+                    modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     when {
@@ -183,6 +175,11 @@ class MainActivity : ComponentActivity() {
                                         },
                                         onNavigateToRegister = { currentAuthScreen = "register" },
                                         onNavigateToForgotPassword = { currentAuthScreen = "forgot" },
+                                        onGoogleSignIn = {
+                                            // Launch Google Sign In
+                                            val signInIntent = googleAuthService.getSignInIntent()
+                                            googleSignInLauncher.launch(signInIntent)
+                                        },
                                         isLoading = isLoading,
                                         errorMessage = errorMessage
                                     )

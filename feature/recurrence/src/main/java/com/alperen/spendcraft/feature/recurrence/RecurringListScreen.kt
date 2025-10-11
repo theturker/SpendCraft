@@ -12,14 +12,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.alperen.spendcraft.core.ui.AppScaffold
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.ui.ModernCard
-import com.alperen.spendcraft.core.ui.PremiumGate
 import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity
 import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * iOS RecurringTransactionsListView'in birebir Android karşılığı
+ * 
+ * Özellikler:
+ * - Premium gate YOK (iOS'ta yok)
+ * - + button toolbar'da (her kullanıcı için)
+ * - List with swipe actions
+ * - Active/Inactive status
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecurringListScreen(
     recurringTransactionsFlow: Flow<List<RecurringTransactionEntity>>,
@@ -31,82 +44,87 @@ fun RecurringListScreen(
 ) {
     val recurringTransactions by recurringTransactionsFlow.collectAsState(initial = emptyList())
     
-    // Debug log
-    LaunchedEffect(recurringTransactions) {
-        println("🔍 DEBUG: RecurringListScreen - ${recurringTransactions.size} adet tekrarlayan işlem alındı")
-        recurringTransactions.forEachIndexed { index, transaction ->
-            println("🔍 DEBUG: RecurringListScreen [$index] ${transaction.name} (ID: ${transaction.id})")
-        }
-    }
-    
-    AppScaffold(
-        title = "Tekrarlayan İşlemler",
-        onBack = onBack,
-        actions = {
-            if (isPremium) {
-                IconButton(onClick = onAddRule) {
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = "Yeni Tekrarlayan İşlem Ekle"
+    Scaffold(
+        topBar = {
+            LargeTopAppBar(
+                title = {
+                    Text(
+                        text = "Tekrarlayan İşlemler",
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold
                     )
-                }
-            }
-        }
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            if (!isPremium) {
-                PremiumGate(
-                    title = "Premium Özellik",
-                    description = "Tekrarlayan işlemler Premium üyeler için özel bir özelliktir.",
-                    onUpgrade = { /* Navigate to paywall */ },
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-            
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                if (recurringTransactions.isEmpty()) {
-                    item {
-                        ModernCard {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(24.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
                         Icon(
-                            painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_schedule_vector),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(48.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Text(
-                                    text = "Henüz tekrarlayan işlem yok",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = "Düzenli işlemlerinizi otomatikleştirin",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-                } else {
-                    items(recurringTransactions) { transaction ->
-                        RecurringTransactionItem(
-                            transaction = transaction,
-                            onEdit = { onEditRule(transaction) },
-                            onDelete = { onDeleteRule(transaction) }
+                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
+                            contentDescription = "Geri"
                         )
                     }
+                },
+                actions = {
+                    // iOS'ta premium kontrolü YOK - herkes ekleyebilir
+                    IconButton(onClick = onAddRule) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Yeni Tekrarlayan İşlem Ekle"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+        }
+    ) { paddingValues ->
+            
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            if (recurringTransactions.isEmpty()) {
+                // iOS'taki empty state
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 60.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_repeat_circle_fill),
+                            contentDescription = null,
+                            modifier = Modifier.size(60.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        Text(
+                            text = "Henüz tekrarlayan işlem yok",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        Text(
+                            text = "Sağ üst köşedeki + butonuna basarak ekleyin",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                }
+            } else {
+                items(recurringTransactions) { transaction ->
+                    RecurringTransactionItem(
+                        transaction = transaction,
+                        onEdit = { onEditRule(transaction) },
+                        onDelete = { onDeleteRule(transaction) }
+                    )
                 }
             }
         }

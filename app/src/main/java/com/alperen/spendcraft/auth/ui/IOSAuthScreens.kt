@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.auth.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -36,6 +37,7 @@ fun IOSLoginScreen(
     onLoginClick: (email: String, password: String) -> Unit,
     onNavigateToRegister: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
+    onGoogleSignIn: () -> Unit = {},
     isLoading: Boolean = false,
     errorMessage: String? = null,
     modifier: Modifier = Modifier
@@ -159,6 +161,53 @@ fun IOSLoginScreen(
                 text = "Şifremi Unuttum",
                 color = IOSColors.Blue
             )
+        }
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // Divider - "veya"
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            HorizontalDivider(modifier = Modifier.weight(1f))
+            Text(
+                text = "veya",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            HorizontalDivider(modifier = Modifier.weight(1f))
+        }
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // Google Sign In Button - iOS Style
+        OutlinedButton(
+            onClick = onGoogleSignIn,
+            enabled = !isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = com.alperen.spendcraft.R.drawable.google),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.Unspecified
+                )
+                Text(
+                    text = "Google ile Giriş Yap",
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
         
         Spacer(modifier = Modifier.weight(1f))
