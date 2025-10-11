@@ -192,7 +192,7 @@ fun MainTabNavigation(
                     budgets = emptyMap(), // TODO: Add budget data
                     spent = emptyMap(), // TODO: Add spent data
                     onAddCategory = { name, icon, color ->
-                        transactionsViewModel.addCategory(name)
+                        transactionsViewModel.addCategory(name, icon, color)
                     },
                     onCategoryClick = { category ->
                         // TODO: Show add/edit budget dialog

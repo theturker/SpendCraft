@@ -398,11 +398,31 @@ private fun CategoryButton(
 }
 
 /**
- * iOS SF Symbol to Android Drawable mapping for categories
- * iOS'taki kategori icon isimlerini Android drawable resource'larına çevirir
+ * Category icon mapping - Android category verilerindeki emoji iconları ve iOS SF Symbol isimlerini Android drawable'lara çevirir
  */
-private fun getCategoryIconResource(sfSymbol: String): Int {
-    return when (sfSymbol) {
+private fun getCategoryIconResource(icon: String): Int {
+    return when (icon) {
+        // Emoji iconlar (veritabanında saklanıyor)
+        "🍔" -> com.alperen.spendcraft.core.ui.R.drawable.ic_fork_knife // Yemek
+        "🚌" -> com.alperen.spendcraft.core.ui.R.drawable.ic_tram_fill // Ulaşım
+        "🎬" -> com.alperen.spendcraft.core.ui.R.drawable.ic_film_fill // Eğlence
+        "💼" -> com.alperen.spendcraft.core.ui.R.drawable.ic_briefcase_fill // Maaş / İş
+        "🛒" -> com.alperen.spendcraft.core.ui.R.drawable.ic_cart_fill // Alışveriş
+        "🏠" -> com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill // Ev
+        "🚗" -> com.alperen.spendcraft.core.ui.R.drawable.ic_car_fill // Araba
+        "✈️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_airplane // Uçak / Seyahat
+        "⚡" -> com.alperen.spendcraft.core.ui.R.drawable.ic_bolt_fill // Elektrik / Faturalar
+        "👜" -> com.alperen.spendcraft.core.ui.R.drawable.ic_bag_fill // Çanta / Moda
+        "🎁" -> com.alperen.spendcraft.core.ui.R.drawable.ic_gift_fill // Hediye
+        "📚" -> com.alperen.spendcraft.core.ui.R.drawable.ic_book_fill // Kitap / Eğitim
+        "🎮" -> com.alperen.spendcraft.core.ui.R.drawable.ic_gamecontroller_fill // Oyun
+        "❤️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_heart_fill // Sağlık / Sevgi
+        "💳" -> com.alperen.spendcraft.core.ui.R.drawable.ic_creditcard_fill // Kredi Kartı
+        "💊" -> com.alperen.spendcraft.core.ui.R.drawable.ic_pills_fill // İlaç / Sağlık
+        "🎓" -> com.alperen.spendcraft.core.ui.R.drawable.ic_graduationcap_fill // Eğitim
+        "📱" -> com.alperen.spendcraft.core.ui.R.drawable.ic_phone_fill // Telefon / İletişim
+        
+        // iOS SF Symbol isimleri (fallback)
         "cart.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_cart_fill
         "fork.knife" -> com.alperen.spendcraft.core.ui.R.drawable.ic_fork_knife
         "house.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill
@@ -422,6 +442,7 @@ private fun getCategoryIconResource(sfSymbol: String): Int {
         "graduationcap.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_graduationcap_fill
         "phone.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_phone_fill
         "circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_circle_fill
+        
         else -> com.alperen.spendcraft.core.ui.R.drawable.ic_circle_fill // Default
     }
 }

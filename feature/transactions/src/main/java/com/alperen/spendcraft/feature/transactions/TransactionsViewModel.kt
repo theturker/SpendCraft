@@ -109,8 +109,8 @@ class TransactionsViewModel @Inject constructor(
         viewModelScope.launch { delete(id) }
     }
     
-    fun addCategory(name: String) {
-        viewModelScope.launch { insertCategory(name) }
+    fun addCategory(name: String, icon: String? = null, color: String? = null) {
+        viewModelScope.launch { insertCategory(name, icon, color) }
     }
     
     fun removeCategory(id: Long) {

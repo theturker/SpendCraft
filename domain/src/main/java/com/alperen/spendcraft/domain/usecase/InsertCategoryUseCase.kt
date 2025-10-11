@@ -7,12 +7,12 @@ import javax.inject.Inject
 class InsertCategoryUseCase @Inject constructor(
     private val repository: TransactionsRepository
 ) {
-    suspend operator fun invoke(name: String): Long {
+    suspend operator fun invoke(name: String, icon: String? = null, color: String? = null): Long {
         val category = Category(
             id = null,
             name = name,
-            color = "#FF5722", // Default color
-            icon = "📂" // Default icon
+            color = color ?: "#FF5722", // Default color
+            icon = icon ?: "📂" // Default icon
         )
         return repository.insertCategory(category)
     }
