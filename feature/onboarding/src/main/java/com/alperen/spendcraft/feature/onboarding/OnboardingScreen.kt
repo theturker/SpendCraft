@@ -104,7 +104,6 @@ fun OnboardingScreen(
                     colors = currentGradient
                 )
             )
-            .consumeWindowInsets(WindowInsets.systemBars)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -113,7 +112,7 @@ fun OnboardingScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
                 if (pagerState.currentPage < pages.size - 1) {

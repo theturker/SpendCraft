@@ -453,7 +453,7 @@ private fun StreakCard(
 }
 
 /**
- * Achievements Section
+ * Achievements Section - iOS'taki horizontal scroll ile birebir aynı
  */
 @Composable
 private fun AchievementsSection(
@@ -466,7 +466,7 @@ private fun AchievementsSection(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Header
+        // Header - iOS'taki gibi
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -484,37 +484,105 @@ private fun AchievementsSection(
             )
         }
         
-        // Achievement Cards Placeholder
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(15.dp))
-                .background(MaterialTheme.extendedColors.achievement.copy(alpha = 0.1f))
-                .clickable(onClick = onAchievements)
-                .padding(24.dp),
-            contentAlignment = Alignment.Center
+        // Horizontal Scroll Achievement Cards - iOS'taki gibi
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 0.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill),
-                    contentDescription = null,
-                    tint = MaterialTheme.extendedColors.achievement,
-                    modifier = Modifier.size(48.dp)
-                )
-                Text(
-                    text = "$achievementsCount Başarı",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "Tümünü görmek için tıklayın",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            // iOS'taki gibi ilk 5 achievement'ı göster
+            items((1..5).toList()) { index ->
+                AchievementCard(
+                    achievementName = when (index) {
+                        1 -> "İlk İşlem"
+                        2 -> "Haftalık Streak"
+                        3 -> "Bütçe Ustası"
+                        4 -> "Tasarrufçu"
+                        else -> "Kategori Ustası"
+                    },
+                    isUnlocked = index <= achievementsCount,
+                    points = when (index) {
+                        1 -> 10
+                        2 -> 25
+                        3 -> 50
+                        4 -> 75
+                        else -> 100
+                    },
+                    progress = when (index) {
+                        1 -> 100
+                        2 -> 75
+                        3 -> 50
+                        4 -> 25
+                        else -> 0
+                    },
+                    maxProgress = 100,
+                    onClick = onAchievements
                 )
             }
+        }
+    }
+}
+
+/**
+ * Achievement Card - iOS'taki AchievementCard'ın birebir kopyası
+ */
+@Composable
+private fun AchievementCard(
+    achievementName: String,
+    isUnlocked: Boolean,
+    points: Int,
+    progress: Int,
+    maxProgress: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .width(100.dp)
+            .height(120.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                if (isUnlocked) 
+                    IOSColors.Yellow.copy(alpha = 0.1f) 
+                else 
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+            )
+            .clickable(onClick = onClick)
+            .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // Icon
+        Icon(
+            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill),
+            contentDescription = null,
+            tint = if (isUnlocked) IOSColors.Yellow else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+            modifier = Modifier.size(32.dp)
+        )
+        
+        // Title
+        Text(
+            text = achievementName,
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+        )
+        
+        // Progress or Points
+        if (isUnlocked) {
+            Text(
+                text = "$points Puan",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        } else {
+            Text(
+                text = "$progress/$maxProgress",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
