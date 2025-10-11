@@ -287,7 +287,7 @@ private fun AddCategoryDialog(
         "gamecontroller.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_gamecontroller_fill,
         "film.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_film_fill,
         "heart.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_heart_fill,
-        "creditcard.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector,
+        "creditcard.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_creditcard_fill,
         "pills.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_pills_fill,
         "briefcase.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_briefcase_fill,
         "graduationcap.fill" to com.alperen.spendcraft.core.ui.R.drawable.ic_graduationcap_fill,
@@ -540,10 +540,31 @@ private fun Color.toHexString(): String {
 }
 
 /**
- * iOS SF Symbol to Android Drawable mapping for categories
+ * Category icon mapping - Android category verilerindeki emoji iconları ve iOS SF Symbol isimlerini Android drawable'lara çevirir
  */
-private fun getCategoryIconResource(sfSymbol: String): Int {
-    return when (sfSymbol) {
+private fun getCategoryIconResource(icon: String): Int {
+    return when (icon) {
+        // Emoji iconlar (veritabanında saklanıyor)
+        "🍔" -> CoreR.drawable.ic_fork_knife // Yemek
+        "🚌" -> CoreR.drawable.ic_tram_fill // Ulaşım
+        "🎬" -> CoreR.drawable.ic_film_fill // Eğlence
+        "💼" -> CoreR.drawable.ic_briefcase_fill // Maaş / İş
+        "🛒" -> CoreR.drawable.ic_cart_fill // Alışveriş
+        "🏠" -> CoreR.drawable.ic_house_fill // Ev
+        "🚗" -> CoreR.drawable.ic_car_fill // Araba
+        "✈️" -> CoreR.drawable.ic_airplane // Uçak / Seyahat
+        "⚡" -> CoreR.drawable.ic_bolt_fill // Elektrik / Faturalar
+        "👜" -> CoreR.drawable.ic_bag_fill // Çanta / Moda
+        "🎁" -> CoreR.drawable.ic_gift_fill // Hediye
+        "📚" -> CoreR.drawable.ic_book_fill // Kitap / Eğitim
+        "🎮" -> CoreR.drawable.ic_gamecontroller_fill // Oyun
+        "❤️" -> CoreR.drawable.ic_heart_fill // Sağlık / Sevgi
+        "💳" -> CoreR.drawable.ic_creditcard_fill // Kredi Kartı
+        "💊" -> CoreR.drawable.ic_pills_fill // İlaç / Sağlık
+        "🎓" -> CoreR.drawable.ic_graduationcap_fill // Eğitim
+        "📱" -> CoreR.drawable.ic_phone_fill // Telefon / İletişim
+        
+        // iOS SF Symbol isimleri (fallback)
         "cart.fill" -> CoreR.drawable.ic_cart_fill
         "fork.knife" -> CoreR.drawable.ic_fork_knife
         "house.fill" -> CoreR.drawable.ic_house_fill
@@ -563,7 +584,8 @@ private fun getCategoryIconResource(sfSymbol: String): Int {
         "graduationcap.fill" -> CoreR.drawable.ic_graduationcap_fill
         "phone.fill" -> CoreR.drawable.ic_phone_fill
         "circle.fill" -> CoreR.drawable.ic_circle_fill
-        else -> CoreR.drawable.ic_circle_fill
+        
+        else -> CoreR.drawable.ic_circle_fill // Default
     }
 }
 
