@@ -1,9 +1,13 @@
+<!-- iOS SF Symbol: chart.line.uptrend.xyaxis -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path
-        android:fillColor="#FF000000"
-        android:pathData="M16,6l2.29,2.29 -4.88,4.88 -4,-4L2,16.59 3.41,18l6,-6 4,4 6.3,-6.29L22,12V6z"/>
+        android:fillColor="#000000"
+        android:pathData="M2,18L6,14L10,18L14,14L18,18L22,14v4L18,22L14,18L10,22L6,18L2,22V18z"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M16,6L20,2L24,6v2L20,4L16,6V6z"/>
 </vector>

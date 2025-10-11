@@ -932,11 +932,20 @@ private fun DashboardAchievementDetailSheet(
 }
 
 /**
- * iOS SF Symbol to Android Drawable mapping
- * iOS'taki icon isimlerini Android drawable resource'larına çevirir
+ * Achievement icon mapping - Android achievement verilerindeki emoji iconları Android drawable'lara çevirir
  */
-private fun getAchievementIconResource(sfSymbol: String): Int {
-    return when (sfSymbol) {
+private fun getAchievementIconResource(icon: String): Int {
+    return when (icon) {
+        // Achievement verilerindeki emoji iconlar
+        "🎯" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill // İlk Adım
+        "📊" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill // İşlem Ustası, Süper İzleyici, Bütçe Planlayıcısı
+        "📈" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trending_up_vector // Süper İzleyici
+        "⚔️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill // Hafta Savaşçısı
+        "🏆" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill // Aylık Şampiyon
+        "🏷️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill // Kategori Uzmanı
+        "💰" -> com.alperen.spendcraft.core.ui.R.drawable.ic_monetization_on_vector // Tasarruf Ustası
+        
+        // iOS SF Symbol isimleri (fallback)
         "checkmark.circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
         "flame.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
         "star.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
@@ -946,6 +955,7 @@ private fun getAchievementIconResource(sfSymbol: String): Int {
         "shield.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_shield_vector
         "banknote.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_monetization_on_vector
         "trophy.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill
+        
         else -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill // Default
     }
 }
