@@ -6,13 +6,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         
-        <!-- Edge-to-edge display için ayarlar -->
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <!-- Sistem barları Compose içinde dinamik olarak ayarlanıyor -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar">true</item>
         
         <!-- Screen size ve density ayarları -->
         <item name="android:windowMinWidthMajor">320dp</item>

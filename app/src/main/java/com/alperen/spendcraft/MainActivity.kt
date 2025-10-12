@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowInsetsCompat
 import androidx.activity.enableEdgeToEdge
 import android.content.res.Configuration
+import androidx.compose.runtime.SideEffect
 import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
 import com.alperen.spendcraft.core.ui.SplashScreen
@@ -100,14 +101,6 @@ class MainActivity : ComponentActivity() {
         // Window ayarları - Safe area için
         WindowCompat.setDecorFitsSystemWindows(window, false)
         
-        // Status bar ve navigation bar'ı şeffaf yap
-        window.statusBarColor = Color.Transparent.toArgb()
-        window.navigationBarColor = Color.Transparent.toArgb()
-        
-        // System UI controller'ı ayarla - Light/Dark mode için
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
-        
         // Splash screen'i hemen başlat - Android native splash'i bypass et
         setContent {
             val context = LocalContext.current
@@ -150,6 +143,34 @@ class MainActivity : ComponentActivity() {
             }
 
             SpendCraftTheme(darkTheme = isDarkMode) {
+                // Sistem barlarının rengini ve ikon renklerini ayarla
+                val view = LocalView.current
+                val backgroundColor = MaterialTheme.colorScheme.background
+                val isLightTheme = !isDarkMode
+                
+                // showSplash ve isLightTheme değiştiğinde sistem barlarını güncelle
+                LaunchedEffect(showSplash, isLightTheme, backgroundColor) {
+                    val window = (view.context as ComponentActivity).window
+                    
+                    // Splash screen'de sistem barları şeffaf, diğer durumlarda background rengi
+                    if (showSplash) {
+                        window.statusBarColor = Color.Transparent.toArgb()
+                        window.navigationBarColor = Color.Transparent.toArgb()
+                        // Splash'te gradient koyu renkli olduğu için ikonlar beyaz olsun
+                        WindowCompat.getInsetsController(window, view).apply {
+                            isAppearanceLightStatusBars = false
+                            isAppearanceLightNavigationBars = false
+                        }
+                    } else {
+                        window.statusBarColor = backgroundColor.toArgb()
+                        window.navigationBarColor = backgroundColor.toArgb()
+                        WindowCompat.getInsetsController(window, view).apply {
+                            isAppearanceLightStatusBars = isLightTheme
+                            isAppearanceLightNavigationBars = isLightTheme
+                        }
+                    }
+                }
+                
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
