@@ -119,11 +119,10 @@ fun ReportsScreen(
                 )
             }
         }
-    ) {
+    ) { _ ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             // Zaman Araligi Chipleri

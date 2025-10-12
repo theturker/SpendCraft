@@ -273,7 +273,7 @@ fun AchievementsScreen(
     AppScaffold(
         title = "Başarılar",
         onBack = onBack
-    ) {
+    ) { _ ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(vertical = 16.dp),

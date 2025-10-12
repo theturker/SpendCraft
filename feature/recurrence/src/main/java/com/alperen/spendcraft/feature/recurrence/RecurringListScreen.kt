@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,7 +45,13 @@ fun RecurringListScreen(
 ) {
     val recurringTransactions by recurringTransactionsFlow.collectAsState(initial = emptyList())
     
+    // Scroll behavior ekleyerek iOS gibi collapsible davranış sağlıyoruz
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+        rememberTopAppBarState()
+    )
+    
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = {
@@ -71,6 +78,7 @@ fun RecurringListScreen(
                         )
                     }
                 },
+                scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                     scrolledContainerColor = MaterialTheme.colorScheme.surface

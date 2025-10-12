@@ -22,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.alpha
@@ -53,16 +54,22 @@ fun AppScaffold(
     showBannerAd: Boolean = false,
     isPremium: Boolean = false,
     bannerContent: (@Composable () -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable (PaddingValues) -> Unit
 ) {
+    // Scroll behavior ekleyerek iOS gibi collapsible davranış sağlıyoruz
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+        rememberTopAppBarState()
+    )
+    
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
                 title = { 
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.ExtraBold
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold
                     ) 
                 },
                 navigationIcon = {
@@ -80,8 +87,10 @@ fun AppScaffold(
                     }
                 },
                 actions = actions,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface,
                     titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
@@ -95,7 +104,7 @@ fun AppScaffold(
                 bannerContent?.invoke()
             }
             Box(modifier = Modifier.weight(1f, fill = true)) {
-                content()
+                content(PaddingValues(0.dp))
             }
         }
     }
