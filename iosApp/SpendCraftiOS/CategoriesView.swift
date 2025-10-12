@@ -16,17 +16,50 @@ struct CategoriesView: View {
     @State private var selectedCategory: CategoryEntity?
     
     var body: some View {
-        List {
-            ForEach(transactionsViewModel.categories, id: \.id) { category in
-                CategoryRow(
-                    category: category,
-                    spent: transactionsViewModel.totalSpentForCategory(category),
-                    budget: budgetViewModel.budgetForCategory(category)
-                )
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    selectedCategory = category
-                    showAddBudget = true
+        ZStack {
+            if transactionsViewModel.categories.isEmpty {
+                // Empty State
+                VStack(spacing: 20) {
+                    Image(systemName: "folder.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.gray)
+                    
+                    Text("Henüz kategori yok")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    
+                    Text("Kategoriler oluşturup harcamalarınızı organize edin")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                    
+                    Button {
+                        showAddCategory = true
+                    } label: {
+                        Text("İlk Kategoriyi Ekle")
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(12)
+                    }
+                    .padding(.top)
+                }
+            } else {
+                List {
+                    ForEach(transactionsViewModel.categories, id: \.id) { category in
+                        CategoryRow(
+                            category: category,
+                            spent: transactionsViewModel.totalSpentForCategory(category),
+                            budget: budgetViewModel.budgetForCategory(category)
+                        )
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            selectedCategory = category
+                            showAddBudget = true
+                        }
+                    }
                 }
             }
         }
@@ -45,6 +78,7 @@ struct CategoriesView: View {
             if let category = selectedCategory {
                 AddBudgetView(category: category)
                     .environmentObject(budgetViewModel)
+                    .environmentObject(transactionsViewModel)
             }
         }
         .sheet(isPresented: $showAddCategory) {
@@ -133,10 +167,15 @@ struct CategoryRow: View {
 struct AddBudgetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var budgetViewModel: BudgetViewModel
+    @EnvironmentObject var transactionsViewModel: TransactionsViewModel
     
     let category: CategoryEntity
     
     @State private var budgetAmount: String = ""
+    
+    var currentSpent: Double {
+        transactionsViewModel.totalSpentForCategory(category)
+    }
     
     var body: some View {
         NavigationView {
@@ -150,6 +189,25 @@ struct AddBudgetView: View {
                     }
                 }
                 
+                // Current Spending
+                Section("Bu Ay Harcanan") {
+                    HStack {
+                        Text(String(format: "%.2f ₺", currentSpent))
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        
+                        Spacer()
+                        
+                        if let budget = budgetViewModel.budgetForCategory(category) {
+                            let limit = Double(budget.monthlyLimitMinor) / 100.0
+                            let percentage = (currentSpent / limit) * 100
+                            Text(String(format: "%.0f%%", percentage))
+                                .font(.subheadline)
+                                .foregroundColor(percentage >= 100 ? .red : (percentage >= 80 ? .orange : .green))
+                        }
+                    }
+                }
+                
                 Section("Aylık Bütçe Limiti") {
                     HStack {
                         TextField("0.00", text: $budgetAmount)
@@ -157,6 +215,18 @@ struct AddBudgetView: View {
                             .font(.title3)
                         Text("₺")
                             .foregroundColor(.secondary)
+                    }
+                    
+                    if let amount = Double(budgetAmount), amount > 0 {
+                        let remaining = amount - currentSpent
+                        HStack {
+                            Text("Kalan:")
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text(String(format: "%.2f ₺", remaining))
+                                .fontWeight(.medium)
+                                .foregroundColor(remaining < 0 ? .red : .green)
+                        }
                     }
                 }
                 
@@ -168,10 +238,10 @@ struct AddBudgetView: View {
                             .frame(maxWidth: .infinity)
                             .font(.subheadline)
                     }
-                    .disabled(budgetAmount.isEmpty || Double(budgetAmount) == nil)
+                    .disabled(budgetAmount.isEmpty || Double(budgetAmount) == nil || Double(budgetAmount) ?? 0 <= 0)
                 }
             }
-            .navigationTitle("Bütçe Ekle")
+            .navigationTitle("Bütçe Yönet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

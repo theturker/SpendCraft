@@ -92,7 +92,7 @@ class TransactionsViewModel: ObservableObject {
         }
     }
     
-    func addTransaction(amount: Double, note: String?, category: CategoryEntity?, account: AccountEntity?, isIncome: Bool) {
+    func addTransaction(amount: Double, note: String?, category: CategoryEntity?, account: AccountEntity?, isIncome: Bool, achievementsViewModel: AchievementsViewModel? = nil, notificationsViewModel: NotificationsViewModel? = nil) {
         let transaction = TransactionEntity(context: context)
         transaction.id = Int64.random(in: 1...1000000)
         transaction.amountMinor = Int64(amount * 100)
@@ -106,6 +106,12 @@ class TransactionsViewModel: ObservableObject {
         
         CoreDataStack.shared.saveContext()
         loadTransactions()
+        
+        // Update daily streak
+        achievementsViewModel?.updateStreak()
+        
+        // Trigger budget check
+        notificationsViewModel?.objectWillChange.send()
     }
     
     func deleteTransaction(_ transaction: TransactionEntity) {

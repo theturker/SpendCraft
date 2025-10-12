@@ -86,12 +86,49 @@ class NotificationsViewModel: ObservableObject {
     // MARK: - Budget Alert
     
     func checkBudgetAlert(category: String, percentage: Double) {
-        if percentage >= 90 {
+        if percentage >= 100 {
             addNotification(
-                title: "⚠️ Bütçe Uyarısı",
-                message: "\(category) kategorisinde bütçenizin %\(Int(percentage))'ini kullandınız.",
+                title: "🚨 Bütçe Aşıldı!",
+                message: "\(category) kategorisinde bütçenizin tamamını kullandınız!",
                 type: .budgetAlert
             )
+        } else if percentage >= 80 {
+            addNotification(
+                title: "⚠️ Bütçe Uyarısı",
+                message: "\(category) kategorisinde bütçenizin %80'ini kullandınız.",
+                type: .budgetAlert
+            )
+        }
+    }
+    
+    func checkAllBudgets(budgets: [BudgetEntity], spentAmounts: [String: Double]) {
+        for budget in budgets {
+            let categoryId = budget.categoryId // categoryId is String
+            guard let spent = spentAmounts[categoryId] else { continue }
+            
+            let limit = Double(budget.monthlyLimitMinor) / 100.0
+            guard limit > 0 else { continue }
+            
+            let percentage = (spent / limit) * 100.0
+            
+            // Check if we already sent notification for this threshold
+            let hasNotified80 = notifications.contains { notification in
+                notification.type == .budgetAlert &&
+                notification.message.contains(budget.category?.name ?? "") &&
+                notification.message.contains("80")
+            }
+            
+            let hasNotified100 = notifications.contains { notification in
+                notification.type == .budgetAlert &&
+                notification.message.contains(budget.category?.name ?? "") &&
+                notification.message.contains("tamamını")
+            }
+            
+            if percentage >= 100 && !hasNotified100 {
+                checkBudgetAlert(category: budget.category?.name ?? "Kategori", percentage: percentage)
+            } else if percentage >= 80 && percentage < 100 && !hasNotified80 {
+                checkBudgetAlert(category: budget.category?.name ?? "Kategori", percentage: percentage)
+            }
         }
     }
     

@@ -62,7 +62,7 @@ class AchievementsViewModel: ObservableObject {
         CoreDataStack.shared.saveContext()
     }
     
-    func checkAchievements(transactionCount: Int, totalSpent: Double, categories: Int) {
+    func checkAchievements(transactionCount: Int, totalSpent: Double, categories: Int, notificationsViewModel: NotificationsViewModel? = nil) {
         for achievement in achievements where !achievement.isUnlocked {
             var shouldUnlock = false
             
@@ -84,17 +84,23 @@ class AchievementsViewModel: ObservableObject {
             }
             
             if shouldUnlock {
-                unlockAchievement(achievement)
+                unlockAchievement(achievement, notificationsViewModel: notificationsViewModel)
             }
         }
         
         CoreDataStack.shared.saveContext()
     }
     
-    func unlockAchievement(_ achievement: AchievementEntity) {
+    func unlockAchievement(_ achievement: AchievementEntity, notificationsViewModel: NotificationsViewModel? = nil) {
         achievement.isUnlocked = true
         achievement.unlockedAt = Int64(Date().timeIntervalSince1970 * 1000)
         CoreDataStack.shared.saveContext()
+        
+        // Send notification
+        notificationsViewModel?.celebrateAchievement(
+            title: achievement.name ?? "Başarım",
+            description: achievement.achievementDescription ?? ""
+        )
     }
     
     func updateProgress(for category: String, progress: Int64) {
@@ -111,5 +117,38 @@ class AchievementsViewModel: ObservableObject {
     
     var totalPoints: Int64 {
         achievements.filter { $0.isUnlocked }.reduce(0) { $0 + $1.points }
+    }
+    
+    // MARK: - Daily Streak
+    
+    func loadStreak() {
+        currentStreak = UserDefaults.standard.integer(forKey: "currentStreak")
+        longestStreak = UserDefaults.standard.integer(forKey: "longestStreak")
+    }
+    
+    func updateStreak() {
+        let lastDate = UserDefaults.standard.object(forKey: "lastStreakDate") as? Date ?? Date.distantPast
+        let calendar = Calendar.current
+        
+        if calendar.isDateInToday(lastDate) {
+            // Already updated today
+            return
+        } else if calendar.isDateInYesterday(lastDate) {
+            // Continue streak
+            currentStreak += 1
+        } else {
+            // Reset streak
+            currentStreak = 1
+        }
+        
+        // Update longest streak
+        if currentStreak > longestStreak {
+            longestStreak = currentStreak
+            UserDefaults.standard.set(longestStreak, forKey: "longestStreak")
+        }
+        
+        // Save
+        UserDefaults.standard.set(currentStreak, forKey: "currentStreak")
+        UserDefaults.standard.set(Date(), forKey: "lastStreakDate")
     }
 }

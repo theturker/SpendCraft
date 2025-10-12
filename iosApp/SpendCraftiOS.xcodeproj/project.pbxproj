@@ -10,6 +10,8 @@
 		2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */; };
 		2152FB062600AC8F00CF470E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB052600AC8F00CF470E /* ContentView.swift */; };
 		7663757A7372818DB3C16F18 /* Pods_SpendCraftiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */; };
+		900445852E9C6E88003DFAFC /* UserProfilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900445842E9C6E88003DFAFC /* UserProfilingView.swift */; };
+		900445872E9C6F68003DFAFC /* AccountInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900445862E9C6F68003DFAFC /* AccountInfoView.swift */; };
 		905181052E98529900F81AAC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 905181042E98529900F81AAC /* Media.xcassets */; };
 		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
 		908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908773A62E95857B00AB0783 /* CoreDataStack.swift */; };
@@ -58,6 +60,8 @@
 		2E1180A2A1DA42FAE7FEF34C /* Pods-SpendCraftiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.release.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.release.xcconfig"; sourceTree = "<group>"; };
 		5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF8C242A565900829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		900445842E9C6E88003DFAFC /* UserProfilingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilingView.swift; sourceTree = "<group>"; };
+		900445862E9C6F68003DFAFC /* AccountInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInfoView.swift; sourceTree = "<group>"; };
 		905181042E98529900F81AAC /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		908773A62E95857B00AB0783 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
+				900445862E9C6F68003DFAFC /* AccountInfoView.swift */,
+				900445842E9C6E88003DFAFC /* UserProfilingView.swift */,
 				908773A62E95857B00AB0783 /* CoreDataStack.swift */,
 				2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */,
 				2152FB052600AC8F00CF470E /* ContentView.swift */,
@@ -286,6 +292,7 @@
 				90AB66CF2E9599890063F8A7 /* AccountEntity.swift in Sources */,
 				90AB66D52E95998A0063F8A7 /* DashboardView.swift in Sources */,
 				2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */,
+				900445852E9C6E88003DFAFC /* UserProfilingView.swift in Sources */,
 				908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */,
 				90A11BCA2E966756005C595F /* NotificationsViewModel.swift in Sources */,
 				90A11BCB2E966756005C595F /* NotificationItem.swift in Sources */,
@@ -296,6 +303,7 @@
 				90AB66D92E95998A0063F8A7 /* ReportsView.swift in Sources */,
 				90A11BC42E966725005C595F /* ExportManager.swift in Sources */,
 				90AB66D12E9599890063F8A7 /* CategoryEntity.swift in Sources */,
+				900445872E9C6F68003DFAFC /* AccountInfoView.swift in Sources */,
 				90AB66DF2E95998B0063F8A7 /* TransactionsViewModel.swift in Sources */,
 				90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */,
 				90AB66DB2E95998B0063F8A7 /* CategoriesView.swift in Sources */,

@@ -224,10 +224,12 @@ extension View {
                         .font(.caption2)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
-                        .padding(5)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 4)
                         .background(Color.red)
                         .clipShape(Circle())
-                        .offset(x: 10, y: -10)
+                        .offset(x: 12, y: -12)
+                        .frame(minWidth: 20, minHeight: 20)
                 }
             },
             alignment: .topTrailing

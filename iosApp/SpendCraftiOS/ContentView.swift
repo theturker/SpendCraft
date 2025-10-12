@@ -19,6 +19,7 @@ struct ContentView: View {
                     .environmentObject(transactionsViewModel)
                     .environmentObject(budgetViewModel)
                     .environmentObject(achievementsViewModel)
+                    .environmentObject(notificationsViewModel)
                     .toolbar {
                         notificationToolbarItem
                     }
@@ -32,6 +33,7 @@ struct ContentView: View {
                 TransactionsTabView()
                     .environmentObject(transactionsViewModel)
                     .environmentObject(achievementsViewModel)
+                    .environmentObject(notificationsViewModel)
                     .toolbar {
                         notificationToolbarItem
                     }

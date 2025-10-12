@@ -12,9 +12,12 @@ struct DashboardView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
     @EnvironmentObject var budgetViewModel: BudgetViewModel
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
+    @EnvironmentObject var notificationsViewModel: NotificationsViewModel
     
     @State private var showAddTransaction = false
     @State private var initialTransactionType: Bool? = nil
+    @State private var showUserProfiling = false
+    @AppStorage("userProfilingCompleted") private var profilingCompleted = false
     
     var body: some View {
         ScrollView {
@@ -120,6 +123,39 @@ struct DashboardView: View {
                 }
                 .padding(.horizontal, 16)
                 
+                // User Profiling Card (if not completed)
+                if !profilingCompleted {
+                    Button {
+                        showUserProfiling = true
+                    } label: {
+                        HStack(spacing: 16) {
+                            Image(systemName: "person.text.rectangle.fill")
+                                .font(.title)
+                                .foregroundColor(.purple)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("AI Profilleme Anketi")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                Text("Daha iyi öneriler için 7 soruyu cevaplayın")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.purple)
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(Color.purple.opacity(0.1))
+                        )
+                    }
+                    .padding(.horizontal, 16)
+                }
+                
                 // Streak Card
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
@@ -224,6 +260,20 @@ struct DashboardView: View {
             AddTransactionView(initialIsIncome: initialTransactionType)
                 .environmentObject(transactionsViewModel)
                 .environmentObject(achievementsViewModel)
+                .environmentObject(notificationsViewModel)
+        }
+        .sheet(isPresented: $showUserProfiling) {
+            UserProfilingView()
+        }
+        .onAppear {
+            // Load streak data
+            achievementsViewModel.loadStreak()
+            
+            // Check budgets and send notifications if needed
+            let spentAmounts = transactionsViewModel.categories.reduce(into: [String: Double]()) { result, category in
+                result[String(category.id)] = transactionsViewModel.totalSpentForCategory(category)
+            }
+            notificationsViewModel.checkAllBudgets(budgets: budgetViewModel.budgets, spentAmounts: spentAmounts)
         }
     }
 }
@@ -266,11 +316,11 @@ struct BudgetProgressRow: View {
 
 struct AchievementCard: View {
     let achievement: AchievementEntity
-    @State private var showDetailDialog = false
+    @State private var showDetailSheet = false
     
     var body: some View {
         Button {
-            showDetailDialog = true
+            showDetailSheet = true
         } label: {
             VStack(spacing: 8) {
                 Image(systemName: achievement.icon ?? "star.fill")
@@ -301,170 +351,10 @@ struct AchievementCard: View {
             )
         }
         .buttonStyle(.plain)
-        .sheet(isPresented: $showDetailDialog) {
+        .sheet(isPresented: $showDetailSheet) {
             AchievementDetailSheet(achievement: achievement)
-                .presentationDetents([.height(400)])
-        }
-    }
-}
-
-struct AchievementDetailSheet: View {
-    @Environment(\.dismiss) var dismiss
-    let achievement: AchievementEntity
-    
-    var progressPercentage: Double {
-        guard achievement.maxProgress > 0 else { return 0 }
-        return Double(achievement.progress) / Double(achievement.maxProgress)
-    }
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            // Header with close button
-            HStack {
-                Spacer()
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.gray)
-                }
-            }
-            .padding()
-            
-            ScrollView {
-                VStack(spacing: 24) {
-                    // Icon and Status
-                    VStack(spacing: 16) {
-                        ZStack {
-                            Circle()
-                                .fill(achievement.isUnlocked ? 
-                                     LinearGradient(colors: [.yellow.opacity(0.3), .orange.opacity(0.3)], 
-                                                   startPoint: .topLeading, 
-                                                   endPoint: .bottomTrailing) :
-                                     LinearGradient(colors: [.gray.opacity(0.2), .gray.opacity(0.1)], 
-                                                   startPoint: .topLeading, 
-                                                   endPoint: .bottomTrailing))
-                                .frame(width: 120, height: 120)
-                            
-                            Image(systemName: achievement.icon ?? "star.fill")
-                                .font(.system(size: 60))
-                                .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
-                        }
-                        
-                        if achievement.isUnlocked {
-                            HStack(spacing: 8) {
-                                Image(systemName: "checkmark.seal.fill")
-                                    .foregroundColor(.green)
-                                Text("Tamamlandı!")
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.green)
-                            }
-                            .font(.headline)
-                        }
-                    }
-                    
-                    // Title
-                    Text(achievement.name ?? "Başarı")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                    
-                    // Description
-                    Text(achievement.achievementDescription ?? "")
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                    
-                    // Progress or Points
-                    if achievement.isUnlocked {
-                        VStack(spacing: 12) {
-                            HStack {
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(.yellow)
-                                Text("\(achievement.points) Puan Kazandınız!")
-                                    .font(.headline)
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.yellow.opacity(0.15))
-                            )
-                        }
-                        .padding(.horizontal)
-                    } else {
-                        VStack(spacing: 16) {
-                            // Progress Bar
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
-                                    Text("İlerleme")
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                    Spacer()
-                                    Text("\(achievement.progress) / \(achievement.maxProgress)")
-                                        .font(.subheadline)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(.blue)
-                                }
-                                
-                                GeometryReader { geometry in
-                                    ZStack(alignment: .leading) {
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color.gray.opacity(0.2))
-                                            .frame(height: 12)
-                                        
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(
-                                                LinearGradient(
-                                                    colors: [.blue, .purple],
-                                                    startPoint: .leading,
-                                                    endPoint: .trailing
-                                                )
-                                            )
-                                            .frame(width: geometry.size.width * CGFloat(progressPercentage), height: 12)
-                                    }
-                                }
-                                .frame(height: 12)
-                                
-                                HStack {
-                                    Text("\(Int(progressPercentage * 100))% Tamamlandı")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                    Spacer()
-                                    Text("Kalan: \(achievement.maxProgress - achievement.progress)")
-                                        .font(.caption)
-                                        .foregroundColor(.orange)
-                                        .fontWeight(.medium)
-                                }
-                            }
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.blue.opacity(0.05))
-                            )
-                            
-                            // Reward info
-                            HStack {
-                                Image(systemName: "gift.fill")
-                                    .foregroundColor(.purple)
-                                Text("Kazanacağınız: \(achievement.points) Puan")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.purple.opacity(0.1))
-                            )
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-                .padding(.vertical)
-            }
+                .presentationDetents([.height(500), .large])
+                .presentationDragIndicator(.visible)
         }
     }
 }

@@ -28,6 +28,47 @@ struct SettingsView: View {
 
     var body: some View {
         List {
+            // User Profile Section
+            Section {
+                NavigationLink {
+                    AccountInfoView()
+                        .environmentObject(authViewModel)
+                } label: {
+                    HStack(spacing: 12) {
+                        Circle()
+                            .fill(LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ))
+                            .frame(width: 50, height: 50)
+                            .overlay(
+                                Text(authViewModel.userDisplayName.prefix(1).uppercased())
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                            )
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(authViewModel.userDisplayName)
+                                .font(.headline)
+                            Text(authViewModel.userEmail)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.vertical, 4)
+                }
+            } header: {
+                Text("Kullanıcı Profili")
+            }
+            
             // Accounts Section
             Section {
                 NavigationLink {
@@ -490,6 +531,8 @@ struct RecurringRow: View {
 
 struct AchievementsListView: View {
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
+    @State private var selectedAchievement: AchievementEntity?
+    @State private var showAchievementDetail = false
     
     var body: some View {
         ScrollView {
@@ -520,6 +563,10 @@ struct AchievementsListView: View {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                     ForEach(achievementsViewModel.achievements, id: \.id) { achievement in
                         AchievementCardLarge(achievement: achievement)
+                            .onTapGesture {
+                                selectedAchievement = achievement
+                                showAchievementDetail = true
+                            }
                     }
                 }
                 .padding(.horizontal)
@@ -528,6 +575,11 @@ struct AchievementsListView: View {
         }
         .navigationTitle("Başarılar")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showAchievementDetail) {
+            if let achievement = selectedAchievement {
+                AchievementDetailSheet(achievement: achievement)
+            }
+        }
     }
 }
 
@@ -997,5 +1049,155 @@ struct AddRecurringTransactionView: View {
             isActive: isActive
         )
         dismiss()
+    }
+}
+
+// MARK: - Achievement Detail Sheet
+
+struct AchievementDetailSheet: View {
+    @Environment(\.dismiss) var dismiss
+    let achievement: AchievementEntity
+    
+    var body: some View {
+        NavigationView {
+            ZStack {
+                // Background gradient
+                LinearGradient(
+                    colors: achievement.isUnlocked ? [Color.yellow.opacity(0.3), Color.orange.opacity(0.2)] : [Color.gray.opacity(0.2), Color.gray.opacity(0.1)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 30) {
+                        // Badge Icon
+                        ZStack {
+                            Circle()
+                                .fill(achievement.isUnlocked ? Color.yellow : Color.gray)
+                                .frame(width: 150, height: 150)
+                                .shadow(color: achievement.isUnlocked ? .yellow.opacity(0.5) : .clear, radius: 20)
+                            
+                            Image(systemName: achievement.icon ?? "star.fill")
+                                .font(.system(size: 70))
+                                .foregroundColor(.white)
+                        }
+                        .padding(.top, 40)
+                        
+                        // Achievement Name
+                        Text(achievement.name ?? "")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                        
+                        // Description
+                        Text(achievement.achievementDescription ?? "")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        // Status Card
+                        VStack(spacing: 16) {
+                            if achievement.isUnlocked {
+                                // Unlocked Info
+                                VStack(spacing: 12) {
+                                    HStack {
+                                        Image(systemName: "star.fill")
+                                            .foregroundColor(.yellow)
+                                        Text("Puan")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        Text("\(achievement.points)")
+                                            .fontWeight(.bold)
+                                    }
+                                    
+                                    Divider()
+                                    
+                                    HStack {
+                                        Image(systemName: "calendar")
+                                            .foregroundColor(.blue)
+                                        Text("Kazanıldı")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        if achievement.unlockedAt > 0 {
+                                            Text(Date(timeIntervalSince1970: Double(achievement.unlockedAt) / 1000).formatted(date: .abbreviated, time: .omitted))
+                                                .fontWeight(.medium)
+                                        }
+                                    }
+                                }
+                                .padding()
+                                .background(Color(uiColor: .systemBackground))
+                                .cornerRadius(16)
+                                .shadow(radius: 2)
+                            } else {
+                                // Progress Info
+                                VStack(spacing: 12) {
+                                    HStack {
+                                        Text("İlerleme")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        Text("\(achievement.progress) / \(achievement.maxProgress)")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                    }
+                                    
+                                    ProgressView(value: Double(achievement.progress), total: Double(achievement.maxProgress))
+                                        .tint(.blue)
+                                        .scaleEffect(y: 2)
+                                    
+                                    HStack {
+                                        Text("Kalan")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        Text("\(achievement.maxProgress - achievement.progress)")
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.blue)
+                                    }
+                                }
+                                .padding()
+                                .background(Color(uiColor: .systemBackground))
+                                .cornerRadius(16)
+                                .shadow(radius: 2)
+                            }
+                        }
+                        .padding(.horizontal)
+                        
+                        // Motivational Text
+                        if !achievement.isUnlocked {
+                            Text("Devam et! Bu başarıya çok yakınsın! 💪")
+                                .font(.subheadline)
+                                .foregroundColor(.blue)
+                                .padding()
+                                .background(Color.blue.opacity(0.1))
+                                .cornerRadius(12)
+                                .padding(.horizontal)
+                        } else {
+                            Text("Tebrikler! Bu başarıyı kazandın! 🎉")
+                                .font(.subheadline)
+                                .foregroundColor(.yellow)
+                                .padding()
+                                .background(Color.yellow.opacity(0.1))
+                                .cornerRadius(12)
+                                .padding(.horizontal)
+                        }
+                        
+                        Spacer(minLength: 50)
+                    }
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+        }
     }
 }

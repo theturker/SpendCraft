@@ -11,6 +11,7 @@ import CoreData
 struct TransactionsTabView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
+    @EnvironmentObject var notificationsViewModel: NotificationsViewModel
     
     @State private var showAddTransaction = false
     @State private var filterType: TransactionFilter = .all
@@ -104,6 +105,7 @@ struct TransactionsTabView: View {
             AddTransactionView()
                 .environmentObject(transactionsViewModel)
                 .environmentObject(achievementsViewModel)
+                .environmentObject(notificationsViewModel)
         }
     }
     

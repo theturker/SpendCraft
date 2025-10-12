@@ -11,6 +11,7 @@ struct AddTransactionView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
+    @EnvironmentObject var notificationsViewModel: NotificationsViewModel
     
     let initialIsIncome: Bool?
     
@@ -27,81 +28,98 @@ struct AddTransactionView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                // Transaction Type
-                Section {
-                    Picker("İşlem Tipi", selection: $isIncome) {
-                        Text("Gider").tag(false)
-                        Text("Gelir").tag(true)
+            ZStack(alignment: .bottom) {
+                Form {
+                    // Transaction Type
+                    Section {
+                        Picker("İşlem Tipi", selection: $isIncome) {
+                            Text("Gider").tag(false)
+                            Text("Gelir").tag(true)
+                        }
+                        .pickerStyle(.segmented)
                     }
-                    .pickerStyle(.segmented)
-                }
-                
-                // Amount
-                Section("Miktar") {
-                    HStack {
-                        TextField("0.00", text: $amount)
-                            .keyboardType(.decimalPad)
-                            .font(.title2)
-                            .font(.subheadline)
-                        Text("₺")
-                            .font(.title2)
-                            .foregroundColor(.secondary)
+                    
+                    // Amount
+                    Section("Miktar") {
+                        HStack {
+                            TextField("0.00", text: $amount)
+                                .keyboardType(.decimalPad)
+                                .font(.title2)
+                            Text("₺")
+                                .font(.title2)
+                                .foregroundColor(.secondary)
+                        }
                     }
-                }
-                
-                // Category
-                Section("Kategori") {
-                    if transactionsViewModel.categories.isEmpty {
-                        Text("Kategori bulunamadı")
-                            .foregroundColor(.secondary)
-                    } else {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(transactionsViewModel.categories, id: \.id) { category in
-                                    CategoryButton(
-                                        category: category,
-                                        isSelected: selectedCategory?.id == category.id
-                                    ) {
-                                        selectedCategory = category
+                    
+                    // Category
+                    Section("Kategori") {
+                        if transactionsViewModel.categories.isEmpty {
+                            Text("Kategori bulunamadı")
+                                .foregroundColor(.secondary)
+                        } else {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 12) {
+                                    ForEach(transactionsViewModel.categories, id: \.id) { category in
+                                        CategoryButton(
+                                            category: category,
+                                            isSelected: selectedCategory?.id == category.id
+                                        ) {
+                                            selectedCategory = category
+                                        }
                                     }
                                 }
+                                .padding(.vertical, 8)
                             }
-                            .padding(.vertical, 8)
                         }
+                    }
+                    
+                    // Account
+                    Section("Hesap") {
+                        Picker("Hesap Seç", selection: $selectedAccount) {
+                            Text("Seçiniz").tag(nil as CategoryEntity?)
+                            ForEach(transactionsViewModel.accounts, id: \.id) { account in
+                                Text(account.name ?? "").tag(account as AccountEntity?)
+                            }
+                        }
+                    }
+                    
+                    // Date
+                    Section("Tarih") {
+                        DatePicker("Tarih", selection: $date, displayedComponents: [.date, .hourAndMinute])
+                    }
+                    
+                    // Note
+                    Section("Not") {
+                        TextField("İsteğe bağlı not", text: $note)
+                    }
+                    
+                    // Spacer for floating button
+                    Section {
+                        Color.clear
+                            .frame(height: 60)
+                            .listRowBackground(Color.clear)
                     }
                 }
                 
-                // Account
-                Section("Hesap") {
-                    Picker("Hesap Seç", selection: $selectedAccount) {
-                        Text("Seçiniz").tag(nil as CategoryEntity?)
-                        ForEach(transactionsViewModel.accounts, id: \.id) { account in
-                            Text(account.name ?? "").tag(account as AccountEntity?)
-                        }
-                    }
-                }
-                
-                // Date
-                Section("Tarih") {
-                    DatePicker("Tarih", selection: $date, displayedComponents: [.date, .hourAndMinute])
-                }
-                
-                // Note
-                Section("Not") {
-                    TextField("İsteğe bağlı not", text: $note)
-                }
-                
-                // Save Button
-                Section {
+                // Floating Save Button
+                VStack(spacing: 0) {
+                    Divider()
+                    
                     Button {
                         saveTransaction()
                     } label: {
                         Text("Kaydet")
+                            .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
-                            .font(.subheadline)
+                            .padding()
+                            .background(isValid ? Color.blue : Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
                     }
                     .disabled(!isValid)
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+                    .background(Color(uiColor: .systemBackground))
                 }
             }
             .navigationTitle("Yeni İşlem")
@@ -150,14 +168,17 @@ struct AddTransactionView: View {
             note: note.isEmpty ? nil : note,
             category: category,
             account: account,
-            isIncome: isIncome
+            isIncome: isIncome,
+            achievementsViewModel: achievementsViewModel,
+            notificationsViewModel: notificationsViewModel
         )
         
         // Update achievements
         achievementsViewModel.checkAchievements(
             transactionCount: transactionsViewModel.transactions.count,
             totalSpent: transactionsViewModel.totalExpense,
-            categories: transactionsViewModel.categories.count
+            categories: transactionsViewModel.categories.count,
+            notificationsViewModel: notificationsViewModel
         )
         
         dismiss()
