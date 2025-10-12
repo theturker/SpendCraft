@@ -3,11 +3,23 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var transactionsViewModel = TransactionsViewModel()
     @StateObject private var achievementsViewModel = AchievementsViewModel()
-    @StateObject private var budgetViewModel = BudgetViewModel(transactionsViewModel: TransactionsViewModel())
-    @StateObject private var recurringViewModel = RecurringViewModel(transactionsViewModel: TransactionsViewModel())
     @StateObject private var accountsViewModel = AccountsViewModel()
     @StateObject private var notificationsViewModel = NotificationsViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
+    
+    // BudgetViewModel ve RecurringViewModel lazy initialization ile aynı transactionsViewModel'i kullanacak
+    @StateObject private var budgetViewModel: BudgetViewModel
+    @StateObject private var recurringViewModel: RecurringViewModel
+    
+    init() {
+        let transactionsVM = TransactionsViewModel()
+        _transactionsViewModel = StateObject(wrappedValue: transactionsVM)
+        _budgetViewModel = StateObject(wrappedValue: BudgetViewModel(transactionsViewModel: transactionsVM))
+        _recurringViewModel = StateObject(wrappedValue: RecurringViewModel(transactionsViewModel: transactionsVM))
+        _achievementsViewModel = StateObject(wrappedValue: AchievementsViewModel())
+        _accountsViewModel = StateObject(wrappedValue: AccountsViewModel())
+        _notificationsViewModel = StateObject(wrappedValue: NotificationsViewModel())
+    }
 
     @State private var selectedTab = 0
     @State private var showNotifications = false

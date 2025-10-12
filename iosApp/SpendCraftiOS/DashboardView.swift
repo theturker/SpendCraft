@@ -266,7 +266,11 @@ struct DashboardView: View {
             UserProfilingView()
         }
         .onAppear {
-            // Load streak data
+            // Load data
+            transactionsViewModel.loadTransactions()
+            transactionsViewModel.loadCategories()
+            budgetViewModel.loadBudgets()
+            achievementsViewModel.loadAchievements()
             achievementsViewModel.loadStreak()
             
             // Check budgets and send notifications if needed

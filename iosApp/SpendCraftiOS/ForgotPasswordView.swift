@@ -56,9 +56,16 @@ struct ForgotPasswordView: View {
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                                .background(Color.blue)
-                                .cornerRadius(12)
+                                .frame(height: 56)
+                                .background(
+                                    LinearGradient(
+                                        colors: [Color.blue, Color.purple],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .cornerRadius(16)
+                                .shadow(color: Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
                         }
                         .padding(.horizontal, 24)
                     }
@@ -100,10 +107,15 @@ struct ForgotPasswordView: View {
                                 }
                             }
                             .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(email.isEmpty ? Color.gray : Color.blue)
+                            .frame(height: 56)
+                            .background(
+                                email.isEmpty ? 
+                                LinearGradient(colors: [Color.gray, Color.gray], startPoint: .leading, endPoint: .trailing) :
+                                LinearGradient(colors: [Color.orange, Color.red], startPoint: .leading, endPoint: .trailing)
+                            )
                             .foregroundColor(.white)
-                            .cornerRadius(12)
+                            .cornerRadius(16)
+                            .shadow(color: email.isEmpty ? Color.clear : Color.orange.opacity(0.3), radius: 8, x: 0, y: 4)
                         }
                         .disabled(isLoading || email.isEmpty)
                         .opacity((isLoading || email.isEmpty) ? 0.6 : 1.0)

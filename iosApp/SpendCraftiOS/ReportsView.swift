@@ -184,6 +184,11 @@ struct ReportsView: View {
             AISuggestionsView()
                 .environmentObject(transactionsViewModel)
         }
+        .onAppear {
+            transactionsViewModel.loadTransactions()
+            transactionsViewModel.loadCategories()
+            budgetViewModel.loadBudgets()
+        }
     }
     
     func topCategories() -> [(CategoryEntity, Double)] {

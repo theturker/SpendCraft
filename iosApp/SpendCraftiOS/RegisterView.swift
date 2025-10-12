@@ -150,10 +150,23 @@ struct RegisterView: View {
                                 }
                             }
                             .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(isFormValid ? Color.blue : Color.gray)
+                            .frame(height: 56)
+                            .background(
+                                isFormValid ?
+                                LinearGradient(
+                                    colors: [Color.green, Color.blue],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ) :
+                                LinearGradient(
+                                    colors: [Color.gray, Color.gray],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
                             .foregroundColor(.white)
-                            .cornerRadius(12)
+                            .cornerRadius(16)
+                            .shadow(color: isFormValid ? Color.green.opacity(0.3) : Color.clear, radius: 8, x: 0, y: 4)
                         }
                         .disabled(isLoading || !isFormValid)
                         .opacity((isLoading || !isFormValid) ? 0.6 : 1.0)

@@ -173,6 +173,9 @@ struct AddTransactionView: View {
             notificationsViewModel: notificationsViewModel
         )
         
+        // Reload achievements to update UI
+        achievementsViewModel.loadAchievements()
+        
         // Update achievements
         achievementsViewModel.checkAchievements(
             transactionCount: transactionsViewModel.transactions.count,
@@ -180,6 +183,9 @@ struct AddTransactionView: View {
             categories: transactionsViewModel.categories.count,
             notificationsViewModel: notificationsViewModel
         )
+        
+        // Force UI refresh
+        achievementsViewModel.objectWillChange.send()
         
         dismiss()
     }
