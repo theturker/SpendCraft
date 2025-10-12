@@ -62,6 +62,8 @@
     
     <!-- Splash Screen Colors -->
     <color name="splash_background">#111121</color>
+    <color name="splash_blue">#007AFF</color>
+    <color name="splash_gradient_mid">#5542AA</color> <!-- Blue to Purple gradient ortası -->
     
     <!-- Legacy Colors -->
     <color name="purple_200">#FFBB86FC</color>

@@ -14,10 +14,14 @@
         <item name="android:windowMinWidthMajor">320dp</item>
         <item name="android:windowMinWidthMinor">320dp</item>
         
-        <!-- Android 12+ native splash: sade beyaz arka plan, ikon yok; Compose Splash tam ekran gösterir -->
-        <item name="android:windowSplashScreenBackground">@android:color/white</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@null</item>
-        <item name="android:windowSplashScreenAnimationDuration">0</item>
+        <!-- Android 12+ native splash: Blue-Purple gradient ortası renk + splash icon -->
+        <item name="android:windowSplashScreenBackground">@color/splash_gradient_mid</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/apptransparent</item>
+        <item name="android:windowSplashScreenAnimationDuration">2000</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+        
+        <!-- Window background -->
+        <item name="android:windowBackground">@color/background</item>
 
         <!-- İstersen renkleri tut -->
         <item name="colorPrimary">@color/primary</item>

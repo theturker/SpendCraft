@@ -38,9 +38,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.activity.enableEdgeToEdge
 import android.content.res.Configuration
 import androidx.compose.runtime.SideEffect
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
-import com.alperen.spendcraft.core.ui.SplashScreen
 import com.alperen.spendcraft.reminder.ReminderScheduler
 import com.alperen.spendcraft.feature.welcome.ui.WelcomeScreen
 import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
@@ -71,6 +71,9 @@ class MainActivity : ComponentActivity() {
     
     private var googleSignInResult by mutableStateOf<GoogleSignInAccount?>(null)
     
+    // Native splash ekranı için ready flag
+    private var isReady = false
+    
     private val googleSignInLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -93,7 +96,16 @@ class MainActivity : ComponentActivity() {
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Native splash screen'i 2 saniye tut
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { !isReady }
+        
         super.onCreate(savedInstanceState)
+        
+        // 2 saniye sonra splash'i kapat
+        window.decorView.postDelayed({
+            isReady = true
+        }, 2000)
         
         // Modern edge-to-edge display için enableEdgeToEdge kullan
         enableEdgeToEdge()
@@ -111,13 +123,6 @@ class MainActivity : ComponentActivity() {
             val authState by authViewModel.authState.collectAsState()
             
             var currentAuthScreen by remember { mutableStateOf("login") }
-            var showSplash by remember { mutableStateOf(true) } // iOS'taki gibi başlangıçta true
-            
-            // iOS'taki gibi splash 1.5 saniye göster
-            LaunchedEffect(Unit) {
-                kotlinx.coroutines.delay(1500)
-                showSplash = false
-            }
             
             // Google Auth Service'i initialize et
             LaunchedEffect(Unit) {
@@ -148,26 +153,15 @@ class MainActivity : ComponentActivity() {
                 val backgroundColor = MaterialTheme.colorScheme.background
                 val isLightTheme = !isDarkMode
                 
-                // showSplash ve isLightTheme değiştiğinde sistem barlarını güncelle
-                LaunchedEffect(showSplash, isLightTheme, backgroundColor) {
+                // isLightTheme değiştiğinde sistem barlarını güncelle
+                LaunchedEffect(isLightTheme, backgroundColor) {
                     val window = (view.context as ComponentActivity).window
                     
-                    // Splash screen'de sistem barları şeffaf, diğer durumlarda background rengi
-                    if (showSplash) {
-                        window.statusBarColor = Color.Transparent.toArgb()
-                        window.navigationBarColor = Color.Transparent.toArgb()
-                        // Splash'te gradient koyu renkli olduğu için ikonlar beyaz olsun
-                        WindowCompat.getInsetsController(window, view).apply {
-                            isAppearanceLightStatusBars = false
-                            isAppearanceLightNavigationBars = false
-                        }
-                    } else {
-                        window.statusBarColor = backgroundColor.toArgb()
-                        window.navigationBarColor = backgroundColor.toArgb()
-                        WindowCompat.getInsetsController(window, view).apply {
-                            isAppearanceLightStatusBars = isLightTheme
-                            isAppearanceLightNavigationBars = isLightTheme
-                        }
+                    window.statusBarColor = backgroundColor.toArgb()
+                    window.navigationBarColor = backgroundColor.toArgb()
+                    WindowCompat.getInsetsController(window, view).apply {
+                        isAppearanceLightStatusBars = isLightTheme
+                        isAppearanceLightNavigationBars = isLightTheme
                     }
                 }
                 
@@ -175,12 +169,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // iOS'taki MainAppView akışının birebir aynısı
+                    // Native splash sonrası uygulama akışı
                     when {
-                        showSplash -> {
-                            // iOS SplashView - 1.5 saniye gradient background + icon
-                            SplashScreen()
-                        }
                         isFirstLaunch -> {
                             // iOS'taki OnboardingView
                             OnboardingScreen(

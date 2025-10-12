@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui)
