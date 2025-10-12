@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.lerp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -50,6 +52,14 @@ fun RecurringListScreen(
         rememberTopAppBarState()
     )
     
+    // Scroll oranına göre text boyutunu ayarlayalım
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+    val titleFontSize = androidx.compose.ui.unit.lerp(
+        start = 32.sp,
+        stop = 22.sp,
+        fraction = collapsedFraction
+    )
+    
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -57,8 +67,9 @@ fun RecurringListScreen(
                 title = {
                     Text(
                         text = "Tekrarlayan İşlemler",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
                     )
                 },
                 navigationIcon = {

@@ -16,6 +16,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.DialogProperties
 import com.alperen.spendcraft.core.ui.IOSColors
@@ -43,6 +45,14 @@ fun AccountsScreen(
         rememberTopAppBarState()
     )
     
+    // Scroll oranına göre text boyutunu ayarlayalım
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+    val titleFontSize = androidx.compose.ui.unit.lerp(
+        start = 32.sp,
+        stop = 22.sp,
+        fraction = collapsedFraction
+    )
+    
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -50,8 +60,9 @@ fun AccountsScreen(
                 title = {
                     Text(
                         text = "Hesaplar",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
                     )
                 },
                 navigationIcon = {

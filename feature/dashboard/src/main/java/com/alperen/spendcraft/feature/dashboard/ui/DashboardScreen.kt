@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.lerp
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
@@ -75,6 +76,14 @@ fun DashboardScreen(
         rememberTopAppBarState()
     )
     
+    // Scroll oranına göre text boyutunu ayarlayalım
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+    val titleFontSize = androidx.compose.ui.unit.lerp(
+        start = 32.sp,
+        stop = 22.sp,
+        fraction = collapsedFraction
+    )
+    
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -82,8 +91,9 @@ fun DashboardScreen(
                 title = {
                     Text(
                         text = "Ana Sayfa",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
                     )
                 },
                 actions = {

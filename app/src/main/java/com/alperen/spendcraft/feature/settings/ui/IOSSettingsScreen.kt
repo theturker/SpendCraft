@@ -19,6 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.lerp
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.R as CoreR
 
@@ -56,6 +58,14 @@ fun IOSSettingsScreen(
         rememberTopAppBarState()
     )
     
+    // Scroll oranına göre text boyutunu ayarlayalım
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+    val titleFontSize = androidx.compose.ui.unit.lerp(
+        start = 32.sp,
+        stop = 22.sp,
+        fraction = collapsedFraction
+    )
+    
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -63,8 +73,9 @@ fun IOSSettingsScreen(
                 title = {
                     Text(
                         text = "Ayarlar",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
                     )
                 },
                 scrollBehavior = scrollBehavior,

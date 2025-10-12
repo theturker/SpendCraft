@@ -61,6 +61,14 @@ fun AppScaffold(
         rememberTopAppBarState()
     )
     
+    // Scroll oranına göre text boyutunu ayarlayalım
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+    val titleFontSize = androidx.compose.ui.unit.lerp(
+        start = 32.sp,  // Büyük başlık
+        stop = 22.sp,   // Küçük başlık (scroll yapıldığında)
+        fraction = collapsedFraction
+    )
+    
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -68,8 +76,9 @@ fun AppScaffold(
                 title = { 
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
                     ) 
                 },
                 navigationIcon = {
