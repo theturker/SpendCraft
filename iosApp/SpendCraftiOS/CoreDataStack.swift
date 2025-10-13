@@ -47,6 +47,7 @@ class CoreDataStack: ObservableObject {
                     ("Alışveriş", "#3CB371", "cart.fill"),
                     ("Sağlık", "#FF69B4", "heart.fill"),
                     ("Eğitim", "#8B4513", "book.closed.fill"),
+                    ("Kredi", "#DC143C", "creditcard.fill"),
                     ("Maaş", "#008000", "banknote.fill"),
                     ("Diğer", "#808080", "ellipsis.circle.fill")
                 ]
@@ -82,28 +83,6 @@ class CoreDataStack: ObservableObject {
 }
 
 // Extensions for convenience
-extension TransactionEntity {
-    var amount: Double {
-        return Double(amountMinor) / 100.0
-    }
-    
-    var formattedAmount: String {
-        return String(format: "%.2f ₺", amount)
-    }
-    
-    var formattedDate: String {
-        let date = Date(timeIntervalSince1970: TimeInterval(timestampUtcMillis / 1000))
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
-    }
-    
-    var isExpense: Bool {
-        return !isIncome
-    }
-}
-
 extension CategoryEntity {
     var uiColor: Color {
         return Color(UIColor(hex: color ?? "#000000") ?? UIColor.black)

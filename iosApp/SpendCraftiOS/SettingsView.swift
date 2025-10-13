@@ -101,21 +101,6 @@ struct SettingsView: View {
                     }
                 }
                 .foregroundColor(.primary)
-                
-                Button {
-                    showAISettings = true
-                } label: {
-                    HStack {
-                        Image(systemName: "gear")
-                            .foregroundColor(.blue)
-                        Text("AI Ayarları")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .foregroundColor(.primary)
             } header: {
                 Text("🤖 Yapay Zeka")
             }

@@ -49,6 +49,7 @@
 		90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */; };
 		90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */; };
 		90B99D2C2E9D12B800EE7EC6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */; };
+		90E79A342E9DBE2F008E585C /* EditTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E79A332E9DBE2E008E585C /* EditTransactionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -97,6 +98,7 @@
 		90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 		90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		90E79A332E9DBE2E008E585C /* EditTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionView.swift; sourceTree = "<group>"; };
 		AFD4B289D948BBA5DC77D2FD /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -123,6 +125,7 @@
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
+				90E79A332E9DBE2E008E585C /* EditTransactionView.swift */,
 				90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */,
 				900445862E9C6F68003DFAFC /* AccountInfoView.swift */,
 				900445842E9C6E88003DFAFC /* UserProfilingView.swift */,
@@ -330,6 +333,7 @@
 				90AB66D52E95998A0063F8A7 /* DashboardView.swift in Sources */,
 				2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */,
 				900445852E9C6E88003DFAFC /* UserProfilingView.swift in Sources */,
+				90E79A342E9DBE2F008E585C /* EditTransactionView.swift in Sources */,
 				908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */,
 				90A11BCA2E966756005C595F /* NotificationsViewModel.swift in Sources */,
 				90A11BCB2E966756005C595F /* NotificationItem.swift in Sources */,

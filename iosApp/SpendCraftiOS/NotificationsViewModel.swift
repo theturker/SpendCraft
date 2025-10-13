@@ -28,9 +28,8 @@ class NotificationsViewModel: ObservableObject {
            let decoded = try? JSONDecoder().decode([NotificationItem].self, from: data) {
             notifications = decoded.sorted { $0.timestamp > $1.timestamp }
         } else {
-            // İlk açılışta sample notifications ekle
-            notifications = NotificationItem.samples
-            saveNotifications()
+            // Yeni kullanıcılar için boş liste ile başla
+            notifications = []
         }
         updateUnreadCount()
     }

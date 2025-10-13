@@ -11,7 +11,7 @@ struct UserProfilingView: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage("userProfilingCompleted") private var isCompleted = false
     @State private var currentPage = 0
-    @State private var answers: [String: String] = [:]
+    @State private var answers: [String: [String]] = [:]
     
     let questions: [(id: String, question: String, options: [String])] = [
         ("income_frequency", "Geliriniz ne sıklıkta oluyor?", ["Haftalık", "2 Haftada bir", "Aylık", "Düzensiz"]),
@@ -87,7 +87,8 @@ struct UserProfilingView: View {
                                         Text(option)
                                             .fontWeight(.medium)
                                         Spacer()
-                                        if answers[questions[currentPage].id] == option {
+                                        let isSelected = answers[questions[currentPage].id]?.contains(option) ?? false
+                                        if isSelected {
                                             Image(systemName: "checkmark.circle.fill")
                                                 .foregroundColor(.white)
                                         } else {
@@ -97,13 +98,19 @@ struct UserProfilingView: View {
                                     }
                                     .padding()
                                     .background(
-                                        answers[questions[currentPage].id] == option ?
+                                        (answers[questions[currentPage].id]?.contains(option) ?? false) ?
                                         Color.purple : Color.white.opacity(0.2)
                                     )
                                     .cornerRadius(12)
                                 }
                                 .foregroundColor(.white)
                             }
+                            
+                            // Multiple selection hint
+                            Text("* Birden fazla seçenek işaretleyebilirsiniz")
+                                .font(.caption)
+                                .foregroundColor(.white.opacity(0.7))
+                                .padding(.top, 4)
                         }
                         .padding(.horizontal)
                         
@@ -134,13 +141,13 @@ struct UserProfilingView: View {
                                     Text(currentPage == questions.count - 1 ? "Bitir" : "İleri")
                                     Image(systemName: "chevron.right")
                                 }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(answers[questions[currentPage].id] != nil ? Color.purple : Color.gray)
-                                .cornerRadius(12)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background((answers[questions[currentPage].id]?.isEmpty ?? true) ? Color.gray : Color.purple)
+                                    .cornerRadius(12)
                             }
                             .foregroundColor(.white)
-                            .disabled(answers[questions[currentPage].id] == nil)
+                            .disabled(answers[questions[currentPage].id]?.isEmpty ?? true)
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 30)
@@ -195,12 +202,22 @@ struct UserProfilingView: View {
     
     func selectOption(_ option: String) {
         withAnimation {
-            answers[questions[currentPage].id] = option
+            let questionId = questions[currentPage].id
+            if answers[questionId] == nil {
+                answers[questionId] = []
+            }
+            
+            // Toggle selection
+            if let index = answers[questionId]?.firstIndex(of: option) {
+                answers[questionId]?.remove(at: index)
+            } else {
+                answers[questionId]?.append(option)
+            }
         }
     }
     
     func nextQuestion() {
-        guard answers[questions[currentPage].id] != nil else { return }
+        guard !(answers[questions[currentPage].id]?.isEmpty ?? true) else { return }
         
         withAnimation {
             currentPage += 1
@@ -210,7 +227,9 @@ struct UserProfilingView: View {
     func saveAndClose() {
         // Save answers to UserDefaults
         for (key, value) in answers {
-            UserDefaults.standard.set(value, forKey: "profiling_\(key)")
+            // Join multiple answers with comma
+            let answerString = value.joined(separator: ", ")
+            UserDefaults.standard.set(answerString, forKey: "profiling_\(key)")
         }
         isCompleted = true
         dismiss()

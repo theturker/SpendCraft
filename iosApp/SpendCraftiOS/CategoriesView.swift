@@ -111,7 +111,7 @@ struct CategoryRow: View {
                             .fontWeight(.medium)
                         
                         if let budget = budget {
-                            Text("Bütçe: \(String(format: "%.2f ₺", Double(budget.monthlyLimitMinor) / 100.0))")
+                            Text("Bütçe: \(formatCurrency(Double(budget.monthlyLimitMinor) / 100.0))")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         } else {
@@ -126,7 +126,7 @@ struct CategoryRow: View {
                 
                 // Spent Amount
                 VStack(alignment: .trailing, spacing: 4) {
-                    Text(String(format: "%.2f ₺", spent))
+                    Text(formatCurrency(spent))
                         .font(.subheadline)
                         .fontWeight(.semibold)
                     
@@ -192,7 +192,7 @@ struct AddBudgetView: View {
                 // Current Spending
                 Section("Bu Ay Harcanan") {
                     HStack {
-                        Text(String(format: "%.2f ₺", currentSpent))
+                        Text(formatCurrency(currentSpent))
                             .font(.title2)
                             .fontWeight(.semibold)
                         
@@ -223,7 +223,7 @@ struct AddBudgetView: View {
                             Text("Kalan:")
                                 .foregroundColor(.secondary)
                             Spacer()
-                            Text(String(format: "%.2f ₺", remaining))
+                            Text(formatCurrency(remaining))
                                 .fontWeight(.medium)
                                 .foregroundColor(remaining < 0 ? .red : .green)
                         }

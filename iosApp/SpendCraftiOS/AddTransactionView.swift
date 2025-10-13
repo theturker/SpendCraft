@@ -21,6 +21,7 @@ struct AddTransactionView: View {
     @State private var selectedAccount: AccountEntity?
     @State private var isIncome: Bool
     @State private var date: Date = Date()
+    @State private var showAddCategory = false
     
     init(initialIsIncome: Bool) {
         self.initialIsIncome = initialIsIncome
@@ -55,23 +56,41 @@ struct AddTransactionView: View {
                     
                     // Category
                     Section("Kategori") {
-                        if transactionsViewModel.categories.isEmpty {
-                            Text("Kategori bulunamadı")
-                                .foregroundColor(.secondary)
-                        } else {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 12) {
-                                    ForEach(transactionsViewModel.categories, id: \.id) { category in
-                                        CategoryButton(
-                                            category: category,
-                                            isSelected: selectedCategory?.id == category.id
-                                        ) {
-                                            selectedCategory = category
-                                        }
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                // New Category Button
+                                Button {
+                                    showAddCategory = true
+                                } label: {
+                                    VStack(spacing: 8) {
+                                        Image(systemName: "plus.circle.fill")
+                                            .font(.title2)
+                                            .foregroundColor(.blue)
+                                            .frame(width: 50, height: 50)
+                                            .background(
+                                                Circle()
+                                                    .fill(Color.blue.opacity(0.2))
+                                            )
+                                        
+                                        Text("Yeni")
+                                            .font(.caption)
+                                            .foregroundColor(.blue)
+                                            .fontWeight(.medium)
+                                    }
+                                    .frame(width: 80)
+                                }
+                                
+                                // Existing Categories
+                                ForEach(transactionsViewModel.categories, id: \.id) { category in
+                                    CategoryButton(
+                                        category: category,
+                                        isSelected: selectedCategory?.id == category.id
+                                    ) {
+                                        selectedCategory = category
                                     }
                                 }
-                                .padding(.vertical, 8)
                             }
+                            .padding(.vertical, 8)
                         }
                     }
                     
@@ -133,6 +152,13 @@ struct AddTransactionView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showAddCategory, onDismiss: {
+            // Reload categories after adding new one
+            transactionsViewModel.loadCategories()
+        }) {
+            AddCategoryView()
+                .environmentObject(transactionsViewModel)
         }
         .onAppear {
             // Reload data to get fresh categories and accounts

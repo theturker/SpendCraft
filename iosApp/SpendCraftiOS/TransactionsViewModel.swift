@@ -39,8 +39,13 @@ class TransactionsViewModel: ObservableObject {
         let fetchRequest: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest() as! NSFetchRequest<TransactionEntity>
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TransactionEntity.timestampUtcMillis, ascending: false)]
         
+        // Refresh all objects to get latest data
+        context.refreshAllObjects()
+        
         do {
             transactions = try context.fetch(fetchRequest)
+            // Force UI update
+            objectWillChange.send()
         } catch {
             print("Error fetching transactions: \(error)")
         }

@@ -15,6 +15,7 @@ struct TransactionsTabView: View {
     
     @State private var showAddTransaction = false
     @State private var filterType: TransactionFilter = .all
+    @State private var transactionToEdit: TransactionEntity?
     
     enum TransactionFilter: String, CaseIterable {
         case all = "Tümü"
@@ -22,95 +23,174 @@ struct TransactionsTabView: View {
         case expense = "Gider"
     }
     
+    // Make the return type explicit and simplify each branch to help the compiler.
     var filteredTransactions: [TransactionEntity] {
         switch filterType {
         case .all:
-            return transactionsViewModel.transactions
+            let all: [TransactionEntity] = transactionsViewModel.transactions
+            return all
         case .income:
-            return transactionsViewModel.transactions.filter { $0.isIncome }
+            let income: [TransactionEntity] = transactionsViewModel.transactions.filter { tx in
+                tx.isIncome
+            }
+            return income
         case .expense:
-            return transactionsViewModel.transactions.filter { !$0.isIncome }
+            let expense: [TransactionEntity] = transactionsViewModel.transactions.filter { tx in
+                !tx.isIncome
+            }
+            return expense
         }
+    }
+    
+    // Precompute grouped sections as a simple array to avoid heavy generics in the View builder.
+    private var sections: [(date: String, items: [TransactionEntity])] {
+        let grouped: [String: [TransactionEntity]] = groupedTransactions()
+        let sortedDates: [String] = grouped.keys.sorted(by: >)
+        let result: [(String, [TransactionEntity])] = sortedDates.map { date in
+            let items: [TransactionEntity] = grouped[date] ?? []
+            return (date, items)
+        }
+        return result
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            // Filter Pills
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(TransactionFilter.allCases, id: \.self) { filter in
-                        FilterPill(
-                            title: filter.rawValue,
-                            isSelected: filterType == filter
-                        ) {
-                            filterType = filter
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
-            }
-            .padding(.vertical, 8)
-            .background(Color(UIColor.systemBackground))
-            
-            // Transactions List
-            if filteredTransactions.isEmpty {
-                VStack(spacing: 12) {
-                    Spacer()
-                    Image(systemName: "tray")
-                        .font(.system(size: 60))
-                        .foregroundColor(.gray)
-                    Text("Henüz işlem yok")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    Text("+ butonuna basarak ilk işleminizi ekleyin")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                    Spacer()
-                }
-                .padding()
-            } else {
-                List {
-                    ForEach(groupedTransactions().keys.sorted(by: >), id: \.self) { date in
-                        Section(header: Text(date)) {
-                            ForEach(groupedTransactions()[date] ?? [], id: \.id) { transaction in
-                                TransactionListRow(transaction: transaction)
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                        Button(role: .destructive) {
-                                            transactionsViewModel.deleteTransaction(transaction)
-                                        } label: {
-                                            Label("Sil", systemImage: "trash")
-                                        }
-                                    }
-                            }
-                        }
-                    }
-                }
-                .listStyle(.insetGrouped)
-            }
+            filterPillsView
+            contentView
         }
         .navigationTitle("İşlemler")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showAddTransaction = true
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title2)
-                }
-            }
+            toolbarContent
         }
-        .sheet(isPresented: $showAddTransaction) {
+        .sheet(isPresented: $showAddTransaction, onDismiss: {
+            // Reload transactions after adding new transaction
+            transactionsViewModel.loadTransactions()
+        }) {
             AddTransactionView(initialIsIncome: false)
                 .environmentObject(transactionsViewModel)
                 .environmentObject(achievementsViewModel)
                 .environmentObject(notificationsViewModel)
         }
+        .sheet(item: $transactionToEdit, onDismiss: {
+            // Delay to ensure CoreData changes are fully committed
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                // Force a complete reload
+                transactionsViewModel.loadTransactions()
+                transactionsViewModel.objectWillChange.send()
+            }
+        }) { transaction in
+            EditTransactionView(transaction: transaction)
+                .environmentObject(transactionsViewModel)
+        }
+    }
+    
+    // MARK: - Subviews
+    
+    private var filterPillsView: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(TransactionFilter.allCases, id: \.self) { filter in
+                    FilterPill(
+                        title: filter.rawValue,
+                        isSelected: filterType == filter
+                    ) {
+                        filterType = filter
+                    }
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+        .padding(.vertical, 8)
+        .background(Color(UIColor.systemBackground))
+    }
+    
+    @ViewBuilder
+    private var contentView: some View {
+        if filteredTransactions.isEmpty {
+            emptyStateView
+        } else {
+            transactionsList
+        }
+    }
+    
+    private var emptyStateView: some View {
+        VStack(spacing: 12) {
+            Spacer()
+            Image(systemName: "tray")
+                .font(.system(size: 60))
+                .foregroundColor(.gray)
+            Text("Henüz işlem yok")
+                .font(.headline)
+                .foregroundColor(.secondary)
+            Text("+ butonuna basarak ilk işleminizi ekleyin")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+            Spacer()
+        }
+        .padding()
+    }
+    
+    private var transactionsList: some View {
+        List {
+            ForEach(sections, id: \.date) { section in
+                Section(header: Text(section.date)) {
+                    ForEach(section.items, id: \.id) { transaction in
+                        transactionRow(for: transaction)
+                    }
+                }
+            }
+        }
+        .listStyle(.insetGrouped)
+    }
+    
+    private func transactionRow(for transaction: TransactionEntity) -> some View {
+        TransactionListRow(transaction: transaction)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                transactionToEdit = transaction
+            }
+            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                deleteButton(for: transaction)
+            }
+            .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                editButton(for: transaction)
+            }
+    }
+    
+    private func deleteButton(for transaction: TransactionEntity) -> some View {
+        Button(role: .destructive) {
+            transactionsViewModel.deleteTransaction(transaction)
+        } label: {
+            Label("Sil", systemImage: "trash")
+        }
+    }
+    
+    private func editButton(for transaction: TransactionEntity) -> some View {
+        Button {
+            transactionToEdit = transaction
+        } label: {
+            Label("Düzenle", systemImage: "pencil")
+        }
+        .tint(.blue)
+    }
+    
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+                showAddTransaction = true
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .font(.title2)
+            }
+        }
     }
     
     func groupedTransactions() -> [String: [TransactionEntity]] {
-        let grouped = Dictionary(grouping: filteredTransactions) { transaction -> String in
+        // Add explicit types for the grouping key and result to reduce inference work.
+        let grouped: [String: [TransactionEntity]] = Dictionary(grouping: filteredTransactions) { transaction -> String in
             let date = Date(timeIntervalSince1970: TimeInterval(transaction.timestampUtcMillis / 1000))
             let formatter = DateFormatter()
             formatter.dateFormat = "d MMMM yyyy"
@@ -179,7 +259,7 @@ struct TransactionListRow: View {
             
             // Amount
             VStack(alignment: .trailing, spacing: 4) {
-                Text(String(format: "%.2f ₺", transaction.amount))
+                Text(transaction.formattedAmount)
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(transaction.isIncome ? .green : .red)

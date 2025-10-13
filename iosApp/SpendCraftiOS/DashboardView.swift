@@ -46,7 +46,7 @@ struct DashboardView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     
-                    Text(String(format: "%.2f ₺", transactionsViewModel.currentBalance))
+                    Text(formatCurrency(transactionsViewModel.currentBalance))
                         .font(.system(size: 42, weight: .bold))
                         .foregroundColor(transactionsViewModel.currentBalance >= 0 ? .green : .red)
                 }
@@ -63,40 +63,6 @@ struct DashboardView: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 8) // başlık ile kart arası makul boşluk
                 
-                // Quick Action Buttons
-                HStack(spacing: 16) {
-                    Button {
-                        transactionTypeToAdd = .income
-                    } label: {
-                        HStack {
-                            Image(systemName: "arrow.down.circle.fill")
-                                .foregroundColor(.white)
-                            Text("Gelir")
-                                .foregroundColor(.white)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
-                        .cornerRadius(15)
-                    }
-                    
-                    Button {
-                        transactionTypeToAdd = .expense
-                    } label: {
-                        HStack {
-                            Image(systemName: "arrow.up.circle.fill")
-                                .foregroundColor(.white)
-                            Text("Gider")
-                                .foregroundColor(.white)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(15)
-                    }
-                }
-                .padding(.horizontal, 16)
-                
                 // Income & Expense Summary Cards
                 HStack(spacing: 16) {
                     // Income Summary
@@ -107,7 +73,7 @@ struct DashboardView: View {
                             Text("Gelir")
                                 .font(.subheadline)
                         }
-                        Text(String(format: "%.2f ₺", transactionsViewModel.totalIncome))
+                        Text(formatCurrency(transactionsViewModel.totalIncome))
                             .font(.title3)
                             .fontWeight(.semibold)
                     }
@@ -126,7 +92,7 @@ struct DashboardView: View {
                             Text("Gider")
                                 .font(.subheadline)
                         }
-                        Text(String(format: "%.2f ₺", transactionsViewModel.totalExpense))
+                        Text(formatCurrency(transactionsViewModel.totalExpense))
                             .font(.title3)
                             .fontWeight(.semibold)
                     }
@@ -171,6 +137,40 @@ struct DashboardView: View {
                     }
                     .padding(.horizontal, 16)
                 }
+                
+                // Quick Action Buttons
+                HStack(spacing: 16) {
+                    Button {
+                        transactionTypeToAdd = .income
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.down.circle.fill")
+                                .foregroundColor(.white)
+                            Text("Gelir")
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(15)
+                    }
+                    
+                    Button {
+                        transactionTypeToAdd = .expense
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .foregroundColor(.white)
+                            Text("Gider")
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(15)
+                    }
+                }
+                .padding(.horizontal, 16)
                 
                 // Streak Card
                 VStack(alignment: .leading, spacing: 12) {
@@ -326,7 +326,7 @@ struct BudgetProgressRow: View {
                 Text(category.name ?? "")
                     .font(.subheadline)
                 Spacer()
-                Text(String(format: "%.2f / %.2f ₺", spent, Double(budget.monthlyLimitMinor) / 100.0))
+                Text("\(formatCurrency(spent)) / \(formatCurrency(Double(budget.monthlyLimitMinor) / 100.0))")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -436,4 +436,18 @@ struct TransactionRow: View {
         .padding(.horizontal)
         .padding(.vertical, 8)
     }
+}
+
+// Helper function for currency formatting
+func formatCurrency(_ amount: Double) -> String {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.locale = Locale(identifier: "tr_TR")
+    formatter.minimumFractionDigits = 2
+    formatter.maximumFractionDigits = 2
+    formatter.groupingSeparator = "."
+    formatter.decimalSeparator = ","
+    
+    let formattedNumber = formatter.string(from: NSNumber(value: abs(amount))) ?? "0,00"
+    return "\(formattedNumber) ₺"
 }
