@@ -9,6 +9,7 @@ target 'SpendCraftiOS' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
+  pod 'Firebase/Crashlytics'
 end
 
 post_install do |installer|

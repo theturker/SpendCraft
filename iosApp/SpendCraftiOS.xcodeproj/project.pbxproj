@@ -9,9 +9,10 @@
 /* Begin PBXBuildFile section */
 		2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */; };
 		2152FB062600AC8F00CF470E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB052600AC8F00CF470E /* ContentView.swift */; };
-		7663757A7372818DB3C16F18 /* Pods_SpendCraftiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */; };
+		7E6DF9951589FE600A33F66F /* Pods_SpendCraftiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFD4B289D948BBA5DC77D2FD /* Pods_SpendCraftiOS.framework */; };
 		900445852E9C6E88003DFAFC /* UserProfilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900445842E9C6E88003DFAFC /* UserProfilingView.swift */; };
 		900445872E9C6F68003DFAFC /* AccountInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900445862E9C6F68003DFAFC /* AccountInfoView.swift */; };
+		904C84332E9DA105008F6F01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 904C84322E9DA105008F6F01 /* GoogleService-Info.plist */; };
 		905181052E98529900F81AAC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 905181042E98529900F81AAC /* Media.xcassets */; };
 		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
 		908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908773A62E95857B00AB0783 /* CoreDataStack.swift */; };
@@ -48,21 +49,17 @@
 		90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */; };
 		90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */; };
 		90B99D2C2E9D12B800EE7EC6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */; };
-		90F10A772E97E0800068F54E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 90F10A762E97E0800068F54E /* FirebaseAnalytics */; };
-		90F10A792E97E0800068F54E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 90F10A782E97E0800068F54E /* FirebaseAuth */; };
-		90F10A7B2E97E0800068F54E /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 90F10A7A2E97E0800068F54E /* FirebaseAuthCombine-Community */; };
-		90F10A7D2E97E0800068F54E /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 90F10A7C2E97E0800068F54E /* FirebaseCore */; };
-		90F10A812E97E9490068F54E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90F10A7F2E97E8790068F54E /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendCraftiOSApp.swift; sourceTree = "<group>"; };
 		2152FB052600AC8F00CF470E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		2E1180A2A1DA42FAE7FEF34C /* Pods-SpendCraftiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.release.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.release.xcconfig"; sourceTree = "<group>"; };
-		5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		542A2F45B96E62B21A39666C /* Pods-SpendCraftiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.release.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.release.xcconfig"; sourceTree = "<group>"; };
 		7555FF8C242A565900829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		862B86DA885C8818002160DF /* Pods-SpendCraftiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.debug.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		900445842E9C6E88003DFAFC /* UserProfilingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilingView.swift; sourceTree = "<group>"; };
 		900445862E9C6F68003DFAFC /* AccountInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInfoView.swift; sourceTree = "<group>"; };
+		904C84322E9DA105008F6F01 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		905181042E98529900F81AAC /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		908773A62E95857B00AB0783 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
@@ -100,8 +97,7 @@
 		90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 		90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
-		90F10A7F2E97E8790068F54E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		9B8BF21B3EEC7B6D4820D8C8 /* Pods-SpendCraftiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.debug.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.debug.xcconfig"; sourceTree = "<group>"; };
+		AFD4B289D948BBA5DC77D2FD /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,17 +105,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90F10A772E97E0800068F54E /* FirebaseAnalytics in Frameworks */,
-				90F10A7D2E97E0800068F54E /* FirebaseCore in Frameworks */,
-				90F10A792E97E0800068F54E /* FirebaseAuth in Frameworks */,
-				7663757A7372818DB3C16F18 /* Pods_SpendCraftiOS.framework in Frameworks */,
-				90F10A7B2E97E0800068F54E /* FirebaseAuthCombine-Community in Frameworks */,
+				7E6DF9951589FE600A33F66F /* Pods_SpendCraftiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00C5FE8BB9310D831BD2E8AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AFD4B289D948BBA5DC77D2FD /* Pods_SpendCraftiOS.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -163,17 +163,9 @@
 				90A11BC82E966756005C595F /* NotificationsView.swift */,
 				90A11BC92E966756005C595F /* NotificationsViewModel.swift */,
 				90A11BCD2E966760005C595F /* RecurringAutomationManager.swift */,
-				90F10A7F2E97E8790068F54E /* GoogleService-Info.plist */,
+				904C84322E9DA105008F6F01 /* GoogleService-Info.plist */,
 			);
 			path = SpendCraftiOS;
-			sourceTree = "<group>";
-		};
-		6507AB0AEB3092A2ECE32113 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				5E4FD6C60C58F05711A1816C /* Pods_SpendCraftiOS.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		7555FF72242A565900829871 = {
@@ -183,15 +175,15 @@
 				2152FB012600AC8F00CF470E /* SpendCraftiOS */,
 				908773A52E95787500AB0783 /* SpendCraftiOS.app */,
 				D629DB3496C39056FDDA95CE /* Pods */,
-				6507AB0AEB3092A2ECE32113 /* Frameworks */,
+				00C5FE8BB9310D831BD2E8AE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		D629DB3496C39056FDDA95CE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9B8BF21B3EEC7B6D4820D8C8 /* Pods-SpendCraftiOS.debug.xcconfig */,
-				2E1180A2A1DA42FAE7FEF34C /* Pods-SpendCraftiOS.release.xcconfig */,
+				862B86DA885C8818002160DF /* Pods-SpendCraftiOS.debug.xcconfig */,
+				542A2F45B96E62B21A39666C /* Pods-SpendCraftiOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -203,10 +195,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "SpendCraftiOS" */;
 			buildPhases = (
-				549A7D25D06DED8FBAF407FD /* [CP] Check Pods Manifest.lock */,
+				9F167B7FF6E40D11C31C6315 /* [CP] Check Pods Manifest.lock */,
 				7555FF77242A565900829871 /* Sources */,
 				D5CB89385649D0445ECD4AC9 /* Frameworks */,
 				90F10A802E97E9400068F54E /* Resources */,
+				7F0CCBB856DA2667B5BACBA2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -235,9 +228,6 @@
 				Base,
 			);
 			mainGroup = 7555FF72242A565900829871;
-			packageReferences = (
-				90F10A752E97E0800068F54E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-			);
 			productRefGroup = 7555FF72242A565900829871;
 			projectDirPath = "";
 			projectRoot = "";
@@ -253,14 +243,31 @@
 			buildActionMask = 2147483647;
 			files = (
 				905181052E98529900F81AAC /* Media.xcassets in Resources */,
-				90F10A812E97E9490068F54E /* GoogleService-Info.plist in Resources */,
+				904C84332E9DA105008F6F01 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		549A7D25D06DED8FBAF407FD /* [CP] Check Pods Manifest.lock */ = {
+		7F0CCBB856DA2667B5BACBA2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9F167B7FF6E40D11C31C6315 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -337,7 +344,7 @@
 /* Begin XCBuildConfiguration section */
 		7555FFA3242A565B00829871 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9B8BF21B3EEC7B6D4820D8C8 /* Pods-SpendCraftiOS.debug.xcconfig */;
+			baseConfigurationReference = 862B86DA885C8818002160DF /* Pods-SpendCraftiOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -374,7 +381,7 @@
 		};
 		7555FFA4242A565B00829871 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E1180A2A1DA42FAE7FEF34C /* Pods-SpendCraftiOS.release.xcconfig */;
+			baseConfigurationReference = 542A2F45B96E62B21A39666C /* Pods-SpendCraftiOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -548,40 +555,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		90F10A752E97E0800068F54E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.4.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		90F10A762E97E0800068F54E /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 90F10A752E97E0800068F54E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		90F10A782E97E0800068F54E /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 90F10A752E97E0800068F54E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		90F10A7A2E97E0800068F54E /* FirebaseAuthCombine-Community */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 90F10A752E97E0800068F54E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseAuthCombine-Community";
-		};
-		90F10A7C2E97E0800068F54E /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 90F10A752E97E0800068F54E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7555FF73242A565900829871 /* Project object */;
 }
