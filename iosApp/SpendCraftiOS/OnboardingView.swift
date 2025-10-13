@@ -595,8 +595,11 @@ struct LoginView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var email = ""
     @State private var password = ""
-       @State private var showError = false
+    @State private var showError = false
     @State private var errorMessage = ""
+    @State private var isEmailFocused = false
+    @State private var isPasswordFocused = false
+    @State private var animateContent = false
     
     let onLoginSuccess: () -> Void
     let onNavigateToRegister: () -> Void
@@ -604,108 +607,302 @@ struct LoginView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                // Header
-                VStack(spacing: 16) {
-                    Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
-                        .font(.system(size: 80))
-                        .foregroundColor(.blue)
-                    
-                    Text("Hoş Geldiniz")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                    
-                    Text("Hesabınıza giriş yapın")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.top, 60)
-                .padding(.bottom, 40)
+            ZStack {
+                // Animated Background Gradient
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.4, green: 0.5, blue: 1.0),
+                        Color(red: 0.6, green: 0.4, blue: 0.9),
+                        Color(red: 0.8, green: 0.3, blue: 0.7)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                .opacity(0.15)
                 
-                // Form
-                VStack(spacing: 20) {
-                    // Email Field
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("E-posta")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.primary)
+                // Floating circles for depth
+                Circle()
+                    .fill(Color.blue.opacity(0.1))
+                    .frame(width: 300, height: 300)
+                    .offset(x: -150, y: -200)
+                    .blur(radius: 50)
+                
+                Circle()
+                    .fill(Color.purple.opacity(0.1))
+                    .frame(width: 250, height: 250)
+                    .offset(x: 150, y: 300)
+                    .blur(radius: 50)
+                
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        // Modern Header with Icon
+                        VStack(spacing: 24) {
+                            // Logo Container with Glassmorphism
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [
+                                                Color.blue.opacity(0.3),
+                                                Color.purple.opacity(0.3)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 120, height: 120)
+                                    .blur(radius: 20)
+                                
+                                Circle()
+                                    .fill(Color(.systemBackground).opacity(0.9))
+                                    .frame(width: 100, height: 100)
+                                    .shadow(color: Color.blue.opacity(0.3), radius: 20, x: 0, y: 10)
+                                
+                                Image(systemName: "chart.line.uptrend.xyaxis")
+                                    .font(.system(size: 45, weight: .medium))
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [Color.blue, Color.purple],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                            }
+                            .scaleEffect(animateContent ? 1.0 : 0.8)
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            
+                            VStack(spacing: 8) {
+                                Text("Tekrar Hoş Geldiniz")
+                                    .font(.system(size: 32, weight: .bold))
+                                    .foregroundColor(.primary)
+                                
+                                Text("Finansal yolculuğunuza devam edin")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .offset(y: animateContent ? 0 : 20)
+                        }
+                        .padding(.top, 60)
+                        .padding(.bottom, 40)
                         
-                        TextField("ornek@email.com", text: $email)
-                            .textFieldStyle(CustomTextFieldStyle())
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                    }
-                    
-                    // Password Field
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Şifre")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.primary)
+                        // Modern Form Card
+                        VStack(spacing: 24) {
+                            // Email Field with Modern Design
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "envelope.fill")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(isEmailFocused ? .blue : .secondary)
+                                    Text("E-posta")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(isEmailFocused ? .blue : .primary)
+                                }
+                                
+                                HStack(spacing: 12) {
+                                    Image(systemName: "at")
+                                        .foregroundColor(.secondary)
+                                        .frame(width: 20)
+                                    
+                                    TextField("ornek@email.com", text: $email)
+                                        .textFieldStyle(PlainTextFieldStyle())
+                                        .keyboardType(.emailAddress)
+                                        .autocapitalization(.none)
+                                        .disableAutocorrection(true)
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: isEmailFocused ? Color.blue.opacity(0.3) : Color.black.opacity(0.05), radius: isEmailFocused ? 12 : 8, x: 0, y: 4)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(isEmailFocused ? Color.blue : Color.clear, lineWidth: 2)
+                                )
+                            }
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .offset(y: animateContent ? 0 : 20)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1), value: animateContent)
+                            
+                            // Password Field with Modern Design
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "lock.fill")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(isPasswordFocused ? .blue : .secondary)
+                                    Text("Şifre")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(isPasswordFocused ? .blue : .primary)
+                                }
+                                
+                                HStack(spacing: 12) {
+                                    Image(systemName: "key.fill")
+                                        .foregroundColor(.secondary)
+                                        .frame(width: 20)
+                                    
+                                    SecureField("••••••••", text: $password)
+                                        .textFieldStyle(PlainTextFieldStyle())
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: isPasswordFocused ? Color.blue.opacity(0.3) : Color.black.opacity(0.05), radius: isPasswordFocused ? 12 : 8, x: 0, y: 4)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(isPasswordFocused ? Color.blue : Color.clear, lineWidth: 2)
+                                )
+                            }
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .offset(y: animateContent ? 0 : 20)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.2), value: animateContent)
+                            
+                            // Error Message with better styling
+                            if showError {
+                                HStack(spacing: 12) {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundColor(.red)
+                                    Text(errorMessage)
+                                        .font(.caption)
+                                        .foregroundColor(.red)
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.red.opacity(0.1))
+                                )
+                                .transition(.scale.combined(with: .opacity))
+                            }
+                            
+                            // Forgot Password Button
+                            HStack {
+                                Spacer()
+                                Button(action: onNavigateToForgotPassword) {
+                                    Text("Şifremi Unuttum")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [Color.blue, Color.purple],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                }
+                            }
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.3), value: animateContent)
+                            
+                            // Modern Login Button
+                            Button(action: handleLogin) {
+                                HStack(spacing: 12) {
+                                    if authViewModel.isLoading {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    } else {
+                                        Text("Giriş Yap")
+                                            .fontWeight(.bold)
+                                            .font(.system(size: 17))
+                                        Image(systemName: "arrow.right")
+                                            .font(.system(size: 16, weight: .bold))
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 56)
+                                .background(
+                                    Group {
+                                        if authViewModel.isLoading || email.isEmpty || password.isEmpty {
+                                            LinearGradient(
+                                                colors: [Color.gray, Color.gray.opacity(0.8)],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        } else {
+                                            LinearGradient(
+                                                colors: [Color.blue, Color.purple],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        }
+                                    }
+                                )
+                                .foregroundColor(.white)
+                                .cornerRadius(16)
+                                .shadow(color: (authViewModel.isLoading || email.isEmpty || password.isEmpty) ? Color.clear : Color.blue.opacity(0.4), radius: 15, x: 0, y: 8)
+                            }
+                            .disabled(authViewModel.isLoading || email.isEmpty || password.isEmpty)
+                            .scaleEffect(animateContent ? 1.0 : 0.9)
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.4), value: animateContent)
+                        }
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 32)
+                        .background(
+                            RoundedRectangle(cornerRadius: 30)
+                                .fill(Color(.systemBackground).opacity(0.7))
+                                .shadow(color: Color.black.opacity(0.1), radius: 30, x: 0, y: 15)
+                        )
+                        .padding(.horizontal, 24)
                         
-                        SecureField("Şifrenizi girin", text: $password)
-                            .textFieldStyle(CustomTextFieldStyle())
-                    }
-                    
-                    // Error Message
-                    if showError {
-                        Text(errorMessage)
-                            .font(.caption)
-                            .foregroundColor(.red)
-                            .padding(.horizontal)
-                    }
-                    
-                    // Login Button
-                    Button(action: handleLogin) {
-                        HStack {
-                            if authViewModel.isLoading {
-                                ProgressView()
-                                    .scaleEffect(0.8)
-                                    .foregroundColor(.white)
-                            } else {
-                                Text("Giriş Yap")
-                                    .fontWeight(.semibold)
+                        // Register Link with modern design
+                        VStack(spacing: 16) {
+                            HStack(spacing: 12) {
+                                Rectangle()
+                                    .fill(Color.secondary.opacity(0.3))
+                                    .frame(height: 1)
+                                Text("veya")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Rectangle()
+                                    .fill(Color.secondary.opacity(0.3))
+                                    .frame(height: 1)
+                            }
+                            .padding(.horizontal, 32)
+                            .padding(.top, 32)
+                            
+                            Button(action: onNavigateToRegister) {
+                                HStack {
+                                    Text("Hesabınız yok mu?")
+                                        .foregroundColor(.secondary)
+                                        .fontWeight(.medium)
+                                    Text("Kayıt Ol")
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [Color.blue, Color.purple],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                }
+                                .font(.subheadline)
+                                .padding(.vertical, 16)
+                                .padding(.horizontal, 32)
+                                .background(
+                                    Capsule()
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                                )
                             }
                         }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
-                    }
-                    .disabled(authViewModel.isLoading || email.isEmpty || password.isEmpty)
-                    .opacity((authViewModel.isLoading || email.isEmpty || password.isEmpty) ? 0.6 : 1.0)
-                    
-                    // Forgot Password
-                    Button(action: onNavigateToForgotPassword) {
-                        Text("Şifremi Unuttum")
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
-                    }
-                    .padding(.top, 8)
-                }
-                .padding(.horizontal, 24)
-                
-                Spacer()
-                
-                // Register Link
-                HStack {
-                    Text("Hesabınız yok mu?")
-                        .foregroundColor(.secondary)
-                    
-                    Button(action: onNavigateToRegister) {
-                        Text("Kayıt Ol")
-                            .fontWeight(.semibold)
-                            .foregroundColor(.blue)
+                        .opacity(animateContent ? 1.0 : 0.0)
+                        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.5), value: animateContent)
+                        .padding(.bottom, 40)
                     }
                 }
-                .padding(.bottom, 40)
             }
-            .background(Color(.systemBackground))
             .navigationBarHidden(true)
+            .onAppear {
+                withAnimation {
+                    animateContent = true
+                }
+            }
         }
     }
     
@@ -717,8 +914,10 @@ struct LoginView: View {
                 try await authViewModel.signIn(email: email, password: password)
                 onLoginSuccess()
             } catch {
-                showError = true
-                errorMessage = error.localizedDescription
+                withAnimation {
+                    showError = true
+                    errorMessage = error.localizedDescription
+                }
             }
         }
     }
@@ -732,129 +931,366 @@ struct RegisterView: View {
     @State private var confirmPassword = ""
     @State private var showError = false
     @State private var errorMessage = ""
+    @State private var animateContent = false
     
     let onRegisterSuccess: () -> Void
     let onNavigateToLogin: () -> Void
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                // Header
-                VStack(spacing: 16) {
-                    Image(systemName: "person.badge.plus")
-                        .font(.system(size: 80))
-                        .foregroundColor(.blue)
-                    
-                    Text("Hesap Oluştur")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                    
-                    Text("Yeni hesabınızı oluşturun")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.top, 40)
-                .padding(.bottom, 30)
+            ZStack {
+                // Animated Background Gradient
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.3, green: 0.8, blue: 0.6),
+                        Color(red: 0.4, green: 0.6, blue: 1.0),
+                        Color(red: 0.6, green: 0.4, blue: 0.9)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                .opacity(0.15)
                 
-                ScrollView {
-                    VStack(spacing: 20) {
-                        // Name Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Ad Soyad")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.primary)
+                // Floating circles
+                Circle()
+                    .fill(Color.green.opacity(0.1))
+                    .frame(width: 280, height: 280)
+                    .offset(x: -140, y: -180)
+                    .blur(radius: 50)
+                
+                Circle()
+                    .fill(Color.blue.opacity(0.1))
+                    .frame(width: 230, height: 230)
+                    .offset(x: 140, y: 280)
+                    .blur(radius: 50)
+                
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        // Modern Header
+                        VStack(spacing: 24) {
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [
+                                                Color.green.opacity(0.3),
+                                                Color.blue.opacity(0.3)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 120, height: 120)
+                                    .blur(radius: 20)
+                                
+                                Circle()
+                                    .fill(Color(.systemBackground).opacity(0.9))
+                                    .frame(width: 100, height: 100)
+                                    .shadow(color: Color.green.opacity(0.3), radius: 20, x: 0, y: 10)
+                                
+                                Image(systemName: "person.badge.plus.fill")
+                                    .font(.system(size: 45, weight: .medium))
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [Color.green, Color.blue],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                            }
+                            .scaleEffect(animateContent ? 1.0 : 0.8)
+                            .opacity(animateContent ? 1.0 : 0.0)
                             
-                            TextField("Adınızı ve soyadınızı girin", text: $name)
-                                .textFieldStyle(CustomTextFieldStyle())
-                                .autocapitalization(.words)
+                            VStack(spacing: 8) {
+                                Text("Hesap Oluştur")
+                                    .font(.system(size: 32, weight: .bold))
+                                    .foregroundColor(.primary)
+                                
+                                Text("Finansal özgürlük yolculuğunuza başlayın")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .offset(y: animateContent ? 0 : 20)
                         }
+                        .padding(.top, 50)
+                        .padding(.bottom, 30)
                         
-                        // Email Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("E-posta")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.primary)
-                            
-                            TextField("ornek@email.com", text: $email)
-                                .textFieldStyle(CustomTextFieldStyle())
-                                .keyboardType(.emailAddress)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                        }
-                        
-                        // Password Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Şifre")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.primary)
-                            
-                            SecureField("Şifrenizi girin", text: $password)
-                                .textFieldStyle(CustomTextFieldStyle())
-                        }
-                        
-                        // Confirm Password Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Şifre Tekrar")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.primary)
-                            
-                            SecureField("Şifrenizi tekrar girin", text: $confirmPassword)
-                                .textFieldStyle(CustomTextFieldStyle())
-                        }
-                        
-                        // Error Message
-                        if showError {
-                            Text(errorMessage)
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .padding(.horizontal)
-                        }
-                        
-                        // Register Button
-                        Button(action: handleRegister) {
-                            HStack {
-                                if authViewModel.isLoading {
-                                    ProgressView()
-                                        .scaleEffect(0.8)
-                                        .foregroundColor(.white)
-                                } else {
-                                    Text("Hesap Oluştur")
+                        // Modern Form Card
+                        VStack(spacing: 20) {
+                            // Name Field
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "person.fill")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.secondary)
+                                    Text("Ad Soyad")
+                                        .font(.subheadline)
                                         .fontWeight(.semibold)
+                                        .foregroundColor(.primary)
+                                }
+                                
+                                HStack(spacing: 12) {
+                                    Image(systemName: "person.text.rectangle")
+                                        .foregroundColor(.secondary)
+                                        .frame(width: 20)
+                                    
+                                    TextField("Adınız ve Soyadınız", text: $name)
+                                        .textFieldStyle(PlainTextFieldStyle())
+                                        .autocapitalization(.words)
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                                )
+                            }
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .offset(y: animateContent ? 0 : 20)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1), value: animateContent)
+                            
+                            // Email Field
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "envelope.fill")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.secondary)
+                                    Text("E-posta")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.primary)
+                                }
+                                
+                                HStack(spacing: 12) {
+                                    Image(systemName: "at")
+                                        .foregroundColor(.secondary)
+                                        .frame(width: 20)
+                                    
+                                    TextField("ornek@email.com", text: $email)
+                                        .textFieldStyle(PlainTextFieldStyle())
+                                        .keyboardType(.emailAddress)
+                                        .autocapitalization(.none)
+                                        .disableAutocorrection(true)
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                                )
+                            }
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .offset(y: animateContent ? 0 : 20)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.2), value: animateContent)
+                            
+                            // Password Field
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "lock.fill")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.secondary)
+                                    Text("Şifre")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.primary)
+                                }
+                                
+                                HStack(spacing: 12) {
+                                    Image(systemName: "key.fill")
+                                        .foregroundColor(.secondary)
+                                        .frame(width: 20)
+                                    
+                                    SecureField("En az 6 karakter", text: $password)
+                                        .textFieldStyle(PlainTextFieldStyle())
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                                )
+                                
+                                // Password strength indicator
+                                if !password.isEmpty {
+                                    HStack(spacing: 4) {
+                                        ForEach(0..<3) { index in
+                                            Rectangle()
+                                                .fill(passwordStrength > index ? strengthColor : Color.gray.opacity(0.3))
+                                                .frame(height: 3)
+                                                .cornerRadius(2)
+                                        }
+                                    }
+                                    .padding(.top, 4)
+                                    
+                                    Text(strengthText)
+                                        .font(.caption2)
+                                        .foregroundColor(strengthColor)
                                 }
                             }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(isFormValid ? Color.blue : Color.gray)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .offset(y: animateContent ? 0 : 20)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.3), value: animateContent)
+                            
+                            // Confirm Password Field
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "lock.shield.fill")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.secondary)
+                                    Text("Şifre Tekrar")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.primary)
+                                }
+                                
+                                HStack(spacing: 12) {
+                                    Image(systemName: "checkmark.shield.fill")
+                                        .foregroundColor(passwordsMatch ? .green : .secondary)
+                                        .frame(width: 20)
+                                    
+                                    SecureField("Şifrenizi tekrar girin", text: $confirmPassword)
+                                        .textFieldStyle(PlainTextFieldStyle())
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(passwordsMatch && !confirmPassword.isEmpty ? Color.green : Color.clear, lineWidth: 2)
+                                )
+                            }
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .offset(y: animateContent ? 0 : 20)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.4), value: animateContent)
+                            
+                            // Error Message
+                            if showError {
+                                HStack(spacing: 12) {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundColor(.red)
+                                    Text(errorMessage)
+                                        .font(.caption)
+                                        .foregroundColor(.red)
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.red.opacity(0.1))
+                                )
+                                .transition(.scale.combined(with: .opacity))
+                            }
+                            
+                            // Register Button
+                            Button(action: handleRegister) {
+                                HStack(spacing: 12) {
+                                    if authViewModel.isLoading {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    } else {
+                                        Text("Hesap Oluştur")
+                                            .fontWeight(.bold)
+                                            .font(.system(size: 17))
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.system(size: 18, weight: .bold))
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 56)
+                                .background(
+                                    Group {
+                                        if !isFormValid {
+                                            LinearGradient(
+                                                colors: [Color.gray, Color.gray.opacity(0.8)],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        } else {
+                                            LinearGradient(
+                                                colors: [Color.green, Color.blue],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        }
+                                    }
+                                )
+                                .foregroundColor(.white)
+                                .cornerRadius(16)
+                                .shadow(color: isFormValid ? Color.green.opacity(0.4) : Color.clear, radius: 15, x: 0, y: 8)
+                            }
+                            .disabled(authViewModel.isLoading || !isFormValid)
+                            .scaleEffect(animateContent ? 1.0 : 0.9)
+                            .opacity(animateContent ? 1.0 : 0.0)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.5), value: animateContent)
                         }
-                        .disabled(authViewModel.isLoading || !isFormValid)
-                        .opacity((authViewModel.isLoading || !isFormValid) ? 0.6 : 1.0)
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 32)
+                        .background(
+                            RoundedRectangle(cornerRadius: 30)
+                                .fill(Color(.systemBackground).opacity(0.7))
+                                .shadow(color: Color.black.opacity(0.1), radius: 30, x: 0, y: 15)
+                        )
+                        .padding(.horizontal, 24)
+                        
+                        // Login Link
+                        VStack(spacing: 16) {
+                            HStack(spacing: 12) {
+                                Rectangle()
+                                    .fill(Color.secondary.opacity(0.3))
+                                    .frame(height: 1)
+                                Text("veya")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Rectangle()
+                                    .fill(Color.secondary.opacity(0.3))
+                                    .frame(height: 1)
+                            }
+                            .padding(.horizontal, 32)
+                            .padding(.top, 24)
+                            
+                            Button(action: onNavigateToLogin) {
+                                HStack {
+                                    Text("Zaten hesabınız var mı?")
+                                        .foregroundColor(.secondary)
+                                        .fontWeight(.medium)
+                                    Text("Giriş Yap")
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [Color.green, Color.blue],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                }
+                                .font(.subheadline)
+                                .padding(.vertical, 16)
+                                .padding(.horizontal, 32)
+                                .background(
+                                    Capsule()
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                                )
+                            }
+                        }
+                        .opacity(animateContent ? 1.0 : 0.0)
+                        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.6), value: animateContent)
+                        .padding(.bottom, 40)
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 40)
                 }
-                
-                // Login Link
-                HStack {
-                    Text("Zaten hesabınız var mı?")
-                        .foregroundColor(.secondary)
-                    
-                    Button(action: onNavigateToLogin) {
-                        Text("Giriş Yap")
-                            .fontWeight(.semibold)
-                            .foregroundColor(.blue)
-                    }
-                }
-                .padding(.bottom, 40)
             }
-            .background(Color(.systemBackground))
             .navigationBarHidden(true)
+            .onAppear {
+                withAnimation {
+                    animateContent = true
+                }
+            }
         }
     }
     
@@ -868,6 +1304,39 @@ struct RegisterView: View {
         email.contains("@")
     }
     
+    private var passwordsMatch: Bool {
+        !password.isEmpty && !confirmPassword.isEmpty && password == confirmPassword
+    }
+    
+    private var passwordStrength: Int {
+        var strength = 0
+        if password.count >= 6 { strength += 1 }
+        if password.count >= 8 { strength += 1 }
+        if password.rangeOfCharacter(from: .decimalDigits) != nil &&
+           password.rangeOfCharacter(from: .letters) != nil {
+            strength += 1
+        }
+        return strength
+    }
+    
+    private var strengthColor: Color {
+        switch passwordStrength {
+        case 0, 1: return .red
+        case 2: return .orange
+        case 3: return .green
+        default: return .gray
+        }
+    }
+    
+    private var strengthText: String {
+        switch passwordStrength {
+        case 0, 1: return "Zayıf"
+        case 2: return "Orta"
+        case 3: return "Güçlü"
+        default: return ""
+        }
+    }
+    
     private func handleRegister() {
         guard isFormValid else { return }
         
@@ -878,8 +1347,10 @@ struct RegisterView: View {
                 try await authViewModel.register(name: name, email: email, password: password)
                 onRegisterSuccess()
             } catch {
-                showError = true
-                errorMessage = error.localizedDescription
+                withAnimation {
+                    showError = true
+                    errorMessage = error.localizedDescription
+                }
             }
         }
     }
@@ -891,126 +1362,354 @@ struct ForgotPasswordView: View {
     @State private var showSuccess = false
     @State private var showError = false
     @State private var errorMessage = ""
+    @State private var animateContent = false
     
     let onNavigateToLogin: () -> Void
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                // Header
-                VStack(spacing: 16) {
-                    Image(systemName: "key.fill")
-                        .font(.system(size: 80))
-                        .foregroundColor(.blue)
-                    
-                    Text("Şifremi Unuttum")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                    
-                    Text("E-posta adresinizi girin, size şifre sıfırlama bağlantısı gönderelim")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-                .padding(.top, 60)
-                .padding(.bottom, 40)
+            ZStack {
+                // Animated Background Gradient
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.9, green: 0.5, blue: 0.3),
+                        Color(red: 0.7, green: 0.4, blue: 0.9),
+                        Color(red: 0.5, green: 0.5, blue: 1.0)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                .opacity(0.15)
                 
-                if showSuccess {
-                    // Success State
-                    VStack(spacing: 24) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.green)
-                        
-                        Text("E-posta Gönderildi")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.primary)
-                        
-                        Text("E-posta adresinize şifre sıfırlama bağlantısı gönderildi. Lütfen e-postanızı kontrol edin.")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                        
-                        Button(action: onNavigateToLogin) {
-                            Text("Giriş Sayfasına Dön")
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                                .background(Color.blue)
-                                .cornerRadius(12)
-                        }
-                        .padding(.horizontal, 24)
-                    }
-                } else {
-                    // Form State
-                    VStack(spacing: 20) {
-                        // Email Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("E-posta")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.primary)
-                            
-                            TextField("ornek@email.com", text: $email)
-                                .textFieldStyle(CustomTextFieldStyle())
-                                .keyboardType(.emailAddress)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                        }
-                        
-                        // Error Message
-                        if showError {
-                            Text(errorMessage)
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .padding(.horizontal)
-                        }
-                        
-                        // Send Reset Button
-                        Button(action: handleForgotPassword) {
-                            HStack {
-                                if authViewModel.isLoading {
-                                    ProgressView()
-                                        .scaleEffect(0.8)
-                                        .foregroundColor(.white)
-                                } else {
-                                    Text("Sıfırlama Bağlantısı Gönder")
-                                        .fontWeight(.semibold)
+                // Floating circles
+                Circle()
+                    .fill(Color.orange.opacity(0.1))
+                    .frame(width: 260, height: 260)
+                    .offset(x: -130, y: -160)
+                    .blur(radius: 50)
+                
+                Circle()
+                    .fill(Color.purple.opacity(0.1))
+                    .frame(width: 210, height: 210)
+                    .offset(x: 130, y: 260)
+                    .blur(radius: 50)
+                
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        if showSuccess {
+                            // Success State with Modern Design
+                            VStack(spacing: 32) {
+                                Spacer()
+                                    .frame(height: 80)
+                                
+                                // Success Icon
+                                ZStack {
+                                    Circle()
+                                        .fill(
+                                            LinearGradient(
+                                                colors: [
+                                                    Color.green.opacity(0.2),
+                                                    Color.green.opacity(0.1)
+                                                ],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
+                                        .frame(width: 140, height: 140)
+                                        .blur(radius: 20)
+                                    
+                                    Circle()
+                                        .fill(Color(.systemBackground))
+                                        .frame(width: 120, height: 120)
+                                        .shadow(color: Color.green.opacity(0.3), radius: 30, x: 0, y: 15)
+                                    
+                                    Image(systemName: "envelope.badge.fill")
+                                        .font(.system(size: 50, weight: .medium))
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [Color.green, Color.blue],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
                                 }
+                                .scaleEffect(animateContent ? 1.0 : 0.5)
+                                .opacity(animateContent ? 1.0 : 0.0)
+                                
+                                VStack(spacing: 16) {
+                                    Text("E-posta Gönderildi")
+                                        .font(.system(size: 28, weight: .bold))
+                                        .foregroundColor(.primary)
+                                    
+                                    Text("E-posta adresinize şifre sıfırlama bağlantısı gönderildi. Lütfen gelen kutunuzu kontrol edin.")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .lineSpacing(6)
+                                        .padding(.horizontal, 32)
+                                }
+                                .opacity(animateContent ? 1.0 : 0.0)
+                                .offset(y: animateContent ? 0 : 20)
+                                
+                                VStack(spacing: 16) {
+                                    Button(action: onNavigateToLogin) {
+                                        HStack(spacing: 12) {
+                                            Text("Giriş Sayfasına Dön")
+                                                .fontWeight(.bold)
+                                                .font(.system(size: 17))
+                                            Image(systemName: "arrow.right")
+                                                .font(.system(size: 16, weight: .bold))
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 56)
+                                        .background(
+                                            LinearGradient(
+                                                colors: [Color.green, Color.blue],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                        .foregroundColor(.white)
+                                        .cornerRadius(16)
+                                        .shadow(color: Color.green.opacity(0.4), radius: 15, x: 0, y: 8)
+                                    }
+                                    
+                                    Text("E-posta gelmediyse spam klasörünü kontrol edin")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                }
+                                .padding(.horizontal, 32)
+                                .padding(.top, 16)
+                                .opacity(animateContent ? 1.0 : 0.0)
+                                .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.3), value: animateContent)
+                                
+                                Spacer()
                             }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(email.isEmpty ? Color.gray : Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                        }
-                        .disabled(authViewModel.isLoading || email.isEmpty)
-                        .opacity((authViewModel.isLoading || email.isEmpty) ? 0.6 : 1.0)
-                        .padding(.horizontal, 24)
-                        
-                        Spacer()
-                        
-                        // Back to Login
-                        Button(action: onNavigateToLogin) {
-                            HStack {
-                                Image(systemName: "arrow.left")
-                                Text("Giriş Sayfasına Dön")
+                        } else {
+                            // Form State with Modern Design
+                            VStack(spacing: 0) {
+                                // Modern Header
+                                VStack(spacing: 24) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [
+                                                        Color.orange.opacity(0.3),
+                                                        Color.purple.opacity(0.3)
+                                                    ],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
+                                            )
+                                            .frame(width: 120, height: 120)
+                                            .blur(radius: 20)
+                                        
+                                        Circle()
+                                            .fill(Color(.systemBackground).opacity(0.9))
+                                            .frame(width: 100, height: 100)
+                                            .shadow(color: Color.orange.opacity(0.3), radius: 20, x: 0, y: 10)
+                                        
+                                        Image(systemName: "lock.rotation")
+                                            .font(.system(size: 45, weight: .medium))
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    colors: [Color.orange, Color.purple],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
+                                            )
+                                    }
+                                    .scaleEffect(animateContent ? 1.0 : 0.8)
+                                    .opacity(animateContent ? 1.0 : 0.0)
+                                    
+                                    VStack(spacing: 12) {
+                                        Text("Şifrenizi mi Unuttunuz?")
+                                            .font(.system(size: 32, weight: .bold))
+                                            .foregroundColor(.primary)
+                                        
+                                        Text("E-posta adresinizi girin, size şifre sıfırlama bağlantısı gönderelim")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                            .multilineTextAlignment(.center)
+                                            .lineSpacing(4)
+                                            .padding(.horizontal, 16)
+                                    }
+                                    .opacity(animateContent ? 1.0 : 0.0)
+                                    .offset(y: animateContent ? 0 : 20)
+                                }
+                                .padding(.top, 60)
+                                .padding(.bottom, 40)
+                                
+                                // Modern Form Card
+                                VStack(spacing: 24) {
+                                    // Email Field
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        HStack {
+                                            Image(systemName: "envelope.fill")
+                                                .font(.system(size: 14))
+                                                .foregroundColor(.secondary)
+                                            Text("E-posta Adresi")
+                                                .font(.subheadline)
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(.primary)
+                                        }
+                                        
+                                        HStack(spacing: 12) {
+                                            Image(systemName: "at")
+                                                .foregroundColor(.secondary)
+                                                .frame(width: 20)
+                                            
+                                            TextField("ornek@email.com", text: $email)
+                                                .textFieldStyle(PlainTextFieldStyle())
+                                                .keyboardType(.emailAddress)
+                                                .autocapitalization(.none)
+                                                .disableAutocorrection(true)
+                                        }
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 16)
+                                                .fill(Color(.systemBackground))
+                                                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                                        )
+                                    }
+                                    .opacity(animateContent ? 1.0 : 0.0)
+                                    .offset(y: animateContent ? 0 : 20)
+                                    .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1), value: animateContent)
+                                    
+                                    // Error Message
+                                    if showError {
+                                        HStack(spacing: 12) {
+                                            Image(systemName: "exclamationmark.triangle.fill")
+                                                .foregroundColor(.red)
+                                            Text(errorMessage)
+                                                .font(.caption)
+                                                .foregroundColor(.red)
+                                            Spacer()
+                                        }
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(Color.red.opacity(0.1))
+                                        )
+                                        .transition(.scale.combined(with: .opacity))
+                                    }
+                                    
+                                    // Info Box
+                                    HStack(spacing: 12) {
+                                        Image(systemName: "info.circle.fill")
+                                            .foregroundColor(.blue)
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("Kayıtlı e-posta adresinizi kullanın")
+                                                .font(.caption)
+                                                .fontWeight(.medium)
+                                                .foregroundColor(.primary)
+                                            Text("Bağlantı 24 saat geçerli olacaktır")
+                                                .font(.caption2)
+                                                .foregroundColor(.secondary)
+                                        }
+                                        Spacer()
+                                    }
+                                    .padding()
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.blue.opacity(0.1))
+                                    )
+                                    .opacity(animateContent ? 1.0 : 0.0)
+                                    .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.2), value: animateContent)
+                                    
+                                    // Send Button
+                                    Button(action: handleForgotPassword) {
+                                        HStack(spacing: 12) {
+                                            if authViewModel.isLoading {
+                                                ProgressView()
+                                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                            } else {
+                                                Text("Sıfırlama Bağlantısı Gönder")
+                                                    .fontWeight(.bold)
+                                                    .font(.system(size: 17))
+                                                Image(systemName: "paperplane.fill")
+                                                    .font(.system(size: 16, weight: .bold))
+                                            }
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 56)
+                                        .background(
+                                            Group {
+                                                if authViewModel.isLoading || email.isEmpty {
+                                                    LinearGradient(
+                                                        colors: [Color.gray, Color.gray.opacity(0.8)],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                } else {
+                                                    LinearGradient(
+                                                        colors: [Color.orange, Color.purple],
+                                                        startPoint: .leading,
+                                                        endPoint: .trailing
+                                                    )
+                                                }
+                                            }
+                                        )
+                                        .foregroundColor(.white)
+                                        .cornerRadius(16)
+                                        .shadow(color: (authViewModel.isLoading || email.isEmpty) ? Color.clear : Color.orange.opacity(0.4), radius: 15, x: 0, y: 8)
+                                    }
+                                    .disabled(authViewModel.isLoading || email.isEmpty)
+                                    .scaleEffect(animateContent ? 1.0 : 0.9)
+                                    .opacity(animateContent ? 1.0 : 0.0)
+                                    .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.3), value: animateContent)
+                                }
+                                .padding(.horizontal, 32)
+                                .padding(.vertical, 32)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 30)
+                                        .fill(Color(.systemBackground).opacity(0.7))
+                                        .shadow(color: Color.black.opacity(0.1), radius: 30, x: 0, y: 15)
+                                )
+                                .padding(.horizontal, 24)
+                                
+                                // Back to Login Link
+                                Button(action: onNavigateToLogin) {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "arrow.left.circle.fill")
+                                            .font(.system(size: 20))
+                                        Text("Giriş Sayfasına Dön")
+                                            .fontWeight(.semibold)
+                                    }
+                                    .font(.subheadline)
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [Color.orange, Color.purple],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .padding(.vertical, 16)
+                                    .padding(.horizontal, 32)
+                                    .background(
+                                        Capsule()
+                                            .fill(Color(.systemBackground))
+                                            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                                    )
+                                }
+                                .padding(.top, 32)
+                                .opacity(animateContent ? 1.0 : 0.0)
+                                .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.4), value: animateContent)
+                                .padding(.bottom, 40)
                             }
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
                         }
-                        .padding(.bottom, 40)
                     }
-                    .padding(.horizontal, 24)
                 }
             }
-            .background(Color(.systemBackground))
             .navigationBarHidden(true)
+            .onAppear {
+                withAnimation {
+                    animateContent = true
+                }
+            }
         }
     }
     
@@ -1022,10 +1721,21 @@ struct ForgotPasswordView: View {
         Task {
             do {
                 try await authViewModel.sendPasswordReset(email: email)
-                showSuccess = true
+                withAnimation {
+                    showSuccess = true
+                    animateContent = false
+                }
+                // Re-animate for success state
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation {
+                        animateContent = true
+                    }
+                }
             } catch {
-                showError = true
-                errorMessage = error.localizedDescription
+                withAnimation {
+                    showError = true
+                    errorMessage = error.localizedDescription
+                }
             }
         }
     }
