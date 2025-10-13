@@ -47,6 +47,7 @@
 		90AB66F42E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F52E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift */; };
 		90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */; };
 		90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */; };
+		90B99D2C2E9D12B800EE7EC6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */; };
 		90F10A772E97E0800068F54E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 90F10A762E97E0800068F54E /* FirebaseAnalytics */; };
 		90F10A792E97E0800068F54E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 90F10A782E97E0800068F54E /* FirebaseAuth */; };
 		90F10A7B2E97E0800068F54E /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 90F10A7A2E97E0800068F54E /* FirebaseAuthCombine-Community */; };
@@ -98,6 +99,7 @@
 		90AB66F52E9599960063F8A7 /* AchievementEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
+		90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		90F10A7F2E97E8790068F54E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9B8BF21B3EEC7B6D4820D8C8 /* Pods-SpendCraftiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.debug.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -121,6 +123,7 @@
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
+				90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */,
 				900445862E9C6F68003DFAFC /* AccountInfoView.swift */,
 				900445842E9C6E88003DFAFC /* UserProfilingView.swift */,
 				908773A62E95857B00AB0783 /* CoreDataStack.swift */,
@@ -308,6 +311,7 @@
 				90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */,
 				90AB66DB2E95998B0063F8A7 /* CategoriesView.swift in Sources */,
 				90AB66DD2E95998B0063F8A7 /* SettingsView.swift in Sources */,
+				90B99D2C2E9D12B800EE7EC6 /* NotificationManager.swift in Sources */,
 				2152FB062600AC8F00CF470E /* ContentView.swift in Sources */,
 				90AB66D72E95998A0063F8A7 /* TransactionsTabView.swift in Sources */,
 				90AB66E82E9599930063F8A7 /* DailyEntryEntity+CoreDataClass.swift in Sources */,

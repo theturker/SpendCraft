@@ -15,6 +15,11 @@ struct SpendCraftiOSApp: App {
         
         // Register background tasks for recurring transactions
         RecurringAutomationManager.shared.registerBackgroundTasks()
+        
+        // Request notification authorization on first launch
+        Task {
+            _ = await NotificationManager.shared.requestAuthorization()
+        }
     }
 
     var body: some Scene {
@@ -24,6 +29,12 @@ struct SpendCraftiOSApp: App {
                 .onAppear {
                     // Schedule background task on app launch
                     RecurringAutomationManager.shared.scheduleBackgroundTask()
+                    
+                    // Schedule all notifications
+                    NotificationManager.shared.scheduleAllNotifications()
+                    
+                    // Clear app icon badge on app open
+                    NotificationManager.shared.clearBadge()
                 }
         }
     }

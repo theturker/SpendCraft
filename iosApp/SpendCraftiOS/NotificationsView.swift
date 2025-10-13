@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct NotificationsView: View {
-    @StateObject private var viewModel = NotificationsViewModel()
+    @EnvironmentObject var viewModel: NotificationsViewModel
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var notificationManager = NotificationManager.shared
     
     var unreadNotifications: [NotificationItem] {
         viewModel.notifications.filter { !$0.isRead }
@@ -55,6 +56,10 @@ struct NotificationsView: View {
                         }
                     }
                 }
+            }
+            .onAppear {
+                // Clear app icon badge when notifications view is opened
+                notificationManager.clearBadge()
             }
         }
     }

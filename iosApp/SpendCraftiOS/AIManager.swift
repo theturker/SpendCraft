@@ -42,6 +42,55 @@ class AIManager: ObservableObject {
     private let apiKey = "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" // Groq API key
     private let apiURL = "https://api.groq.com/openai/v1/chat/completions"
     
+    // MARK: - User Profiling Data
+    
+    private func getUserProfilingData() -> [String: String]? {
+        let isCompleted = UserDefaults.standard.bool(forKey: "userProfilingCompleted")
+        guard isCompleted else { return nil }
+        
+        var profileData: [String: String] = [:]
+        let keys = ["income_frequency", "spending_habit", "savings_goal", "biggest_expense", 
+                    "budget_management", "financial_goal", "debt_status"]
+        
+        for key in keys {
+            if let value = UserDefaults.standard.string(forKey: "profiling_\(key)") {
+                profileData[key] = value
+            }
+        }
+        
+        return profileData.isEmpty ? nil : profileData
+    }
+    
+    private func buildProfilingContext() -> String? {
+        guard let profileData = getUserProfilingData() else { return nil }
+        
+        var context = "\n\nKullanıcı Profili:"
+        
+        if let incomeFreq = profileData["income_frequency"] {
+            context += "\n- Gelir Sıklığı: \(incomeFreq)"
+        }
+        if let spendingHabit = profileData["spending_habit"] {
+            context += "\n- Harcama Alışkanlığı: \(spendingHabit)"
+        }
+        if let savingsGoal = profileData["savings_goal"] {
+            context += "\n- Tasarruf Hedefi: \(savingsGoal)"
+        }
+        if let biggestExpense = profileData["biggest_expense"] {
+            context += "\n- En Çok Harcama Yapılan Alan: \(biggestExpense)"
+        }
+        if let budgetMgmt = profileData["budget_management"] {
+            context += "\n- Bütçe Yönetimi Seviyesi: \(budgetMgmt)"
+        }
+        if let financialGoal = profileData["financial_goal"] {
+            context += "\n- Ana Finansal Hedef: \(financialGoal)"
+        }
+        if let debtStatus = profileData["debt_status"] {
+            context += "\n- Borç Durumu: \(debtStatus)"
+        }
+        
+        return context
+    }
+    
     // MARK: - Generate Advice
     
     func generateAdvice(
@@ -86,6 +135,7 @@ class AIManager: ObservableObject {
     ) -> String {
         let savings = income - expenses
         let categoryText = categoryBreakdown.map { "\($0.category): ₺\($0.amount)" }.joined(separator: ", ")
+        let profilingContext = buildProfilingContext() ?? ""
         
         switch type {
         case .spendingAnalysis:
@@ -97,13 +147,14 @@ class AIManager: ObservableObject {
             Tasarruf: ₺\(savings)
             
             Kategori Bazlı Harcamalar:
-            \(categoryText)
+            \(categoryText)\(profilingContext)
             
             Lütfen:
             1. En çok harcama yapılan kategorileri belirt
             2. Hangi kategorilerde dikkat edilmeli
             3. Harcama dengesi hakkında yorum yap
-            4. Kısa ve öz, madde madde yaz (maksimum 200 kelime)
+            4. Kullanıcı profili varsa ona göre özel öneriler ver
+            5. Kısa ve öz, madde madde yaz (maksimum 200 kelime)
             """
             
         case .budgetOptimization:
@@ -115,13 +166,14 @@ class AIManager: ObservableObject {
             Net Bakiye: ₺\(savings)
             
             Kategori Dağılımı:
-            \(categoryText)
+            \(categoryText)\(profilingContext)
             
             Lütfen:
             1. Gelir-gider dengesini değerlendir
             2. Hangi kategorilerde bütçe azaltılabilir
             3. Tasarruf hedefi öner
-            4. Uygulanabilir 3-4 öneri sun (maksimum 200 kelime)
+            4. Kullanıcının finansal hedef ve durumuna göre özelleştirilmiş öneriler ver
+            5. Uygulanabilir 3-4 öneri sun (maksimum 200 kelime)
             """
             
         case .savingsAdvice:
@@ -133,13 +185,14 @@ class AIManager: ObservableObject {
             Mevcut Tasarruf: ₺\(savings)
             
             Harcama Kategorileri:
-            \(categoryText)
+            \(categoryText)\(profilingContext)
             
             Lütfen:
             1. Kısa vadeli tasarruf teknikleri
             2. Günlük hayatta uygulanabilir öneriler
             3. Hangi kategorilerde kesinti yapılabilir
-            4. Madde madde, pratik öneriler (maksimum 200 kelime)
+            4. Kullanıcının tasarruf hedefi ve borç durumunu göz önünde bulundur
+            5. Madde madde, pratik öneriler (maksimum 200 kelime)
             """
         }
     }
