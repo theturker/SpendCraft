@@ -13,17 +13,19 @@ struct AddTransactionView: View {
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
     @EnvironmentObject var notificationsViewModel: NotificationsViewModel
     
-    let initialIsIncome: Bool?
+    let initialIsIncome: Bool
     
     @State private var amount: String = ""
     @State private var note: String = ""
     @State private var selectedCategory: CategoryEntity?
     @State private var selectedAccount: AccountEntity?
-    @State private var isIncome: Bool = false
+    @State private var isIncome: Bool
     @State private var date: Date = Date()
     
-    init(initialIsIncome: Bool? = nil) {
+    init(initialIsIncome: Bool) {
         self.initialIsIncome = initialIsIncome
+        // Set initial state immediately in init, don't wait for onAppear
+        _isIncome = State(initialValue: initialIsIncome)
     }
     
     var body: some View {
@@ -136,11 +138,6 @@ struct AddTransactionView: View {
             // Reload data to get fresh categories and accounts
             transactionsViewModel.loadCategories()
             transactionsViewModel.loadAccounts()
-            
-            // Set initial transaction type
-            if let initialType = initialIsIncome {
-                isIncome = initialType
-            }
             
             // Set default account
             if let defaultAccount = transactionsViewModel.accounts.first(where: { $0.isDefault }) {

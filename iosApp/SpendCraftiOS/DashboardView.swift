@@ -14,10 +14,28 @@ struct DashboardView: View {
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
     @EnvironmentObject var notificationsViewModel: NotificationsViewModel
     
-    @State private var showAddTransaction = false
-    @State private var initialTransactionType: Bool? = nil
+    @State private var transactionTypeToAdd: TransactionType? = nil
     @State private var showUserProfiling = false
     @AppStorage("userProfilingCompleted") private var profilingCompleted = false
+    
+    enum TransactionType: Identifiable {
+        case income
+        case expense
+        
+        var id: String {
+            switch self {
+            case .income: return "income"
+            case .expense: return "expense"
+            }
+        }
+        
+        var isIncome: Bool {
+            switch self {
+            case .income: return true
+            case .expense: return false
+            }
+        }
+    }
     
     var body: some View {
         ScrollView {
@@ -48,8 +66,7 @@ struct DashboardView: View {
                 // Quick Action Buttons
                 HStack(spacing: 16) {
                     Button {
-                        initialTransactionType = true // true = income
-                        showAddTransaction = true
+                        transactionTypeToAdd = .income
                     } label: {
                         HStack {
                             Image(systemName: "arrow.down.circle.fill")
@@ -64,8 +81,7 @@ struct DashboardView: View {
                     }
                     
                     Button {
-                        initialTransactionType = false // false = expense
-                        showAddTransaction = true
+                        transactionTypeToAdd = .expense
                     } label: {
                         HStack {
                             Image(systemName: "arrow.up.circle.fill")
@@ -232,7 +248,7 @@ struct DashboardView: View {
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(achievementsViewModel.achievements.prefix(5), id: \.id) { achievement in
+                            ForEach(achievementsViewModel.achievements.prefix(5), id: \.objectID) { achievement in
                                 AchievementCard(achievement: achievement)
                             }
                         }
@@ -240,6 +256,7 @@ struct DashboardView: View {
                     }
                 }
                 .padding(.vertical, 8)
+                .id(achievementsViewModel.achievements.map { "\($0.objectID)-\($0.progress)" }.joined())
                 
                 // Recent Transactions
                 VStack(alignment: .leading, spacing: 12) {
@@ -256,8 +273,23 @@ struct DashboardView: View {
         }
         .navigationTitle("Ana Sayfa")
         .navigationBarTitleDisplayMode(.large)
-        .sheet(isPresented: $showAddTransaction) {
-            AddTransactionView(initialIsIncome: initialTransactionType)
+        .sheet(item: $transactionTypeToAdd, onDismiss: {
+            // Small delay to ensure CoreData changes are committed
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                // Reload data when sheet is dismissed to reflect new transaction
+                transactionsViewModel.loadTransactions()
+                achievementsViewModel.loadAchievements()
+                
+                // Check achievements with updated transaction count
+                achievementsViewModel.checkAchievements(
+                    transactionCount: transactionsViewModel.transactions.count,
+                    totalSpent: transactionsViewModel.totalExpense,
+                    categories: transactionsViewModel.categories.count,
+                    notificationsViewModel: notificationsViewModel
+                )
+            }
+        }) { transactionType in
+            AddTransactionView(initialIsIncome: transactionType.isIncome)
                 .environmentObject(transactionsViewModel)
                 .environmentObject(achievementsViewModel)
                 .environmentObject(notificationsViewModel)
@@ -319,7 +351,7 @@ struct BudgetProgressRow: View {
 }
 
 struct AchievementCard: View {
-    let achievement: AchievementEntity
+    @ObservedObject var achievement: AchievementEntity
     @State private var showDetailSheet = false
     
     var body: some View {
@@ -360,6 +392,7 @@ struct AchievementCard: View {
                 .presentationDetents([.height(500), .large])
                 .presentationDragIndicator(.visible)
         }
+        .id(achievement.objectID) // Force SwiftUI to track changes by CoreData objectID
     }
 }
 

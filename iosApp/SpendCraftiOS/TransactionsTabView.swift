@@ -102,7 +102,7 @@ struct TransactionsTabView: View {
             }
         }
         .sheet(isPresented: $showAddTransaction) {
-            AddTransactionView()
+            AddTransactionView(initialIsIncome: false)
                 .environmentObject(transactionsViewModel)
                 .environmentObject(achievementsViewModel)
                 .environmentObject(notificationsViewModel)

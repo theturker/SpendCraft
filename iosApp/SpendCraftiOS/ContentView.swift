@@ -123,12 +123,19 @@ struct ContentView: View {
             }
         }
         .onChange(of: transactionsViewModel.transactions.count) { count in
-            // Update achievements when transactions change
-            achievementsViewModel.checkAchievements(
-                transactionCount: count,
-                totalSpent: transactionsViewModel.totalExpense,
-                categories: transactionsViewModel.categories.count
-            )
+            // Small delay to ensure all updates are processed
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                // Reload achievements data first to get fresh progress values
+                achievementsViewModel.loadAchievements()
+                
+                // Update achievements when transactions change
+                achievementsViewModel.checkAchievements(
+                    transactionCount: count,
+                    totalSpent: transactionsViewModel.totalExpense,
+                    categories: transactionsViewModel.categories.count,
+                    notificationsViewModel: notificationsViewModel
+                )
+            }
         }
     }
 

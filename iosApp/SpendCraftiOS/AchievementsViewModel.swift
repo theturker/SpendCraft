@@ -63,8 +63,11 @@ class AchievementsViewModel: ObservableObject {
     }
     
     func checkAchievements(transactionCount: Int, totalSpent: Double, categories: Int, notificationsViewModel: NotificationsViewModel? = nil) {
+        var hasChanges = false
+        
         for achievement in achievements where !achievement.isUnlocked {
             var shouldUnlock = false
+            let oldProgress = achievement.progress
             
             switch achievement.category {
             case "TRANSACTIONS":
@@ -83,18 +86,34 @@ class AchievementsViewModel: ObservableObject {
                 break
             }
             
+            // Check if progress changed
+            if oldProgress != achievement.progress {
+                hasChanges = true
+            }
+            
             if shouldUnlock {
                 unlockAchievement(achievement, notificationsViewModel: notificationsViewModel)
+                hasChanges = true
             }
         }
         
         CoreDataStack.shared.saveContext()
+        
+        // Force UI update by reloading achievements from CoreData
+        if hasChanges {
+            // Reload to ensure SwiftUI picks up the changes
+            loadAchievements()
+        }
     }
     
     func unlockAchievement(_ achievement: AchievementEntity, notificationsViewModel: NotificationsViewModel? = nil) {
         achievement.isUnlocked = true
         achievement.unlockedAt = Int64(Date().timeIntervalSince1970 * 1000)
+        achievement.progress = achievement.maxProgress // Set progress to max when unlocked
         CoreDataStack.shared.saveContext()
+        
+        // Reload to ensure SwiftUI picks up the changes
+        loadAchievements()
         
         // Send notification
         notificationsViewModel?.celebrateAchievement(
@@ -104,8 +123,15 @@ class AchievementsViewModel: ObservableObject {
     }
     
     func updateProgress(for category: String, progress: Int64) {
+        var hasChanges = false
+        
         for achievement in achievements where achievement.category == category && !achievement.isUnlocked {
+            let oldProgress = achievement.progress
             achievement.progress = progress
+            
+            if oldProgress != progress {
+                hasChanges = true
+            }
             
             if progress >= achievement.maxProgress {
                 unlockAchievement(achievement)
@@ -113,6 +139,11 @@ class AchievementsViewModel: ObservableObject {
         }
         
         CoreDataStack.shared.saveContext()
+        
+        // Force UI update by reloading achievements from CoreData
+        if hasChanges {
+            loadAchievements()
+        }
     }
     
     var totalPoints: Int64 {
