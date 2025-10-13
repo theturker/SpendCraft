@@ -4,6 +4,11 @@ use_frameworks!
 target 'SpendCraftiOS' do
   # Shared KMP Framework
   pod 'shared', :path => '../shared'
+  
+  # Firebase
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
 end
 
 post_install do |installer|
@@ -11,6 +16,9 @@ post_install do |installer|
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
       config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+      
+      # dSYM sorunu için
+      config.build_settings['DEBUG_INFORMATION_FORMAT'] = 'dwarf-with-dsym'
       
       # SQLite linking için - iOS'ta built-in SQLite3 kullan
       if target.name == 'shared'
