@@ -7,9 +7,11 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import GoogleMobileAds
 
 struct ExportView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
+    @StateObject private var adsManager = AdsManager.shared
     @Environment(\.dismiss) private var dismiss
     
     @State private var showShareSheet = false
@@ -233,6 +235,12 @@ struct ExportView: View {
             } message: {
                 Text(alertMessage)
             }
+            .onAppear {
+                // Ekran geçişinin tamamen bitmesini bekle (daha uzun süre)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    showInterstitialAd()
+                }
+            }
         }
     }
     
@@ -299,6 +307,50 @@ struct ExportView: View {
         case .failure(let error):
             alertMessage = "❌ Dosya seçimi başarısız: \(error.localizedDescription)"
             showAlert = true
+        }
+    }
+    
+    // MARK: - Interstitial Ad
+    
+    private func showInterstitialAd() {
+        print("🎯 Export View - Attempting to show interstitial ad...")
+        
+        // Premium kullanıcılar için reklam gösterme
+        guard adsManager.shouldShowAds() else {
+            print("⚠️ Export View - User is premium, skipping ad")
+            return
+        }
+        
+        // Farklı view controller bulma yöntemleri dene
+        var targetViewController: UIViewController?
+        
+        // Yöntem 1: Window scene'den root view controller
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = windowScene.windows.first?.rootViewController {
+            targetViewController = rootViewController
+            print("✅ Export View - Found root view controller via window scene")
+        }
+        
+        // Yöntem 2: Key window'dan root view controller
+        if targetViewController == nil,
+           let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }),
+           let rootViewController = keyWindow.rootViewController {
+            targetViewController = rootViewController
+            print("✅ Export View - Found root view controller via key window")
+        }
+        
+        guard let viewController = targetViewController else {
+            print("❌ Export View - Could not find any root view controller")
+            return
+        }
+        
+        // UI transition'ın tamamlanmasını bekle
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            print("🚀 Export View - Showing interstitial ad now...")
+            self.adsManager.showInterstitialAd(from: viewController) {
+                // Reklam kapandıktan sonra yeni reklam yükle
+                print("✅ Export View - Interstitial ad closed, loading new ad")
+            }
         }
     }
 }

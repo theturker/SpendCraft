@@ -24,19 +24,16 @@ class AdsManager: NSObject, ObservableObject {
         // Production IDs - Gerçek AdMob hesabınızdan alınacak
         // Release build'de bu ID'ler kullanılmalı
         #if DEBUG
-        static let banner = bannerTest
-        static let interstitial = interstitialTest
+        // DEBUG modda TEST reklamlarını kullan (gerçek reklamlar hazır olana kadar)
+        // AdMob'da reklam birimleri aktif olunca gerçek ID'leri kullanın
+        static let banner = bannerTest  // Geçici olarak test ID
+        static let interstitial = interstitialTest  // Geçici olarak test ID
         static let rewarded = rewardedTest
         #else
-        // TODO: Production ID'lerinizi Google AdMob Console'dan alıp buraya ekleyin
-        // Şimdilik test ID'lerini kullan (production'da mutlaka değiştirin!)
-        static let banner = bannerTest
-        static let interstitial = interstitialTest
-        static let rewarded = rewardedTest
-        // Production'da bu satırları uncomment edip gerçek ID'leri ekleyin:
-        // static let banner = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
-        // static let interstitial = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
-        // static let rewarded = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+        // Production IDs - Gerçek AdMob hesabından alınan ID'ler
+        static let banner = "ca-app-pub-3199248450820147/4629737731"
+        static let interstitial = "ca-app-pub-3199248450820147/4092156468"
+        static let rewarded = rewardedTest // Henüz rewarded ad oluşturulmadı, test ID kullanılıyor
         #endif
     }
     
@@ -81,33 +78,45 @@ class AdsManager: NSObject, ObservableObject {
     
     /// Interstitial reklam yükle
     func loadInterstitialAd() {
-        guard !isPremium else { return }
+        guard !isPremium else {
+            print("⚠️ Interstitial ad not loaded - User is premium")
+            return
+        }
+        
+        print("🔄 Loading interstitial ad with ID: \(AdUnitIDs.interstitial)")
         
         InterstitialAd.load(
             with: AdUnitIDs.interstitial,
             request: Request()
         ) { [weak self] ad, error in
             if let error = error {
-                print("Failed to load interstitial ad: \(error.localizedDescription)")
+                print("❌ Failed to load interstitial ad: \(error.localizedDescription)")
                 self?.interstitialAd = nil
                 return
             }
             
             self?.interstitialAd = ad
             self?.interstitialAd?.fullScreenContentDelegate = self
-            print("Interstitial ad loaded successfully")
+            print("✅ Interstitial ad loaded successfully!")
         }
     }
     
     /// Interstitial reklam göster
     func showInterstitialAd(from viewController: UIViewController?, onAdClosed: @escaping () -> Void = {}) {
+        showInterstitialAd(from: viewController, retryCount: 0, onAdClosed: onAdClosed)
+    }
+    
+    private func showInterstitialAd(from viewController: UIViewController?, retryCount: Int, onAdClosed: @escaping () -> Void = {}) {
+        let maxRetries = 3 // Maksimum 3 kez dene
+        
         guard !isPremium else {
+            print("⚠️ Interstitial ad not shown - User is premium")
             onAdClosed()
             return
         }
         
         guard let interstitialAd = interstitialAd else {
-            print("Interstitial ad not ready")
+            print("⚠️ Interstitial ad not ready - Loading new ad...")
             onAdClosed()
             // Tekrar yükle
             loadInterstitialAd()
@@ -115,8 +124,28 @@ class AdsManager: NSObject, ObservableObject {
         }
         
         if let viewController = viewController {
+            // View controller'ın meşgul olup olmadığını kontrol et
+            if viewController.presentedViewController != nil {
+                if retryCount < maxRetries {
+                    print("⚠️ View controller is busy presenting another view controller (attempt \(retryCount + 1)/\(maxRetries))")
+                    print("🔄 Retrying in 2 seconds...")
+                    
+                    // 2 saniye sonra tekrar dene
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        self.showInterstitialAd(from: viewController, retryCount: retryCount + 1, onAdClosed: onAdClosed)
+                    }
+                    return
+                } else {
+                    print("❌ Max retries reached. View controller is still busy. Skipping interstitial ad.")
+                    onAdClosed()
+                    return
+                }
+            }
+            
+            print("🎬 Presenting interstitial ad...")
             interstitialAd.present(from: viewController)
         } else {
+            print("❌ No view controller to present interstitial ad")
             onAdClosed()
         }
     }

@@ -23,6 +23,12 @@ struct SpendCraftiOSApp: App {
         Task {
             _ = await NotificationManager.shared.requestAuthorization()
         }
+        
+        // Preload interstitial ads for better UX (hemen yükle)
+        DispatchQueue.main.async {
+            print("📱 App started - Preloading interstitial ads...")
+            AdsManager.shared.loadInterstitialAd()
+        }
     }
 
     var body: some Scene {
@@ -38,6 +44,9 @@ struct SpendCraftiOSApp: App {
                     
                     // Clear app icon badge on app open
                     NotificationManager.shared.clearBadge()
+                    
+                    // Preload interstitial ad if needed
+                    AdsManager.shared.loadInterstitialAd()
                 }
         }
     }

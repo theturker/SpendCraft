@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import GoogleMobileAds
 
 struct AISuggestionsView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
     @StateObject private var aiManager = AIManager()
+    @StateObject private var adsManager = AdsManager.shared
     @Environment(\.dismiss) private var dismiss
     
     @State private var selectedType: AdviceType?
@@ -288,6 +290,11 @@ struct AISuggestionsView: View {
             .onAppear {
                 updateRemainingTime()
                 startTimer()
+                
+                // Ekran geçişinin tamamen bitmesini bekle (daha uzun süre)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    showInterstitialAd()
+                }
             }
             .onDisappear {
                 stopTimer()
@@ -367,6 +374,50 @@ struct AISuggestionsView: View {
         // Timer'ı başlat
         updateRemainingTime()
         startTimer()
+    }
+    
+    // MARK: - Interstitial Ad
+    
+    private func showInterstitialAd() {
+        print("🎯 AI Suggestions View - Attempting to show interstitial ad...")
+        
+        // Premium kullanıcılar için reklam gösterme
+        guard adsManager.shouldShowAds() else {
+            print("⚠️ AI Suggestions - User is premium, skipping ad")
+            return
+        }
+        
+        // Farklı view controller bulma yöntemleri dene
+        var targetViewController: UIViewController?
+        
+        // Yöntem 1: Window scene'den root view controller
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = windowScene.windows.first?.rootViewController {
+            targetViewController = rootViewController
+            print("✅ AI Suggestions - Found root view controller via window scene")
+        }
+        
+        // Yöntem 2: Key window'dan root view controller
+        if targetViewController == nil,
+           let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }),
+           let rootViewController = keyWindow.rootViewController {
+            targetViewController = rootViewController
+            print("✅ AI Suggestions - Found root view controller via key window")
+        }
+        
+        guard let viewController = targetViewController else {
+            print("❌ AI Suggestions - Could not find any root view controller")
+            return
+        }
+        
+        // UI transition'ın tamamlanmasını bekle
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            print("🚀 AI Suggestions - Showing interstitial ad now...")
+            self.adsManager.showInterstitialAd(from: viewController) {
+                // Reklam kapandıktan sonra yeni reklam yükle
+                print("✅ AI Suggestions - Interstitial ad closed, loading new ad")
+            }
+        }
     }
 }
 

@@ -48,7 +48,7 @@
 	<key>NSUserTrackingUsageDescription</key>
 	<string>Daha alakalı reklamlar göstermek ve uygulama deneyiminizi iyileştirmek için verilerinizi kullanmak istiyoruz.</string>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-3199248450820147~6334294542</string>
 	<key>GADIsAdManagerApp</key>
 	<true/>
 	<key>SKAdNetworkItems</key>
@@ -244,6 +244,42 @@
 		<dict>
 			<key>SKAdNetworkIdentifier</key>
 			<string>3qcr597p9d.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>5l3tpt7t6e.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>u679fj5vs4.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>zmvfpc5aq8.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>pu4na253f3.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>24t9a8vw3c.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>32z4fx6l9h.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>lr83yxwka7.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>mtkv5xtk9e.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>qqp299437r.skadnetwork</string>
 		</dict>
 	</array>
 	<key>UIApplicationSceneManifest</key>
