@@ -198,8 +198,12 @@ struct NotificationTemplateRow: View {
                             .fontWeight(.semibold)
                             .foregroundColor(.blue)
                         
-                        if let days = template.daysOfWeek {
-                            Text("• \(daysText(days))")
+                        if let monthDays = template.daysOfMonth {
+                            Text("• Ayın \(monthDaysText(monthDays))")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        } else if let weekDays = template.daysOfWeek {
+                            Text("• \(daysText(weekDays))")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         } else {
@@ -223,6 +227,14 @@ struct NotificationTemplateRow: View {
     private func daysText(_ days: [Int]) -> String {
         let dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"]
         return days.map { dayNames[$0 - 1] }.joined(separator: ", ")
+    }
+    
+    private func monthDaysText(_ days: [Int]) -> String {
+        if days.count > 4 {
+            return "\(days.first ?? 1)-\(days.last ?? 1). günleri"
+        } else {
+            return days.map { "\($0)." }.joined(separator: ", ") + " günleri"
+        }
     }
 }
 
@@ -289,12 +301,14 @@ struct EditTemplateView: View {
     @State private var hour: Int
     @State private var minute: Int
     @State private var isEnabled: Bool
+    @State private var selectedMonthDays: Set<Int>
     
     init(template: NotificationTemplate) {
         self.template = template
         _hour = State(initialValue: template.hour)
         _minute = State(initialValue: template.minute)
         _isEnabled = State(initialValue: template.isEnabled)
+        _selectedMonthDays = State(initialValue: Set(template.daysOfMonth ?? []))
     }
     
     var body: some View {
@@ -338,11 +352,62 @@ struct EditTemplateView: View {
                         .frame(width: 70, height: 100)
                     }
                     
-                    if let days = template.daysOfWeek {
+                    // Aylık bildirimler için gün seçimi
+                    if template.daysOfMonth != nil {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Ayın Hangi Günlerinde?")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            // Hızlı seçimler
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    QuickSelectButton(title: "1-5", days: Set(1...5), selection: $selectedMonthDays)
+                                    QuickSelectButton(title: "5-15", days: Set(5...15), selection: $selectedMonthDays)
+                                    QuickSelectButton(title: "15-20", days: Set(15...20), selection: $selectedMonthDays)
+                                    QuickSelectButton(title: "20-31", days: Set(20...31), selection: $selectedMonthDays)
+                                    QuickSelectButton(title: "25-30", days: Set(25...30), selection: $selectedMonthDays)
+                                    Button {
+                                        selectedMonthDays = Set(1...31)
+                                    } label: {
+                                        Text("Her Gün")
+                                            .font(.caption)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 6)
+                                            .background(selectedMonthDays.count == 31 ? Color.blue : Color.gray.opacity(0.2))
+                                            .foregroundColor(selectedMonthDays.count == 31 ? .white : .primary)
+                                            .cornerRadius(8)
+                                    }
+                                }
+                            }
+                            
+                            // Gün seçiciler
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 8) {
+                                ForEach(1...31, id: \.self) { day in
+                                    Button {
+                                        if selectedMonthDays.contains(day) {
+                                            selectedMonthDays.remove(day)
+                                        } else {
+                                            selectedMonthDays.insert(day)
+                                        }
+                                    } label: {
+                                        Text("\(day)")
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
+                                            .frame(width: 36, height: 36)
+                                            .background(selectedMonthDays.contains(day) ? Color.blue : Color.gray.opacity(0.2))
+                                            .foregroundColor(selectedMonthDays.contains(day) ? .white : .primary)
+                                            .cornerRadius(8)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    } else if let weekDays = template.daysOfWeek {
                         HStack {
-                            Text("Günler")
+                            Text("Haftanın Günleri")
                             Spacer()
-                            Text(daysText(days))
+                            Text(daysText(weekDays))
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -376,6 +441,11 @@ struct EditTemplateView: View {
         updatedTemplate.minute = minute
         updatedTemplate.isEnabled = isEnabled
         
+        // Eğer template aylık ise, günleri güncelle
+        if template.daysOfMonth != nil {
+            updatedTemplate.daysOfMonth = selectedMonthDays.isEmpty ? nil : Array(selectedMonthDays).sorted()
+        }
+        
         notificationManager.updateTemplate(updatedTemplate)
         dismiss()
     }
@@ -383,6 +453,14 @@ struct EditTemplateView: View {
     private func daysText(_ days: [Int]) -> String {
         let dayNames = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
         return days.map { dayNames[$0 - 1] }.joined(separator: ", ")
+    }
+    
+    private func monthDaysText(_ days: [Int]) -> String {
+        if days.count > 4 {
+            return "\(days.first ?? 1)-\(days.last ?? 1). günleri"
+        } else {
+            return days.map { "\($0)." }.joined(separator: ", ") + " günleri"
+        }
     }
 }
 
@@ -637,3 +715,24 @@ struct EditCustomNotificationView: View {
     }
 }
 
+// MARK: - Helper Components
+
+struct QuickSelectButton: View {
+    let title: String
+    let days: Set<Int>
+    @Binding var selection: Set<Int>
+    
+    var body: some View {
+        Button {
+            selection = days
+        } label: {
+            Text(title)
+                .font(.caption)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(selection == days ? Color.blue : Color.gray.opacity(0.2))
+                .foregroundColor(selection == days ? .white : .primary)
+                .cornerRadius(8)
+        }
+    }
+}

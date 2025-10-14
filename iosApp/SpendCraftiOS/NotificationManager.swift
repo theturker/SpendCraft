@@ -20,36 +20,37 @@ struct NotificationTemplate: Identifiable, Codable {
     var hour: Int
     var minute: Int
     var isEnabled: Bool
-    var daysOfWeek: [Int]? // nil = her gün, [1,2,3...] = belirli günler
+    var daysOfWeek: [Int]? // nil = her gün, [1-7] = haftanın günleri (1=Pazar)
+    var daysOfMonth: [Int]? // nil = her gün, [1-31] = ayın günleri
     
     static let templates: [NotificationTemplate] = [
         // Sabah Motivasyonu
-        NotificationTemplate(id: "morning_1", title: "Günaydın! ☀️", body: "Yeni bir gün, yeni bir başlangıç! Harcamalarınızı takip etmeye hazır mısınız?", icon: "sun.max.fill", category: "Sabah", hour: 8, minute: 0, isEnabled: true, daysOfWeek: nil),
-        NotificationTemplate(id: "morning_2", title: "Kahve Molası ☕️", body: "Kahvenizi içerken bugünkü bütçenizi kontrol edin!", icon: "cup.and.saucer.fill", category: "Sabah", hour: 9, minute: 30, isEnabled: false, daysOfWeek: nil),
+        NotificationTemplate(id: "morning_1", title: "Günaydın! ☀️", body: "Yeni bir gün, yeni bir başlangıç! Harcamalarınızı takip etmeye hazır mısınız?", icon: "sun.max.fill", category: "Sabah", hour: 8, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "morning_2", title: "Kahve Molası ☕️", body: "Kahvenizi içerken bugünkü bütçenizi kontrol edin!", icon: "cup.and.saucer.fill", category: "Sabah", hour: 9, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
         // Öğlen Hatırlatmaları
-        NotificationTemplate(id: "noon_1", title: "Öğle Arası 🍽️", body: "Yemek harcamanızı kaydetmeyi unutmayın!", icon: "fork.knife", category: "Öğlen", hour: 12, minute: 30, isEnabled: true, daysOfWeek: nil),
-        NotificationTemplate(id: "noon_2", title: "Harcama Kontrolü 💰", body: "Bugüne kadar ne kadar harcadınız? Kontrol edin!", icon: "chart.bar.fill", category: "Öğlen", hour: 14, minute: 0, isEnabled: false, daysOfWeek: nil),
+        NotificationTemplate(id: "noon_1", title: "Öğle Arası 🍽️", body: "Yemek harcamanızı kaydetmeyi unutmayın!", icon: "fork.knife", category: "Öğlen", hour: 12, minute: 30, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "noon_2", title: "Harcama Kontrolü 💰", body: "Bugüne kadar ne kadar harcadınız? Kontrol edin!", icon: "chart.bar.fill", category: "Öğlen", hour: 14, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
         // Akşam Özetleri
-        NotificationTemplate(id: "evening_1", title: "Günün Özeti 🌙", body: "Bugünkü harcamalarınızı gözden geçirme zamanı!", icon: "moon.stars.fill", category: "Akşam", hour: 20, minute: 0, isEnabled: true, daysOfWeek: nil),
-        NotificationTemplate(id: "evening_2", title: "Günlük Hedef 🎯", body: "Bugünkü bütçe hedefinize ulaştınız mı?", icon: "target", category: "Akşam", hour: 21, minute: 0, isEnabled: false, daysOfWeek: nil),
+        NotificationTemplate(id: "evening_1", title: "Günün Özeti 🌙", body: "Bugünkü harcamalarınızı gözden geçirme zamanı!", icon: "moon.stars.fill", category: "Akşam", hour: 20, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "evening_2", title: "Günlük Hedef 🎯", body: "Bugünkü bütçe hedefinize ulaştınız mı?", icon: "target", category: "Akşam", hour: 21, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
         // Haftalık Özetler
-        NotificationTemplate(id: "weekly_1", title: "Haftalık Rapor 📊", body: "Bu haftaki harcamalarınızı inceleyin!", icon: "calendar", category: "Haftalık", hour: 10, minute: 0, isEnabled: false, daysOfWeek: [1]), // Pazartesi
-        NotificationTemplate(id: "weekly_2", title: "Hafta Sonu Planı 🎉", body: "Hafta sonu harcamalarınızı planlayın!", icon: "party.popper.fill", category: "Haftalık", hour: 18, minute: 0, isEnabled: false, daysOfWeek: [6]), // Cumartesi
+        NotificationTemplate(id: "weekly_1", title: "Haftalık Rapor 📊", body: "Bu haftaki harcamalarınızı inceleyin!", icon: "calendar", category: "Haftalık", hour: 10, minute: 0, isEnabled: false, daysOfWeek: [1], daysOfMonth: nil), // Pazartesi
+        NotificationTemplate(id: "weekly_2", title: "Hafta Sonu Planı 🎉", body: "Hafta sonu harcamalarınızı planlayın!", icon: "party.popper.fill", category: "Haftalık", hour: 18, minute: 0, isEnabled: false, daysOfWeek: [6], daysOfMonth: nil), // Cumartesi
         
         // Aylık Hatırlatmalar
-        NotificationTemplate(id: "monthly_1", title: "Maaş Günü 💸", body: "Gelirinizi kaydetmeyi unutmayın!", icon: "banknote.fill", category: "Aylık", hour: 10, minute: 0, isEnabled: true, daysOfWeek: nil),
-        NotificationTemplate(id: "monthly_2", title: "Fatura Ödemeleri 🧾", body: "Ay sonuna yaklaştık, faturalarınızı kontrol edin!", icon: "doc.text.fill", category: "Aylık", hour: 19, minute: 0, isEnabled: false, daysOfWeek: nil),
+        NotificationTemplate(id: "monthly_1", title: "Maaş Günü 💸", body: "Gelirinizi kaydetmeyi unutmayın!", icon: "banknote.fill", category: "Aylık", hour: 10, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: [1, 2, 3, 4, 5]),
+        NotificationTemplate(id: "monthly_2", title: "Fatura Ödemeleri 🧾", body: "Ay sonuna yaklaştık, faturalarınızı kontrol edin!", icon: "doc.text.fill", category: "Aylık", hour: 19, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: [25, 26, 27, 28, 29, 30]),
         
         // Motivasyon
-        NotificationTemplate(id: "motivation_1", title: "Tasarruf Hedefi 🎯", body: "Küçük tasarruflar büyük sonuçlar doğurur! Devam edin!", icon: "star.fill", category: "Motivasyon", hour: 16, minute: 0, isEnabled: false, daysOfWeek: nil),
-        NotificationTemplate(id: "motivation_2", title: "Finansal Özgürlük 🚀", body: "Her kaydettiğiniz işlem sizi hedefinize bir adım yaklaştırıyor!", icon: "rocket.fill", category: "Motivasyon", hour: 15, minute: 30, isEnabled: false, daysOfWeek: nil),
+        NotificationTemplate(id: "motivation_1", title: "Tasarruf Hedefi 🎯", body: "Küçük tasarruflar büyük sonuçlar doğurur! Devam edin!", icon: "star.fill", category: "Motivasyon", hour: 16, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "motivation_2", title: "Finansal Özgürlük 🚀", body: "Her kaydettiğiniz işlem sizi hedefinize bir adım yaklaştırıyor!", icon: "rocket.fill", category: "Motivasyon", hour: 15, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
         // Özel Günler
-        NotificationTemplate(id: "weekend_1", title: "Hafta Sonu Başladı! 🎊", body: "Hafta sonu harcamalarınızı takip etmeyi unutmayın!", icon: "gift.fill", category: "Özel", hour: 11, minute: 0, isEnabled: false, daysOfWeek: [6, 7]),
-        NotificationTemplate(id: "weekend_2", title: "Pazar Günü 🏡", body: "Haftayı değerlendirin ve yeni haftayı planlayın!", icon: "house.fill", category: "Özel", hour: 19, minute: 0, isEnabled: false, daysOfWeek: [7])
+        NotificationTemplate(id: "weekend_1", title: "Hafta Sonu Başladı! 🎊", body: "Hafta sonu harcamalarınızı takip etmeyi unutmayın!", icon: "gift.fill", category: "Özel", hour: 11, minute: 0, isEnabled: false, daysOfWeek: [6, 7], daysOfMonth: nil),
+        NotificationTemplate(id: "weekend_2", title: "Pazar Günü 🏡", body: "Haftayı değerlendirin ve yeni haftayı planlayın!", icon: "house.fill", category: "Özel", hour: 19, minute: 0, isEnabled: false, daysOfWeek: [7], daysOfMonth: nil)
     ]
 }
 
@@ -191,7 +192,8 @@ class NotificationManager: ObservableObject {
                 body: template.body,
                 hour: template.hour,
                 minute: template.minute,
-                daysOfWeek: template.daysOfWeek
+                daysOfWeek: template.daysOfWeek,
+                daysOfMonth: template.daysOfMonth
             )
         }
         
@@ -203,21 +205,43 @@ class NotificationManager: ObservableObject {
                 body: notification.body,
                 hour: notification.hour,
                 minute: notification.minute,
-                daysOfWeek: notification.daysOfWeek
+                daysOfWeek: notification.daysOfWeek,
+                daysOfMonth: nil
             )
         }
     }
     
-    private func scheduleNotification(id: String, title: String, body: String, hour: Int, minute: Int, daysOfWeek: [Int]?) {
+    private func scheduleNotification(id: String, title: String, body: String, hour: Int, minute: Int, daysOfWeek: [Int]?, daysOfMonth: [Int]?) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = .default
         content.badge = 1
         
-        if let days = daysOfWeek {
+        if let monthDays = daysOfMonth {
+            // Specific days of month (e.g., 1-5 for salary, 25-30 for bills)
+            for day in monthDays {
+                var dateComponents = DateComponents()
+                dateComponents.day = day
+                dateComponents.hour = hour
+                dateComponents.minute = minute
+                
+                let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+                let request = UNNotificationRequest(
+                    identifier: "\(id)_monthDay_\(day)",
+                    content: content,
+                    trigger: trigger
+                )
+                
+                UNUserNotificationCenter.current().add(request) { error in
+                    if let error = error {
+                        print("Error scheduling notification \(id) for month day \(day): \(error)")
+                    }
+                }
+            }
+        } else if let weekDays = daysOfWeek {
             // Specific days of week
-            for day in days {
+            for day in weekDays {
                 var dateComponents = DateComponents()
                 dateComponents.weekday = day
                 dateComponents.hour = hour
@@ -225,14 +249,14 @@ class NotificationManager: ObservableObject {
                 
                 let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
                 let request = UNNotificationRequest(
-                    identifier: "\(id)_day_\(day)",
+                    identifier: "\(id)_weekDay_\(day)",
                     content: content,
                     trigger: trigger
                 )
                 
                 UNUserNotificationCenter.current().add(request) { error in
                     if let error = error {
-                        print("Error scheduling notification \(id) for day \(day): \(error)")
+                        print("Error scheduling notification \(id) for week day \(day): \(error)")
                     }
                 }
             }
