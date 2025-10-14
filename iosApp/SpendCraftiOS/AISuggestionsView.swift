@@ -239,14 +239,14 @@ struct AISuggestionsView: View {
                             HStack(spacing: 12) {
                                 FinancialStatCard(
                                     title: "Gelir",
-                                    value: "₺\(String(format: "%.0f", transactionsViewModel.totalIncome))",
+                                    value: formatCurrency(transactionsViewModel.totalIncome),
                                     icon: "arrow.down.circle.fill",
                                     color: .green
                                 )
                                 
                                 FinancialStatCard(
                                     title: "Gider",
-                                    value: "₺\(String(format: "%.0f", transactionsViewModel.totalExpense))",
+                                    value: formatCurrency(transactionsViewModel.totalExpense),
                                     icon: "arrow.up.circle.fill",
                                     color: .red
                                 )
@@ -256,7 +256,7 @@ struct AISuggestionsView: View {
                             HStack(spacing: 12) {
                                 FinancialStatCard(
                                     title: "Bakiye",
-                                    value: "₺\(String(format: "%.0f", transactionsViewModel.currentBalance))",
+                                    value: formatCurrency(transactionsViewModel.currentBalance),
                                     icon: "banknote.fill",
                                     color: .blue
                                 )

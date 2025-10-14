@@ -55,16 +55,19 @@ class TransactionsViewModel: ObservableObject {
         let fetchRequest: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest() as! NSFetchRequest<CategoryEntity>
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \CategoryEntity.name, ascending: true)]
         
+        // Refresh context to get latest data
+        context.refreshAllObjects()
+        
         do {
             categories = try context.fetch(fetchRequest)
             
             // Debug: Kategorileri ve type'larını yazdır
             print("📂 Loaded \(categories.count) categories:")
             for cat in categories {
-                print("  - \(cat.name): type=\(cat.type ?? "nil")")
+                print("  - \(cat.name ?? "?"): type=\(cat.type ?? "nil")")
             }
         } catch {
-            print("Error fetching categories: \(error)")
+            print("❌ Error fetching categories: \(error)")
         }
     }
     
@@ -74,6 +77,8 @@ class TransactionsViewModel: ObservableObject {
         category.name = name
         category.icon = icon
         category.type = type
+        
+        print("➕ Adding category: \(name), type: \(type)")
         
         // Convert SwiftUI Color to hex string for storage
         let uiColor = UIColor(color)
@@ -89,6 +94,38 @@ class TransactionsViewModel: ObservableObject {
                               Int(blue * 255))
         category.color = hexString
         
+        // CRITICAL: Save to disk immediately
+        do {
+            // First save the main context
+            try context.save()
+            print("✅ Category saved to main context")
+            
+            // Then save the persistent container to ensure it's written to disk
+            if context.hasChanges {
+                try context.save()
+            }
+            
+            // Force the persistent store coordinator to save
+            CoreDataStack.shared.saveContext()
+            print("✅ Category persisted to disk")
+        } catch {
+            print("❌ Error saving category: \(error.localizedDescription)")
+            print("❌ Full error: \(error)")
+        }
+        
+        // Reload categories and force UI update
+        loadCategories()
+        objectWillChange.send()
+        
+        print("✅ Category saved. Total categories: \(categories.count)")
+        print("📂 Categories by type:")
+        for cat in categories {
+            print("  - \(cat.name ?? "?"): \(cat.type ?? "no-type")")
+        }
+    }
+    
+    func deleteCategory(_ category: CategoryEntity) {
+        context.delete(category)
         CoreDataStack.shared.saveContext()
         loadCategories()
     }
@@ -105,6 +142,10 @@ class TransactionsViewModel: ObservableObject {
         }
         
         print("🔍 Filtering categories for \(type): found \(filtered.count) out of \(categories.count)")
+        print("🔍 Filtered categories:")
+        for cat in filtered {
+            print("  - \(cat.name ?? "?"): \(cat.type ?? "no-type")")
+        }
         return filtered
     }
     

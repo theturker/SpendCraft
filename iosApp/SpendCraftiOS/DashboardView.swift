@@ -13,6 +13,7 @@ struct DashboardView: View {
     @EnvironmentObject var budgetViewModel: BudgetViewModel
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
     @EnvironmentObject var notificationsViewModel: NotificationsViewModel
+    @EnvironmentObject var recurringViewModel: RecurringViewModel
     
     @State private var transactionTypeToAdd: TransactionType? = nil
     @State private var showUserProfiling = false
@@ -297,9 +298,11 @@ struct DashboardView: View {
             }
         }) { transactionType in
             AddTransactionView(initialIsIncome: transactionType.isIncome)
+                .id(transactionType.id) // Force new view instance for each type
                 .environmentObject(transactionsViewModel)
                 .environmentObject(achievementsViewModel)
                 .environmentObject(notificationsViewModel)
+                .environmentObject(recurringViewModel)
         }
         .sheet(isPresented: $showUserProfiling) {
             UserProfilingView()

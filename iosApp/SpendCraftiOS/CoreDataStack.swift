@@ -14,8 +14,10 @@ class CoreDataStack: ObservableObject {
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
+            print("💾 CoreData store loaded: \(storeDescription.url?.path ?? "unknown")")
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return container
     }()
 
@@ -24,10 +26,17 @@ class CoreDataStack: ObservableObject {
         if context.hasChanges {
             do {
                 try context.save()
+                print("💾 CoreDataStack: Context saved successfully")
+                
+                // Force synchronous save to disk
+                try container.viewContext.parent?.save()
             } catch {
                 let nserror = error as NSError
+                print("❌ CoreDataStack: Failed to save context: \(nserror), \(nserror.userInfo)")
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
+        } else {
+            print("💾 CoreDataStack: No changes to save")
         }
     }
 
@@ -39,34 +48,35 @@ class CoreDataStack: ObservableObject {
             let existingCategories = try context.fetch(fetchRequest)
             var migrated = false
             
-            // Mevcut kategorilere doğru type'ı ata
+            // SADECE type'ı olmayan kategorileri migrate et
             for category in existingCategories {
-                let name = category.name.lowercased()
+                // Eğer kategori zaten bir type'a sahipse, DOKUNMA!
+                if let existingType = category.type, !existingType.isEmpty {
+                    continue
+                }
+                
+                // Sadece type'ı olmayan kategoriler için tahmin et
+                let name = category.name.lowercased() ?? ""
                 var newType: String?
                 
                 // Gelir kategorilerini tespit et
                 if name.contains("maaş") || name.contains("gelir") || name.contains("yatırım") || 
-                   name.contains("ikramiye") || name.contains("serbest") || name == "maaş" {
+                   name.contains("ikramiye") || name.contains("serbest") || name.contains("kira") || 
+                   name.contains("prim") || name == "maaş" {
                     newType = "income"
+                    print("🔵 Migrating '\(category.name ?? "")' -> income")
                 } else {
                     newType = "expense"
+                    print("🔴 Migrating '\(category.name ?? "")' -> expense")
                 }
                 
-                // Type değişti mi kontrol et
-                if category.type != newType {
-                    category.type = newType
-                    migrated = true
-                    if newType == "income" {
-                        print("🔵 \(category.name) -> income")
-                    } else {
-                        print("🔴 \(category.name) -> expense")
-                    }
-                }
+                category.type = newType
+                migrated = true
             }
             
             if migrated {
                 try context.save()
-                print("✅ Categories migrated successfully (\(existingCategories.count) categories)")
+                print("✅ Categories migrated successfully")
             } else {
                 print("ℹ️ No migration needed, all categories have correct types")
             }
@@ -103,9 +113,12 @@ class CoreDataStack: ObservableObject {
                     
                     // Gelir Kategorileri
                     ("Maaş", "#008000", "banknote.fill", "income"),
+                    ("Kira", "#32CD32", "house.fill", "income"),
+                    ("Prim", "#FFD700", "star.fill", "income"),
                     ("Yatırım", "#4169E1", "chart.line.uptrend.xyaxis", "income"),
-                    ("İkramiye", "#FFD700", "gift.fill", "income"),
+                    ("İkramiye", "#FFA500", "gift.fill", "income"),
                     ("Serbest Çalışma", "#9370DB", "briefcase.fill", "income"),
+                    ("Kira Geliri", "#20B2AA", "building.2.fill", "income"),
                     ("Diğer Gelir", "#808080", "ellipsis.circle.fill", "income")
                 ]
 

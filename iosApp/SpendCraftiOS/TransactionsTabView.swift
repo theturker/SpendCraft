@@ -12,6 +12,7 @@ struct TransactionsTabView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
     @EnvironmentObject var notificationsViewModel: NotificationsViewModel
+    @EnvironmentObject var recurringViewModel: RecurringViewModel
     
     @State private var showAddTransaction = false
     @State private var filterType: TransactionFilter = .all
@@ -76,6 +77,7 @@ struct TransactionsTabView: View {
                 .environmentObject(transactionsViewModel)
                 .environmentObject(achievementsViewModel)
                 .environmentObject(notificationsViewModel)
+                .environmentObject(recurringViewModel)
         }
         .sheet(item: $transactionToEdit, onDismiss: {
             // Delay to ensure CoreData changes are fully committed

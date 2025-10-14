@@ -12,6 +12,7 @@ struct AddTransactionView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
     @EnvironmentObject var achievementsViewModel: AchievementsViewModel
     @EnvironmentObject var notificationsViewModel: NotificationsViewModel
+    @EnvironmentObject var recurringViewModel: RecurringViewModel
     
     let initialIsIncome: Bool
     
@@ -22,6 +23,8 @@ struct AddTransactionView: View {
     @State private var isIncome: Bool
     @State private var date: Date = Date()
     @State private var showAddCategory = false
+    @State private var isRecurring: Bool = false
+    @State private var recurringFrequency: String = "MONTHLY"
     
     init(initialIsIncome: Bool) {
         self.initialIsIncome = initialIsIncome
@@ -44,9 +47,12 @@ struct AddTransactionView: View {
                             Text("Gelir").tag(true)
                         }
                         .pickerStyle(.segmented)
-                        .onChange(of: isIncome) { _ in
+                        .onChange(of: isIncome) { newValue in
+                            print("🔄 Transaction type changed to: \(newValue ? "income" : "expense")")
                             // İşlem tipi değiştiğinde kategori seçimini sıfırla
                             selectedCategory = nil
+                            // Reload categories
+                            transactionsViewModel.loadCategories()
                         }
                     }
                     
@@ -122,6 +128,27 @@ struct AddTransactionView: View {
                         TextField("İsteğe bağlı not", text: $note)
                     }
                     
+                    // Recurring Transaction
+                    Section {
+                        Toggle("Tekrarlayan İşlem", isOn: $isRecurring)
+                        
+                        if isRecurring {
+                            Picker("Tekrarlama Sıklığı", selection: $recurringFrequency) {
+                                Text("Günlük").tag("DAILY")
+                                Text("Haftalık").tag("WEEKLY")
+                                Text("Aylık").tag("MONTHLY")
+                                Text("Yıllık").tag("YEARLY")
+                            }
+                        }
+                    } header: {
+                        Text("Tekrarlama Ayarları")
+                    } footer: {
+                        if isRecurring {
+                            Text("Bu işlem seçilen sıklıkta otomatik olarak tekrarlanacaktır")
+                                .font(.caption)
+                        }
+                    }
+                    
                     // Spacer for floating button
                     Section {
                         Color.clear
@@ -163,12 +190,22 @@ struct AddTransactionView: View {
         }
         .sheet(isPresented: $showAddCategory, onDismiss: {
             // Reload categories after adding new one
-            transactionsViewModel.loadCategories()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                print("🔄 Reloading categories after adding new one...")
+                transactionsViewModel.loadCategories()
+                // Force refresh the filtered categories
+                transactionsViewModel.objectWillChange.send()
+                print("🔄 Categories reloaded. Available for \(isIncome ? "income" : "expense"): \(transactionsViewModel.categoriesForType(isIncome).count)")
+            }
         }) {
-            AddCategoryView()
+            AddCategoryView(initialType: isIncome ? "income" : "expense")
                 .environmentObject(transactionsViewModel)
         }
         .onAppear {
+            print("\n🔵 ============ AddTransactionView APPEARED ============")
+            print("🔵 isIncome: \(isIncome)")
+            print("🔵 Looking for type: \(isIncome ? "income" : "expense")")
+            
             // Reload data to get fresh categories and accounts
             transactionsViewModel.loadCategories()
             transactionsViewModel.loadAccounts()
@@ -179,6 +216,14 @@ struct AddTransactionView: View {
             } else if let firstAccount = transactionsViewModel.accounts.first {
                 selectedAccount = firstAccount
             }
+            
+            print("🔵 Total categories loaded: \(transactionsViewModel.categories.count)")
+            print("🔵 Filtered categories for \(isIncome ? "income" : "expense"): \(filteredCategories.count)")
+            print("🔵 Filtered category names:")
+            for cat in filteredCategories {
+                print("   - \(cat.name ?? "?")")
+            }
+            print("🔵 ===============================================\n")
         }
     }
     
@@ -194,6 +239,7 @@ struct AddTransactionView: View {
               let category = selectedCategory,
               let account = selectedAccount else { return }
         
+        // İşlemi kaydet
         transactionsViewModel.addTransaction(
             amount: amountValue,
             note: note.isEmpty ? nil : note,
@@ -203,6 +249,22 @@ struct AddTransactionView: View {
             achievementsViewModel: achievementsViewModel,
             notificationsViewModel: notificationsViewModel
         )
+        
+        // Eğer tekrarlayan işlem ise, recurring transaction olarak da kaydet
+        if isRecurring {
+            let transactionName = category.name ?? "Tekrarlayan İşlem"
+            recurringViewModel.addRecurringTransaction(
+                name: transactionName,
+                amount: amountValue,
+                categoryId: category.id,
+                accountId: account.id,
+                isIncome: isIncome,
+                frequency: recurringFrequency,
+                startDate: date,
+                endDate: nil,
+                note: note.isEmpty ? nil : note
+            )
+        }
         
         // Reload achievements to update UI
         achievementsViewModel.loadAchievements()

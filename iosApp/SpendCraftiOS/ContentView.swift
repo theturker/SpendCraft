@@ -32,6 +32,7 @@ struct ContentView: View {
                     .environmentObject(budgetViewModel)
                     .environmentObject(achievementsViewModel)
                     .environmentObject(notificationsViewModel)
+                    .environmentObject(recurringViewModel)
                     .toolbar {
                         notificationToolbarItem
                     }
@@ -46,6 +47,7 @@ struct ContentView: View {
                     .environmentObject(transactionsViewModel)
                     .environmentObject(achievementsViewModel)
                     .environmentObject(notificationsViewModel)
+                    .environmentObject(recurringViewModel)
                     .toolbar {
                         notificationToolbarItem
                     }

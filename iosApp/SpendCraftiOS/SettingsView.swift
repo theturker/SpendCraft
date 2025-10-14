@@ -25,6 +25,7 @@ struct SettingsView: View {
     @State private var showNotificationSettings = false
     @State private var showSignOutConfirm = false
     @State private var signOutError: String?
+    @State private var showCategoryDebug = false
 
     var body: some View {
         List {

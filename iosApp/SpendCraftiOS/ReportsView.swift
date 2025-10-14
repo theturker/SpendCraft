@@ -221,7 +221,7 @@ struct SummaryCard: View {
                     .font(.subheadline)
             }
             
-            Text(String(format: "%.2f ₺", amount))
+            Text(formatCurrency(amount))
                 .font(.title2)
                 .fontWeight(.bold)
         }
@@ -251,7 +251,7 @@ struct CategorySpendingRow: View {
                 Spacer()
                 
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text(String(format: "%.2f ₺", amount))
+                    Text(formatCurrency(amount))
                         .font(.subheadline)
                         .fontWeight(.semibold)
                     Text(String(format: "%.0f%%", percentage * 100))
@@ -296,7 +296,7 @@ struct BudgetStatusRow: View {
                 
                 Spacer()
                 
-                Text(String(format: "%.2f / %.2f ₺", spent, Double(budget.monthlyLimitMinor) / 100.0))
+                Text("\(formatCurrency(spent)) / \(formatCurrency(Double(budget.monthlyLimitMinor) / 100.0))")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -344,7 +344,7 @@ struct TopCategoryRow: View {
             
             Spacer()
             
-            Text(String(format: "%.2f ₺", amount))
+            Text(formatCurrency(amount))
                 .font(.subheadline)
                 .fontWeight(.semibold)
         }
@@ -442,7 +442,8 @@ struct TrendChartView: View {
                         AxisGridLine()
                         AxisValueLabel {
                             if let doubleValue = value.as(Double.self) {
-                                Text(String(format: "%.0f₺", doubleValue))
+                                Text(formatCurrency(doubleValue))
+                                    .font(.caption2)
                             }
                         }
                     }
@@ -544,7 +545,7 @@ struct CategoryPieChartView: View {
                             Spacer()
                             
                             VStack(alignment: .trailing, spacing: 2) {
-                                Text(String(format: "%.2f ₺", item.1))
+                                Text(formatCurrency(item.1))
                                     .font(.subheadline)
                                     .fontWeight(.semibold)
                                 
@@ -595,7 +596,7 @@ struct ComparisonBarChartView: View {
                     .foregroundStyle(item.0.uiColor.gradient)
                     .cornerRadius(6)
                     .annotation(position: .trailing, alignment: .leading) {
-                        Text(String(format: "%.0f₺", item.1))
+                        Text(formatCurrency(item.1))
                             .font(.caption)
                             .foregroundColor(.secondary)
                             .padding(.leading, 4)
@@ -607,7 +608,8 @@ struct ComparisonBarChartView: View {
                         AxisGridLine()
                         AxisValueLabel {
                             if let doubleValue = value.as(Double.self) {
-                                Text(String(format: "%.0f₺", doubleValue))
+                                Text(formatCurrency(doubleValue))
+                                    .font(.caption2)
                             }
                         }
                     }

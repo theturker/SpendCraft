@@ -59,6 +59,13 @@ struct CategoriesView: View {
                             selectedCategory = category
                             showAddBudget = true
                         }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                deleteCategory(category)
+                            } label: {
+                                Label("Sil", systemImage: "trash")
+                            }
+                        }
                     }
                 }
             }
@@ -85,6 +92,10 @@ struct CategoriesView: View {
             AddCategoryView()
                 .environmentObject(transactionsViewModel)
         }
+    }
+    
+    func deleteCategory(_ category: CategoryEntity) {
+        transactionsViewModel.deleteCategory(category)
     }
 }
 
@@ -269,10 +280,18 @@ struct AddCategoryView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
     
+    let initialType: String? // Hangi tip için kategori ekleneceği
+    
     @State private var categoryName: String = ""
     @State private var selectedIcon: String = "circle.fill"
     @State private var selectedColor: Color = .blue
-    @State private var categoryType: String = "expense" // "income" veya "expense"
+    @State private var categoryType: String // "income" veya "expense"
+    
+    init(initialType: String? = nil) {
+        self.initialType = initialType
+        // Init içinde doğru değeri ata
+        _categoryType = State(initialValue: initialType ?? "expense")
+    }
     
     let categoryIcons = [
         "cart.fill", "fork.knife", "house.fill", "car.fill", "tram.fill",
@@ -386,10 +405,14 @@ struct AddCategoryView: View {
                     }
                 }
             }
+            .onAppear {
+                print("📝 AddCategoryView appeared with categoryType: \(categoryType)")
+            }
         }
     }
     
     func saveCategory() {
+        print("💾 Saving category: \(categoryName), type: \(categoryType)")
         transactionsViewModel.addCategory(
             name: categoryName,
             icon: selectedIcon,
