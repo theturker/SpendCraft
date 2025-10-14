@@ -38,8 +38,9 @@ struct DashboardView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 12) {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 12) {
                 // Balance Card
                 VStack(spacing: 12) {
                     Text("Toplam Bakiye")
@@ -270,6 +271,12 @@ struct DashboardView: View {
                 }
                 .padding(.vertical, 8)
             }
+        }
+        
+        // Banner Ad at bottom
+        AdaptiveBannerAdView()
+            .background(Color(uiColor: .systemBackground))
+            .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
         }
         .navigationTitle("Ana Sayfa")
         .navigationBarTitleDisplayMode(.large)

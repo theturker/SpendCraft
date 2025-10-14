@@ -10,6 +10,9 @@ struct SpendCraftiOSApp: App {
         // Configure Firebase
         FirebaseApp.configure()
         
+        // Initialize Google Mobile Ads
+        AdsManager.shared.initializeAds()
+        
         // Seed initial data on first launch
         CoreDataStack.shared.seedInitialData()
         

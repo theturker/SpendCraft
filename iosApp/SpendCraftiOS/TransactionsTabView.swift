@@ -57,6 +57,11 @@ struct TransactionsTabView: View {
         VStack(spacing: 0) {
             filterPillsView
             contentView
+            
+            // Banner Ad at bottom
+            AdaptiveBannerAdView()
+                .background(Color(uiColor: .systemBackground))
+                .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
         }
         .navigationTitle("İşlemler")
         .navigationBarTitleDisplayMode(.large)

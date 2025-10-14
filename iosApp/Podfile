@@ -10,6 +10,9 @@ target 'SpendCraftiOS' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   pod 'Firebase/Crashlytics'
+  
+  # Google Mobile Ads
+  pod 'Google-Mobile-Ads-SDK'
 end
 
 post_install do |installer|

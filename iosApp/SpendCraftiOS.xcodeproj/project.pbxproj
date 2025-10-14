@@ -51,6 +51,8 @@
 		90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */; };
 		90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */; };
 		90B99D2C2E9D12B800EE7EC6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */; };
+		90E41C7B2E9E8B87001188EB /* AdsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E41C7A2E9E8B87001188EB /* AdsManager.swift */; };
+		90E41C7D2E9E90FB001188EB /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E41C7C2E9E90FB001188EB /* BannerAdView.swift */; };
 		90E79A342E9DBE2F008E585C /* EditTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E79A332E9DBE2E008E585C /* EditTransactionView.swift */; };
 /* End PBXBuildFile section */
 
@@ -102,6 +104,8 @@
 		90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 		90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		90E41C7A2E9E8B87001188EB /* AdsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsManager.swift; sourceTree = "<group>"; };
+		90E41C7C2E9E90FB001188EB /* BannerAdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdView.swift; sourceTree = "<group>"; };
 		90E79A332E9DBE2E008E585C /* EditTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionView.swift; sourceTree = "<group>"; };
 		AFD4B289D948BBA5DC77D2FD /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -129,6 +133,8 @@
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
+				90E41C7C2E9E90FB001188EB /* BannerAdView.swift */,
+				90E41C7A2E9E8B87001188EB /* AdsManager.swift */,
 				90417A512E9E5FF600418F07 /* CurrencySettingsView.swift */,
 				9037B6A02E9DCEF10087D68B /* NotificationSettingsView.swift */,
 				90E79A332E9DBE2E008E585C /* EditTransactionView.swift */,
@@ -210,6 +216,7 @@
 				90F10A802E97E9400068F54E /* Resources */,
 				7F0CCBB856DA2667B5BACBA2 /* [CP] Embed Pods Frameworks */,
 				904A58D62E9DB3210012E95B /* ShellScript */,
+				50034D2E81433AD85186BA80 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -260,6 +267,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		50034D2E81433AD85186BA80 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7F0CCBB856DA2667B5BACBA2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -338,6 +366,8 @@
 				90AB66E72E9599920063F8A7 /* AccountsViewModel.swift in Sources */,
 				90AB66CF2E9599890063F8A7 /* AccountEntity.swift in Sources */,
 				90AB66D52E95998A0063F8A7 /* DashboardView.swift in Sources */,
+				90E41C7D2E9E90FB001188EB /* BannerAdView.swift in Sources */,
+				90E41C7B2E9E8B87001188EB /* AdsManager.swift in Sources */,
 				2152FB042600AC8F00CF470E /* SpendCraftiOSApp.swift in Sources */,
 				900445852E9C6E88003DFAFC /* UserProfilingView.swift in Sources */,
 				90E79A342E9DBE2F008E585C /* EditTransactionView.swift in Sources */,

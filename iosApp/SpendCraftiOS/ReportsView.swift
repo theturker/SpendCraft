@@ -29,8 +29,9 @@ struct ReportsView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 16) {
                 // Period Selector
                 Picker("Dönem", selection: $selectedPeriod) {
                     ForEach(Period.allCases, id: \.self) { period in
@@ -177,6 +178,12 @@ struct ReportsView: View {
                 }
                 .padding(.vertical)
             }
+        }
+        
+        // Banner Ad at bottom
+        AdaptiveBannerAdView()
+            .background(Color(uiColor: .systemBackground))
+            .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
         }
         .navigationTitle("Raporlar")
         .navigationBarTitleDisplayMode(.large)
