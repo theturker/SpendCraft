@@ -12,6 +12,7 @@
 		7E6DF9951589FE600A33F66F /* Pods_SpendCraftiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFD4B289D948BBA5DC77D2FD /* Pods_SpendCraftiOS.framework */; };
 		900445852E9C6E88003DFAFC /* UserProfilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900445842E9C6E88003DFAFC /* UserProfilingView.swift */; };
 		900445872E9C6F68003DFAFC /* AccountInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900445862E9C6F68003DFAFC /* AccountInfoView.swift */; };
+		9037B6A12E9DCEF20087D68B /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9037B6A02E9DCEF10087D68B /* NotificationSettingsView.swift */; };
 		904C84332E9DA105008F6F01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 904C84322E9DA105008F6F01 /* GoogleService-Info.plist */; };
 		905181052E98529900F81AAC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 905181042E98529900F81AAC /* Media.xcassets */; };
 		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
@@ -60,6 +61,7 @@
 		862B86DA885C8818002160DF /* Pods-SpendCraftiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.debug.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		900445842E9C6E88003DFAFC /* UserProfilingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilingView.swift; sourceTree = "<group>"; };
 		900445862E9C6F68003DFAFC /* AccountInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInfoView.swift; sourceTree = "<group>"; };
+		9037B6A02E9DCEF10087D68B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
 		904C84322E9DA105008F6F01 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		905181042E98529900F81AAC /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +127,7 @@
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
+				9037B6A02E9DCEF10087D68B /* NotificationSettingsView.swift */,
 				90E79A332E9DBE2E008E585C /* EditTransactionView.swift */,
 				90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */,
 				900445862E9C6F68003DFAFC /* AccountInfoView.swift */,
@@ -344,6 +347,7 @@
 				90AB66D92E95998A0063F8A7 /* ReportsView.swift in Sources */,
 				90A11BC42E966725005C595F /* ExportManager.swift in Sources */,
 				90AB66D12E9599890063F8A7 /* CategoryEntity.swift in Sources */,
+				9037B6A12E9DCEF20087D68B /* NotificationSettingsView.swift in Sources */,
 				900445872E9C6F68003DFAFC /* AccountInfoView.swift in Sources */,
 				90AB66DF2E95998B0063F8A7 /* TransactionsViewModel.swift in Sources */,
 				90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */,

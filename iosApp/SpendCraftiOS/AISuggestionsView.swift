@@ -13,6 +13,14 @@ struct AISuggestionsView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var selectedType: AdviceType?
+    @AppStorage("lastAISuggestionTime") private var lastSuggestionTime: Double = 0
+    @State private var remainingTime: TimeInterval = 0
+    @State private var timer: Timer?
+    
+    private var canUseAI: Bool {
+        let elapsed = Date().timeIntervalSince1970 - lastSuggestionTime
+        return elapsed >= 86400 // 24 saat
+    }
     
     var categoryBreakdown: [(category: String, amount: Double)] {
         let categories = Dictionary(grouping: transactionsViewModel.transactions.filter { !$0.isIncome }) { transaction -> String in
@@ -113,34 +121,70 @@ struct AISuggestionsView: View {
                             }
                         }
                         
-                        // Generate Button
-                        Button {
-                            generateAdvice()
-                        } label: {
-                            HStack {
-                                if aiManager.isLoading {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                } else {
-                                    Image(systemName: "sparkles")
-                                    Text("AI Önerisi Al")
-                                        .fontWeight(.semibold)
+                        // Generate Button or Countdown
+                        if canUseAI {
+                            Button {
+                                generateAdvice()
+                            } label: {
+                                HStack {
+                                    if aiManager.isLoading {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    } else {
+                                        Image(systemName: "sparkles")
+                                        Text("AI Önerisi Al")
+                                            .fontWeight(.semibold)
+                                    }
                                 }
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(
+                                    LinearGradient(
+                                        colors: selectedType == nil ? [Color.gray] : [Color.blue, Color.purple],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .foregroundColor(.white)
+                                .cornerRadius(16)
+                            }
+                            .disabled(selectedType == nil || aiManager.isLoading)
+                            .padding(.horizontal)
+                        } else {
+                            // Countdown Display
+                            VStack(spacing: 12) {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "hourglass")
+                                        .font(.title2)
+                                        .foregroundColor(.purple)
+                                    Text("Sonraki Öneri İçin Bekleme Süresi")
+                                        .font(.headline)
+                                }
+                                
+                                Text(timeString(from: remainingTime))
+                                    .font(.system(size: 36, weight: .bold))
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [.blue, .purple],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                
+                                Text("AI önerileri günde bir kez kullanılabilir. Bir sonraki öneriye erişmek için lütfen bekleyin.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(
-                                LinearGradient(
-                                    colors: selectedType == nil ? [Color.gray] : [Color.blue, Color.purple],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(.systemBackground))
                             )
-                            .foregroundColor(.white)
-                            .cornerRadius(16)
+                            .padding(.horizontal)
                         }
-                        .disabled(selectedType == nil || aiManager.isLoading)
-                        .padding(.horizontal)
                         
                         // AI Advice Display
                         if let advice = aiManager.currentAdvice {
@@ -241,13 +285,75 @@ struct AISuggestionsView: View {
                     }
                 }
             }
+            .onAppear {
+                updateRemainingTime()
+                startTimer()
+            }
+            .onDisappear {
+                stopTimer()
+            }
+        }
+    }
+    
+    // MARK: - Timer & Countdown
+    
+    private func updateRemainingTime() {
+        let elapsed = Date().timeIntervalSince1970 - lastSuggestionTime
+        remainingTime = max(0, 86400 - elapsed)
+    }
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            updateRemainingTime()
+            
+            // Süre dolduğunda bildirim gönder
+            if remainingTime <= 0 && lastSuggestionTime > 0 {
+                sendAIAvailableNotification()
+                stopTimer()
+            }
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    private func timeString(from timeInterval: TimeInterval) -> String {
+        let hours = Int(timeInterval) / 3600
+        let minutes = Int(timeInterval) / 60 % 60
+        let seconds = Int(timeInterval) % 60
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+    
+    private func sendAIAvailableNotification() {
+        let content = UNMutableNotificationContent()
+        content.title = "AI Danışman Hazır! 🤖✨"
+        content.body = "Yeni bir AI önerisi almanın zamanı geldi! Finansal önerileriniz sizi bekliyor."
+        content.sound = .default
+        content.badge = 1
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(
+            identifier: "ai_suggestion_available",
+            content: content,
+            trigger: trigger
+        )
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error sending AI available notification: \(error)")
+            }
         }
     }
     
     // MARK: - Generate Advice
     
     private func generateAdvice() {
-        guard let type = selectedType else { return }
+        guard let type = selectedType, canUseAI else { return }
+        
+        // Son kullanım zamanını kaydet
+        lastSuggestionTime = Date().timeIntervalSince1970
         
         Task {
             await aiManager.generateAdvice(
@@ -257,6 +363,10 @@ struct AISuggestionsView: View {
                 categoryBreakdown: categoryBreakdown
             )
         }
+        
+        // Timer'ı başlat
+        updateRemainingTime()
+        startTimer()
     }
 }
 
