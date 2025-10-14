@@ -81,6 +81,19 @@ struct SettingsView: View {
                         Text("Hesaplar")
                     }
                 }
+                
+                NavigationLink {
+                    CurrencySettingsView()
+                } label: {
+                    HStack {
+                        Image(systemName: "dollarsign.circle.fill")
+                            .foregroundColor(.green)
+                        Text("Para Birimi")
+                        Spacer()
+                        Text(UserDefaults.standard.string(forKey: "selectedCurrency") ?? "TRY")
+                            .foregroundColor(.secondary)
+                    }
+                }
             } header: {
                 Text("Finans")
             }

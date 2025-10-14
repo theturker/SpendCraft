@@ -29,6 +29,10 @@ struct AddTransactionView: View {
         _isIncome = State(initialValue: initialIsIncome)
     }
     
+    var filteredCategories: [CategoryEntity] {
+        return transactionsViewModel.categoriesForType(isIncome)
+    }
+    
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
@@ -40,6 +44,10 @@ struct AddTransactionView: View {
                             Text("Gelir").tag(true)
                         }
                         .pickerStyle(.segmented)
+                        .onChange(of: isIncome) { _ in
+                            // İşlem tipi değiştiğinde kategori seçimini sıfırla
+                            selectedCategory = nil
+                        }
                     }
                     
                     // Amount
@@ -48,7 +56,7 @@ struct AddTransactionView: View {
                             TextField("0.00", text: $amount)
                                 .keyboardType(.decimalPad)
                                 .font(.title2)
-                            Text("₺")
+                            Text(getCurrentCurrencySymbol())
                                 .font(.title2)
                                 .foregroundColor(.secondary)
                         }
@@ -80,8 +88,8 @@ struct AddTransactionView: View {
                                     .frame(width: 80)
                                 }
                                 
-                                // Existing Categories
-                                ForEach(transactionsViewModel.categories, id: \.id) { category in
+                                // Existing Categories - Filtered by type
+                                ForEach(filteredCategories, id: \.id) { category in
                                     CategoryButton(
                                         category: category,
                                         isSelected: selectedCategory?.id == category.id

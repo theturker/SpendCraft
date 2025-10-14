@@ -31,33 +31,91 @@ class CoreDataStack: ObservableObject {
         }
     }
 
+    func migrateExistingCategories() {
+        let context = container.viewContext
+        let fetchRequest: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest() as! NSFetchRequest<CategoryEntity>
+        
+        do {
+            let existingCategories = try context.fetch(fetchRequest)
+            var migrated = false
+            
+            // Mevcut kategorilere doğru type'ı ata
+            for category in existingCategories {
+                let name = category.name.lowercased()
+                var newType: String?
+                
+                // Gelir kategorilerini tespit et
+                if name.contains("maaş") || name.contains("gelir") || name.contains("yatırım") || 
+                   name.contains("ikramiye") || name.contains("serbest") || name == "maaş" {
+                    newType = "income"
+                } else {
+                    newType = "expense"
+                }
+                
+                // Type değişti mi kontrol et
+                if category.type != newType {
+                    category.type = newType
+                    migrated = true
+                    if newType == "income" {
+                        print("🔵 \(category.name) -> income")
+                    } else {
+                        print("🔴 \(category.name) -> expense")
+                    }
+                }
+            }
+            
+            if migrated {
+                try context.save()
+                print("✅ Categories migrated successfully (\(existingCategories.count) categories)")
+            } else {
+                print("ℹ️ No migration needed, all categories have correct types")
+            }
+        } catch {
+            print("❌ Error migrating categories: \(error)")
+        }
+    }
+    
     func seedInitialData() {
         let context = container.viewContext
         let fetchRequest: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest() as! NSFetchRequest<CategoryEntity>
 
         do {
             let count = try context.count(for: fetchRequest)
+            
+            // Önce mevcut kategorileri migrate et
+            if count > 0 {
+                migrateExistingCategories()
+            }
+            
             if count == 0 {
                 // Seed initial categories
-                let categories = [
-                    ("Gıda", "#FF6347", "fork.knife"),
-                    ("Ulaşım", "#4682B4", "car.fill"),
-                    ("Fatura", "#DAA520", "doc.text.fill"),
-                    ("Eğlence", "#9370DB", "gamecontroller.fill"),
-                    ("Alışveriş", "#3CB371", "cart.fill"),
-                    ("Sağlık", "#FF69B4", "heart.fill"),
-                    ("Eğitim", "#8B4513", "book.closed.fill"),
-                    ("Kredi", "#DC143C", "creditcard.fill"),
-                    ("Maaş", "#008000", "banknote.fill"),
-                    ("Diğer", "#808080", "ellipsis.circle.fill")
+                let categories: [(name: String, color: String, icon: String, type: String)] = [
+                    // Gider Kategorileri
+                    ("Gıda", "#FF6347", "fork.knife", "expense"),
+                    ("Ulaşım", "#4682B4", "car.fill", "expense"),
+                    ("Fatura", "#DAA520", "doc.text.fill", "expense"),
+                    ("Eğlence", "#9370DB", "gamecontroller.fill", "expense"),
+                    ("Alışveriş", "#3CB371", "cart.fill", "expense"),
+                    ("Sağlık", "#FF69B4", "heart.fill", "expense"),
+                    ("Eğitim", "#8B4513", "book.closed.fill", "expense"),
+                    ("Kredi", "#DC143C", "creditcard.fill", "expense"),
+                    ("Diğer Gider", "#808080", "ellipsis.circle.fill", "expense"),
+                    
+                    // Gelir Kategorileri
+                    ("Maaş", "#008000", "banknote.fill", "income"),
+                    ("Yatırım", "#4169E1", "chart.line.uptrend.xyaxis", "income"),
+                    ("İkramiye", "#FFD700", "gift.fill", "income"),
+                    ("Serbest Çalışma", "#9370DB", "briefcase.fill", "income"),
+                    ("Diğer Gelir", "#808080", "ellipsis.circle.fill", "income")
                 ]
 
-                for (name, color, icon) in categories {
-                    let category = CategoryEntity(context: context)
-                    category.id = Int64.random(in: 1...10000)
-                    category.name = name
-                    category.color = color
-                    category.icon = icon
+                for category in categories {
+                    let categoryEntity = CategoryEntity(context: context)
+                    categoryEntity.id = Int64.random(in: 1...10000)
+                    categoryEntity.name = category.name
+                    categoryEntity.color = category.color
+                    categoryEntity.icon = category.icon
+                    categoryEntity.type = category.type
                 }
 
                 // Seed initial account
@@ -114,4 +172,42 @@ extension UIColor {
         
         return nil
     }
+}
+
+// MARK: - Currency Helper Functions
+
+/// Para birimi sembolünü al
+func getCurrentCurrencySymbol() -> String {
+    return UserDefaults.standard.string(forKey: "selectedCurrencySymbol") ?? "₺"
+}
+
+/// Para birimi kodunu al
+func getCurrentCurrencyCode() -> String {
+    return UserDefaults.standard.string(forKey: "selectedCurrency") ?? "TRY"
+}
+
+/// Tutarı seçilen para birimine göre formatla
+func formatCurrency(_ amount: Double) -> String {
+    let selectedCurrency = getCurrentCurrencyCode()
+    let selectedSymbol = getCurrentCurrencySymbol()
+    
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.minimumFractionDigits = 2
+    formatter.maximumFractionDigits = 2
+    
+    // Türk Lirası için özel format
+    if selectedCurrency == "TRY" {
+        formatter.locale = Locale(identifier: "tr_TR")
+        formatter.groupingSeparator = "."
+        formatter.decimalSeparator = ","
+    } else {
+        // Diğer para birimleri için varsayılan format
+        formatter.locale = Locale(identifier: "en_US")
+        formatter.groupingSeparator = ","
+        formatter.decimalSeparator = "."
+    }
+    
+    let formattedNumber = formatter.string(from: NSNumber(value: abs(amount))) ?? "0.00"
+    return "\(formattedNumber) \(selectedSymbol)"
 }

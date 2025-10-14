@@ -57,16 +57,23 @@ class TransactionsViewModel: ObservableObject {
         
         do {
             categories = try context.fetch(fetchRequest)
+            
+            // Debug: Kategorileri ve type'larını yazdır
+            print("📂 Loaded \(categories.count) categories:")
+            for cat in categories {
+                print("  - \(cat.name): type=\(cat.type ?? "nil")")
+            }
         } catch {
             print("Error fetching categories: \(error)")
         }
     }
     
-    func addCategory(name: String, icon: String, color: Color) {
+    func addCategory(name: String, icon: String, color: Color, type: String) {
         let category = CategoryEntity(context: context)
         category.id = Int64.random(in: 1...1000000)
         category.name = name
         category.icon = icon
+        category.type = type
         
         // Convert SwiftUI Color to hex string for storage
         let uiColor = UIColor(color)
@@ -84,6 +91,21 @@ class TransactionsViewModel: ObservableObject {
         
         CoreDataStack.shared.saveContext()
         loadCategories()
+    }
+    
+    func categoriesForType(_ isIncome: Bool) -> [CategoryEntity] {
+        let type = isIncome ? "income" : "expense"
+        let filtered = categories.filter { category in
+            if let categoryType = category.type, !categoryType.isEmpty {
+                return categoryType == type
+            } else {
+                // Type yoksa hepsini göster (backward compatibility)
+                return true
+            }
+        }
+        
+        print("🔍 Filtering categories for \(type): found \(filtered.count) out of \(categories.count)")
+        return filtered
     }
     
     func loadAccounts() {

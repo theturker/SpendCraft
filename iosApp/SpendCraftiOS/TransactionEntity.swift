@@ -25,16 +25,27 @@ extension TransactionEntity {
     }
     
     var formattedAmount: String {
+        let currencySymbol = getCurrentCurrencySymbol()
+        let currencyCode = getCurrentCurrencyCode()
+        
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        formatter.locale = Locale(identifier: "tr_TR")
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
-        formatter.groupingSeparator = "."
-        formatter.decimalSeparator = ","
         
-        let formattedNumber = formatter.string(from: NSNumber(value: amount)) ?? "0,00"
-        return "\(isIncome ? "+" : "-")\(formattedNumber) ₺"
+        // Türk Lirası için özel format
+        if currencyCode == "TRY" {
+            formatter.locale = Locale(identifier: "tr_TR")
+            formatter.groupingSeparator = "."
+            formatter.decimalSeparator = ","
+        } else {
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.groupingSeparator = ","
+            formatter.decimalSeparator = "."
+        }
+        
+        let formattedNumber = formatter.string(from: NSNumber(value: amount)) ?? "0.00"
+        return "\(isIncome ? "+" : "-")\(formattedNumber) \(currencySymbol)"
     }
     
     var formattedDate: String {

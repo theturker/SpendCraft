@@ -437,17 +437,3 @@ struct TransactionRow: View {
         .padding(.vertical, 8)
     }
 }
-
-// Helper function for currency formatting
-func formatCurrency(_ amount: Double) -> String {
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .decimal
-    formatter.locale = Locale(identifier: "tr_TR")
-    formatter.minimumFractionDigits = 2
-    formatter.maximumFractionDigits = 2
-    formatter.groupingSeparator = "."
-    formatter.decimalSeparator = ","
-    
-    let formattedNumber = formatter.string(from: NSNumber(value: abs(amount))) ?? "0,00"
-    return "\(formattedNumber) ₺"
-}

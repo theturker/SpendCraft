@@ -272,6 +272,7 @@ struct AddCategoryView: View {
     @State private var categoryName: String = ""
     @State private var selectedIcon: String = "circle.fill"
     @State private var selectedColor: Color = .blue
+    @State private var categoryType: String = "expense" // "income" veya "expense"
     
     let categoryIcons = [
         "cart.fill", "fork.knife", "house.fill", "car.fill", "tram.fill",
@@ -293,6 +294,12 @@ struct AddCategoryView: View {
                 Section("Kategori Bilgileri") {
                     TextField("Kategori Adı", text: $categoryName)
                         .font(.body)
+                    
+                    Picker("Kategori Tipi", selection: $categoryType) {
+                        Text("Gider").tag("expense")
+                        Text("Gelir").tag("income")
+                    }
+                    .pickerStyle(.segmented)
                 }
                 
                 Section("İkon Seç") {
@@ -386,7 +393,8 @@ struct AddCategoryView: View {
         transactionsViewModel.addCategory(
             name: categoryName,
             icon: selectedIcon,
-            color: selectedColor
+            color: selectedColor,
+            type: categoryType
         )
         dismiss()
     }

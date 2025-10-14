@@ -20,6 +20,10 @@ struct EditTransactionView: View {
     @State private var isIncome: Bool = false
     @State private var date: Date = Date()
     
+    var filteredCategories: [CategoryEntity] {
+        return transactionsViewModel.categoriesForType(isIncome)
+    }
+    
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
@@ -31,6 +35,10 @@ struct EditTransactionView: View {
                             Text("Gelir").tag(true)
                         }
                         .pickerStyle(.segmented)
+                        .onChange(of: isIncome) { _ in
+                            // İşlem tipi değiştiğinde kategori seçimini sıfırla
+                            selectedCategory = nil
+                        }
                     }
                     
                     // Amount
@@ -39,7 +47,7 @@ struct EditTransactionView: View {
                             TextField("0.00", text: $amount)
                                 .keyboardType(.decimalPad)
                                 .font(.title2)
-                            Text("₺")
+                            Text(getCurrentCurrencySymbol())
                                 .font(.title2)
                                 .foregroundColor(.secondary)
                         }
@@ -47,13 +55,13 @@ struct EditTransactionView: View {
                     
                     // Category
                     Section("Kategori") {
-                        if transactionsViewModel.categories.isEmpty {
-                            Text("Kategori bulunamadı")
+                        if filteredCategories.isEmpty {
+                            Text("Bu tip için kategori bulunamadı")
                                 .foregroundColor(.secondary)
                         } else {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 12) {
-                                    ForEach(transactionsViewModel.categories, id: \.id) { category in
+                                    ForEach(filteredCategories, id: \.id) { category in
                                         CategoryButton(
                                             category: category,
                                             isSelected: selectedCategory?.id == category.id
