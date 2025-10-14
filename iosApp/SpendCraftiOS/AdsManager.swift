@@ -28,10 +28,15 @@ class AdsManager: NSObject, ObservableObject {
         static let interstitial = interstitialTest
         static let rewarded = rewardedTest
         #else
-        // Production ID'lerinizi buraya ekleyin
-        static let banner = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
-        static let interstitial = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
-        static let rewarded = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+        // TODO: Production ID'lerinizi Google AdMob Console'dan alıp buraya ekleyin
+        // Şimdilik test ID'lerini kullan (production'da mutlaka değiştirin!)
+        static let banner = bannerTest
+        static let interstitial = interstitialTest
+        static let rewarded = rewardedTest
+        // Production'da bu satırları uncomment edip gerçek ID'leri ekleyin:
+        // static let banner = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+        // static let interstitial = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+        // static let rewarded = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
         #endif
     }
     
