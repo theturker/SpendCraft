@@ -1,15 +1,19 @@
 package com.alperen.spendcraft.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.alperen.spendcraft.core.ui.IOSColors
+import com.alperen.spendcraft.ui.iosTheme.IOSColors
+import com.alperen.spendcraft.ui.icons.SFSymbolsTabBar
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -102,12 +106,33 @@ fun MainTabNavigation(
 ) {
     val navController = rememberNavController()
     
+    // Tab index state
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    
     Scaffold(
         modifier = Modifier.systemBarsPadding(), // Safe area için
         bottomBar = {
-            TabNavigationBar(
+            // iOS UITabBar birebir karşılığı - Basit implementation
+            IOSStyleTabBar(
                 navController = navController,
-                tabs = tabScreens
+                selectedIndex = selectedTabIndex,
+                onTabSelected = { index ->
+                    selectedTabIndex = index
+                    val route = when (index) {
+                        0 -> TabScreen.Dashboard.route
+                        1 -> TabScreen.Transactions.route
+                        2 -> TabScreen.Reports.route
+                        3 -> TabScreen.Settings.route
+                        else -> TabScreen.Dashboard.route
+                    }
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
     ) { paddingValues ->
@@ -224,11 +249,120 @@ fun MainTabNavigation(
 }
 
 /**
- * iOS-style Bottom Navigation Bar - Birebir iOS Tab Bar tasarımı
+ * iOS-style Bottom Navigation Bar - Custom iOS Tab Bar Implementation
  */
 @Composable
-private fun TabNavigationBar(
+private fun IOSStyleTabBar(
     navController: NavHostController,
+    selectedIndex: Int,
+    onTabSelected: (Int) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        // Top divider - iOS: 0.5dp hairline
+        HorizontalDivider(
+            thickness = 0.5.dp,
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
+        
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(49.dp)
+                .background(MaterialTheme.colorScheme.surface),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Tab 1: Ana Sayfa
+            IOSTabItem(
+                icon = SFSymbolsTabBar.HouseFill,
+                label = "Ana Sayfa",
+                isSelected = selectedIndex == 0,
+                onClick = { onTabSelected(0) },
+                modifier = Modifier.weight(1f)
+            )
+            
+            // Tab 2: İşlemler
+            IOSTabItem(
+                icon = SFSymbolsTabBar.ListBullet,
+                label = "İşlemler",
+                isSelected = selectedIndex == 1,
+                onClick = { onTabSelected(1) },
+                modifier = Modifier.weight(1f)
+            )
+            
+            // Tab 3: Raporlar
+            IOSTabItem(
+                icon = SFSymbolsTabBar.ChartBarFill,
+                label = "Raporlar",
+                isSelected = selectedIndex == 2,
+                onClick = { onTabSelected(2) },
+                modifier = Modifier.weight(1f)
+            )
+            
+            // Tab 4: Ayarlar
+            IOSTabItem(
+                icon = SFSymbolsTabBar.GearshapeFill,
+                label = "Ayarlar",
+                isSelected = selectedIndex == 3,
+                onClick = { onTabSelected(3) },
+                modifier = Modifier.weight(1f)
+            )
+        }
+        
+        // Bottom safe area - iOS: 34dp
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(34.dp)
+                .background(MaterialTheme.colorScheme.surface)
+        )
+    }
+}
+
+@Composable
+private fun IOSTabItem(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val iconTint = if (isSelected) IOSColors.Blue else Color(0xFF8E8E93)
+    
+    Column(
+        modifier = modifier
+            .fillMaxHeight()
+            .clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = iconTint,
+            modifier = Modifier.size(25.dp)
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = label,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Medium,
+            color = iconTint
+        )
+    }
+}
+
+/**
+ * OLD iOS-style Bottom Navigation Bar - Deprecated, use IOSStyleTabBar instead
+ */
+@Deprecated("Use IOSStyleTabBar instead")
+@Composable
+private fun TabNavigationBar(
+navController: NavHostController,
     tabs: List<TabScreen>
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()

@@ -386,6 +386,100 @@ object SFSymbols {
         }.build()
 
     /**
+     * SF Symbol: questionmark.circle.fill
+     */
+    val QuestionmarkCircleFill: ImageVector
+        get() = ImageVector.Builder(
+            name = "QuestionmarkCircleFill",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFFAF52DE)), // iOS Purple
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(12f, 2f)
+                curveTo(6.48f, 2f, 2f, 6.48f, 2f, 12f)
+                curveTo(2f, 17.52f, 6.48f, 22f, 12f, 22f)
+                curveTo(17.52f, 22f, 22f, 17.52f, 22f, 12f)
+                curveTo(22f, 6.48f, 17.52f, 2f, 12f, 2f)
+                close()
+            }
+            path(
+                fill = SolidColor(Color.White),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                // Question mark top curve
+                moveTo(12f, 7f)
+                curveTo(10.35f, 7f, 9f, 8.35f, 9f, 10f)
+                horizontalLineTo(11f)
+                curveTo(11f, 9.45f, 11.45f, 9f, 12f, 9f)
+                curveTo(12.55f, 9f, 13f, 9.45f, 13f, 10f)
+                curveTo(13f, 10.55f, 12.55f, 11f, 12f, 11f)
+                curveTo(11.45f, 11f, 11f, 11.45f, 11f, 12f)
+                verticalLineTo(13f)
+                horizontalLineTo(13f)
+                verticalLineTo(12f)
+                curveTo(14.1f, 12f, 15f, 11.1f, 15f, 10f)
+                curveTo(15f, 8.35f, 13.65f, 7f, 12f, 7f)
+                close()
+                // Question mark dot
+                moveTo(11f, 15f)
+                horizontalLineTo(13f)
+                verticalLineTo(17f)
+                horizontalLineTo(11f)
+                close()
+            }
+        }.build()
+    
+    /**
+     * SF Symbol: circle (outline)
+     */
+    val CircleOutline: ImageVector
+        get() = ImageVector.Builder(
+            name = "CircleOutline",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f
+        ).apply {
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 2.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(12f, 2f)
+                curveTo(6.48f, 2f, 2f, 6.48f, 2f, 12f)
+                curveTo(2f, 17.52f, 6.48f, 22f, 12f, 22f)
+                curveTo(17.52f, 22f, 22f, 17.52f, 22f, 12f)
+                curveTo(22f, 6.48f, 17.52f, 2f, 12f, 2f)
+                close()
+            }
+        }.build()
+
+    /**
      * SF Symbol: arrow.backward
      */
     val ArrowBackward: ImageVector
