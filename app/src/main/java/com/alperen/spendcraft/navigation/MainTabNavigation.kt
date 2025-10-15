@@ -3,10 +3,12 @@ package com.alperen.spendcraft.navigation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -14,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.ui.iosTheme.IOSColors
 import com.alperen.spendcraft.ui.icons.SFSymbolsTabBar
+import com.alperen.spendcraft.ui.components.IOSBottomNavigationBar
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -112,28 +115,34 @@ fun MainTabNavigation(
     Scaffold(
         modifier = Modifier.systemBarsPadding(), // Safe area için
         bottomBar = {
-            // iOS UITabBar birebir karşılığı - Basit implementation
-            IOSStyleTabBar(
-                navController = navController,
-                selectedIndex = selectedTabIndex,
-                onTabSelected = { index ->
-                    selectedTabIndex = index
-                    val route = when (index) {
-                        0 -> TabScreen.Dashboard.route
-                        1 -> TabScreen.Transactions.route
-                        2 -> TabScreen.Reports.route
-                        3 -> TabScreen.Settings.route
-                        else -> TabScreen.Dashboard.route
-                    }
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+            // iOS UITabBar birebir karşılığı - Exact match to iOS design
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent) // Transparent background so content shows through
+            ) {
+                IOSBottomNavigationBar(
+                    selectedIndex = selectedTabIndex,
+                    onTabSelected = { index ->
+                        selectedTabIndex = index
+                        val route = when (index) {
+                            0 -> TabScreen.Dashboard.route
+                            1 -> TabScreen.Transactions.route
+                            2 -> TabScreen.Reports.route
+                            3 -> TabScreen.Categories.route
+                            4 -> TabScreen.Settings.route
+                            else -> TabScreen.Dashboard.route
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                        navController.navigate(route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     ) { paddingValues ->
         NavHost(
@@ -249,7 +258,8 @@ fun MainTabNavigation(
 }
 
 /**
- * iOS-style Bottom Navigation Bar - Custom iOS Tab Bar Implementation
+ * iOS-style Bottom Navigation Bar - Exact match to iOS design
+ * Features: Rounded background with blur effect, 5 tabs with proper spacing
  */
 @Composable
 private fun IOSStyleTabBar(
@@ -257,28 +267,25 @@ private fun IOSStyleTabBar(
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        // Top divider - iOS: 0.5dp hairline
-        HorizontalDivider(
-            thickness = 0.5.dp,
-            color = MaterialTheme.colorScheme.outlineVariant
-        )
-        
+        // Main navigation bar with rounded background and blur effect
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(49.dp)
-                .background(MaterialTheme.colorScheme.surface),
+                .height(60.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color(0xFF1C1C1E).copy(alpha = 0.8f)) // Dark background with opacity
+                .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Tab 1: Ana Sayfa
             IOSTabItem(
-                icon = SFSymbolsTabBar.HouseFill,
+                icon = SFSymbolsTabBar.HouseOutline,
                 label = "Ana Sayfa",
                 isSelected = selectedIndex == 0,
                 onClick = { onTabSelected(0) },
@@ -296,30 +303,31 @@ private fun IOSStyleTabBar(
             
             // Tab 3: Raporlar
             IOSTabItem(
-                icon = SFSymbolsTabBar.ChartBarFill,
+                icon = SFSymbolsTabBar.ChartBarOutline,
                 label = "Raporlar",
                 isSelected = selectedIndex == 2,
                 onClick = { onTabSelected(2) },
                 modifier = Modifier.weight(1f)
             )
             
-            // Tab 4: Ayarlar
+            // Tab 4: Kategoriler
             IOSTabItem(
-                icon = SFSymbolsTabBar.GearshapeFill,
-                label = "Ayarlar",
+                icon = SFSymbolsTabBar.FolderFill,
+                label = "Kategoriler",
                 isSelected = selectedIndex == 3,
                 onClick = { onTabSelected(3) },
                 modifier = Modifier.weight(1f)
             )
+            
+            // Tab 5: Ayarlar
+            IOSTabItem(
+                icon = SFSymbolsTabBar.GearshapeOutline,
+                label = "Ayarlar",
+                isSelected = selectedIndex == 4,
+                onClick = { onTabSelected(4) },
+                modifier = Modifier.weight(1f)
+            )
         }
-        
-        // Bottom safe area - iOS: 34dp
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(34.dp)
-                .background(MaterialTheme.colorScheme.surface)
-        )
     }
 }
 
@@ -331,28 +339,43 @@ private fun IOSTabItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val iconTint = if (isSelected) IOSColors.Blue else Color(0xFF8E8E93)
+    val iconTint = if (isSelected) Color(0xFF007AFF) else Color.White // iOS Blue for selected, White for unselected
+    val textTint = if (isSelected) Color(0xFF007AFF) else Color.White
     
-    Column(
+    Box(
         modifier = modifier
             .fillMaxHeight()
-            .clickable(onClick = onClick),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .clickable(onClick = onClick)
+            .then(
+                if (isSelected) {
+                    Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFF007AFF).copy(alpha = 0.15f))
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                } else {
+                    Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                }
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = iconTint,
-            modifier = Modifier.size(25.dp)
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = label,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Medium,
-            color = iconTint
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = iconTint,
+                modifier = Modifier.size(22.dp) // Slightly smaller for better proportion
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = label,
+                fontSize = 9.sp, // Smaller font size for iOS look
+                fontWeight = FontWeight.Medium,
+                color = textTint
+            )
+        }
     }
 }
 

@@ -254,5 +254,143 @@ object SFSymbolsTabBar {
                 close()
             }
         }.build()
+    
+    /**
+     * SF Symbol: house (outline)
+     * Ana Sayfa / Dashboard icon (inactive state)
+     */
+    val HouseOutline: ImageVector
+        get() = ImageVector.Builder(
+            name = "HouseOutline",
+            defaultWidth = 25.dp,
+            defaultHeight = 25.dp,
+            viewportWidth = 25f,
+            viewportHeight = 25f
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.5f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                // House outline
+                moveTo(12.5f, 3f)
+                lineTo(2f, 11f)
+                verticalLineTo(22f)
+                horizontalLineTo(8f)
+                verticalLineTo(16f)
+                horizontalLineTo(17f)
+                verticalLineTo(22f)
+                horizontalLineTo(23f)
+                verticalLineTo(11f)
+                close()
+                // Door
+                moveTo(10f, 18f)
+                horizontalLineTo(15f)
+                verticalLineTo(22f)
+                horizontalLineTo(10f)
+                close()
+            }
+        }.build()
+    
+    /**
+     * SF Symbol: chart.bar (outline)
+     * Raporlar / Reports icon (inactive state)
+     */
+    val ChartBarOutline: ImageVector
+        get() = ImageVector.Builder(
+            name = "ChartBarOutline",
+            defaultWidth = 25.dp,
+            defaultHeight = 25.dp,
+            viewportWidth = 25f,
+            viewportHeight = 25f
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.5f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                // Bar 1 (shortest)
+                moveTo(4f, 16f)
+                horizontalLineTo(8f)
+                verticalLineTo(21f)
+                horizontalLineTo(4f)
+                close()
+                
+                // Bar 2 (medium)
+                moveTo(10f, 12f)
+                horizontalLineTo(14f)
+                verticalLineTo(21f)
+                horizontalLineTo(10f)
+                close()
+                
+                // Bar 3 (tallest)
+                moveTo(16f, 7f)
+                horizontalLineTo(20f)
+                verticalLineTo(21f)
+                horizontalLineTo(16f)
+                close()
+            }
+        }.build()
+    
+    /**
+     * SF Symbol: gearshape (outline)
+     * Ayarlar / Settings icon (inactive state)
+     */
+    val GearshapeOutline: ImageVector
+        get() = ImageVector.Builder(
+            name = "GearshapeOutline",
+            defaultWidth = 25.dp,
+            defaultHeight = 25.dp,
+            viewportWidth = 25f,
+            viewportHeight = 25f
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.5f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                // Gear outline
+                moveTo(12.5f, 2f)
+                lineTo(14.5f, 6f)
+                lineTo(19f, 6.5f)
+                lineTo(21f, 11f)
+                lineTo(18f, 14.5f)
+                lineTo(18.5f, 19f)
+                lineTo(14f, 21f)
+                lineTo(10f, 18f)
+                lineTo(5.5f, 18.5f)
+                lineTo(3f, 14f)
+                lineTo(6f, 10.5f)
+                lineTo(5.5f, 6f)
+                lineTo(10f, 3f)
+                close()
+                
+                // Center circle
+                moveTo(12.5f, 16f)
+                curveTo(14.43f, 16f, 16f, 14.43f, 16f, 12.5f)
+                curveTo(16f, 10.57f, 14.43f, 9f, 12.5f, 9f)
+                curveTo(10.57f, 9f, 9f, 10.57f, 9f, 12.5f)
+                curveTo(9f, 14.43f, 10.57f, 16f, 12.5f, 16f)
+                close()
+            }
+        }.build()
 }
 
