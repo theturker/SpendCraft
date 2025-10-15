@@ -23,10 +23,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.IOSColors
+// import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
 
 data class Achievement(
     val id: String,
@@ -749,4 +752,14 @@ private fun AchievementDetailSheet(
             }
         }
     }
+}
+
+// ====================================================================================================
+// Preview Composables
+// ====================================================================================================
+
+@Preview(name = "Achievements - Light")
+@Composable
+private fun AchievementsScreenPreview() {
+    AchievementsScreen(onBack = {})
 }

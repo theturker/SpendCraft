@@ -552,3 +552,10 @@ enum class AdviceType(
     )
 }
 
+
+// Preview removed due to kapt compatibility issues
+// @Preview(name = "AI Suggestions - Light")
+// @Composable
+// private fun AISuggestionsScreenPreview() {
+//     AISuggestionsScreen(onBack = {})
+// }

@@ -29,6 +29,8 @@ import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.CurrencyFormatter
 import com.alperen.spendcraft.core.ui.charts.*
+// import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
+import androidx.compose.ui.tooling.preview.Preview
 import com.alperen.spendcraft.core.ui.R as CoreR
 import java.text.SimpleDateFormat
 import java.util.*
@@ -636,3 +638,15 @@ private fun CategorySpendingRow(
     }
 }
 
+
+@Preview(name = "Reports - Light")
+@Composable
+private fun IOSReportsScreenPreview() {
+    IOSReportsScreen(
+        transactions = emptyList(),
+        categories = emptyList(),
+        totalIncome = 25000.0,
+        totalExpense = 12500.0,
+        onNavigateToAISuggestions = {}
+    )
+}

@@ -20,8 +20,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.*
+import com.alperen.spendcraft.ui.iosTheme.*
 import com.alperen.spendcraft.core.ui.R as CoreR
 
 /**

@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.notifications.NotificationType
+// import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -255,4 +257,10 @@ private fun getNotificationColor(type: NotificationType) = when (type) {
     NotificationType.SPENDING_REMINDER -> MaterialTheme.colorScheme.primary
     NotificationType.ACHIEVEMENT -> Color(0xFFFFD700) // Gold
     NotificationType.SYSTEM -> MaterialTheme.colorScheme.onSurfaceVariant
+}
+
+@Preview(name = "Notifications - Light")
+@Composable
+private fun NotificationsScreenPreview() {
+    NotificationsScreen(onBack = {})
 }

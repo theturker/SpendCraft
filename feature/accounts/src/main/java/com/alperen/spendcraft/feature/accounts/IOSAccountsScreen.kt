@@ -16,8 +16,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.IOSColors
+// import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
 import com.alperen.spendcraft.core.ui.R as CoreR
 
 /**
@@ -291,3 +293,16 @@ private fun AddAccountDialog(
     )
 }
 
+
+@Preview(name = "Accounts - Light")
+@Composable
+private fun IOSAccountsScreenPreview() {
+    Surface {
+        IOSAccountsScreen(
+            accounts = emptyList(),
+            onAddAccount = { _, _, _ -> },
+            onDeleteAccount = {},
+            onSetDefaultAccount = {}
+        )
+    }
+}

@@ -13,8 +13,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.alperen.spendcraft.ui.iosTheme.*
 import kotlinx.coroutines.delay
 
 /**
@@ -75,3 +77,12 @@ fun SplashScreen(
         }
     }
 }
+
+@Preview(name = "Splash Screen")
+@Composable
+private fun SplashScreenPreview() {
+    IOSTheme(darkTheme = false) {
+        SplashScreen()
+    }
+}
+

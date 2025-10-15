@@ -19,8 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.ui.ModernCard
+// import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
 import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity
 import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
@@ -292,4 +294,17 @@ private fun getFrequencyDisplayName(frequency: com.alperen.spendcraft.data.db.en
         com.alperen.spendcraft.data.db.entities.RecurringFrequency.MONTHLY -> "Aylık"
         com.alperen.spendcraft.data.db.entities.RecurringFrequency.YEARLY -> "Yıllık"
     }
+}
+
+@Preview(name = "Recurring - Light")
+@Composable
+private fun RecurringListScreenPreview() {
+    RecurringListScreen(
+        recurringTransactionsFlow = kotlinx.coroutines.flow.flowOf(emptyList()),
+        onAddRule = {},
+        onEditRule = {},
+        onDeleteRule = {},
+        isPremium = false,
+        onBack = {}
+    )
 }

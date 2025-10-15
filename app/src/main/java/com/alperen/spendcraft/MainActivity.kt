@@ -196,11 +196,6 @@ class MainActivity : ComponentActivity() {
                                         },
                                         onNavigateToRegister = { currentAuthScreen = "register" },
                                         onNavigateToForgotPassword = { currentAuthScreen = "forgot" },
-                                        onGoogleSignIn = {
-                                            // Launch Google Sign In
-                                            val signInIntent = googleAuthService.getSignInIntent()
-                                            googleSignInLauncher.launch(signInIntent)
-                                        },
                                         isLoading = isLoading,
                                         errorMessage = errorMessage
                                     )
