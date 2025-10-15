@@ -148,7 +148,7 @@ fun MainTabNavigation(
         NavHost(
             navController = navController,
             startDestination = TabScreen.Dashboard.route,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.fillMaxSize() // Full screen so content shows through bottom bar
         ) {
             // 1. Dashboard Tab
             composable(TabScreen.Dashboard.route) {

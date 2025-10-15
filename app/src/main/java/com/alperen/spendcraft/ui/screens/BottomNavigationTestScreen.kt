@@ -45,8 +45,7 @@ fun BottomNavigationTestScreen() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .background(Color(0xFF000000)), // Dark background
+                .background(Color(0xFF000000)), // Dark background that shows through bottom bar
             contentAlignment = Alignment.Center
         ) {
             Column(

@@ -82,14 +82,13 @@ fun IOSBottomNavigationBar(
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 12.dp)
     ) {
-        // Main navigation bar with more oval shape and blur effect
-        // Exact match to iOS design with highly transparent background
+        // Main navigation bar with liquid glass effect - pixel perfect iOS design
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .clip(RoundedCornerShape(28.dp)) // More oval shape (28dp instead of 20dp)
-                .background(Color(0xFF1C1C1E).copy(alpha = 0.6f)) // More transparent like iOS
+                .clip(RoundedCornerShape(28.dp)) // Oval shape like iOS
+                .background(Color(0xFF1C1C1E).copy(alpha = 0.3f)) // Much more transparent for liquid glass effect
                 .padding(horizontal = 4.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
@@ -123,8 +122,8 @@ private fun IOSTabItem(
             .then(
                 if (isSelected) {
                     Modifier
-                        .clip(CircleShape) // Circular background instead of rounded rectangle
-                        .background(Color(0xFF007AFF).copy(alpha = 0.2f)) // Slightly more visible blue background
+                        .clip(CircleShape) // Circular background like iOS
+                        .background(Color(0xFF007AFF).copy(alpha = 0.15f)) // More subtle blue background for liquid glass effect
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 } else {
                     Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
