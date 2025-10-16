@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alperen.spendcraft.auth.AuthViewModel
 import com.alperen.spendcraft.ThemeHelper
+import com.alperen.spendcraft.ThemeMode
 import com.alperen.spendcraft.LocaleHelper
 import com.alperen.spendcraft.R
 
@@ -52,7 +53,13 @@ fun RegisterScreen(
     val authViewModel: AuthViewModel = viewModel()
     val isLoading by authViewModel.isLoading.collectAsState()
     val errorMessage by authViewModel.errorMessage.collectAsState()
-    val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = true)
+    val themeMode by ThemeHelper.getThemeMode(context).collectAsState(initial = ThemeMode.SYSTEM)
+    val systemInDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDarkMode = when (themeMode) {
+        ThemeMode.SYSTEM -> systemInDarkTheme
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    }
 
     val isTr = LocaleHelper.getLanguage(context) == "tr"
 

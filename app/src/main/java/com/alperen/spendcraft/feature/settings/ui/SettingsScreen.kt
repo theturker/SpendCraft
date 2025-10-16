@@ -41,6 +41,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.CurrencyHelper
 import com.alperen.spendcraft.ThemeHelper
+import com.alperen.spendcraft.ThemeMode
 import com.alperen.spendcraft.core.model.Category
 import androidx.compose.ui.res.stringResource
 import com.alperen.spendcraft.R
@@ -99,7 +100,13 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = true)
+    val themeMode by ThemeHelper.getThemeMode(context).collectAsState(initial = ThemeMode.SYSTEM)
+    val systemInDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDarkMode = when (themeMode) {
+        ThemeMode.SYSTEM -> systemInDarkTheme
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    }
     
     // Premium durumu parent'tan gelir
     var currency by rememberSaveable { mutableStateOf(CurrencyHelper.getCurrency(context)) }

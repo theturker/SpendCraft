@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.alperen.spendcraft.LocaleHelper
 import com.alperen.spendcraft.FirstLaunchHelper
 import com.alperen.spendcraft.ThemeHelper
+import com.alperen.spendcraft.ThemeMode
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
@@ -60,7 +61,13 @@ fun WelcomeScreen(
     val isTurkish = currentLanguage == "tr"
     
     // Get dark mode state
-    val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = false)
+    val themeMode by ThemeHelper.getThemeMode(context).collectAsState(initial = ThemeMode.SYSTEM)
+    val systemInDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDarkMode = when (themeMode) {
+        ThemeMode.SYSTEM -> systemInDarkTheme
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    }
     
     // Handle first launch completion
     val firstLaunchHelper = remember { FirstLaunchHelper(context) }

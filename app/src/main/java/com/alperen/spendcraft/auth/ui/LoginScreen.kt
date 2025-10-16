@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alperen.spendcraft.R
 import com.alperen.spendcraft.auth.AuthViewModel
 import com.alperen.spendcraft.ThemeHelper
+import com.alperen.spendcraft.ThemeMode
 import com.alperen.spendcraft.LocaleHelper
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 
@@ -47,7 +48,13 @@ fun LoginScreen(
     val authViewModel: AuthViewModel = viewModel()
     val isLoading by authViewModel.isLoading.collectAsState()
     val errorMessage by authViewModel.errorMessage.collectAsState()
-    val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = true)
+    val themeMode by ThemeHelper.getThemeMode(context).collectAsState(initial = ThemeMode.SYSTEM)
+    val systemInDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDarkMode = when (themeMode) {
+        ThemeMode.SYSTEM -> systemInDarkTheme
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    }
 
     val currentLanguage = LocaleHelper.getLanguage(context)
     val isTurkish = currentLanguage == "tr"

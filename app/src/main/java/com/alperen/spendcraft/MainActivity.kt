@@ -117,10 +117,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val scope = rememberCoroutineScope()
-            val isDarkMode by ThemeHelper.getDarkMode(context).collectAsState(initial = false)
+            val themeMode by ThemeHelper.getThemeMode(context).collectAsState(initial = ThemeMode.SYSTEM)
             val isFirstLaunch by firstLaunchHelper.isFirstLaunch.collectAsState(initial = true)
             val authViewModel: AuthViewModel = viewModel()
             val authState by authViewModel.authState.collectAsState()
+            
+            // Calculate isDarkMode based on theme mode
+            val systemInDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
+            val isDarkMode = when (themeMode) {
+                ThemeMode.SYSTEM -> systemInDarkTheme
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+            }
             
             var currentAuthScreen by remember { mutableStateOf("login") }
             

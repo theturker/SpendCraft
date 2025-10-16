@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -55,7 +56,15 @@ fun IOSSettingsScreen(
     totalCategories: Int = 0,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val scope = rememberCoroutineScope()
+    
     var showSignOutDialog by remember { mutableStateOf(false) }
+    var showThemeDialog by remember { mutableStateOf(false) }
+    
+    // Theme mode state
+    val themeMode by com.alperen.spendcraft.ThemeHelper.getThemeMode(context)
+        .collectAsState(initial = com.alperen.spendcraft.ThemeMode.SYSTEM)
     
     // Scroll behavior ekleyerek iOS gibi collapsible davranış sağlıyoruz
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -96,7 +105,24 @@ fun IOSSettingsScreen(
                 .padding(paddingValues),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            // 1. Finans Section
+            // 1. Görünüm Section (iOS-like Appearance)
+            item {
+                SettingsSectionHeader(title = "Görünüm")
+            }
+            
+            item {
+                SettingsListItem(
+                    icon = CoreR.drawable.ic_sparkles,
+                    iconColor = IOSColors.Purple,
+                    title = "Tema",
+                    subtitle = com.alperen.spendcraft.ThemeHelper.getThemeModeDisplayName(themeMode),
+                    onClick = { showThemeDialog = true }
+                )
+            }
+            
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            
+            // 2. Finans Section
             item {
                 SettingsSectionHeader(title = "Finans")
             }
@@ -112,7 +138,7 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
-            // 2. Yapay Zeka Section
+            // 3. Yapay Zeka Section
             item {
                 SettingsSectionHeader(title = "🤖 Yapay Zeka")
             }
@@ -128,7 +154,7 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
-            // 3. Özellikler Section
+            // 4. Özellikler Section
             item {
                 SettingsSectionHeader(title = "Özellikler")
             }
@@ -171,7 +197,7 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
-            // 4. Veri Yönetimi Section
+            // 5. Veri Yönetimi Section
             item {
                 SettingsSectionHeader(title = "Veri Yönetimi")
             }
@@ -187,7 +213,7 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
-            // 5. Hesap Section
+            // 6. Hesap Section
             item {
                 SettingsSectionHeader(title = "Hesap")
             }
@@ -204,7 +230,7 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
-            // 6. Uygulama Section
+            // 7. Uygulama Section
             item {
                 SettingsSectionHeader(title = "Uygulama")
             }
@@ -254,6 +280,66 @@ fun IOSSettingsScreen(
             dismissButton = {
                 TextButton(onClick = { showSignOutDialog = false }) {
                     Text("İptal")
+                }
+            }
+        )
+    }
+    
+    // Theme Selection Dialog (iOS-style)
+    if (showThemeDialog) {
+        AlertDialog(
+            onDismissRequest = { showThemeDialog = false },
+            title = { Text("Tema Seçin") },
+            text = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    com.alperen.spendcraft.ThemeMode.values().forEach { mode ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(IOSRadius.medium)
+                                .clickable {
+                                    scope.launch {
+                                        com.alperen.spendcraft.ThemeHelper.setThemeMode(context, mode)
+                                        showThemeDialog = false
+                                    }
+                                }
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(
+                                    text = com.alperen.spendcraft.ThemeHelper.getThemeModeDisplayName(mode),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                Text(
+                                    text = when (mode) {
+                                        com.alperen.spendcraft.ThemeMode.SYSTEM -> "Cihaz ayarlarını takip et"
+                                        com.alperen.spendcraft.ThemeMode.LIGHT -> "Her zaman açık tema"
+                                        com.alperen.spendcraft.ThemeMode.DARK -> "Her zaman koyu tema"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            
+                            if (themeMode == mode) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = "Seçili",
+                                    tint = IOSColors.Blue
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showThemeDialog = false }) {
+                    Text("Tamam")
                 }
             }
         )
