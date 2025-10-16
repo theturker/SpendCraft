@@ -36,15 +36,15 @@ object IOSColors {
     val AchievementYellow = Color(0xFFFBBF24)
     val StreakOrange = Color(0xFFF59E0B)
     
-    // Light Theme
-    val LightBackground = Color(0xFFF8FAFC)
-    val LightSurface = Color(0xFFFFFFFF)
-    val LightSecondaryBackground = Color(0xFFF1F5F9)
+    // Light Theme - iOS systemBackground
+    val LightBackground = Color.White
+    val LightSurface = Color(0xFFF2F2F7)          // iOS secondarySystemBackground
+    val LightSecondaryBackground = Color.White    // iOS tertiarySystemBackground
     
-    // Dark Theme
-    val DarkBackground = Color(0xFF0F172A)
-    val DarkSurface = Color(0xFF1E293B)
-    val DarkSecondaryBackground = Color(0xFF334155)
+    // Dark Theme - iOS systemBackground (dark mode)
+    val DarkBackground = Color.Black              // iOS systemBackground (dark)
+    val DarkSurface = Color(0xFF1C1C1E)          // iOS secondarySystemBackground (dark)
+    val DarkSecondaryBackground = Color(0xFF2C2C2E) // iOS tertiarySystemBackground (dark)
 }
 
 // iOS-style Corner Radius
@@ -78,71 +78,71 @@ val LocalExtendedColors = staticCompositionLocalOf {
     )
 }
 
-// Modern Light Theme Colors (iOS-inspired)
+// iOS Light Mode Colors - Exact match to iOS systemColors
 private val LightColors = lightColorScheme(
     primary = IOSColors.Blue,
-    onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFFE0E7FF),
-    onPrimaryContainer = Color(0xFF1E1B4B),
+    onPrimary = Color.White,
+    primaryContainer = IOSColors.Blue.copy(alpha = 0.2f),
+    onPrimaryContainer = IOSColors.Blue,
     
     secondary = IOSColors.Green,
-    onSecondary = Color(0xFFFFFFFF),
-    secondaryContainer = Color(0xFFD1FAE5),
-    onSecondaryContainer = Color(0xFF064E3B),
+    onSecondary = Color.White,
+    secondaryContainer = IOSColors.Green.copy(alpha = 0.2f),
+    onSecondaryContainer = IOSColors.Green,
     
     tertiary = IOSColors.Purple,
-    onTertiary = Color(0xFFFFFFFF),
-    tertiaryContainer = Color(0xFFEDE9FE),
-    onTertiaryContainer = Color(0xFF4C1D95),
+    onTertiary = Color.White,
+    tertiaryContainer = IOSColors.Purple.copy(alpha = 0.2f),
+    onTertiaryContainer = IOSColors.Purple,
     
     error = IOSColors.Red,
-    onError = Color(0xFFFFFFFF),
-    errorContainer = Color(0xFFFEE2E2),
-    onErrorContainer = Color(0xFF7F1D1D),
+    onError = Color.White,
+    errorContainer = IOSColors.Red.copy(alpha = 0.2f),
+    onErrorContainer = IOSColors.Red,
     
-    background = IOSColors.LightBackground,
-    onBackground = Color(0xFF1E293B),
-    surface = IOSColors.LightSurface,
-    onSurface = Color(0xFF1E293B),
-    surfaceVariant = IOSColors.LightSecondaryBackground,
-    onSurfaceVariant = Color(0xFF64748B),
+    background = IOSColors.LightBackground,       // White
+    onBackground = Color.Black,
+    surface = IOSColors.LightSurface,            // #F2F2F7
+    onSurface = Color(0xFF1C1B1F),
+    surfaceVariant = IOSColors.LightSecondaryBackground, // White
+    onSurfaceVariant = Color(0xFF8E8E93),        // iOS secondaryLabel
     
-    outline = Color(0xFFE2E8F0),
-    outlineVariant = Color(0xFFF1F5F9),
+    outline = Color(0xFFC7C7CC),                 // iOS separator
+    outlineVariant = Color(0xFFE5E5EA),
     scrim = Color(0xFF000000)
 )
 
-// Modern Dark Theme Colors (iOS-inspired)
+// iOS Dark Mode Colors - Exact match to iOS systemColors (dark)
 private val DarkColors = darkColorScheme(
-    primary = Color(0xFF0A84FF), // iOS Blue Dark Mode
-    onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFF4338CA),
-    onPrimaryContainer = Color(0xFFE0E7FF),
+    primary = IOSColors.Blue,                     // systemBlue
+    onPrimary = Color.White,
+    primaryContainer = IOSColors.Blue.copy(alpha = 0.3f),
+    onPrimaryContainer = IOSColors.Blue,
     
-    secondary = Color(0xFF32D74B), // iOS Green Dark Mode
-    onSecondary = Color(0xFF064E3B),
-    secondaryContainer = Color(0xFF047857),
-    onSecondaryContainer = Color(0xFFD1FAE5),
+    secondary = IOSColors.Green,                  // systemGreen
+    onSecondary = Color.White,
+    secondaryContainer = IOSColors.Green.copy(alpha = 0.3f),
+    onSecondaryContainer = IOSColors.Green,
     
-    tertiary = Color(0xFFBF5AF2), // iOS Purple Dark Mode
-    onTertiary = Color(0xFF4C1D95),
-    tertiaryContainer = Color(0xFF7C3AED),
-    onTertiaryContainer = Color(0xFFEDE9FE),
+    tertiary = IOSColors.Purple,                  // systemPurple
+    onTertiary = Color.White,
+    tertiaryContainer = IOSColors.Purple.copy(alpha = 0.3f),
+    onTertiaryContainer = IOSColors.Purple,
     
-    error = Color(0xFFFF453A), // iOS Red Dark Mode
-    onError = Color(0xFF7F1D1D),
-    errorContainer = Color(0xFFDC2626),
-    onErrorContainer = Color(0xFFFEE2E2),
+    error = IOSColors.Red,                        // systemRed
+    onError = Color.White,
+    errorContainer = IOSColors.Red.copy(alpha = 0.3f),
+    onErrorContainer = IOSColors.Red,
     
-    background = IOSColors.DarkBackground,
-    onBackground = Color(0xFFF1F5F9),
-    surface = IOSColors.DarkSurface,
-    onSurface = Color(0xFFF1F5F9),
-    surfaceVariant = IOSColors.DarkSecondaryBackground,
-    onSurfaceVariant = Color(0xFF94A3B8),
+    background = IOSColors.DarkBackground,        // Black
+    onBackground = Color.White,
+    surface = IOSColors.DarkSurface,             // #1C1C1E
+    onSurface = Color(0xFFEBEBF5),
+    surfaceVariant = IOSColors.DarkSecondaryBackground, // #2C2C2E
+    onSurfaceVariant = Color(0xFF8E8E93),        // iOS secondaryLabel
     
-    outline = Color(0xFF475569),
-    outlineVariant = Color(0xFF334155),
+    outline = Color(0xFF38383A),                 // iOS separator (dark)
+    outlineVariant = Color(0xFF48484A),
     scrim = Color(0xFF000000)
 )
 
@@ -162,11 +162,12 @@ fun SpendCraftTheme(
 ) {
     val colorScheme = if (darkTheme) DarkColors else LightColors
     
+    // iOS system colors - same in both light and dark mode
     val extendedColors = ExtendedColors(
-        income = if (darkTheme) Color(0xFF32D74B) else IOSColors.IncomeGreen,
-        expense = if (darkTheme) Color(0xFFFF453A) else IOSColors.ExpenseRed,
-        achievement = if (darkTheme) Color(0xFFFFD60A) else IOSColors.AchievementYellow,
-        streak = if (darkTheme) Color(0xFFFF9F0A) else IOSColors.StreakOrange,
+        income = IOSColors.Green,                   // #34C759
+        expense = IOSColors.Red,                    // #FF3B30
+        achievement = IOSColors.AchievementYellow,  // #FBBF24
+        streak = IOSColors.StreakOrange,           // #F59E0B
         cardBackground = if (darkTheme) IOSColors.DarkSurface else IOSColors.LightSurface,
         secondaryBackground = if (darkTheme) IOSColors.DarkSecondaryBackground else IOSColors.LightSecondaryBackground
     )
