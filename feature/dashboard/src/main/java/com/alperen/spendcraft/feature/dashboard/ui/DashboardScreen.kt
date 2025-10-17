@@ -80,7 +80,7 @@ fun DashboardScreen(
         rememberTopAppBarState()
     )
     
-    // Scroll oranına göre text boyutunu ayarlayalım
+    // Scroll oranına göre text boyutunu
     val collapsedFraction = scrollBehavior.state.collapsedFraction
     val titleFontSize = androidx.compose.ui.unit.lerp(
         start = 32.sp,
