@@ -7,6 +7,81 @@
 
 import SwiftUI
 
+// MARK: - Currency TextField Helper
+fileprivate struct CurrencyTextField: View {
+    let title: String
+    @Binding var value: String
+    @FocusState.Binding var isFocused: Bool
+    
+    @State private var displayValue: String = ""
+    
+    var body: some View {
+        TextField(title, text: $displayValue)
+            .keyboardType(.decimalPad)
+            .font(.title2)
+            .focused($isFocused)
+            .onChange(of: displayValue) { newValue in
+                formatInput(newValue)
+            }
+            .onAppear {
+                if !value.isEmpty {
+                    displayValue = formatNumber(value)
+                }
+            }
+    }
+    
+    private func formatInput(_ input: String) {
+        let cleaned = input.replacingOccurrences(of: "[^0-9,.]", with: "", options: .regularExpression)
+        let currency = getCurrentCurrencyCode()
+        let decimalSep = currency == "TRY" ? "," : "."
+        let parts = cleaned.split(separator: Character(decimalSep), maxSplits: 1)
+        
+        var integerPart = String(parts.first ?? "")
+        var decimalPart = parts.count > 1 ? String(parts[1]) : ""
+        
+        integerPart = integerPart.replacingOccurrences(of: ".", with: "")
+        integerPart = integerPart.replacingOccurrences(of: ",", with: "")
+        
+        if decimalPart.count > 2 {
+            decimalPart = String(decimalPart.prefix(2))
+        }
+        
+        if decimalPart.isEmpty {
+            value = integerPart
+        } else {
+            value = "\(integerPart).\(decimalPart)"
+        }
+        
+        if !integerPart.isEmpty {
+            displayValue = formatNumber(value)
+        } else {
+            displayValue = ""
+        }
+    }
+    
+    private func formatNumber(_ number: String) -> String {
+        guard let doubleValue = Double(number) else { return number }
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        
+        let currency = getCurrentCurrencyCode()
+        if currency == "TRY" {
+            formatter.locale = Locale(identifier: "tr_TR")
+            formatter.groupingSeparator = "."
+            formatter.decimalSeparator = ","
+        } else {
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.groupingSeparator = ","
+            formatter.decimalSeparator = "."
+        }
+        
+        return formatter.string(from: NSNumber(value: doubleValue)) ?? number
+    }
+}
+
 struct AddTransactionView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel

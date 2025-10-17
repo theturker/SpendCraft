@@ -102,6 +102,14 @@ class ExportManager {
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             let jsonData = try encoder.encode(backupData)
             
+            // Debug: Print summary of exported data
+            print("✅ JSON Export Summary:")
+            print("  📊 Transactions: \(backupData.transactions.count)")
+            print("  📁 Categories: \(backupData.categories.count)")
+            print("  💳 Accounts: \(backupData.accounts.count)")
+            print("  📅 Export Date: \(backupData.exportDate)")
+            print("  📦 File Size: \(jsonData.count) bytes")
+            
             let fileName = "spendcraft_backup_\(Date().timeIntervalSince1970).json"
             return saveToFile(data: jsonData, fileName: fileName)
         } catch {
@@ -111,11 +119,21 @@ class ExportManager {
     }
     
     static func importFromJSON(url: URL, context: NSManagedObjectContext, replaceExisting: Bool = false) -> (success: Int, failed: Int, message: String) {
+        print("📥 Starting JSON import from: \(url.path)")
+        print("📥 File exists: \(FileManager.default.fileExists(atPath: url.path))")
+        
         do {
             let jsonData = try Data(contentsOf: url)
+            print("📥 File size: \(jsonData.count) bytes")
+            
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             let backupData = try decoder.decode(BackupData.self, from: jsonData)
+            
+            print("📥 Decoded backup data:")
+            print("   - Transactions: \(backupData.transactions.count)")
+            print("   - Categories: \(backupData.categories.count)")
+            print("   - Accounts: \(backupData.accounts.count)")
             
             var successCount = 0
             var failedCount = 0
@@ -194,12 +212,33 @@ class ExportManager {
             }
             
             try context.save()
+            print("✅ CoreData saved successfully")
             
             let message = "✅ Yedekleme başarıyla içe aktarıldı!\n\n📊 \(backupData.transactions.count) işlem\n📁 \(backupData.categories.count) kategori\n💳 \(backupData.accounts.count) hesap"
             return (successCount, failedCount, message)
             
+        } catch let error as DecodingError {
+            print("❌ JSON decoding error: \(error)")
+            switch error {
+            case .dataCorrupted(let context):
+                print("   Data corrupted: \(context)")
+                return (0, 0, "❌ Dosya bozuk veya geçersiz format")
+            case .keyNotFound(let key, let context):
+                print("   Key not found: \(key), \(context)")
+                return (0, 0, "❌ Dosya formatı uyumsuz (eksik alan: \(key.stringValue))")
+            case .typeMismatch(let type, let context):
+                print("   Type mismatch: \(type), \(context)")
+                return (0, 0, "❌ Dosya formatı hatalı")
+            case .valueNotFound(let type, let context):
+                print("   Value not found: \(type), \(context)")
+                return (0, 0, "❌ Dosya formatı eksik")
+            @unknown default:
+                return (0, 0, "❌ Bilinmeyen okuma hatası")
+            }
         } catch {
             print("❌ JSON import failed: \(error)")
+            print("   Error type: \(type(of: error))")
+            print("   Error description: \(error.localizedDescription)")
             return (0, 0, "❌ İçe aktarım başarısız: \(error.localizedDescription)")
         }
     }

@@ -82,7 +82,9 @@ struct TransactionsTabView: View {
         .sheet(item: $transactionToEdit, onDismiss: {
             // Delay to ensure CoreData changes are fully committed
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                // Force a complete reload
+                // Force a complete reload with context refresh
+                let context = CoreDataStack.shared.container.viewContext
+                context.refreshAllObjects()
                 transactionsViewModel.loadTransactions()
                 transactionsViewModel.objectWillChange.send()
             }
@@ -90,6 +92,7 @@ struct TransactionsTabView: View {
             EditTransactionView(transaction: transaction)
                 .environmentObject(transactionsViewModel)
         }
+        .id(transactionsViewModel.transactions.map { "\($0.id)-\($0.timestampUtcMillis)" }.joined())
     }
     
     // MARK: - Subviews
@@ -145,6 +148,7 @@ struct TransactionsTabView: View {
                 Section(header: Text(section.date)) {
                     ForEach(section.items, id: \.id) { transaction in
                         transactionRow(for: transaction)
+                            .id("\(transaction.id)-\(transaction.timestampUtcMillis)-\(transaction.amountMinor)")
                     }
                 }
             }

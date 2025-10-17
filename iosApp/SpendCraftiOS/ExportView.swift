@@ -310,39 +310,109 @@ struct ExportView: View {
         case .success(let urls):
             guard let url = urls.first else { return }
             
-            // Check file type
-            let fileExtension = url.pathExtension.lowercased()
-            
-            if fileExtension == "json" {
-                // Import JSON backup
-                let (_, _, message) = ExportManager.importFromJSON(
-                    url: url,
-                    context: CoreDataStack.shared.container.viewContext,
-                    replaceExisting: replaceExistingData
-                )
-                
-                transactionsViewModel.loadData()
-                alertMessage = message
-                showAlert = true
-                
-            } else if fileExtension == "csv" {
-                // Import CSV
-                let (success, failed) = ExportManager.importFromCSV(
-                    url: url,
-                    context: CoreDataStack.shared.container.viewContext,
-                    categories: transactionsViewModel.categories,
-                    accounts: transactionsViewModel.accounts
-                )
-                
-                if success > 0 {
-                    transactionsViewModel.loadData()
-                    alertMessage = "✅ \(success) işlem başarıyla içe aktarıldı.\n❌ \(failed) işlem başarısız oldu."
-                } else {
-                    alertMessage = "❌ İçe aktarım başarısız oldu. Dosya formatını kontrol edin."
+            // Start accessing security-scoped resource
+            let didStartAccessing = url.startAccessingSecurityScopedResource()
+            defer {
+                if didStartAccessing {
+                    url.stopAccessingSecurityScopedResource()
                 }
-                showAlert = true
-            } else {
-                alertMessage = "❌ Desteklenmeyen dosya formatı. Lütfen JSON veya CSV dosyası seçin."
+            }
+            
+            // Copy file to temporary directory to avoid permission issues
+            let fileManager = FileManager.default
+            let tempDirectory = fileManager.temporaryDirectory
+            let tempFileName = UUID().uuidString + "." + url.pathExtension
+            let tempFileURL = tempDirectory.appendingPathComponent(tempFileName)
+            
+            do {
+                print("📂 Original file: \(url.path)")
+                print("📂 Is iCloud file: \(url.path.contains("com~apple~CloudDocs"))")
+                
+                // Remove existing temp file if any
+                if fileManager.fileExists(atPath: tempFileURL.path) {
+                    try fileManager.removeItem(at: tempFileURL)
+                    print("🗑️ Removed existing temp file")
+                }
+                
+                // Use NSFileCoordinator for iCloud files (required by iOS)
+                let coordinator = NSFileCoordinator()
+                var coordinatorError: NSError?
+                var fileData: Data?
+                
+                coordinator.coordinate(readingItemAt: url, options: .withoutChanges, error: &coordinatorError) { coordinatedURL in
+                    print("📂 Coordinated URL: \(coordinatedURL.path)")
+                    
+                    do {
+                        // Read file data
+                        fileData = try Data(contentsOf: coordinatedURL)
+                        print("✅ File data loaded: \(fileData?.count ?? 0) bytes")
+                    } catch {
+                        print("❌ Error reading coordinated file: \(error)")
+                    }
+                }
+                
+                // Check for coordination error
+                if let error = coordinatorError {
+                    throw error
+                }
+                
+                // Check if we got data
+                guard let data = fileData else {
+                    throw NSError(domain: "com.spendcraft", code: 2, userInfo: [NSLocalizedDescriptionKey: "Dosya okunamadı"])
+                }
+                
+                // Write to temp location
+                try data.write(to: tempFileURL)
+                
+                print("✅ File written to temp: \(tempFileURL.path)")
+                print("✅ Temp file size: \(data.count) bytes")
+                
+                if let attributes = try? fileManager.attributesOfItem(atPath: tempFileURL.path) {
+                    print("✅ Temp file verified: \(attributes[.size] ?? 0) bytes")
+                }
+                
+                // Check file type
+                let fileExtension = tempFileURL.pathExtension.lowercased()
+                
+                if fileExtension == "json" {
+                    // Import JSON backup
+                    let (_, _, message) = ExportManager.importFromJSON(
+                        url: tempFileURL,
+                        context: CoreDataStack.shared.container.viewContext,
+                        replaceExisting: replaceExistingData
+                    )
+                    
+                    transactionsViewModel.loadData()
+                    alertMessage = message
+                    showAlert = true
+                    
+                } else if fileExtension == "csv" {
+                    // Import CSV
+                    let (success, failed) = ExportManager.importFromCSV(
+                        url: tempFileURL,
+                        context: CoreDataStack.shared.container.viewContext,
+                        categories: transactionsViewModel.categories,
+                        accounts: transactionsViewModel.accounts
+                    )
+                    
+                    if success > 0 {
+                        transactionsViewModel.loadData()
+                        alertMessage = "✅ \(success) işlem başarıyla içe aktarıldı.\n❌ \(failed) işlem başarısız oldu."
+                    } else {
+                        alertMessage = "❌ İçe aktarım başarısız oldu. Dosya formatını kontrol edin."
+                    }
+                    showAlert = true
+                } else {
+                    alertMessage = "❌ Desteklenmeyen dosya formatı. Lütfen JSON veya CSV dosyası seçin."
+                    showAlert = true
+                }
+                
+                // Clean up temp file
+                try? fileManager.removeItem(at: tempFileURL)
+                
+            } catch {
+                print("❌ File copy error: \(error.localizedDescription)")
+                alertMessage = "❌ Dosya işleme hatası: \(error.localizedDescription)"
                 showAlert = true
             }
             

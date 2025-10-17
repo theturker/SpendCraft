@@ -17,7 +17,6 @@ struct DashboardView: View {
     
     @State private var transactionTypeToAdd: TransactionType? = nil
     @State private var showUserProfiling = false
-    @State private var transactionToEdit: TransactionEntity? = nil
     @AppStorage("userProfilingCompleted") private var profilingCompleted = false
     
     enum TransactionType: Identifiable {
@@ -269,14 +268,10 @@ struct DashboardView: View {
                     
                     ForEach(transactionsViewModel.transactions.prefix(5), id: \.id) { transaction in
                         TransactionRow(transaction: transaction)
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                transactionToEdit = transaction
-                            }
                     }
                 }
                 .padding(.vertical, 8)
-                .id(transactionsViewModel.transactions.map { "\($0.id)-\($0.timestampUtcMillis)" }.joined())
+                .id(transactionsViewModel.transactions.map { "\($0.id)-\($0.timestampUtcMillis)-\($0.amountMinor)" }.joined())
             }
         }
         
@@ -313,23 +308,9 @@ struct DashboardView: View {
         .sheet(isPresented: $showUserProfiling) {
             UserProfilingView()
         }
-        .sheet(item: $transactionToEdit, onDismiss: {
-            // Force reload after editing transaction
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                transactionsViewModel.loadTransactions()
-                transactionsViewModel.objectWillChange.send()
-            }
-        }) { transaction in
-            EditTransactionView(transaction: transaction)
-                .environmentObject(transactionsViewModel)
-        }
         .onAppear {
             // Load data
-            transactionsViewModel.loadTransactions()
-            transactionsViewModel.loadCategories()
-            budgetViewModel.loadBudgets()
-            achievementsViewModel.loadAchievements()
-            achievementsViewModel.loadStreak()
+            reloadAllData()
             
             // Check budgets and send notifications if needed
             let spentAmounts = transactionsViewModel.categories.reduce(into: [String: Double]()) { result, category in
@@ -337,6 +318,29 @@ struct DashboardView: View {
             }
             notificationsViewModel.checkAllBudgets(budgets: budgetViewModel.budgets, spentAmounts: spentAmounts)
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("TransactionUpdated"))) { _ in
+            // Reload when transaction is updated from other screens
+            print("🔄 Dashboard: Received transaction update notification")
+            reloadAllData()
+        }
+    }
+    
+    private func reloadAllData() {
+        // Refresh CoreData context first
+        let context = CoreDataStack.shared.container.viewContext
+        context.refreshAllObjects()
+        
+        // Reload all data
+        transactionsViewModel.loadTransactions()
+        transactionsViewModel.loadCategories()
+        budgetViewModel.loadBudgets()
+        achievementsViewModel.loadAchievements()
+        achievementsViewModel.loadStreak()
+        
+        // Force UI update
+        transactionsViewModel.objectWillChange.send()
+        
+        print("✅ Dashboard: All data reloaded")
     }
 }
 
