@@ -85,6 +85,51 @@ class CoreDataStack: ObservableObject {
         }
     }
     
+    func clearAllUserData() {
+        let context = container.viewContext
+        
+        // Delete all transactions
+        let transactionFetch: NSFetchRequest<NSFetchRequestResult> = TransactionEntity.fetchRequest()
+        let transactionDelete = NSBatchDeleteRequest(fetchRequest: transactionFetch)
+        
+        // Delete all categories
+        let categoryFetch: NSFetchRequest<NSFetchRequestResult> = CategoryEntity.fetchRequest()
+        let categoryDelete = NSBatchDeleteRequest(fetchRequest: categoryFetch)
+        
+        // Delete all accounts
+        let accountFetch: NSFetchRequest<NSFetchRequestResult> = AccountEntity.fetchRequest()
+        let accountDelete = NSBatchDeleteRequest(fetchRequest: accountFetch)
+        
+        // Delete all budgets
+        let budgetFetch: NSFetchRequest<NSFetchRequestResult> = BudgetEntity.fetchRequest()
+        let budgetDelete = NSBatchDeleteRequest(fetchRequest: budgetFetch)
+        
+        // Delete all achievements
+        let achievementFetch: NSFetchRequest<NSFetchRequestResult> = AchievementEntity.fetchRequest()
+        let achievementDelete = NSBatchDeleteRequest(fetchRequest: achievementFetch)
+        
+        // Delete all recurring transactions
+        let recurringFetch: NSFetchRequest<NSFetchRequestResult> = RecurringTransactionEntity.fetchRequest()
+        let recurringDelete = NSBatchDeleteRequest(fetchRequest: recurringFetch)
+        
+        do {
+            try context.execute(transactionDelete)
+            try context.execute(categoryDelete)
+            try context.execute(accountDelete)
+            try context.execute(budgetDelete)
+            try context.execute(achievementDelete)
+            try context.execute(recurringDelete)
+            try context.save()
+            
+            // Refresh context to reflect changes
+            context.refreshAllObjects()
+            
+            print("✅ All user data cleared successfully")
+        } catch {
+            print("❌ Failed to clear user data: \(error)")
+        }
+    }
+    
     func seedInitialData() {
         let context = container.viewContext
         let fetchRequest: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest() as! NSFetchRequest<CategoryEntity>

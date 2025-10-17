@@ -25,6 +25,7 @@ struct AddTransactionView: View {
     @State private var showAddCategory = false
     @State private var isRecurring: Bool = false
     @State private var recurringFrequency: String = "MONTHLY"
+    @FocusState private var isAmountFocused: Bool
     
     init(initialIsIncome: Bool) {
         self.initialIsIncome = initialIsIncome
@@ -59,9 +60,7 @@ struct AddTransactionView: View {
                     // Amount
                     Section("Miktar") {
                         HStack {
-                            TextField("0.00", text: $amount)
-                                .keyboardType(.decimalPad)
-                                .font(.title2)
+                            CurrencyTextField(title: "0.00", value: $amount, isFocused: $isAmountFocused)
                             Text(getCurrentCurrencySymbol())
                                 .font(.title2)
                                 .foregroundColor(.secondary)
@@ -215,6 +214,11 @@ struct AddTransactionView: View {
                 selectedAccount = defaultAccount
             } else if let firstAccount = transactionsViewModel.accounts.first {
                 selectedAccount = firstAccount
+            }
+            
+            // Auto-focus on amount field with slight delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                isAmountFocused = true
             }
             
             print("🔵 Total categories loaded: \(transactionsViewModel.categories.count)")

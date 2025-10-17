@@ -18,6 +18,8 @@ struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var notificationManager = NotificationManager.shared
     
+    @AppStorage("selectedCurrency") private var selectedCurrency: String = "TRY"
+    
     @State private var showAISettings = false
     @State private var showAISuggestions = false
     @State private var showExport = false
@@ -91,7 +93,7 @@ struct SettingsView: View {
                             .foregroundColor(.green)
                         Text("Para Birimi")
                         Spacer()
-                        Text(UserDefaults.standard.string(forKey: "selectedCurrency") ?? "TRY")
+                        Text(selectedCurrency)
                             .foregroundColor(.secondary)
                     }
                 }

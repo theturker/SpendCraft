@@ -16,17 +16,20 @@ struct ExportView: View {
     
     @State private var showShareSheet = false
     @State private var fileURL: URL?
-    @State private var exportType: ExportType = .csv
+    @State private var exportType: ExportType = .json
     @State private var showImportPicker = false
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State private var replaceExistingData = false
     
     enum ExportType: String, CaseIterable {
+        case json = "Tam Yedekleme (JSON)"
         case csv = "CSV"
         case pdf = "PDF"
         
         var icon: String {
             switch self {
+            case .json: return "doc.badge.gearshape"
             case .csv: return "doc.text"
             case .pdf: return "doc.richtext"
             }
@@ -34,6 +37,7 @@ struct ExportView: View {
         
         var description: String {
             switch self {
+            case .json: return "Tüm verilerinizi yedekleyin (işlemler, kategoriler, hesaplar)"
             case .csv: return "Excel ve diğer tablolama uygulamalarında açılabilir"
             case .pdf: return "Profesyonel raporlar için ideal"
             }
@@ -136,24 +140,24 @@ struct ExportView: View {
                             }
                             .padding(.horizontal)
                             
-                            Text("CSV dosyasından işlem aktarın")
+                            Text("Yedekleme dosyasından verilerinizi geri yükleyin")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal)
                             
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("CSV Formatı:")
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("⚠️ Önemli:")
                                     .font(.caption)
-                                    .fontWeight(.semibold)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.orange)
+                                
+                                Text("JSON yedekleme dosyası tüm verilerinizi (işlemler, kategoriler, hesaplar) içerir. CSV dosyası ise sadece işlemleri içerir.")
+                                    .font(.caption)
                                     .foregroundColor(.secondary)
                                 
-                                Text("Tarih,Kategori,Tutar,Not,Tür")
+                                Toggle("Mevcut verileri sil ve değiştir", isOn: $replaceExistingData)
                                     .font(.caption)
-                                    .fontWeight(.medium)
-                                    .padding(8)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(Color(.systemGray6))
-                                    .cornerRadius(8)
+                                    .tint(.red)
                             }
                             .padding()
                             .background(Color(.systemBackground))
@@ -165,7 +169,7 @@ struct ExportView: View {
                             } label: {
                                 HStack {
                                     Image(systemName: "arrow.up.doc")
-                                    Text("CSV Dosyası Seç")
+                                    Text("Dosya Seç (JSON/CSV)")
                                         .fontWeight(.semibold)
                                 }
                                 .frame(maxWidth: .infinity)
@@ -225,7 +229,7 @@ struct ExportView: View {
             }
             .fileImporter(
                 isPresented: $showImportPicker,
-                allowedContentTypes: [.commaSeparatedText],
+                allowedContentTypes: [.json, .commaSeparatedText],
                 allowsMultipleSelection: false
             ) { result in
                 handleImport(result)
@@ -248,11 +252,28 @@ struct ExportView: View {
     
     private func exportData() {
         switch exportType {
+        case .json:
+            exportJSON()
         case .csv:
             exportCSV()
         case .pdf:
             exportPDF()
         }
+    }
+    
+    private func exportJSON() {
+        guard let url = ExportManager.exportToJSON(
+            transactions: transactionsViewModel.transactions,
+            categories: transactionsViewModel.categories,
+            accounts: transactionsViewModel.accounts
+        ) else {
+            alertMessage = "JSON yedekleme başarısız oldu"
+            showAlert = true
+            return
+        }
+        
+        fileURL = url
+        showShareSheet = true
     }
     
     private func exportCSV() {
@@ -289,20 +310,41 @@ struct ExportView: View {
         case .success(let urls):
             guard let url = urls.first else { return }
             
-            let (success, failed) = ExportManager.importFromCSV(
-                url: url,
-                context: CoreDataStack.shared.container.viewContext,
-                categories: transactionsViewModel.categories,
-                accounts: transactionsViewModel.accounts
-            )
+            // Check file type
+            let fileExtension = url.pathExtension.lowercased()
             
-            if success > 0 {
+            if fileExtension == "json" {
+                // Import JSON backup
+                let (_, _, message) = ExportManager.importFromJSON(
+                    url: url,
+                    context: CoreDataStack.shared.container.viewContext,
+                    replaceExisting: replaceExistingData
+                )
+                
                 transactionsViewModel.loadData()
-                alertMessage = "✅ \(success) işlem başarıyla içe aktarıldı.\n❌ \(failed) işlem başarısız oldu."
+                alertMessage = message
+                showAlert = true
+                
+            } else if fileExtension == "csv" {
+                // Import CSV
+                let (success, failed) = ExportManager.importFromCSV(
+                    url: url,
+                    context: CoreDataStack.shared.container.viewContext,
+                    categories: transactionsViewModel.categories,
+                    accounts: transactionsViewModel.accounts
+                )
+                
+                if success > 0 {
+                    transactionsViewModel.loadData()
+                    alertMessage = "✅ \(success) işlem başarıyla içe aktarıldı.\n❌ \(failed) işlem başarısız oldu."
+                } else {
+                    alertMessage = "❌ İçe aktarım başarısız oldu. Dosya formatını kontrol edin."
+                }
+                showAlert = true
             } else {
-                alertMessage = "❌ İçe aktarım başarısız oldu. Dosya formatını kontrol edin."
+                alertMessage = "❌ Desteklenmeyen dosya formatı. Lütfen JSON veya CSV dosyası seçin."
+                showAlert = true
             }
-            showAlert = true
             
         case .failure(let error):
             alertMessage = "❌ Dosya seçimi başarısız: \(error.localizedDescription)"

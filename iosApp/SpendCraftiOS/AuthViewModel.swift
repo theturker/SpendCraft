@@ -145,7 +145,15 @@ class AuthViewModel: ObservableObject {
         // Firebase'den çıkış yap
         do {
             try Auth.auth().signOut()
+            
+            // CoreData'yı temizle
+            CoreDataStack.shared.clearAllUserData()
+            
+            // Seed initial data for next user
+            CoreDataStack.shared.seedInitialData()
+            
             // Firebase auth state listener otomatik olarak güncelleyecek
+            print("✅ User signed out and data cleared")
         } catch {
             errorMessage = error.localizedDescription
             throw AuthError.networkError

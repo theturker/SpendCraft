@@ -180,6 +180,15 @@ class TransactionsViewModel: ObservableObject {
         
         // Trigger budget check
         notificationsViewModel?.objectWillChange.send()
+        
+        // If income is added in the first 5 days of the month, cancel salary notification
+        if isIncome {
+            let calendar = Calendar.current
+            let day = calendar.component(.day, from: Date())
+            if (1...5).contains(day) {
+                NotificationManager.shared.cancelSalaryNotificationForCurrentMonth()
+            }
+        }
     }
     
     func deleteTransaction(_ transaction: TransactionEntity) {

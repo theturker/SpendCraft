@@ -281,6 +281,45 @@ class NotificationManager: ObservableObject {
         }
     }
     
+    // MARK: - Salary Notification Management
+    
+    func cancelSalaryNotificationForCurrentMonth() {
+        let calendar = Calendar.current
+        let now = Date()
+        let year = calendar.component(.year, from: now)
+        let month = calendar.component(.month, from: now)
+        
+        // Cancel all salary notification variants for days 1-5 of current month
+        for day in 1...5 {
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["monthly_1_monthDay_\(day)"])
+        }
+        
+        // Save that salary notification was dismissed for this month
+        let key = "salaryNotificationDismissed_\(year)_\(month)"
+        UserDefaults.standard.set(true, forKey: key)
+        
+        print("✅ Salary notification cancelled for \(month)/\(year)")
+    }
+    
+    func shouldShowSalaryNotificationForCurrentMonth() -> Bool {
+        let calendar = Calendar.current
+        let now = Date()
+        let year = calendar.component(.year, from: now)
+        let month = calendar.component(.month, from: now)
+        let day = calendar.component(.day, from: now)
+        
+        // Only show between day 1-5
+        guard (1...5).contains(day) else {
+            return false
+        }
+        
+        // Check if already dismissed for this month
+        let key = "salaryNotificationDismissed_\(year)_\(month)"
+        let dismissed = UserDefaults.standard.bool(forKey: key)
+        
+        return !dismissed
+    }
+    
     // MARK: - Badge Management
     
     func clearBadge() {

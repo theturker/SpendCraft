@@ -17,6 +17,7 @@ struct DashboardView: View {
     
     @State private var transactionTypeToAdd: TransactionType? = nil
     @State private var showUserProfiling = false
+    @State private var transactionToEdit: TransactionEntity? = nil
     @AppStorage("userProfilingCompleted") private var profilingCompleted = false
     
     enum TransactionType: Identifiable {
@@ -268,9 +269,14 @@ struct DashboardView: View {
                     
                     ForEach(transactionsViewModel.transactions.prefix(5), id: \.id) { transaction in
                         TransactionRow(transaction: transaction)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                transactionToEdit = transaction
+                            }
                     }
                 }
                 .padding(.vertical, 8)
+                .id(transactionsViewModel.transactions.map { "\($0.id)-\($0.timestampUtcMillis)" }.joined())
             }
         }
         
@@ -306,6 +312,16 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showUserProfiling) {
             UserProfilingView()
+        }
+        .sheet(item: $transactionToEdit, onDismiss: {
+            // Force reload after editing transaction
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                transactionsViewModel.loadTransactions()
+                transactionsViewModel.objectWillChange.send()
+            }
+        }) { transaction in
+            EditTransactionView(transaction: transaction)
+                .environmentObject(transactionsViewModel)
         }
         .onAppear {
             // Load data

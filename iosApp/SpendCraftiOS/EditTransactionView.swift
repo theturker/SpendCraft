@@ -19,6 +19,7 @@ struct EditTransactionView: View {
     @State private var selectedAccount: AccountEntity?
     @State private var isIncome: Bool = false
     @State private var date: Date = Date()
+    @FocusState private var isAmountFocused: Bool
     
     var filteredCategories: [CategoryEntity] {
         return transactionsViewModel.categoriesForType(isIncome)
@@ -44,9 +45,7 @@ struct EditTransactionView: View {
                     // Amount
                     Section("Miktar") {
                         HStack {
-                            TextField("0.00", text: $amount)
-                                .keyboardType(.decimalPad)
-                                .font(.title2)
+                            CurrencyTextField(title: "0.00", value: $amount, isFocused: $isAmountFocused)
                             Text(getCurrentCurrencySymbol())
                                 .font(.title2)
                                 .foregroundColor(.secondary)
@@ -148,7 +147,14 @@ struct EditTransactionView: View {
     
     func loadTransactionData() {
         // Load current transaction data
-        amount = String(format: "%.2f", transaction.amount)
+        let amountValue = transaction.amount
+        // Remove trailing zeros for cleaner display
+        if amountValue.truncatingRemainder(dividingBy: 1) == 0 {
+            amount = String(format: "%.0f", amountValue)
+        } else {
+            amount = String(format: "%.2f", amountValue).replacingOccurrences(of: ".00", with: "")
+        }
+        
         note = transaction.note ?? ""
         isIncome = transaction.isIncome
         date = Date(timeIntervalSince1970: TimeInterval(transaction.timestampUtcMillis / 1000))

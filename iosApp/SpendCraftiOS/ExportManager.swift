@@ -10,7 +10,223 @@ import CoreData
 import PDFKit
 import UIKit
 
+// MARK: - Backup Data Models
+
+struct BackupData: Codable {
+    let version: Int
+    let exportDate: Date
+    let transactions: [BackupTransaction]
+    let categories: [BackupCategory]
+    let accounts: [BackupAccount]
+    
+    static let currentVersion = 1
+}
+
+struct BackupTransaction: Codable {
+    let id: Int64
+    let amountMinor: Int64
+    let timestampUtcMillis: Int64
+    let note: String?
+    let categoryId: Int64
+    let accountId: Int64
+    let isIncome: Bool
+}
+
+struct BackupCategory: Codable {
+    let id: Int64
+    let name: String
+    let icon: String?
+    let color: String?
+    let type: String?
+}
+
+struct BackupAccount: Codable {
+    let id: Int64
+    let name: String
+    let type: String?
+    let currency: String?
+    let isDefault: Bool
+    let archived: Bool
+}
+
 class ExportManager {
+    
+    // MARK: - JSON Backup Export/Import
+    
+    static func exportToJSON(transactions: [TransactionEntity], categories: [CategoryEntity], accounts: [AccountEntity]) -> URL? {
+        // Convert entities to backup models
+        let backupTransactions = transactions.map { transaction in
+            BackupTransaction(
+                id: transaction.id,
+                amountMinor: transaction.amountMinor,
+                timestampUtcMillis: transaction.timestampUtcMillis,
+                note: transaction.note,
+                categoryId: transaction.categoryId,
+                accountId: transaction.accountId,
+                isIncome: transaction.isIncome
+            )
+        }
+        
+        let backupCategories = categories.map { category in
+            BackupCategory(
+                id: category.id,
+                name: category.name ?? "",
+                icon: category.icon,
+                color: category.color,
+                type: category.type
+            )
+        }
+        
+        let backupAccounts = accounts.map { account in
+            BackupAccount(
+                id: account.id,
+                name: account.name ?? "",
+                type: account.type,
+                currency: account.currency,
+                isDefault: account.isDefault,
+                archived: account.archived
+            )
+        }
+        
+        let backupData = BackupData(
+            version: BackupData.currentVersion,
+            exportDate: Date(),
+            transactions: backupTransactions,
+            categories: backupCategories,
+            accounts: backupAccounts
+        )
+        
+        do {
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            let jsonData = try encoder.encode(backupData)
+            
+            let fileName = "spendcraft_backup_\(Date().timeIntervalSince1970).json"
+            return saveToFile(data: jsonData, fileName: fileName)
+        } catch {
+            print("❌ JSON export failed: \(error)")
+            return nil
+        }
+    }
+    
+    static func importFromJSON(url: URL, context: NSManagedObjectContext, replaceExisting: Bool = false) -> (success: Int, failed: Int, message: String) {
+        do {
+            let jsonData = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let backupData = try decoder.decode(BackupData.self, from: jsonData)
+            
+            var successCount = 0
+            var failedCount = 0
+            
+            // If replace existing, clear all data first
+            if replaceExisting {
+                clearAllData(context: context)
+            }
+            
+            // Import categories first
+            var categoryMap: [Int64: CategoryEntity] = [:]
+            for backupCategory in backupData.categories {
+                // Check if category with same ID already exists
+                let fetchRequest: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest() as! NSFetchRequest<CategoryEntity>
+                fetchRequest.predicate = NSPredicate(format: "id == %lld", backupCategory.id)
+                
+                let existingCategories = try context.fetch(fetchRequest)
+                let category: CategoryEntity
+                
+                if let existing = existingCategories.first, !replaceExisting {
+                    category = existing
+                } else {
+                    category = CategoryEntity(context: context)
+                    category.id = backupCategory.id
+                }
+                
+                category.name = backupCategory.name
+                category.icon = backupCategory.icon
+                category.color = backupCategory.color!
+                category.type = backupCategory.type
+                
+                categoryMap[backupCategory.id] = category
+                successCount += 1
+            }
+            
+            // Import accounts
+            var accountMap: [Int64: AccountEntity] = [:]
+            for backupAccount in backupData.accounts {
+                let fetchRequest: NSFetchRequest<AccountEntity> = AccountEntity.fetchRequest() as! NSFetchRequest<AccountEntity>
+                fetchRequest.predicate = NSPredicate(format: "id == %lld", backupAccount.id)
+                
+                let existingAccounts = try context.fetch(fetchRequest)
+                let account: AccountEntity
+                
+                if let existing = existingAccounts.first, !replaceExisting {
+                    account = existing
+                } else {
+                    account = AccountEntity(context: context)
+                    account.id = backupAccount.id
+                }
+                
+                account.name = backupAccount.name
+                account.type = backupAccount.type!
+                account.currency = backupAccount.currency!
+                account.isDefault = backupAccount.isDefault
+                account.archived = backupAccount.archived
+                
+                accountMap[backupAccount.id] = account
+                successCount += 1
+            }
+            
+            // Import transactions
+            for backupTransaction in backupData.transactions {
+                let transaction = TransactionEntity(context: context)
+                transaction.id = backupTransaction.id
+                transaction.amountMinor = backupTransaction.amountMinor
+                transaction.timestampUtcMillis = backupTransaction.timestampUtcMillis
+                transaction.note = backupTransaction.note
+                transaction.categoryId = backupTransaction.categoryId
+                transaction.accountId = backupTransaction.accountId
+                transaction.isIncome = backupTransaction.isIncome
+                transaction.category = categoryMap[backupTransaction.categoryId]
+                transaction.account = accountMap[backupTransaction.accountId]
+                
+                successCount += 1
+            }
+            
+            try context.save()
+            
+            let message = "✅ Yedekleme başarıyla içe aktarıldı!\n\n📊 \(backupData.transactions.count) işlem\n📁 \(backupData.categories.count) kategori\n💳 \(backupData.accounts.count) hesap"
+            return (successCount, failedCount, message)
+            
+        } catch {
+            print("❌ JSON import failed: \(error)")
+            return (0, 0, "❌ İçe aktarım başarısız: \(error.localizedDescription)")
+        }
+    }
+    
+    private static func clearAllData(context: NSManagedObjectContext) {
+        // Delete all transactions
+        let transactionFetch: NSFetchRequest<NSFetchRequestResult> = TransactionEntity.fetchRequest()
+        let transactionDelete = NSBatchDeleteRequest(fetchRequest: transactionFetch)
+        
+        // Delete all categories
+        let categoryFetch: NSFetchRequest<NSFetchRequestResult> = CategoryEntity.fetchRequest()
+        let categoryDelete = NSBatchDeleteRequest(fetchRequest: categoryFetch)
+        
+        // Delete all accounts
+        let accountFetch: NSFetchRequest<NSFetchRequestResult> = AccountEntity.fetchRequest()
+        let accountDelete = NSBatchDeleteRequest(fetchRequest: accountFetch)
+        
+        do {
+            try context.execute(transactionDelete)
+            try context.execute(categoryDelete)
+            try context.execute(accountDelete)
+            try context.save()
+            print("✅ All data cleared successfully")
+        } catch {
+            print("❌ Failed to clear data: \(error)")
+        }
+    }
     
     // MARK: - CSV Export
     
