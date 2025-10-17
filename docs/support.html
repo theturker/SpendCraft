@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpendCraft - Destek & Yardım</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .contact-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        
+        .contact-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        
+        .contact-info svg {
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .email-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            padding: 12px 30px;
+            background: white;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 10px;
+            border: 2px solid #667eea;
+        }
+        
+        .email-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .faq-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .faq-item h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .faq-item p {
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h4 {
+            color: #667eea;
+            margin: 15px 0 10px;
+            font-size: 1.1em;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .icon {
+            font-size: 2.5em;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        .response-time {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 SpendCraft</h1>
+            <p>Destek & Yardım Merkezi</p>
+        </div>
+        
+        <div class="content">
+            <!-- İletişim Bölümü -->
+            <div class="section">
+                <h2>📧 Bize Ulaşın</h2>
+                <div class="contact-box">
+                    <h3>Destek Ekibimiz Sizin İçin Burada!</h3>
+                    <p>Sorularınız, önerileriniz veya sorunlarınız için bizimle iletişime geçebilirsiniz. Size en kısa sürede dönüş yapacağız.</p>
+                    
+                    <div class="contact-info">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <span><strong>E-posta:</strong> spendcraftapp@gmail.com</span>
+                    </div>
+                    
+                    <a href="mailto:spendcraftapp@gmail.com?subject=SpendCraft iOS Destek&body=Merhaba SpendCraft Ekibi,%0D%0A%0D%0ALütfen sorunumu/önerimi aşağıda açıklıyorum:%0D%0A%0D%0A" class="email-link">
+                        ✉️ Destek Talebi Oluştur
+                    </a>
+                    
+                    <div class="response-time">
+                        ⏱️ Ortalama Yanıt Süresi: 24-48 saat
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SSS Bölümü -->
+            <div class="section">
+                <h2>❓ Sık Sorulan Sorular</h2>
+                
+                <div class="faq-item">
+                    <h3>SpendCraft nedir?</h3>
+                    <p>SpendCraft, gelir ve giderlerinizi kolayca takip etmenizi, bütçe oluşturmanızı ve AI destekli kişiselleştirilmiş finansal öneriler almanızı sağlayan modern bir finans yönetim uygulamasıdır.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Verilerim güvende mi?</h3>
+                    <p>Evet! Tüm finansal verileriniz cihazınızda güvenli bir şekilde saklanır. Banka bilgileriniz veya hassas verileriniz kesinlikle istenmez. Verileriniz şifrelenir ve yalnızca sizin erişiminize açıktır.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Uygulama ücretsiz mi?</h3>
+                    <p>SpendCraft'ın temel özellikleri tamamen ücretsizdir. Premium abonelik ile reklamsız deneyim, gelişmiş AI analizi ve ek özelliklerden faydalanabilirsiniz.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Verilerimi nasıl yedekleyebilirim?</h3>
+                    <p>Ayarlar menüsünden verilerinizi CSV formatında dışa aktarabilirsiniz. Premium üyeler için otomatik bulut yedekleme özelliği de mevcuttur.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Birden fazla hesap ekleyebilir miyim?</h3>
+                    <p>Evet! Banka hesaplarınızı, nakit cüzdanınızı ve kredi kartlarınızı ayrı hesaplar olarak ekleyebilir ve her birini ayrı ayrı takip edebilirsiniz.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>AI önerileri nasıl çalışır?</h3>
+                    <p>Yapay zeka asistanımız, harcama alışkanlıklarınızı analiz eder ve size özel tasarruf önerileri, bütçe optimizasyonu ve finansal ipuçları sunar. Ne kadar çok kullanırsanız, öneriler o kadar kişiselleşir.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Aboneliğimi nasıl iptal edebilirim?</h3>
+                    <p>iOS Ayarlar > Apple ID > Abonelikler bölümünden SpendCraft aboneliğinizi istediğiniz zaman iptal edebilirsiniz. İptal sonrası mevcut dönem sonuna kadar premium özellikler aktif kalır.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Hangi para birimlerini destekliyorsunuz?</h3>
+                    <p>SpendCraft, TL, USD, EUR, GBP dahil tüm popüler para birimlerini destekler. Ayarlardan tercih ettiğiniz para birimini seçebilirsiniz.</p>
+                </div>
+            </div>
+            
+            <!-- Özellikler Bölümü -->
+            <div class="section">
+                <h2>✨ Özelliklerimiz</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="icon">📊</div>
+                        <h4>Detaylı Raporlar</h4>
+                        <p>Gelir ve gider grafiklerinizi görselleştirin</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="icon">💰</div>
+                        <h4>Bütçe Yönetimi</h4>
+                        <p>Kategoriler için limitler belirleyin</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="icon">🤖</div>
+                        <h4>AI Asistanı</h4>
+                        <p>Kişiselleştirilmiş finansal öneriler</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="icon">🏆</div>
+                        <h4>Başarı Sistemi</h4>
+                        <p>Hedeflerinize ulaşırken rozet kazanın</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="icon">🔔</div>
+                        <h4>Akıllı Bildirimler</h4>
+                        <p>Bütçe aşımı ve hatırlatma uyarıları</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="icon">🔒</div>
+                        <h4>Güvenli Saklama</h4>
+                        <p>Verileriniz şifreli ve güvende</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Destek Konuları -->
+            <div class="section">
+                <h2>🛠️ Yardım Konuları</h2>
+                <div class="contact-box">
+                    <h3>Hangi konularda size yardımcı olabiliriz?</h3>
+                    <ul style="list-style: none; padding: 0; margin-top: 15px;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                            <strong>🐛 Teknik Sorunlar:</strong> Uygulama çökmeleri, hata mesajları, performans sorunları
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                            <strong>💳 Ödeme & Abonelik:</strong> Premium özellikleri, ödeme sorunları, iade talepleri
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                            <strong>📝 Özellik Kullanımı:</strong> Nasıl yapılır soruları, özellik açıklamaları
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                            <strong>💡 Öneri & Geri Bildirim:</strong> Yeni özellik önerileri, iyileştirme fikirleri
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                            <strong>🔐 Hesap & Güvenlik:</strong> Hesap sorunları, veri güvenliği, gizlilik
+                        </li>
+                        <li style="padding: 10px 0;">
+                            <strong>📊 Veri Yönetimi:</strong> Yedekleme, geri yükleme, veri aktarımı
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- İpuçları -->
+            <div class="section">
+                <h2>💡 Hızlı İpuçları</h2>
+                <div class="faq-item">
+                    <h3>✅ Destek Talebi Oluştururken:</h3>
+                    <p>• iOS sürümünüzü belirtin<br>
+                    • Sorunun ne zaman başladığını açıklayın<br>
+                    • Varsa hata mesajının ekran görüntüsünü ekleyin<br>
+                    • Sorunu yeniden oluşturma adımlarını paylaşın<br>
+                    • İletişim bilgilerinizi doğru yazdığınızdan emin olun</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>SpendCraft - Akıllı Finans Yönetimi</strong></p>
+            <p>📱 iOS Uygulaması</p>
+            <p>✉️ spendcraftapp@gmail.com</p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                <a href="index.html" style="color: #667eea; text-decoration: none;">Gizlilik Politikası</a>
+            </p>
+            <p style="margin-top: 10px; color: #999; font-size: 0.85em;">
+                © 2025 SpendCraft. Tüm hakları saklıdır.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
