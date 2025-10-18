@@ -98,7 +98,12 @@ fun AddRecurringRuleScreen(
                         // Tutar
                         OutlinedTextField(
                             value = amount,
-                            onValueChange = { amount = it },
+                            onValueChange = { newValue ->
+                                // iOS: Hem nokta hem virgül kabul et - her ikisi de görünsün
+                                if (newValue.isEmpty() || newValue.matches(Regex("^\\d*[.,]?\\d*$"))) {
+                                    amount = newValue
+                                }
+                            },
                             label = { Text("Tutar") },
                             placeholder = { Text("0.00") },
                             trailingIcon = { 
@@ -203,19 +208,31 @@ fun AddRecurringRuleScreen(
                                 }
                             }
                         } else {
-                            // Category picker
-                            OutlinedTextField(
-                                value = "Seçiniz",
-                                onValueChange = { },
-                                label = { Text("Kategori Seç") },
-                                readOnly = true,
-                                trailingIcon = {
-                                    Icon(Icons.Default.ArrowDropDown, contentDescription = null)
-                                },
+                            // Category picker - iOS: Picker
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .clip(MaterialTheme.shapes.small)
                                     .clickable { showCategoryPicker = true }
-                            )
+                            ) {
+                                OutlinedTextField(
+                                    value = "Seçiniz",
+                                    onValueChange = { },
+                                    label = { Text("Kategori Seç") },
+                                    readOnly = true,
+                                    enabled = false,
+                                    trailingIcon = {
+                                        Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                                        disabledBorderColor = MaterialTheme.colorScheme.outline,
+                                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                )
+                            }
                         }
                     }
                 }
@@ -232,35 +249,59 @@ fun AddRecurringRuleScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         
-                        // Frequency Picker
-                        OutlinedTextField(
-                            value = frequencyDisplay,
-                            onValueChange = { },
-                            label = { Text("Sıklık") },
-                            readOnly = true,
-                            trailingIcon = {
-                                Icon(Icons.Default.ArrowDropDown, contentDescription = null)
-                            },
+                        // Frequency Picker - iOS: Picker
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(MaterialTheme.shapes.small)
                                 .clickable { showFrequencyPicker = true }
-                        )
+                        ) {
+                            OutlinedTextField(
+                                value = frequencyDisplay,
+                                onValueChange = { },
+                                label = { Text("Sıklık") },
+                                readOnly = true,
+                                enabled = false,
+                                trailingIcon = {
+                                    Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledBorderColor = MaterialTheme.colorScheme.outline,
+                                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
+                        }
                         
                         Spacer(modifier = Modifier.height(12.dp))
                         
-                        // Start Date
-                        OutlinedTextField(
-                            value = dateFormat.format(Date(startDate)),
-                            onValueChange = { },
-                            label = { Text("Başlangıç Tarihi") },
-                            readOnly = true,
-                            trailingIcon = {
-                                Icon(Icons.Default.DateRange, contentDescription = null)
-                            },
+                        // Start Date - iOS: DatePicker
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(MaterialTheme.shapes.small)
                                 .clickable { showDatePicker = true }
-                        )
+                        ) {
+                            OutlinedTextField(
+                                value = dateFormat.format(Date(startDate)),
+                                onValueChange = { },
+                                label = { Text("Başlangıç Tarihi") },
+                                readOnly = true,
+                                enabled = false,
+                                trailingIcon = {
+                                    Icon(Icons.Default.DateRange, contentDescription = null)
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledBorderColor = MaterialTheme.colorScheme.outline,
+                                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -291,7 +332,9 @@ fun AddRecurringRuleScreen(
             item {
                 Button(
                     onClick = {
-                        val amountValue = amount.toDoubleOrNull()
+                        // iOS locale-aware: virgül de nokta da kabul edilir
+                        val normalizedAmount = amount.replace(',', '.')
+                        val amountValue = normalizedAmount.toDoubleOrNull()
                         val category = selectedCategory
                         if (name.isNotEmpty() && amountValue != null && category != null && category.id != null) {
                             onSave(
@@ -315,7 +358,7 @@ fun AddRecurringRuleScreen(
                             )
                         }
                     },
-                    enabled = name.isNotEmpty() && amount.toDoubleOrNull() != null && selectedCategory != null,
+                    enabled = name.isNotEmpty() && amount.replace(',', '.').toDoubleOrNull() != null && selectedCategory != null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)

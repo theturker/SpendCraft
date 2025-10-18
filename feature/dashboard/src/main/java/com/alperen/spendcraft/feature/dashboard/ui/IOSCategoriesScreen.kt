@@ -52,13 +52,17 @@ fun IOSCategoriesScreen(
     spent: Map<Long, Double> = emptyMap(), // categoryId to spent amount
     onAddCategory: (name: String, icon: String, color: String) -> Unit,
     onCategoryClick: (Category) -> Unit,
+    onDeleteCategory: (Category) -> Unit = {}, // iOS: swipe to delete
+    onSaveBudget: (categoryId: Long, amount: Double) -> Unit = { _, _ -> }, // iOS: upsertBudget
     onNotifications: () -> Unit = {}, // iOS'taki notificationToolbarItem
     unreadCount: Int = 0, // iOS: notificationsViewModel.unreadCount
     modifier: Modifier = Modifier
 ) {
     var showAddBudgetDialog by remember { mutableStateOf(false) }
     var showAddCategoryDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
+    var categoryToDelete by remember { mutableStateOf<Category?>(null) }
     
     // Scroll behavior ekleyerek iOS gibi collapsible davranış sağlıyoruz
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -139,33 +143,120 @@ fun IOSCategoriesScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(categories) { category ->
-                CategoryRow(
-                    category = category,
-                    budgetLimit = budgets[category.id],
-                    spentAmount = spent[category.id] ?: 0.0,
-                    onClick = {
-                        selectedCategory = category
-                        showAddBudgetDialog = true
+            items(
+                items = categories,
+                key = { it.id ?: 0L }
+            ) { category ->
+                // iOS: .swipeActions(edge: .trailing, allowsFullSwipe: false)
+                // CategoriesView.swift:62-68
+                val dismissState = rememberSwipeToDismissBoxState(
+                    confirmValueChange = { value ->
+                        when (value) {
+                            SwipeToDismissBoxValue.EndToStart -> {
+                                // iOS: Show confirmation alert before delete
+                                categoryToDelete = category
+                                showDeleteDialog = true
+                                false  // Don't auto-dismiss, wait for user confirmation
+                            }
+                            else -> false
+                        }
                     }
                 )
+                
+                SwipeToDismissBox(
+                    state = dismissState,
+                    backgroundContent = {
+                        // iOS: Button(role: .destructive) - Red background
+                        val color = when (dismissState.targetValue) {
+                            SwipeToDismissBoxValue.EndToStart -> IOSColors.Red
+                            else -> Color.Transparent
+                        }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color)
+                                .padding(horizontal = 20.dp),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            Icon(
+                                painter = painterResource(id = CoreR.drawable.ic_trash_fill),
+                                contentDescription = "Sil",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    },
+                    enableDismissFromEndToStart = true,
+                    enableDismissFromStartToEnd = false
+                ) {
+                    CategoryRow(
+                        category = category,
+                        budgetLimit = budgets[category.id],
+                        spentAmount = spent[category.id] ?: 0.0,
+                        onClick = {
+                            selectedCategory = category
+                            showAddBudgetDialog = true
+                        }
+                    )
+                }
             }
         }
     }
     
-    // Add Budget Dialog
+    // Add Budget Dialog - iOS: AddBudgetView
     if (showAddBudgetDialog && selectedCategory != null) {
+        val category = selectedCategory!!
         AddBudgetDialog(
-            category = selectedCategory!!,
-            currentBudget = budgets[selectedCategory!!.id],
+            category = category,
+            currentBudget = budgets[category.id],
+            currentSpent = spent[category.id] ?: 0.0,
             onDismiss = {
                 showAddBudgetDialog = false
                 selectedCategory = null
             },
             onSave = { amount ->
-                // TODO: Save budget
+                // iOS: budgetViewModel.upsertBudget(category: category, monthlyLimit: amount)
+                category.id?.let { categoryId ->
+                    onSaveBudget(categoryId, amount)
+                }
                 showAddBudgetDialog = false
                 selectedCategory = null
+            }
+        )
+    }
+    
+    // Delete Confirmation Dialog - iOS Alert
+    if (showDeleteDialog && categoryToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { 
+                showDeleteDialog = false
+                categoryToDelete = null
+            },
+            title = { Text("Kategoriyi Sil?") },
+            text = { Text("${categoryToDelete?.name} kategorisini silmek istediğinizden emin misiniz?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        categoryToDelete?.let { onDeleteCategory(it) }
+                        showDeleteDialog = false
+                        categoryToDelete = null
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = IOSColors.Red
+                    )
+                ) {
+                    Text("Sil")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { 
+                        showDeleteDialog = false
+                        categoryToDelete = null
+                    }
+                ) {
+                    Text("İptal")
+                }
             }
         )
     }
@@ -645,12 +736,13 @@ private fun getCategoryIconResource(icon: String): Int {
 private fun AddBudgetDialog(
     category: Category,
     currentBudget: Double?,
+    currentSpent: Double,  // iOS: transactionsViewModel.totalSpentForCategory(category)
     onDismiss: () -> Unit,
     onSave: (Double) -> Unit
 ) {
     val context = LocalContext.current
     var budgetAmount by remember { 
-        mutableStateOf(currentBudget?.toString() ?: "") 
+        mutableStateOf(currentBudget?.let { String.format("%.2f", it) } ?: "") 
     }
     
     val categoryColor = remember(category.color) {
@@ -660,6 +752,15 @@ private fun AddBudgetDialog(
             IOSColors.Blue
         }
     }
+    
+    // iOS: Calculate percentage and remaining
+    val budgetValue = budgetAmount.replace(',', '.').toDoubleOrNull()
+    val percentage = if (budgetValue != null && budgetValue > 0) {
+        (currentSpent / budgetValue) * 100
+    } else {
+        0.0
+    }
+    val remaining = (budgetValue ?: 0.0) - currentSpent
     
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -682,31 +783,93 @@ private fun AddBudgetDialog(
         },
         text = {
             Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    text = "Aylık Bütçe Limiti",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold
-                )
+                // iOS: Section("Bu Ay Harcanan") - AddBudgetView.swift:204-220
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Bu Ay Harcanan",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = CurrencyFormatter.format(context, (currentSpent * 100).toLong()),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        
+                        if (budgetValue != null && budgetValue > 0) {
+                            val progressColor = when {
+                                percentage >= 100 -> IOSColors.Red
+                                percentage >= 80 -> IOSColors.Orange
+                                else -> IOSColors.Green
+                            }
+                            Text(
+                                text = String.format("%.0f%%", percentage),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = progressColor
+                            )
+                        }
+                    }
+                }
                 
-                OutlinedTextField(
-                    value = budgetAmount,
-                    onValueChange = { budgetAmount = it },
-                    placeholder = { Text("0.00") },
-                    trailingIcon = { Text("₺") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
+                // iOS: Section("Aylık Bütçe Limiti") - AddBudgetView.swift:222-242
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Aylık Bütçe Limiti",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    
+                    OutlinedTextField(
+                        value = budgetAmount,
+                        onValueChange = { newValue ->
+                            // iOS: Hem nokta hem virgül kabul et
+                            if (newValue.isEmpty() || newValue.matches(Regex("^\\d*[.,]?\\d*$"))) {
+                                budgetAmount = newValue
+                            }
+                        },
+                        placeholder = { Text("0.00") },
+                        trailingIcon = { Text("₺") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+                    
+                    // iOS: Show remaining if budget is set
+                    if (budgetValue != null && budgetValue > 0) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Kalan:",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = CurrencyFormatter.format(context, (remaining * 100).toLong()),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = if (remaining < 0) IOSColors.Red else IOSColors.Green
+                            )
+                        }
+                    }
+                }
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    budgetAmount.toDoubleOrNull()?.let { onSave(it) }
+                    budgetAmount.replace(',', '.').toDoubleOrNull()?.let { onSave(it) }
                 },
-                enabled = budgetAmount.toDoubleOrNull() != null
+                enabled = budgetAmount.replace(',', '.').toDoubleOrNull() != null
             ) {
                 Text("Kaydet")
             }

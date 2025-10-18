@@ -5,9 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -19,93 +16,95 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.ui.R as CoreR
 
 /**
  * iOS AddCategoryView'in birebir Android karşılığı
- * 
- * iOS Source: iosApp/SpendCraftiOS/CategoriesView.swift:279-424
+ * Source: iosApp/SpendCraftiOS/CategoriesView.swift:279-424
  * 
  * Özellikler:
- * - Kategori Adı (TextField)
- * - Kategori Tipi (Segmented: Gider/Gelir)
- * - İkon Seç (LazyVGrid, 18 icon)
- * - Renk Seç (12 color)
- * - Önizleme
- * - Kaydet butonu
+ * - Full screen navigation (dialog değil)
+ * - initialType parametresi ile gelir/gider otomatik seçimi
+ * - Icon grid selection
+ * - Color grid selection
+ * - Preview section
+ * - Tip değiştirme segmented control
  */
-
-// iOS: categoryIcons - CategoriesView.swift:296-301
-private val CategoryIcons = listOf(
-    CoreR.drawable.ic_cart_fill,
-    CoreR.drawable.ic_fork_knife,
-    CoreR.drawable.ic_house_fill,
-    CoreR.drawable.ic_car_fill,
-    CoreR.drawable.ic_tram_fill,
-    CoreR.drawable.ic_airplane,
-    CoreR.drawable.ic_bolt_fill,
-    CoreR.drawable.ic_bag_fill,
-    CoreR.drawable.ic_gift_fill,
-    CoreR.drawable.ic_book_fill,
-    CoreR.drawable.ic_gamecontroller_fill,
-    CoreR.drawable.ic_film_fill,
-    CoreR.drawable.ic_heart_fill,
-    CoreR.drawable.ic_creditcard_fill,
-    CoreR.drawable.ic_pills_fill,
-    CoreR.drawable.ic_briefcase_fill,
-    CoreR.drawable.ic_graduationcap_fill,
-    CoreR.drawable.ic_phone_fill
-)
-
-// iOS: categoryColors - CategoriesView.swift:303-308
-private data class CategoryColor(val name: String, val color: Color)
-private val CategoryColors = listOf(
-    CategoryColor("Mavi", IOSColors.Blue),
-    CategoryColor("Yeşil", IOSColors.Green),
-    CategoryColor("Kırmızı", IOSColors.Red),
-    CategoryColor("Turuncu", IOSColors.Orange),
-    CategoryColor("Mor", IOSColors.Purple),
-    CategoryColor("Pembe", IOSColors.Pink),
-    CategoryColor("Sarı", IOSColors.Yellow),
-    CategoryColor("Kahverengi", Color(0xFF8B4513)),
-    CategoryColor("İndigo", Color(0xFF4B0082)),
-    CategoryColor("Cyan", Color(0xFF00FFFF)),
-    CategoryColor("Mint", Color(0xFF98FF98)),
-    CategoryColor("Teal", Color(0xFF008080))
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCategoryScreen(
-    initialType: String? = null, // "income" or "expense"
+    initialType: Boolean, // true = income, false = expense
+    onSave: (name: String, icon: String, color: String, isIncome: Boolean) -> Unit,
     onDismiss: () -> Unit,
-    onSave: (name: String, icon: String, color: String, type: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var categoryName by remember { mutableStateOf("") }
-    var categoryType by remember { mutableStateOf(initialType ?: "expense") }
-    var selectedIconIndex by remember { mutableStateOf(0) }
-    var selectedColorIndex by remember { mutableStateOf(0) }
+    var selectedIcon by remember { mutableStateOf("cart.fill") }
+    var selectedColor by remember { mutableStateOf(IOSColors.Blue) }
+    var categoryType by remember { mutableStateOf(if (initialType) "income" else "expense") }
     
-    val selectedColor = CategoryColors[selectedColorIndex].color
+    // Debug log
+    LaunchedEffect(initialType) {
+        android.util.Log.d("AddCategoryScreen", "🔵 Initialized with initialType=$initialType → categoryType=$categoryType")
+    }
+    
+    // iOS: let categoryIcons - CategoriesView.swift:296-301
+    val categoryIcons = listOf(
+        "cart.fill" to CoreR.drawable.ic_cart_fill,
+        "fork.knife" to CoreR.drawable.ic_fork_knife,
+        "house.fill" to CoreR.drawable.ic_house_fill,
+        "car.fill" to CoreR.drawable.ic_car_fill,
+        "airplane" to CoreR.drawable.ic_airplane,
+        "bolt.fill" to CoreR.drawable.ic_bolt_fill,
+        "bag.fill" to CoreR.drawable.ic_bag_fill,
+        "gift.fill" to CoreR.drawable.ic_gift_fill,
+        "book.fill" to CoreR.drawable.ic_book_fill,
+        "gamecontroller.fill" to CoreR.drawable.ic_gamecontroller_fill,
+        "film.fill" to CoreR.drawable.ic_film_fill,
+        "heart.fill" to CoreR.drawable.ic_heart_fill,
+        "creditcard.fill" to CoreR.drawable.ic_creditcard_fill,
+        "pills.fill" to CoreR.drawable.ic_pills_fill,
+        "briefcase.fill" to CoreR.drawable.ic_briefcase_fill,
+        "graduationcap.fill" to CoreR.drawable.ic_graduationcap_fill,
+        "phone.fill" to CoreR.drawable.ic_phone_fill,
+        "tram.fill" to CoreR.drawable.ic_tram_fill
+    )
+    
+    // iOS: let categoryColors - CategoriesView.swift:303-308
+    val categoryColors = listOf(
+        "Mavi" to IOSColors.Blue,
+        "Yeşil" to IOSColors.Green,
+        "Kırmızı" to IOSColors.Red,
+        "Turuncu" to IOSColors.Orange,
+        "Mor" to IOSColors.Purple,
+        "Pembe" to IOSColors.Pink,
+        "Sarı" to IOSColors.Yellow,
+        "Kahverengi" to Color(0xFF8D6E63),
+        "İndigo" to Color(0xFF5E35B1),
+        "Cyan" to IOSColors.Cyan,
+        "Mint" to IOSColors.Mint,
+        "Teal" to IOSColors.Teal
+    )
     
     Scaffold(
         topBar = {
+            // iOS: .navigationTitle("Yeni Kategori") - CategoriesView.swift:399
             TopAppBar(
-                title = { 
-                    Text(
-                        "Yeni Kategori",
-                        style = MaterialTheme.typography.titleMedium
-                    ) 
-                },
+                title = { Text("Yeni Kategori") },
                 navigationIcon = {
+                    // iOS: Button("İptal") - CategoriesView.swift:403-405
                     TextButton(onClick = onDismiss) {
                         Text("İptal")
                     }
                 },
+                actions = {
+                    // iOS: implicit save button (kaydet button in form)
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         }
@@ -114,235 +113,278 @@ fun AddCategoryScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            contentPadding = PaddingValues(vertical = 16.dp)
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // 1. Kategori Bilgileri - iOS: Section("Kategori Bilgileri")
+            // 1. Kategori Bilgileri Section - iOS: Section("Kategori Bilgileri")
             item {
-                Text(
-                    text = "Kategori Bilgileri",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-                
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "Kategori Bilgileri",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        // Category Name TextField - iOS: TextField("Kategori Adı")
-                        OutlinedTextField(
-                            value = categoryName,
-                            onValueChange = { categoryName = it },
-                            label = { Text("Kategori Adı") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
+                    
+                    // Kategori Adı - iOS: TextField("Kategori Adı", text: $categoryName)
+                    OutlinedTextField(
+                        value = categoryName,
+                        onValueChange = { categoryName = it },
+                        placeholder = { Text("Kategori Adı") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+                    
+                    // Kategori Tipi - iOS: Picker("Kategori Tipi", selection: $categoryType)
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = "Kategori Tipi",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium
                         )
                         
-                        // Category Type Picker - iOS: Picker("Kategori Tipi").pickerStyle(.segmented)
+                        // iOS Segmented Control - iOS: .pickerStyle(.segmented)
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
+                                .height(40.dp)
+                                .clip(RoundedCornerShape(10.dp))
                                 .background(MaterialTheme.colorScheme.surfaceVariant),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            listOf("expense" to "Gider", "income" to "Gelir").forEach { (type, label) ->
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(
-                                            if (categoryType == type) MaterialTheme.colorScheme.primary
-                                            else Color.Transparent
-                                        )
-                                        .clickable { categoryType = type }
-                                        .padding(vertical = 12.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = label,
-                                        color = if (categoryType == type) Color.White
-                                               else MaterialTheme.colorScheme.onSurfaceVariant,
-                                        fontWeight = if (categoryType == type) FontWeight.SemiBold
-                                                     else FontWeight.Normal
+                            // Gider
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(
+                                        if (categoryType == "expense") 
+                                            MaterialTheme.colorScheme.primary
+                                        else 
+                                            Color.Transparent
                                     )
-                                }
+                                    .clickable { categoryType = "expense" },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Gider",
+                                    color = if (categoryType == "expense") 
+                                        Color.White 
+                                    else 
+                                        MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                            
+                            // Gelir
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(
+                                        if (categoryType == "income") 
+                                            MaterialTheme.colorScheme.primary
+                                        else 
+                                            Color.Transparent
+                                    )
+                                    .clickable { categoryType = "income" },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Gelir",
+                                    color = if (categoryType == "income") 
+                                        Color.White 
+                                    else 
+                                        MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontWeight = FontWeight.Medium
+                                )
                             }
                         }
                     }
                 }
             }
             
-            // 2. İkon Seç - iOS: Section("İkon Seç") + LazyVGrid
+            // 2. İkon Seç Section - iOS: Section("İkon Seç")
             item {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "İkon Seç",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-                
-                // iOS: LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 12)
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 60.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .height(240.dp), // Fixed height for grid
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(CategoryIcons.size) { index ->
-                        val isSelected = selectedIconIndex == index
-                        Box(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(
-                                    if (isSelected) selectedColor
-                                    else selectedColor.copy(alpha = 0.2f)
-                                )
-                                .clickable { selectedIconIndex = index },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = CategoryIcons[index]),
-                                contentDescription = null,
-                                tint = if (isSelected) Color.White else selectedColor,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-                }
-            }
-            
-            // 3. Renk Seç - iOS: Section("Renk Seç")
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "Renk Seç",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-                
-                // iOS: HStack with color circles
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    CategoryColors.forEachIndexed { index, categoryColor ->
-                        val isSelected = selectedColorIndex == index
-                        Box(
-                            modifier = Modifier
-                                .size(if (isSelected) 50.dp else 44.dp)
-                                .clip(CircleShape)
-                                .background(categoryColor.color)
-                                .border(
-                                    width = if (isSelected) 3.dp else 0.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape
-                                )
-                                .clickable { selectedColorIndex = index }
-                        )
-                    }
-                }
-            }
-            
-            // 4. Önizleme - iOS: Section("Önizleme")
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "Önizleme",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-                
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "İkon Seç",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
+                    
+                    // iOS: LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 12)
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        maxItemsInEachRow = 6
                     ) {
-                        // Preview Icon
-                        Box(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(selectedColor.copy(alpha = 0.2f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = CategoryIcons[selectedIconIndex]),
-                                contentDescription = null,
-                                tint = selectedColor,
-                                modifier = Modifier.size(24.dp)
-                            )
+                        categoryIcons.forEach { (iconName, iconRes) ->
+                            Box(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(
+                                        if (selectedIcon == iconName) {
+                                            selectedColor
+                                        } else {
+                                            selectedColor.copy(alpha = 0.2f)
+                                        }
+                                    )
+                                    .clickable { selectedIcon = iconName },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = iconRes),
+                                    contentDescription = null,
+                                    tint = if (selectedIcon == iconName) {
+                                        Color.White
+                                    } else {
+                                        selectedColor
+                                    },
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
                         }
-                        
-                        // Preview Name
-                        Text(
-                            text = categoryName.ifEmpty { "Kategori Adı" },
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
                     }
                 }
             }
             
-            // 5. Kaydet Butonu - iOS: Section { Button("Kategori Ekle") }
+            // 3. Renk Seç Section - iOS: Section("Renk Seç")
             item {
-                Spacer(modifier = Modifier.height(24.dp))
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "Renk Seç",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    
+                    // iOS: LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))], spacing: 12)
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        maxItemsInEachRow = 6
+                    ) {
+                        categoryColors.forEach { (colorName, color) ->
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(6.dp),
+                                modifier = Modifier.width(60.dp)
+                            ) {
+                                // iOS: Circle().fill(colorItem.1)
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape)
+                                        .background(color)
+                                        .then(
+                                            if (selectedColor == color) {
+                                                // iOS: .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                                                Modifier.border(3.dp, Color.White, CircleShape)
+                                            } else {
+                                                Modifier
+                                            }
+                                        )
+                                        .clickable { selectedColor = color }
+                                )
+                                
+                                Text(
+                                    text = colorName,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    maxLines = 1,
+                                    fontSize = 10.sp
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 4. Önizleme Section - iOS: Section("Önizleme")
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "Önizleme",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    
+                    Surface(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(selectedColor.copy(alpha = 0.2f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(
+                                        id = categoryIcons.find { it.first == selectedIcon }?.second
+                                            ?: CoreR.drawable.ic_circle_fill
+                                    ),
+                                    contentDescription = null,
+                                    tint = selectedColor,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                            
+                            Text(
+                                text = categoryName.ifBlank { "Kategori Adı" },
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
+            
+            // 5. Kaydet Butonu Section
+            item {
                 Button(
                     onClick = {
-                        // Convert icon resource ID to string name
-                        val iconName = CategoryIcons[selectedIconIndex].toString()
-                        val colorHex = String.format("#%06X", 0xFFFFFF and selectedColor.hashCode())
-                        onSave(categoryName, iconName, colorHex, categoryType)
+                        // iOS: saveCategory() - CategoriesView.swift:414-423
+                        val isIncome = categoryType == "income"
+                        android.util.Log.d("AddCategoryScreen", "💾 Save button clicked: categoryType=$categoryType → isIncome=$isIncome")
+                        onSave(categoryName, selectedIcon, selectedColor.toHexString(), isIncome)
                     },
-                    enabled = categoryName.isNotEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .height(50.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = categoryName.isNotBlank(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = IOSColors.Blue,
-                        disabledContainerColor = Color.Gray
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
                         text = "Kategori Ekle",
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
         }
     }
+    
+    // iOS: .onAppear - CategoriesView.swift:408-410
+    LaunchedEffect(Unit) {
+        println("📝 AddCategoryScreen appeared with categoryType: $categoryType")
+    }
 }
 
-
+// Helper function to convert Color to hex string
+private fun Color.toHexString(): String {
+    val red = (this.red * 255).toInt()
+    val green = (this.green * 255).toInt()
+    val blue = (this.blue * 255).toInt()
+    return String.format("#%02X%02X%02X", red, green, blue)
+}

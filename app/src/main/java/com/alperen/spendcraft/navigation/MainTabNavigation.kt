@@ -217,16 +217,48 @@ fun MainTabNavigation(
                 val categories by transactionsViewModel.categories.collectAsState()
                 val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
                 val unreadCount by notificationsViewModel.unreadCount.collectAsState()
+                val budgetViewModel: com.alperen.spendcraft.feature.budget.BudgetViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                val budgets by budgetViewModel.budgets.collectAsState()
+                val spentAmountsRaw by budgetViewModel.spentAmounts.collectAsState()
+                
+                // iOS: Load spent amounts on appear
+                LaunchedEffect(Unit) {
+                    budgetViewModel.calculateSpentAmounts()
+                }
+                
+                // Convert budget list to map: categoryId (Long) -> budget limit (Double)
+                val budgetMap: Map<Long, Double> = budgets.associate { budget ->
+                    (budget.categoryId.toLongOrNull() ?: 0L) to (budget.monthlyLimitMinor / 100.0)
+                }
+                
+                // Convert spent amounts: categoryId (String) -> spent (Long) to categoryId (Long) -> spent (Double)
+                val spentAmounts: Map<Long, Double> = spentAmountsRaw.mapKeys { (key, _) ->
+                    key.toLongOrNull() ?: 0L
+                }.mapValues { (_, value) ->
+                    value / 100.0
+                }
                 
                 com.alperen.spendcraft.feature.dashboard.ui.IOSCategoriesScreen(
                     categories = categories,
-                    budgets = emptyMap(), // TODO: Add budget data
-                    spent = emptyMap(), // TODO: Add spent data
+                    budgets = budgetMap,
+                    spent = spentAmounts,
                     onAddCategory = { name, icon, color ->
                         transactionsViewModel.addCategory(name, icon, color)
                     },
                     onCategoryClick = { category ->
-                        // TODO: Show add/edit budget dialog
+                        // iOS: Show AddBudgetView - already handled in IOSCategoriesScreen
+                    },
+                    onDeleteCategory = { category ->
+                        // iOS: deleteCategory(category) - CategoriesView.swift:97-99
+                        category.id?.let { transactionsViewModel.removeCategory(it) }
+                    },
+                    onSaveBudget = { categoryId, amount ->
+                        // iOS: budgetViewModel.upsertBudget - CategoriesView.swift:274
+                        val budget = com.alperen.spendcraft.core.model.Budget(
+                            categoryId = categoryId.toString(),
+                            monthlyLimitMinor = (amount * 100).toLong()
+                        )
+                        budgetViewModel.addBudget(budget)
                     },
                     onNotifications = onNavigateToNotifications, // iOS'taki notification button
                     unreadCount = unreadCount // iOS'taki badge

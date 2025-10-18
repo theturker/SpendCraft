@@ -8,7 +8,8 @@ fun CategoryEntity.toCategory(): Category {
         id = id,
         name = name,
         color = color,
-        icon = icon
+        icon = icon,
+        isIncome = isIncome  // iOS pattern
     )
 }
 
@@ -17,6 +18,7 @@ fun Category.toCategoryEntity(): CategoryEntity {
         id = id ?: 0,
         name = name,
         color = color,
-        icon = icon
+        icon = icon,
+        isIncome = isIncome  // iOS pattern
     )
 }

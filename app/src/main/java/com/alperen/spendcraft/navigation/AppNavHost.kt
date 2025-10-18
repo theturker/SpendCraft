@@ -71,6 +71,7 @@ object Routes {
     const val ACCOUNT_INFO = "account_info"  // iOS AccountInfoView
     const val NOTIFICATION_SETTINGS = "notification_settings"  // iOS NotificationSettingsView
     const val CURRENCY_PICKER = "currency_picker"  // iOS CurrencyPickerView
+    const val ADD_CATEGORY = "add_category/{isIncome}"  // iOS AddCategoryView
 }
 
 @Composable
@@ -142,6 +143,13 @@ fun AppNavHost(
         }
         composable(Routes.ADD) {
             val categories by vm.categories.collectAsState()
+            
+            // iOS: Reload categories when returning from AddCategoryView
+            // AddTransactionView.swift:265-273
+            LaunchedEffect(navController.currentBackStackEntry) {
+                vm.loadCategories()
+            }
+            
             com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
                 categories = categories,
                 initialTransactionType = null,
@@ -149,11 +157,21 @@ fun AppNavHost(
                     vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
                     navController.popBackStack()
                 },
-                onDismiss = { navController.popBackStack() }
+                onDismiss = { navController.popBackStack() },
+                onNavigateToAddCategory = { isIncome ->
+                    // iOS: AddCategoryView(initialType: isIncome ? "income" : "expense")
+                    navController.navigate("add_category/${isIncome}")
+                }
             )
         }
         composable(Routes.ADD_INCOME) {
             val categories by vm.categories.collectAsState()
+            
+            // iOS: Reload categories when returning from AddCategoryView
+            LaunchedEffect(navController.currentBackStackEntry) {
+                vm.loadCategories()
+            }
+            
             com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
                 categories = categories,
                 initialTransactionType = true,
@@ -161,11 +179,21 @@ fun AppNavHost(
                     vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
                     navController.popBackStack()
                 },
-                onDismiss = { navController.popBackStack() }
+                onDismiss = { navController.popBackStack() },
+                onNavigateToAddCategory = { isIncome ->
+                    // iOS: AddCategoryView(initialType: isIncome ? "income" : "expense")
+                    navController.navigate("add_category/${isIncome}")
+                }
             )
         }
         composable(Routes.ADD_EXPENSE) {
             val categories by vm.categories.collectAsState()
+            
+            // iOS: Reload categories when returning from AddCategoryView
+            LaunchedEffect(navController.currentBackStackEntry) {
+                vm.loadCategories()
+            }
+            
             com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
                 categories = categories,
                 initialTransactionType = false,
@@ -173,7 +201,11 @@ fun AppNavHost(
                     vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
                     navController.popBackStack()
                 },
-                onDismiss = { navController.popBackStack() }
+                onDismiss = { navController.popBackStack() },
+                onNavigateToAddCategory = { isIncome ->
+                    // iOS: AddCategoryView(initialType: isIncome ? "income" : "expense")
+                    navController.navigate("add_category/${isIncome}")
+                }
             )
         }
         composable(Routes.REPORTS) {
@@ -351,7 +383,10 @@ fun AppNavHost(
                 }
             AccountsScreen(
                 accountsFlow = accountsFlow,
-                onAddAccount = { vm.addAccount("Yeni Hesap") },
+                onAddAccount = { name, type, currency ->
+                    // iOS: accountsViewModel.addAccount(name: name, type: type, currency: currency)
+                    vm.addAccount(name)  // TODO: Extend addAccount to support type and currency
+                },
                 onEditAccount = { account -> vm.updateAccountName(account.id, account.name) },
                 onArchiveAccount = { account -> vm.removeAccount(account.id) },
                 onSetDefaultAccount = { _ -> /* TODO: implement set default when repo supports */ },
@@ -476,6 +511,28 @@ fun AppNavHost(
         composable(Routes.CURRENCY_PICKER) {
             com.alperen.spendcraft.feature.settings.ui.CurrencyPickerScreen(
                 onBack = { navController.popBackStack() }
+            )
+        }
+        
+        // iOS AddCategoryView - AddTransactionView'dan açılır
+        composable("add_category/{isIncome}") { backStackEntry ->
+            val isIncomeStr = backStackEntry.arguments?.getString("isIncome") ?: "false"
+            val isIncome = isIncomeStr.toBoolean()
+            
+            android.util.Log.d("AddCategory", "🔵 Route parameter isIncome: $isIncomeStr → $isIncome")
+            
+            com.alperen.spendcraft.feature.category.AddCategoryScreen(
+                initialType = isIncome,
+                onSave = { name, icon, color, isIncomeType ->
+                    android.util.Log.d("AddCategory", "💾 Saving category: name=$name, isIncome=$isIncomeType")
+                    // iOS: transactionsViewModel.addCategory
+                    vm.addCategory(name, icon, color, isIncomeType)
+                    
+                    // iOS: onDismiss callback ile kategoriler otomatik reload ediliyor
+                    // AddTransactionView.swift:265-271
+                    navController.popBackStack()
+                },
+                onDismiss = { navController.popBackStack() }
             )
         }
     }

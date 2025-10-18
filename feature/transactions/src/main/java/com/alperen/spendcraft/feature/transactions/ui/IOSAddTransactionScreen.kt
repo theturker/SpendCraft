@@ -51,6 +51,7 @@ fun IOSAddTransactionScreen(
     initialTransactionType: Boolean? = null,
     onSave: (amountMinor: Long, note: String?, categoryId: Long?, isIncome: Boolean) -> Unit,
     onDismiss: () -> Unit,
+    onNavigateToAddCategory: (Boolean) -> Unit = {}, // iOS: isIncome type'ı geç
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -62,16 +63,17 @@ fun IOSAddTransactionScreen(
     var selectedCategory by remember { mutableStateOf<Category?>(categories.firstOrNull()) }
     var selectedDate by remember { mutableStateOf(Date()) }
     var showDatePicker by remember { mutableStateOf(false) }
-    var showAddCategory by remember { mutableStateOf(false) }
     
     // iOS: filteredCategories based on transaction type
     val filteredCategories = remember(categories, isIncomeState.value) {
         categories.filter { it.isIncome == isIncomeState.value }
     }
     
+    // iOS locale-aware decimal parsing
+    val normalizedAmount = amount.replace(',', '.')
     val isValid = amount.isNotEmpty() && 
-                  amount.toDoubleOrNull() != null && 
-                  amount.toDouble() > 0 &&
+                  normalizedAmount.toDoubleOrNull() != null && 
+                  normalizedAmount.toDouble() > 0 &&
                   selectedCategory != null
     
     Scaffold(
@@ -125,7 +127,13 @@ fun IOSAddTransactionScreen(
                     ) {
                         OutlinedTextField(
                             value = amount,
-                            onValueChange = { amount = it },
+                            onValueChange = { newValue ->
+                                // iOS: Hem nokta hem virgül kabul et - her ikisi de görünsün
+                                // Validation: sadece rakam, nokta veya virgül olabilir
+                                if (newValue.isEmpty() || newValue.matches(Regex("^\\d*[.,]?\\d*$"))) {
+                                    amount = newValue
+                                }
+                            },
                             placeholder = { Text("0.00") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             textStyle = MaterialTheme.typography.titleLarge,
@@ -158,7 +166,10 @@ fun IOSAddTransactionScreen(
                         // iOS Pattern: Image(systemName: "plus.circle.fill") + Circle background
                         item {
                             Button(
-                                onClick = { showAddCategory = true },
+                                onClick = { 
+                                    // iOS: AddCategoryView(initialType: isIncome ? "income" : "expense")
+                                    onNavigateToAddCategory(isIncome)
+                                },
                                 modifier = Modifier.width(80.dp),
                                 shape = RoundedCornerShape(0.dp),  // No shape for the button itself
                                 colors = ButtonDefaults.buttonColors(
@@ -280,7 +291,9 @@ fun IOSAddTransactionScreen(
                 FormSection(title = null) {
                     Button(
                         onClick = {
-                            val amountValue = amount.toDoubleOrNull() ?: 0.0
+                            // iOS locale-aware: virgül de nokta da kabul edilir
+                            val normalizedAmount = amount.replace(',', '.')
+                            val amountValue = normalizedAmount.toDoubleOrNull() ?: 0.0
                             val amountMinor = (amountValue * 100).toLong()
                             onSave(
                                 amountMinor,
@@ -384,48 +397,6 @@ fun IOSAddTransactionScreen(
         }
     }
     
-    // Add Category Dialog - iOS: AddTransactionView.swift:329-380
-    if (showAddCategory) {
-        var newCategoryName by remember { mutableStateOf("") }
-        
-        AlertDialog(
-            onDismissRequest = { showAddCategory = false },
-            title = { Text("Yeni Kategori") },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    OutlinedTextField(
-                        value = newCategoryName,
-                        onValueChange = { newCategoryName = it },
-                        label = { Text("Kategori Adı") },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Text(
-                        text = "Tip: ${if (isIncome) "Gelir" else "Gider"}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        // TODO: Add category via ViewModel
-                        // transactionsViewModel.addCategory(newCategoryName, "tag.fill", if (isIncome) "#00C853" else "#FF0000", isIncome)
-                        showAddCategory = false
-                    },
-                    enabled = newCategoryName.isNotEmpty()
-                ) {
-                    Text("Ekle")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showAddCategory = false }) {
-                    Text("İptal")
-                }
-            }
-        )
-    }
 }
 
 /**

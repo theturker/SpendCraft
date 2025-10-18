@@ -32,19 +32,29 @@ object TransactionMapper {
 }
 
 object CategoryMapper {
-    fun fromEntity(e: CategoryEntity): Category = Category(
-        id = e.id,
-        name = e.name,
-        color = e.color,
-        icon = e.icon
-    )
+    fun fromEntity(e: CategoryEntity): Category {
+        val category = Category(
+            id = e.id,
+            name = e.name,
+            color = e.color,
+            icon = e.icon,
+            isIncome = e.isIncome  // iOS pattern: Categories are type-specific
+        )
+        android.util.Log.d("CategoryMapper", "🔵 Entity → Category: name=${e.name}, isIncome=${e.isIncome}")
+        return category
+    }
     
-    fun toEntity(c: Category): CategoryEntity = CategoryEntity(
-        id = c.id ?: 0,
-        name = c.name,
-        color = c.color,
-        icon = c.icon
-    )
+    fun toEntity(c: Category): CategoryEntity {
+        val entity = CategoryEntity(
+            id = c.id ?: 0,
+            name = c.name,
+            color = c.color,
+            icon = c.icon,
+            isIncome = c.isIncome  // iOS pattern: Categories are type-specific
+        )
+        android.util.Log.d("CategoryMapper", "🔵 Category → Entity: name=${c.name}, isIncome=${c.isIncome}")
+        return entity
+    }
 }
 
 object AccountMapper {

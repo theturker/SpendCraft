@@ -19,6 +19,7 @@ import com.alperen.spendcraft.data.db.dao.TxDao
 import com.alperen.spendcraft.data.db.entities.AccountEntity
 import com.alperen.spendcraft.data.db.entities.CategoryEntity
 import com.alperen.spendcraft.data.db.migrations.MIGRATION_4_TO_5
+import com.alperen.spendcraft.data.db.migrations.MIGRATION_7_8
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -96,7 +97,7 @@ object DbModule {
     @Singleton
     fun provideDb(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "spendcraft.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_TO_5)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_TO_5, MIGRATION_7_8)
             .fallbackToDestructiveMigration()
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
@@ -116,14 +117,16 @@ object DbModule {
                             )
                         )
                         
-                        // Insert default categories
+                        // Insert default categories - iOS pattern: type-specific
                         database.categoryDao().insertAll(
                             listOf(
-                                CategoryEntity(name = "Yemek", color = "#FF5722", icon = "🍔"),
-                                CategoryEntity(name = "Ulaşım", color = "#2196F3", icon = "🚌"),
-                                CategoryEntity(name = "Eğlence", color = "#9C27B0", icon = "🎬"),
-                                CategoryEntity(name = "Maaş", color = "#4CAF50", icon = "💼"),
-                                CategoryEntity(name = "Alışveriş", color = "#FF9800", icon = "🛒")
+                                // Expense categories
+                                CategoryEntity(name = "Yemek", color = "#FF5722", icon = "🍔", isIncome = false),
+                                CategoryEntity(name = "Ulaşım", color = "#2196F3", icon = "🚌", isIncome = false),
+                                CategoryEntity(name = "Eğlence", color = "#9C27B0", icon = "🎬", isIncome = false),
+                                CategoryEntity(name = "Alışveriş", color = "#FF9800", icon = "🛒", isIncome = false),
+                                // Income categories
+                                CategoryEntity(name = "Maaş", color = "#4CAF50", icon = "💼", isIncome = true)
                             )
                         )
                         database.close()

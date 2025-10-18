@@ -53,63 +53,10 @@ class NotificationsViewModel @Inject constructor(
     }
     
     private suspend fun generateRealNotifications(): List<NotificationItem> {
-        val notifications = mutableListOf<NotificationItem>()
-        
-        // Örnek bildirimler - gerçek veri yerine
-        notifications.add(
-            NotificationItem(
-                id = "budget_1",
-                title = "⚠️ Bütçe Uyarısı",
-                message = "Yemek bütçenizi aştınız!",
-                timestamp = System.currentTimeMillis() - (2 * 60 * 60 * 1000L), // 2 saat önce
-                type = NotificationType.BUDGET_ALERT,
-                isRead = false
-            )
-        )
-        
-        // Günlük hatırlatma bildirimleri
-        val today = Calendar.getInstance()
-        for (i in 1..7) {
-            val day = Calendar.getInstance().apply {
-                timeInMillis = today.timeInMillis - (i * 24 * 60 * 60 * 1000L)
-            }
-            notifications.add(
-                NotificationItem(
-                    id = "reminder_$i",
-                    title = "📝 Günlük Hatırlatma",
-                    message = "Bugünkü harcamalarınızı kaydetmeyi unutmayın!",
-                    timestamp = day.timeInMillis,
-                    type = NotificationType.SPENDING_REMINDER,
-                    isRead = false
-                )
-            )
-        }
-        
-        // Başarım bildirimleri
-        notifications.add(
-            NotificationItem(
-                id = "achievement_1",
-                title = "🏆 Yeni Başarım!",
-                message = "İlk işleminizi kaydettiniz!",
-                timestamp = System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000L),
-                type = NotificationType.ACHIEVEMENT,
-                isRead = false
-            )
-        )
-        
-        // Sistem bildirimleri
-        notifications.add(
-            NotificationItem(
-                id = "system_1",
-                title = "🎉 Hoş Geldiniz!",
-                message = "SpendCraft'a hoş geldiniz!",
-                timestamp = System.currentTimeMillis() - (5 * 24 * 60 * 60 * 1000L),
-                type = NotificationType.SYSTEM,
-                isRead = true
-            )
-        )
-        
-        return notifications.sortedByDescending { it.timestamp }
+        // iOS pattern: Bildirimler sadece gerçek olaylardan oluşur
+        // NotificationsViewModel.swift:26-34 - loadNotifications() UserDefaults'tan okur
+        // Yeni kullanıcılar için boş liste
+        return emptyList()
     }
     
     private fun listenToNotificationEvents() {

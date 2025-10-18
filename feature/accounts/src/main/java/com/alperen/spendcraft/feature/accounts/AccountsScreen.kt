@@ -1,5 +1,6 @@
 package com.alperen.spendcraft.feature.accounts
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,7 +30,7 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun AccountsScreen(
     accountsFlow: Flow<List<AccountEntity>>,
-    onAddAccount: () -> Unit,
+    onAddAccount: (String, String, String) -> Unit,  // iOS: name, type, currency
     onEditAccount: (AccountEntity) -> Unit,
     onArchiveAccount: (AccountEntity) -> Unit,
     onSetDefaultAccount: (AccountEntity) -> Unit,
@@ -132,16 +133,73 @@ fun AccountsScreen(
                     }
                 }
             } else {
-                items(accounts) { account ->
-                    AccountItem(
-                        account = account,
-                        onEdit = { 
-                            selectedAccount = account
-                            showEditAccountDialog = true
+                items(
+                    items = accounts,
+                    key = { it.id }
+                ) { account ->
+                    // iOS: .swipeActions(edge: .trailing, allowsFullSwipe: false)
+                    // SettingsView.swift:340-353
+                    val dismissState = rememberSwipeToDismissBoxState()
+                    
+                    SwipeToDismissBox(
+                        state = dismissState,
+                        backgroundContent = {
+                            // iOS: 2 actions - Delete (red) and Set Default (blue)
+                            val color = when (dismissState.targetValue) {
+                                SwipeToDismissBoxValue.EndToStart -> IOSColors.Red
+                                else -> Color.Transparent
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 20.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    // Varsayılan yap - iOS: Label("Varsayılan", systemImage: "star")
+                                    if (!account.isDefault) {
+                                        IconButton(
+                                            onClick = { onSetDefaultAccount(account) }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill),
+                                                contentDescription = "Varsayılan",
+                                                tint = Color.White,
+                                                modifier = Modifier.size(24.dp)
+                                            )
+                                        }
+                                    }
+                                    
+                                    // Sil - iOS: Label("Sil", systemImage: "trash")
+                                    IconButton(
+                                        onClick = { onArchiveAccount(account) }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_trash_fill),
+                                            contentDescription = "Sil",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
+                                }
+                            }
                         },
-                        onArchive = { onArchiveAccount(account) },
-                        onSetDefault = { onSetDefaultAccount(account) }
-                    )
+                        enableDismissFromEndToStart = true,
+                        enableDismissFromStartToEnd = false
+                    ) {
+                        AccountItem(
+                            account = account,
+                            onEdit = { 
+                                selectedAccount = account
+                                showEditAccountDialog = true
+                            },
+                            onArchive = { onArchiveAccount(account) },
+                            onSetDefault = { onSetDefaultAccount(account) }
+                        )
+                    }
                 }
             }
             }
@@ -152,8 +210,8 @@ fun AccountsScreen(
                     account = null,
                     onDismiss = { showAddAccountDialog = false },
                     onSave = { name, type, currency ->
-                        // Create new account
-                        onAddAccount()
+                        // iOS: accountsViewModel.addAccount(name: name, type: type, currency: currency)
+                        onAddAccount(name, type, currency)
                         showAddAccountDialog = false
                     }
                 )

@@ -109,8 +109,21 @@ class TransactionsViewModel @Inject constructor(
         viewModelScope.launch { delete(id) }
     }
     
-    fun addCategory(name: String, icon: String? = null, color: String? = null) {
-        viewModelScope.launch { insertCategory(name, icon, color) }
+    fun addCategory(name: String, icon: String? = null, color: String? = null, isIncome: Boolean = false) {
+        android.util.Log.d("TransactionsViewModel", "🔵 addCategory called: name=$name, isIncome=$isIncome")
+        viewModelScope.launch { 
+            val categoryId = insertCategory(name, icon, color, isIncome)
+            android.util.Log.d("TransactionsViewModel", "✅ Category inserted with ID: $categoryId, isIncome=$isIncome")
+        }
+    }
+    
+    // iOS: loadCategories() - Force refresh categories
+    // AddTransactionView.swift:269
+    fun loadCategories() {
+        // StateFlow otomatik güncellenecek ama UI refresh için trigger
+        viewModelScope.launch {
+            // Trigger refresh - categories zaten observeCategories() ile otomatik güncelleniyor
+        }
     }
     
     fun removeCategory(id: Long) {

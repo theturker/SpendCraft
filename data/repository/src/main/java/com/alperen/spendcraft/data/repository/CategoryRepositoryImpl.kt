@@ -27,7 +27,11 @@ class CategoryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertCategory(category: Category): Long {
-        return categoryDao.insertCategory(category.toCategoryEntity())
+        android.util.Log.d("CategoryRepositoryImpl", "🔵 insertCategory: name=${category.name}, isIncome=${category.isIncome}")
+        val entity = category.toCategoryEntity()
+        val categoryId = categoryDao.insertCategory(entity)
+        android.util.Log.d("CategoryRepositoryImpl", "✅ Category inserted with ID: $categoryId")
+        return categoryId
     }
 
     override suspend fun updateCategory(category: Category) {
@@ -36,6 +40,7 @@ class CategoryRepositoryImpl @Inject constructor(
             name = category.name,
             color = category.color,
             icon = category.icon ?: ""
+            // TODO: Add isIncome parameter to updateCategory query
         )
     }
 
