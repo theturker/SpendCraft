@@ -78,27 +78,24 @@ fun IOSSettingsScreen(
         rememberTopAppBarState()
     )
     
-    // Scroll oranına göre text boyutunu ayarlayalım
+    // Scroll oranına göre text boyutunu ayarlayalım - daha çok küçülsün
     val collapsedFraction = scrollBehavior.state.collapsedFraction
     val titleFontSize = androidx.compose.ui.unit.lerp(
-        start = 32.sp,
-        stop = 22.sp,
+        start = 34.sp, // Daha büyük başlangıç
+        stop = 17.sp,  // iOS gibi çok küçülsün
         fraction = collapsedFraction
     )
     
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = "Ayarlar",
-                        fontSize = titleFontSize,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1
-                    )
-                },
-                actions = {
+            Box {
+                LargeTopAppBar(
+                    title = {
+                        // Boş bırak - başlığı absolute position ile koyacağız
+                        Spacer(modifier = Modifier)
+                    },
+                    actions = {
                     // iOS'taki notificationToolbarItem - ContentView.swift:95-97
                     IconButton(onClick = onNavigateToNotifications) {
                         Box {
@@ -125,12 +122,38 @@ fun IOSSettingsScreen(
                         }
                     }
                 },
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.largeTopAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
                 )
-            )
+                
+                // Başlığı ekranın TAM ORTASINA koy (butonlardan bağımsız)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(if (collapsedFraction > 0.5f) 64.dp else 152.dp)
+                        .align(Alignment.BottomCenter),
+                    contentAlignment = if (collapsedFraction > 0.5f) {
+                        Alignment.Center
+                    } else {
+                        Alignment.BottomStart
+                    }
+                ) {
+                    Text(
+                        text = "Ayarlar",
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        modifier = if (collapsedFraction > 0.5f) {
+                            Modifier
+                        } else {
+                            Modifier.padding(start = 16.dp, bottom = 8.dp)
+                        }
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         LazyColumn(

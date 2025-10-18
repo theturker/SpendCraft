@@ -81,11 +81,11 @@ fun DashboardScreen(
         rememberTopAppBarState()
     )
     
-    // Scroll oranına göre text boyutunu
+    // Scroll oranına göre text boyutunu - daha çok küçülsün
     val collapsedFraction = scrollBehavior.state.collapsedFraction
     val titleFontSize = androidx.compose.ui.unit.lerp(
-        start = 32.sp,
-        stop = 22.sp,
+        start = 34.sp, // Daha büyük başlangıç
+        stop = 17.sp,  // iOS gibi çok küçülsün
         fraction = collapsedFraction
     )
     
@@ -95,15 +95,9 @@ fun DashboardScreen(
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = "Ana Sayfa",
-                        fontSize = titleFontSize,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1
-                    )
-                },
+            Box {
+                LargeTopAppBar(
+                    title = { Spacer(modifier = Modifier) },
                 actions = {
                     // iOS'taki notificationToolbarItem - ContentView.swift:36-38
                     IconButton(onClick = onNotifications) {
@@ -131,12 +125,38 @@ fun DashboardScreen(
                         }
                     }
                 },
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.largeTopAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
                 )
-            )
+                
+                // Başlığı ekranın TAM ORTASINA koy
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(if (collapsedFraction > 0.5f) 64.dp else 152.dp)
+                        .align(Alignment.BottomCenter),
+                    contentAlignment = if (collapsedFraction > 0.5f) {
+                        Alignment.Center
+                    } else {
+                        Alignment.BottomStart
+                    }
+                ) {
+                    Text(
+                        text = "Ana Sayfa",
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        modifier = if (collapsedFraction > 0.5f) {
+                            Modifier
+                        } else {
+                            Modifier.padding(start = 16.dp, bottom = 8.dp)
+                        }
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         LazyColumn(

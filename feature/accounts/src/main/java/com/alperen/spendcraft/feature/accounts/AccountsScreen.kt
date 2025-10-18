@@ -46,26 +46,20 @@ fun AccountsScreen(
         rememberTopAppBarState()
     )
     
-    // Scroll oranına göre text boyutunu ayarlayalım
+    // Scroll oranına göre text boyutunu ayarlayalım - daha çok küçülsün
     val collapsedFraction = scrollBehavior.state.collapsedFraction
     val titleFontSize = androidx.compose.ui.unit.lerp(
-        start = 32.sp,
-        stop = 22.sp,
+        start = 34.sp,
+        stop = 17.sp,
         fraction = collapsedFraction
     )
     
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = "Hesaplar",
-                        fontSize = titleFontSize,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1
-                    )
-                },
+            Box {
+                LargeTopAppBar(
+                    title = { Spacer(modifier = Modifier) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -74,12 +68,37 @@ fun AccountsScreen(
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.largeTopAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
                 )
-            )
+                
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(if (collapsedFraction > 0.5f) 64.dp else 152.dp)
+                        .align(Alignment.BottomCenter),
+                    contentAlignment = if (collapsedFraction > 0.5f) {
+                        Alignment.Center
+                    } else {
+                        Alignment.BottomStart
+                    }
+                ) {
+                    Text(
+                        text = "Hesaplar",
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        modifier = if (collapsedFraction > 0.5f) {
+                            Modifier
+                        } else {
+                            Modifier.padding(start = 16.dp, bottom = 8.dp)
+                        }
+                    )
+                }
+            }
         },
         floatingActionButton = {
             // iOS-style FAB
@@ -412,8 +431,8 @@ fun AccountEditorScreen(
                     }
                 },
                 colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent
                 )
             )
         }
