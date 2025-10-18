@@ -23,6 +23,7 @@ import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.IOSColors
+import com.alperen.spendcraft.core.ui.CurrencyTextField
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -95,27 +96,25 @@ fun AddRecurringRuleScreen(
                         
                         Spacer(modifier = Modifier.height(12.dp))
                         
-                        // Tutar
-                        OutlinedTextField(
-                            value = amount,
-                            onValueChange = { newValue ->
-                                // iOS: Hem nokta hem virgül kabul et - her ikisi de görünsün
-                                if (newValue.isEmpty() || newValue.matches(Regex("^\\d*[.,]?\\d*$"))) {
-                                    amount = newValue
-                                }
-                            },
-                            label = { Text("Tutar") },
-                            placeholder = { Text("0.00") },
-                            trailingIcon = { 
-                                Text(
-                                    "₺",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(end = 12.dp)
-                                )
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        // Tutar - iOS: CurrencyTextField with formatting
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            com.alperen.spendcraft.core.ui.CurrencyTextField(
+                                value = amount,
+                                onValueChange = { amount = it },
+                                placeholder = { Text("0.00") },
+                                modifier = Modifier.weight(1f)
+                            )
+                            
+                            Text(
+                                "₺",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
                         
                         Spacer(modifier = Modifier.height(12.dp))
                         

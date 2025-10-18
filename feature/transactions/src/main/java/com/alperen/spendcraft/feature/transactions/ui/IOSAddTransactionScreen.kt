@@ -125,17 +125,11 @@ fun IOSAddTransactionScreen(
                             .padding(horizontal = 16.dp, vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        OutlinedTextField(
+                        // iOS: CurrencyTextField - Binlik ayırıcı ile formatlama
+                        com.alperen.spendcraft.core.ui.CurrencyTextField(
                             value = amount,
-                            onValueChange = { newValue ->
-                                // iOS: Hem nokta hem virgül kabul et - her ikisi de görünsün
-                                // Validation: sadece rakam, nokta veya virgül olabilir
-                                if (newValue.isEmpty() || newValue.matches(Regex("^\\d*[.,]?\\d*$"))) {
-                                    amount = newValue
-                                }
-                            },
+                            onValueChange = { amount = it },
                             placeholder = { Text("0.00") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             textStyle = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.weight(1f),
                             colors = OutlinedTextFieldDefaults.colors(

@@ -827,20 +827,25 @@ private fun AddBudgetDialog(
                         fontWeight = FontWeight.SemiBold
                     )
                     
-                    OutlinedTextField(
-                        value = budgetAmount,
-                        onValueChange = { newValue ->
-                            // iOS: Hem nokta hem virgül kabul et
-                            if (newValue.isEmpty() || newValue.matches(Regex("^\\d*[.,]?\\d*$"))) {
-                                budgetAmount = newValue
-                            }
-                        },
-                        placeholder = { Text("0.00") },
-                        trailingIcon = { Text("₺") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    // iOS: CurrencyTextField with formatting
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        com.alperen.spendcraft.core.ui.CurrencyTextField(
+                            value = budgetAmount,
+                            onValueChange = { budgetAmount = it },
+                            placeholder = { Text("0.00") },
+                            modifier = Modifier.weight(1f)
+                        )
+                        
+                        Text(
+                            "₺",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
                     
                     // iOS: Show remaining if budget is set
                     if (budgetValue != null && budgetValue > 0) {
