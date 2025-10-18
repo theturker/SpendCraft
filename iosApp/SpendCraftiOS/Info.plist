@@ -21,7 +21,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -45,8 +45,6 @@
 	<string>AI önerileri için internet bağlantısı gereklidir.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Bütçe aşımları ve tekrarlayan işlemler için bildirim göndermemize izin verin.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Daha alakalı reklamlar göstermek ve uygulama deneyiminizi iyileştirmek için verilerinizi kullanmak istiyoruz.</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3199248450820147~6334294542</string>
 	<key>GADIsAdManagerApp</key>
