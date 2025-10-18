@@ -52,6 +52,8 @@ fun IOSCategoriesScreen(
     spent: Map<Long, Double> = emptyMap(), // categoryId to spent amount
     onAddCategory: (name: String, icon: String, color: String) -> Unit,
     onCategoryClick: (Category) -> Unit,
+    onNotifications: () -> Unit = {}, // iOS'taki notificationToolbarItem
+    unreadCount: Int = 0, // iOS: notificationsViewModel.unreadCount
     modifier: Modifier = Modifier
 ) {
     var showAddBudgetDialog by remember { mutableStateOf(false) }
@@ -84,6 +86,33 @@ fun IOSCategoriesScreen(
                     )
                 },
                 actions = {
+                    // iOS'taki notificationToolbarItem - ContentView.swift:77-79
+                    IconButton(onClick = onNotifications) {
+                        Box {
+                            Icon(
+                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_outline),
+                                contentDescription = "Bildirimler",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            
+                            // iOS'taki unread badge
+                            if (unreadCount > 0) {
+                                Badge(
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = 4.dp, y = (-4).dp)
+                                ) {
+                                    Text(
+                                        text = "$unreadCount",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    
+                    // + butonu
                     IconButton(onClick = { showAddCategoryDialog = true }) {
                         Icon(
                             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_plus_circle_fill),

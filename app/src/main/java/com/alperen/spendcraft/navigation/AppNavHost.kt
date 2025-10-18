@@ -17,9 +17,10 @@ import com.alperen.spendcraft.feature.reports.ReportsScreen
 import com.alperen.spendcraft.feature.reports.ExportReportScreen
 import com.alperen.spendcraft.feature.settings.ui.SettingsScreen
 import com.alperen.spendcraft.feature.settings.ui.CategoryManagementScreen
-import com.alperen.spendcraft.feature.paywall.PaywallScreen
-import com.alperen.spendcraft.feature.paywall.navigation.PaywallNavigation
-import com.alperen.spendcraft.feature.premiumdebug.PremiumDebugScreen
+// iOS'ta Paywall yok - kaldırıldı
+// import com.alperen.spendcraft.feature.paywall.PaywallScreen
+// import com.alperen.spendcraft.feature.paywall.navigation.PaywallNavigation
+// import com.alperen.spendcraft.feature.premiumdebug.PremiumDebugScreen
 import com.alperen.spendcraft.feature.ai.AISuggestionsScreen
 import com.alperen.spendcraft.feature.settings.AISettingsScreen
 import com.alperen.spendcraft.feature.accounts.AccountsScreen
@@ -49,8 +50,9 @@ object Routes {
     const val ALL_TRANSACTIONS = "all_transactions"
     const val AI_SUGGESTIONS = "ai_suggestions"
     // AI_SETTINGS removed - API key is hardcoded
-    const val PAYWALL = PaywallNavigation.ROUTE_PAYWALL
-    const val PREMIUM_DEBUG = "premium_debug"
+    // iOS'ta Paywall yok - kaldırıldı
+    // const val PAYWALL = PaywallNavigation.ROUTE_PAYWALL
+    // const val PREMIUM_DEBUG = "premium_debug"
     const val ACCOUNTS = "accounts"
     const val RECURRING = "recurring"
     const val ADD_RECURRING_RULE = "add_recurring_rule"
@@ -67,12 +69,11 @@ fun AppNavHost(
     deepLinkUri: android.net.Uri? = null
 ) {
     val vm: TransactionsViewModel = hiltViewModel()
-    val paywallVm: com.alperen.spendcraft.feature.paywall.PaywallViewModel = hiltViewModel()
-    val isPremium by paywallVm.isPremium.collectAsState(initial = false)
-    val hasAIWeekly by paywallVm.aiWeekly.collectAsState(initial = false)
+    // iOS pattern: AdsManager.shared.isPremium (her zaman false)
+    val context = LocalContext.current
+    val isPremium = com.alperen.spendcraft.core.ui.rememberIsPremium(context)
     
     // Handle deep links
-    val context = LocalContext.current
     LaunchedEffect(deepLinkUri) {
         deepLinkUri?.let { uri ->
             val intent = DeepLinkHandler.handleDeepLink(context, uri)
@@ -207,9 +208,8 @@ fun AppNavHost(
                 onNavigateToBudgets = { 
                     navController.navigate(Routes.BUDGET_MANAGEMENT) 
                 },
-                onNavigateToPremiumDebug = {
-                    navController.navigate(Routes.PREMIUM_DEBUG)
-                },
+                // iOS'ta Premium Debug yok - kaldırıldı
+                onNavigateToPremiumDebug = { /* iOS'ta yok */ },
                 onNavigateToAISuggestions = {
                     navController.navigate(Routes.AI_SUGGESTIONS)
                 },
@@ -267,8 +267,7 @@ fun AppNavHost(
                 onDeleteBudget = { categoryId -> budgetViewModel.deleteBudget(categoryId) },
                 onBack = { navController.popBackStack() },
                 onNavigateToPaywall = { 
-                    android.util.Log.d("AppNavHost", "Navigating to paywall from Budget Management")
-                    navController.navigate(Routes.PAYWALL) 
+                    // iOS'ta Paywall yok - boş bırakıldı
                 },
                 onCalculateSpentAmounts = { budgetViewModel.calculateSpentAmounts() }
             )
@@ -283,17 +282,9 @@ fun AppNavHost(
                 }
             )
         }
-        composable(Routes.PAYWALL) {
-            PaywallScreen(
-                onNavigateUp = { navController.popBackStack() },
-                onSuccess = { navController.popBackStack() }
-            )
-        }
-        composable(Routes.PREMIUM_DEBUG) {
-            PremiumDebugScreen(
-                onNavigateUp = { navController.popBackStack() }
-            )
-        }
+        // iOS'ta Paywall yok - route kaldırıldı
+        // composable(Routes.PAYWALL) { ... }
+        // composable(Routes.PREMIUM_DEBUG) { ... }
         composable(Routes.AI_SUGGESTIONS) {
             val aiViewModel: com.alperen.spendcraft.feature.ai.AIViewModel = hiltViewModel()
             
@@ -324,7 +315,7 @@ fun AppNavHost(
                 expenses = totalExpense,
                 savings = savings,
                 isPremium = isPremium,
-                onUpgrade = { navController.navigate(Routes.PAYWALL) },
+                onUpgrade = { /* iOS'ta Paywall yok */ },
                 onBack = { navController.popBackStack() }
             )
         }
@@ -355,7 +346,8 @@ fun AppNavHost(
         }
         composable(Routes.RECURRING) {
             val recurringViewModel: com.alperen.spendcraft.feature.recurrence.RecurringViewModel = hiltViewModel()
-            val isPremium = recurringViewModel.billingRepository.isPremium.collectAsState(initial = false).value
+            // iOS'ta recurring premium özelliği değil - herkes kullanabilir
+            val isPremium = false
             
             RecurringListScreen(
                 recurringTransactionsFlow = recurringViewModel.recurringTransactions,
@@ -389,7 +381,8 @@ fun AppNavHost(
         composable("${Routes.EDIT_RECURRING_RULE}/{ruleId}") { backStackEntry ->
             val ruleId = backStackEntry.arguments?.getString("ruleId")?.toLongOrNull() ?: 0L
             val recurringViewModel: com.alperen.spendcraft.feature.recurrence.RecurringViewModel = hiltViewModel()
-            val isPremium = recurringViewModel.billingRepository.isPremium.collectAsState(initial = false).value
+            // iOS'ta recurring premium özelliği değil - herkes kullanabilir
+            val isPremium = false
             RecurringEditorScreen(
                 templateTransaction = null, // TODO: Get transaction from ViewModel
                 onSave = { /* TODO: Implement save functionality */ },
@@ -399,7 +392,8 @@ fun AppNavHost(
         }
         composable(Routes.SHARING) {
             val sharingViewModel: com.alperen.spendcraft.feature.sharing.SharingViewModel = hiltViewModel()
-            val isPremium = sharingViewModel.billingRepository.isPremium.collectAsState(initial = false).value
+            // iOS'ta sharing premium özelliği değil - herkes kullanabilir
+            val isPremium = false
             
             android.util.Log.d("AppNavHost", "Sharing - isPremium: $isPremium")
             
@@ -410,8 +404,7 @@ fun AppNavHost(
                 onRemoveMember = { /* TODO: Implement */ },
                 isPremium = isPremium,
                 onUpgrade = { 
-                    android.util.Log.d("AppNavHost", "Sharing - Premium'a Geç button clicked, navigating to paywall")
-                    navController.navigate(Routes.PAYWALL) 
+                    // iOS'ta Paywall yok - boş bırakıldı
                 },
                 onBack = { navController.popBackStack() }
             )

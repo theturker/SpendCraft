@@ -60,6 +60,7 @@ fun DashboardScreen(
     totalPoints: Int = 0,
     achievements: List<com.alperen.spendcraft.data.db.entities.AchievementEntity> = emptyList(),
     profilingCompleted: Boolean = false,
+    unreadCount: Int = 0, // iOS'taki notificationsViewModel.unreadCount
     onAddIncome: () -> Unit,
     onAddExpense: () -> Unit,
     onNotifications: () -> Unit = {},
@@ -101,13 +102,30 @@ fun DashboardScreen(
                     )
                 },
                 actions = {
-                    // Bildirim ikonu
+                    // iOS'taki notificationToolbarItem - ContentView.swift:36-38
                     IconButton(onClick = onNotifications) {
-                        Icon(
-                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_fill),
-                            contentDescription = "Bildirimler",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
+                        Box {
+                            Icon(
+                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_outline),
+                                contentDescription = "Bildirimler",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            
+                            // iOS'taki unread badge - ContentView.swift:153-163
+                            if (unreadCount > 0) {
+                                Badge(
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = 4.dp, y = (-4).dp)
+                                ) {
+                                    Text(
+                                        text = "$unreadCount",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+                        }
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -116,6 +134,28 @@ fun DashboardScreen(
                     scrolledContainerColor = MaterialTheme.colorScheme.surface
                 )
             )
+        },
+        // iOS'taki AdaptiveBannerAdView ile birebir aynı - DashboardView.swift:278-282
+        bottomBar = {
+            // iOS: AdsManager.shared.shouldShowAds()
+            val isPremiumForAd = rememberIsPremium()
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                // Shadow effect - iOS: .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
+                Divider(
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                    thickness = 1.dp
+                )
+                
+                AdMobBanner(
+                    modifier = Modifier.fillMaxWidth(),
+                    isPremium = isPremiumForAd
+                )
+            }
         }
     ) { paddingValues ->
         LazyColumn(

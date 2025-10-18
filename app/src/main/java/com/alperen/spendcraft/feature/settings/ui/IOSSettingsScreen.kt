@@ -51,9 +51,16 @@ fun IOSSettingsScreen(
     onNavigateToNotifications: () -> Unit,
     onNavigateToNotificationSettings: () -> Unit,
     onNavigateToExport: () -> Unit,
+    onNavigateToCurrencySettings: () -> Unit = {}, // iOS'ta CurrencySettingsView var
+    onNavigateToAccountInfo: () -> Unit = {}, // iOS'ta AccountInfoView var
     onSignOut: () -> Unit,
+    userName: String = "Kullanıcı", // iOS'ta authViewModel.userDisplayName
+    userEmail: String = "", // iOS'ta authViewModel.userEmail
+    selectedCurrency: String = "TRY", // iOS'ta @AppStorage selectedCurrency
     totalTransactions: Int = 0,
     totalCategories: Int = 0,
+    totalPoints: Int = 0, // iOS'ta achievementsViewModel.totalPoints
+    unreadCount: Int = 0, // iOS'taki notificationsViewModel.unreadCount
     modifier: Modifier = Modifier
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -91,6 +98,33 @@ fun IOSSettingsScreen(
                         maxLines = 1
                     )
                 },
+                actions = {
+                    // iOS'taki notificationToolbarItem - ContentView.swift:95-97
+                    IconButton(onClick = onNavigateToNotifications) {
+                        Box {
+                            Icon(
+                                painter = painterResource(id = CoreR.drawable.ic_bell_outline),
+                                contentDescription = "Bildirimler",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            
+                            // iOS'taki unread badge
+                            if (unreadCount > 0) {
+                                Badge(
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = 4.dp, y = (-4).dp)
+                                ) {
+                                    Text(
+                                        text = "$unreadCount",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = androidx.compose.ui.graphics.Color.White
+                                    )
+                                }
+                            }
+                        }
+                    }
+                },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
@@ -105,19 +139,76 @@ fun IOSSettingsScreen(
                 .padding(paddingValues),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            // 1. Görünüm Section (iOS-like Appearance)
+            // 1. User Profile Section - iOS SettingsView.swift:34-73
             item {
-                SettingsSectionHeader(title = "Görünüm")
+                SettingsSectionHeader(title = "Kullanıcı Profili")
             }
             
             item {
-                SettingsListItem(
-                    icon = CoreR.drawable.ic_sparkles,
-                    iconColor = IOSColors.Purple,
-                    title = "Tema",
-                    subtitle = com.alperen.spendcraft.ThemeHelper.getThemeModeDisplayName(themeMode),
-                    onClick = { showThemeDialog = true }
-                )
+                // iOS'taki user profile card ile birebir aynı
+                Card(
+                    onClick = onNavigateToAccountInfo,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Avatar circle - iOS: Circle with gradient
+                        Box(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    androidx.compose.ui.graphics.Brush.linearGradient(
+                                        colors = listOf(IOSColors.Blue, IOSColors.Purple)
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = userName.take(1).uppercase(),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                        
+                        // User info
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = userName,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                text = userEmail,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        
+                        // Chevron
+                        Icon(
+                            painter = painterResource(id = CoreR.drawable.ic_chevron_right),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
             }
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
@@ -133,6 +224,17 @@ fun IOSSettingsScreen(
                     iconColor = IOSColors.Blue,
                     title = "Hesaplar",
                     onClick = onNavigateToAccounts
+                )
+            }
+            
+            // Para Birimi - iOS SettingsView.swift:88-100
+            item {
+                SettingsListItem(
+                    icon = CoreR.drawable.ic_monetization_on_vector,
+                    iconColor = IOSColors.Green,
+                    title = "Para Birimi",
+                    subtitle = selectedCurrency,
+                    onClick = onNavigateToCurrencySettings
                 )
             }
             
@@ -172,7 +274,8 @@ fun IOSSettingsScreen(
                 SettingsListItem(
                     icon = CoreR.drawable.ic_trophy_fill,
                     iconColor = IOSColors.Yellow,
-                    title = "Başarımlar",
+                    title = "Başarılar",
+                    subtitle = "$totalPoints", // iOS: Text("\(achievementsViewModel.totalPoints)")
                     onClick = onNavigateToAchievements
                 )
             }
@@ -182,6 +285,7 @@ fun IOSSettingsScreen(
                     icon = CoreR.drawable.ic_bell_fill,
                     iconColor = IOSColors.Red,
                     title = "Bildirimler",
+                    badgeCount = if (unreadCount > 0) unreadCount else null, // iOS'taki badge
                     onClick = onNavigateToNotifications
                 )
             }
@@ -373,6 +477,7 @@ private fun SettingsListItem(
     title: String,
     subtitle: String? = null,
     titleColor: Color? = null,
+    badgeCount: Int? = null, // iOS'taki notification badge için
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -424,6 +529,24 @@ private fun SettingsListItem(
                         text = subtitle,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            
+            // Badge - iOS SettingsView.swift:160-169
+            if (badgeCount != null && badgeCount > 0) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(IOSColors.Red)
+                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "$badgeCount",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
                 }
             }

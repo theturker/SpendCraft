@@ -28,6 +28,8 @@ import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.data.repository.AIRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import android.app.Activity
+import kotlinx.coroutines.delay
 
 /**
  * iOS AISuggestionsView'in birebir Android karşılığı
@@ -48,8 +50,8 @@ fun AISuggestionsScreen(
     income: Long,
     expenses: Long,
     savings: Long,
-    isPremium: Boolean,
-    onUpgrade: () -> Unit,
+    isPremium: Boolean = false, // iOS'ta premium yok, her zaman false
+    onUpgrade: () -> Unit = {}, // iOS'ta kullanılmıyor
     onBack: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -65,6 +67,34 @@ fun AISuggestionsScreen(
         aiRepository.getUsageInfo().collect { info ->
             weeklyQuota = info.weeklyQuota
             usedThisWeek = info.usedThisWeek
+        }
+    }
+    
+    // iOS'taki interstitial ad entegrasyonu
+    // iosApp/SpendCraftiOS/AISuggestionsView.swift:290-298
+    val interstitialManager = rememberInterstitialAdLoader(isPremium = isPremium)
+    
+    // Ekran açıldıktan 5 saniye sonra interstitial ad göster - iOS ile birebir aynı
+    LaunchedEffect(Unit) {
+        if (!isPremium) {
+            android.util.Log.d("AISuggestionsScreen", "🎯 Attempting to show interstitial ad in 5 seconds...")
+            delay(5000L) // iOS: .now() + 5.0
+            
+            val activity = context as? Activity
+            if (activity != null) {
+                android.util.Log.d("AISuggestionsScreen", "🚀 Showing interstitial ad now...")
+                interstitialManager.showInterstitialAd(
+                    activity = activity,
+                    isPremium = isPremium,
+                    onAdClosed = {
+                        android.util.Log.d("AISuggestionsScreen", "✅ Interstitial ad closed, loading new ad")
+                    }
+                )
+            } else {
+                android.util.Log.e("AISuggestionsScreen", "❌ Could not get activity for interstitial ad")
+            }
+        } else {
+            android.util.Log.d("AISuggestionsScreen", "⚠️ User is premium, skipping interstitial ad")
         }
     }
     

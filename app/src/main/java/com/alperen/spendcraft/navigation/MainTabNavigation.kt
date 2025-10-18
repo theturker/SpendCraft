@@ -162,6 +162,8 @@ fun MainTabNavigation(
                 val achievementsCount by dashboardViewModel.achievementsCount.collectAsState()
                 val totalPoints by dashboardViewModel.totalPoints.collectAsState()
                 val achievements by dashboardViewModel.achievements.collectAsState() // Gerçek achievement verisi
+                val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                val unreadCount by notificationsViewModel.unreadCount.collectAsState()
                 
                 DashboardScreen(
                     transactions = transactions,
@@ -173,6 +175,7 @@ fun MainTabNavigation(
                     achievementsCount = achievementsCount,
                     totalPoints = totalPoints,
                     achievements = achievements, // Gerçek achievement verisi
+                    unreadCount = unreadCount, // iOS'taki badge
                     onAddIncome = { onNavigateToAddTransaction(true) },
                     onAddExpense = { onNavigateToAddTransaction(false) },
                     onNotifications = onNavigateToNotifications,
@@ -184,13 +187,17 @@ fun MainTabNavigation(
             composable(TabScreen.Transactions.route) {
                 val transactionsViewModel: TransactionsViewModel = hiltViewModel()
                 val transactions by transactionsViewModel.items.collectAsState()
+                val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                val unreadCount by notificationsViewModel.unreadCount.collectAsState()
                 
                 com.alperen.spendcraft.feature.transactions.ui.TransactionsListScreen(
                     transactions = transactions,
                     onAddTransaction = { onNavigateToAddTransaction(null) },
                     onDeleteTransaction = { transaction ->
                         // TODO: Implement delete functionality
-                    }
+                    },
+                    onNotifications = onNavigateToNotifications, // iOS'taki notification button
+                    unreadCount = unreadCount // iOS'taki badge
                 )
             }
             
@@ -199,6 +206,8 @@ fun MainTabNavigation(
                 val transactionsViewModel: TransactionsViewModel = hiltViewModel()
                 val transactions by transactionsViewModel.items.collectAsState()
                 val categories by transactionsViewModel.categories.collectAsState()
+                val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                val unreadCount by notificationsViewModel.unreadCount.collectAsState()
                 
                 val totalIncome = transactions
                     .filter { it.type == com.alperen.spendcraft.core.model.TransactionType.INCOME }
@@ -212,7 +221,9 @@ fun MainTabNavigation(
                     categories = categories,
                     totalIncome = totalIncome,
                     totalExpense = totalExpense,
-                    onNavigateToAISuggestions = onNavigateToAISettings
+                    onNavigateToAISuggestions = onNavigateToAISettings,
+                    onNotifications = onNavigateToNotifications, // iOS'taki notification button
+                    unreadCount = unreadCount // iOS'taki badge
                 )
             }
             
@@ -220,6 +231,8 @@ fun MainTabNavigation(
             composable(TabScreen.Categories.route) {
                 val transactionsViewModel: TransactionsViewModel = hiltViewModel()
                 val categories by transactionsViewModel.categories.collectAsState()
+                val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                val unreadCount by notificationsViewModel.unreadCount.collectAsState()
                 
                 com.alperen.spendcraft.feature.dashboard.ui.IOSCategoriesScreen(
                     categories = categories,
@@ -230,15 +243,38 @@ fun MainTabNavigation(
                     },
                     onCategoryClick = { category ->
                         // TODO: Show add/edit budget dialog
-                    }
+                    },
+                    onNotifications = onNavigateToNotifications, // iOS'taki notification button
+                    unreadCount = unreadCount // iOS'taki badge
                 )
             }
             
             // 5. Settings Tab
             composable(TabScreen.Settings.route) {
+                val ctx = androidx.compose.ui.platform.LocalContext.current
                 val transactionsViewModel: TransactionsViewModel = hiltViewModel()
                 val transactions by transactionsViewModel.items.collectAsState()
                 val categories by transactionsViewModel.categories.collectAsState()
+                val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                val unreadCount by notificationsViewModel.unreadCount.collectAsState()
+                val dashboardViewModel: com.alperen.spendcraft.feature.dashboard.DashboardViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                val totalPoints by dashboardViewModel.totalPoints.collectAsState()
+                val authViewModel: com.alperen.spendcraft.auth.AuthViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                val authState by authViewModel.authState.collectAsState()
+                
+                // iOS'ta authViewModel'den user bilgileri
+                val userName: String = when (val state = authState) {
+                    is com.alperen.spendcraft.auth.AuthState.Authenticated -> state.user.displayName ?: "Kullanıcı"
+                    else -> "Kullanıcı"
+                }
+                val userEmail: String = when (val state = authState) {
+                    is com.alperen.spendcraft.auth.AuthState.Authenticated -> state.user.email ?: ""
+                    else -> ""
+                }
+                
+                // Para birimi - iOS @AppStorage("selectedCurrency")
+                val prefs = ctx.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+                val selectedCurrency: String = prefs.getString("selectedCurrency", "TRY") ?: "TRY"
                 
                 com.alperen.spendcraft.feature.settings.ui.IOSSettingsScreen(
                     onNavigateToAccounts = onNavigateToAccounts,
@@ -248,9 +284,16 @@ fun MainTabNavigation(
                     onNavigateToNotifications = onNavigateToNotifications,
                     onNavigateToNotificationSettings = { /* TODO: Create notification settings screen */ },
                     onNavigateToExport = onNavigateToExport,
+                    onNavigateToCurrencySettings = { /* TODO: Create currency settings screen */ },
+                    onNavigateToAccountInfo = { /* TODO: Create account info screen */ },
                     onSignOut = { /* TODO: Implement sign out */ },
+                    userName = userName,
+                    userEmail = userEmail,
+                    selectedCurrency = selectedCurrency,
                     totalTransactions = transactions.size,
-                    totalCategories = categories.size
+                    totalCategories = categories.size,
+                    totalPoints = totalPoints,
+                    unreadCount = unreadCount
                 )
             }
         }

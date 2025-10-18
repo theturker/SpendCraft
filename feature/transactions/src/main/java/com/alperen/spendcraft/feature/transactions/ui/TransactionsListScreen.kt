@@ -56,6 +56,8 @@ fun TransactionsListScreen(
     transactions: List<Transaction>,
     onAddTransaction: () -> Unit,
     onDeleteTransaction: (Transaction) -> Unit,
+    onNotifications: () -> Unit = {}, // iOS'taki notificationToolbarItem
+    unreadCount: Int = 0, // iOS: notificationsViewModel.unreadCount
     modifier: Modifier = Modifier
 ) {
     var selectedFilter by remember { mutableStateOf(TransactionFilter.ALL) }
@@ -98,6 +100,33 @@ fun TransactionsListScreen(
                     )
                 },
                 actions = {
+                    // iOS'taki notificationToolbarItem - ContentView.swift:51-52
+                    IconButton(onClick = onNotifications) {
+                        Box {
+                            Icon(
+                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_outline),
+                                contentDescription = "Bildirimler",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            
+                            // iOS'taki unread badge - ContentView.swift:153-163
+                            if (unreadCount > 0) {
+                                Badge(
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = 4.dp, y = (-4).dp)
+                                ) {
+                                    Text(
+                                        text = "$unreadCount",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    
+                    // + butonu
                     IconButton(onClick = onAddTransaction) {
                         Icon(
                             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_plus_circle_fill),
@@ -112,6 +141,27 @@ fun TransactionsListScreen(
                     scrolledContainerColor = MaterialTheme.colorScheme.surface
                 )
             )
+        },
+        // iOS'taki AdaptiveBannerAdView ile birebir aynı - TransactionsTabView.swift:62-65
+        bottomBar = {
+            // iOS: AdsManager.shared.shouldShowAds()
+            val isPremiumForAd = com.alperen.spendcraft.core.ui.rememberIsPremium()
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Divider(
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                    thickness = 1.dp
+                )
+                
+                AdMobBanner(
+                    modifier = Modifier.fillMaxWidth(),
+                    isPremium = isPremiumForAd
+                )
+            }
         }
     ) { paddingValues ->
         Column(

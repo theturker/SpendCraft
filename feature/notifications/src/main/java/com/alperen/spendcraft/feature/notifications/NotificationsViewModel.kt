@@ -26,6 +26,10 @@ class NotificationsViewModel @Inject constructor(
     private val _notifications = MutableStateFlow<List<NotificationItem>>(emptyList())
     val notifications: StateFlow<List<NotificationItem>> = _notifications.asStateFlow()
     
+    // iOS NotificationsViewModel.swift:14 - @Published var unreadCount: Int = 0
+    private val _unreadCount = MutableStateFlow(0)
+    val unreadCount: StateFlow<Int> = _unreadCount.asStateFlow()
+    
     init {
         loadNotifications()
         listenToNotificationEvents()
@@ -36,10 +40,16 @@ class NotificationsViewModel @Inject constructor(
             try {
                 val realNotifications = generateRealNotifications()
                 _notifications.value = realNotifications
+                updateUnreadCount() // iOS'taki gibi
             } catch (e: Exception) {
                 // Handle error
             }
         }
+    }
+    
+    // iOS NotificationsViewModel.swift:44-46
+    private fun updateUnreadCount() {
+        _unreadCount.value = _notifications.value.count { !it.isRead }
     }
     
     private suspend fun generateRealNotifications(): List<NotificationItem> {
@@ -114,6 +124,7 @@ class NotificationsViewModel @Inject constructor(
                     isRead = false
                 )
                 _notifications.value = listOf(newNotification) + _notifications.value
+                updateUnreadCount() // iOS'taki gibi
             }
         }
     }
@@ -131,6 +142,7 @@ class NotificationsViewModel @Inject constructor(
         val currentNotifications = _notifications.value.toMutableList()
         currentNotifications.add(0, notification) // En üste ekle
         _notifications.value = currentNotifications
+        updateUnreadCount() // iOS'taki gibi
     }
     
     fun markAsRead(notificationId: String) {
@@ -139,21 +151,25 @@ class NotificationsViewModel @Inject constructor(
         if (index != -1) {
             currentNotifications[index] = currentNotifications[index].copy(isRead = true)
             _notifications.value = currentNotifications
+            updateUnreadCount() // iOS'taki gibi
         }
     }
     
     fun markAllAsRead() {
         val currentNotifications = _notifications.value.map { it.copy(isRead = true) }
         _notifications.value = currentNotifications
+        updateUnreadCount() // iOS'taki gibi
     }
     
     fun deleteNotification(notificationId: String) {
         val currentNotifications = _notifications.value.toMutableList()
         currentNotifications.removeAll { it.id == notificationId }
         _notifications.value = currentNotifications
+        updateUnreadCount() // iOS'taki gibi
     }
     
     fun clearAllNotifications() {
         _notifications.value = emptyList()
+        updateUnreadCount() // iOS'taki gibi
     }
 }

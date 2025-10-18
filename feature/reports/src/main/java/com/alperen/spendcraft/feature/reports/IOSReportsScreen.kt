@@ -69,6 +69,8 @@ fun IOSReportsScreen(
     totalIncome: Double,
     totalExpense: Double,
     onNavigateToAISuggestions: () -> Unit,
+    onNotifications: () -> Unit = {}, // iOS'taki notificationToolbarItem
+    unreadCount: Int = 0, // iOS: notificationsViewModel.unreadCount
     modifier: Modifier = Modifier
 ) {
     var selectedPeriod by remember { mutableStateOf(ReportPeriod.MONTH) }
@@ -100,12 +102,60 @@ fun IOSReportsScreen(
                         maxLines = 1
                     )
                 },
+                actions = {
+                    // iOS'taki notificationToolbarItem - ContentView.swift:64-66
+                    androidx.compose.material3.IconButton(onClick = onNotifications) {
+                        androidx.compose.foundation.layout.Box {
+                            androidx.compose.material3.Icon(
+                                painter = androidx.compose.ui.res.painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_outline),
+                                contentDescription = "Bildirimler",
+                                modifier = androidx.compose.ui.Modifier.size(24.dp)
+                            )
+                            
+                            // iOS'taki unread badge
+                            if (unreadCount > 0) {
+                                androidx.compose.material3.Badge(
+                                    modifier = androidx.compose.ui.Modifier
+                                        .align(androidx.compose.ui.Alignment.TopEnd)
+                                        .offset(x = 4.dp, y = (-4).dp)
+                                ) {
+                                    androidx.compose.material3.Text(
+                                        text = "$unreadCount",
+                                        style = androidx.compose.material3.MaterialTheme.typography.labelSmall,
+                                        color = androidx.compose.ui.graphics.Color.White
+                                    )
+                                }
+                            }
+                        }
+                    }
+                },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                     scrolledContainerColor = MaterialTheme.colorScheme.surface
                 )
             )
+        },
+        // iOS'taki AdaptiveBannerAdView ile birebir aynı - ReportsView.swift:183-187
+        bottomBar = {
+            // iOS: AdsManager.shared.shouldShowAds()
+            val isPremiumForAd = com.alperen.spendcraft.core.ui.rememberIsPremium()
+            
+            androidx.compose.foundation.layout.Column(
+                modifier = androidx.compose.ui.Modifier
+                    .fillMaxWidth()
+                    .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
+            ) {
+                androidx.compose.material3.Divider(
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                    thickness = 1.dp
+                )
+                
+                com.alperen.spendcraft.core.ui.AdMobBanner(
+                    modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
+                    isPremium = isPremiumForAd
+                )
+            }
         }
     ) { paddingValues ->
         LazyColumn(
