@@ -75,7 +75,7 @@ fun DashboardScreen(
         transactions.sortedByDescending { it.timestampUtcMillis }.take(5)
     }
     
-    // Scroll behavior ekleyerek iOS gibi collapsible davranış sağlıyoruz
+    // Scroll behavior ekleyerek iOS gibi collapsible davranış
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
