@@ -178,27 +178,9 @@ private fun LiquidGlassTabItem(
         LiquidGlassThemeTokens.Light.pillBackground
     }
     
-    // Animations
-    val iconScale by animateFloatAsState(
-        targetValue = if (isSelected) {
-            LiquidGlassThemeTokens.iconScaleSelected
-        } else {
-            LiquidGlassThemeTokens.iconScaleUnselected
-        },
-        animationSpec = LiquidGlassThemeTokens.iconScaleSpring,
-        label = "iconScale"
-    )
-    
-    val labelOffset by animateDpAsState(
-        targetValue = if (isSelected) 0.dp else LiquidGlassThemeTokens.labelSlideUpOffset,
-        animationSpec = androidx.compose.animation.core.tween(
-            LiquidGlassThemeTokens.selectionAnimationDuration
-        ),
-        label = "labelOffset"
-    )
-    
+    // Animations - Sadece opacity değişiyor (icon ve text oynamıyor)
     val labelAlpha by animateFloatAsState(
-        targetValue = if (isSelected) 1f else 0.7f,
+        targetValue = if (isSelected) 1f else 0.75f,
         animationSpec = androidx.compose.animation.core.tween(
             LiquidGlassThemeTokens.selectionAnimationDuration
         ),
@@ -251,25 +233,23 @@ private fun LiquidGlassTabItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Icon with scale animation
+            // Icon - HER ZAMAN AYNI (oynamıyor)
             Icon(
-                imageVector = if (isSelected) item.selectedIcon else item.icon,
+                imageVector = item.icon, // Seçilide de aynı icon
                 contentDescription = item.title,
                 tint = iconColor,
-                modifier = Modifier
-                    .size(LiquidGlassThemeTokens.iconSize)
-                    .scale(iconScale)
+                modifier = Modifier.size(LiquidGlassThemeTokens.iconSize)
             )
             
             Spacer(modifier = Modifier.height(LiquidGlassThemeTokens.iconLabelSpacing))
             
-            // Label with fade and slide
+            // Label - Sadece opacity değişiyor (oynamıyor)
             Text(
                 text = item.title,
                 fontSize = LiquidGlassThemeTokens.labelFontSize.sp,
                 fontWeight = FontWeight.Medium,
                 color = labelColor.copy(alpha = labelAlpha),
-                modifier = Modifier.offset(y = labelOffset)
+                maxLines = 1 // Tek satırda sığsın
             )
         }
     }

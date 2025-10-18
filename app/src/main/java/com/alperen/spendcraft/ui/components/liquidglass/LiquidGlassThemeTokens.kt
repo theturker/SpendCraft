@@ -59,12 +59,12 @@ object LiquidGlassThemeTokens {
     val barBottomOffset: Dp = 12.dp // Floating offset from screen bottom
     
     val pillCornerRadius: Dp = 20.dp
-    val pillPaddingHorizontal: Dp = 12.dp
-    val pillPaddingVertical: Dp = 8.dp
+    val pillPaddingHorizontal: Dp = 10.dp
+    val pillPaddingVertical: Dp = 6.dp
     
-    val iconSize: Dp = 22.dp
-    val iconLabelSpacing: Dp = 2.dp
-    val labelFontSize = 9 // sp
+    val iconSize: Dp = 26.dp // Daha büyük icon
+    val iconLabelSpacing: Dp = 1.dp // Daha az boşluk
+    val labelFontSize = 8 // sp - Küçültüldü ki sığsın
     
     // Shadow & Blur
     val shadowElevation: Dp = 8.dp

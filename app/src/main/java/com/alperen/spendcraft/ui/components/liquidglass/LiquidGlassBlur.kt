@@ -52,6 +52,7 @@ fun LiquidGlassBlurSurface(
 /**
  * Real Backdrop Blur (API 31+)
  * Uses RenderEffect to blur content behind the bar
+ * NOTE: Content (icons/text) remains sharp, only background is translucent
  */
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -66,29 +67,21 @@ private fun RealBackdropBlur(
         LiquidGlassThemeTokens.Light.glassBackground
     }
     
-    // Create blur effect
-    val blurEffect = remember {
-        RenderEffect.createBlurEffect(
-            LiquidGlassThemeTokens.blurRadius,
-            LiquidGlassThemeTokens.blurRadius,
-            Shader.TileMode.CLAMP
-        ).asComposeRenderEffect()
-    }
-    
-    Box(
-        modifier = modifier
-            .graphicsLayer {
-                renderEffect = blurEffect
-            }
-            .background(backgroundColor)
-    ) {
-        // Noise overlay (2–3% alpha)
-        ProceduralNoiseOverlay(
-            modifier = Modifier.fillMaxSize(),
-            alpha = LiquidGlassThemeTokens.noiseAlpha
-        )
+    Box(modifier = modifier) {
+        // Background layer: Translucent glass effect
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(backgroundColor)
+        ) {
+            // Noise overlay (2–3% alpha)
+            ProceduralNoiseOverlay(
+                modifier = Modifier.fillMaxSize(),
+                alpha = LiquidGlassThemeTokens.noiseAlpha
+            )
+        }
         
-        // Content on top
+        // Content on top (NOT blurred - stays sharp!)
         content()
     }
 }
