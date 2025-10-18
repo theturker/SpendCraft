@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -105,6 +106,10 @@ fun MainTabNavigation(
     onNavigateToRecurring: () -> Unit = {},
     onNavigateToSharing: () -> Unit = {},
     onNavigateToExport: () -> Unit = {},
+    onNavigateToUserProfiling: () -> Unit = {},  // iOS UserProfilingView
+    onNavigateToAccountInfo: () -> Unit = {},  // iOS AccountInfoView
+    onNavigateToNotificationSettings: () -> Unit = {},  // iOS NotificationSettingsView
+    onNavigateToCurrencyPicker: () -> Unit = {},  // iOS CurrencyPickerView
     isPremium: Boolean = false
 ) {
     val navController = rememberNavController()
@@ -152,6 +157,7 @@ fun MainTabNavigation(
         ) {
             // 1. Dashboard Tab
             composable(TabScreen.Dashboard.route) {
+                val context = LocalContext.current
                 val dashboardViewModel: DashboardViewModel = hiltViewModel()
                 val transactions by dashboardViewModel.transactions.collectAsState()
                 val currentBalance by dashboardViewModel.currentBalance.collectAsState()
@@ -175,11 +181,14 @@ fun MainTabNavigation(
                     achievementsCount = achievementsCount,
                     totalPoints = totalPoints,
                     achievements = achievements, // Gerçek achievement verisi
+                    profilingCompleted = context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+                        .getBoolean("profilingCompleted", false),
                     unreadCount = unreadCount, // iOS'taki badge
                     onAddIncome = { onNavigateToAddTransaction(true) },
                     onAddExpense = { onNavigateToAddTransaction(false) },
                     onNotifications = onNavigateToNotifications,
-                    onAchievements = onNavigateToAchievements
+                    onAchievements = onNavigateToAchievements,
+                    onUserProfiling = onNavigateToUserProfiling  // iOS: .sheet(isPresented: $showUserProfiling)
                 )
             }
             
@@ -282,11 +291,14 @@ fun MainTabNavigation(
                     onNavigateToRecurring = onNavigateToRecurring,
                     onNavigateToAchievements = onNavigateToAchievements,
                     onNavigateToNotifications = onNavigateToNotifications,
-                    onNavigateToNotificationSettings = { /* TODO: Create notification settings screen */ },
+                    onNavigateToNotificationSettings = onNavigateToNotificationSettings,  // iOS NotificationSettingsView
                     onNavigateToExport = onNavigateToExport,
-                    onNavigateToCurrencySettings = { /* TODO: Create currency settings screen */ },
-                    onNavigateToAccountInfo = { /* TODO: Create account info screen */ },
-                    onSignOut = { /* TODO: Implement sign out */ },
+                    onNavigateToCurrencySettings = onNavigateToCurrencyPicker,  // iOS CurrencyPickerView
+                    onNavigateToAccountInfo = onNavigateToAccountInfo,  // iOS AccountInfoView
+                    onSignOut = {
+                        // iOS'taki sign out - AuthViewModel.signOut()
+                        authViewModel.signOut()
+                    },
                     userName = userName,
                     userEmail = userEmail,
                     selectedCurrency = selectedCurrency,

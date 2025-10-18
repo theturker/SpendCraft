@@ -5,6 +5,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -61,6 +67,10 @@ object Routes {
     const val NOTIFICATIONS = "notifications"
     const val ONBOARDING = "onboarding"
     const val ACHIEVEMENTS = "achievements"
+    const val USER_PROFILING = "user_profiling"  // iOS UserProfilingView
+    const val ACCOUNT_INFO = "account_info"  // iOS AccountInfoView
+    const val NOTIFICATION_SETTINGS = "notification_settings"  // iOS NotificationSettingsView
+    const val CURRENCY_PICKER = "currency_picker"  // iOS CurrencyPickerView
 }
 
 @Composable
@@ -113,6 +123,10 @@ fun AppNavHost(
                 onNavigateToRecurring = { navController.navigate(Routes.RECURRING) },
                 onNavigateToSharing = { navController.navigate(Routes.SHARING) },
                 onNavigateToExport = { navController.navigate(Routes.EXPORT_REPORT) },
+                onNavigateToUserProfiling = { navController.navigate(Routes.USER_PROFILING) },  // iOS UserProfilingView
+                onNavigateToAccountInfo = { navController.navigate(Routes.ACCOUNT_INFO) },  // iOS AccountInfoView
+                onNavigateToNotificationSettings = { navController.navigate(Routes.NOTIFICATION_SETTINGS) },  // iOS NotificationSettingsView
+                onNavigateToCurrencyPicker = { navController.navigate(Routes.CURRENCY_PICKER) },  // iOS CurrencyPickerView
                 isPremium = isPremium
             )
         }
@@ -427,6 +441,41 @@ fun AppNavHost(
             AchievementsScreen(
                 onBack = { navController.popBackStack() },
                 viewModel = achievementsViewModel
+            )
+        }
+        
+        // iOS UserProfilingView - Ana sayfadan açılır
+        composable(Routes.USER_PROFILING) {
+            val ctx = LocalContext.current
+            com.alperen.spendcraft.feature.ai.UserProfilingScreen(
+                onComplete = {
+                    // iOS: @AppStorage("userProfilingCompleted") = true
+                    val prefs = ctx.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+                    prefs.edit().putBoolean("userProfilingCompleted", true).apply()
+                    navController.popBackStack()
+                },
+                onDismiss = { navController.popBackStack() }
+            )
+        }
+        
+        // iOS AccountInfoView - Settings'den açılır
+        composable(Routes.ACCOUNT_INFO) {
+            com.alperen.spendcraft.feature.settings.ui.AccountInfoScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
+        // iOS NotificationSettingsView - Settings > Bildirim Ayarları
+        composable(Routes.NOTIFICATION_SETTINGS) {
+            com.alperen.spendcraft.feature.settings.ui.NotificationSettingsScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
+        // iOS CurrencyPickerView - Settings > Para Birimi
+        composable(Routes.CURRENCY_PICKER) {
+            com.alperen.spendcraft.feature.settings.ui.CurrencyPickerScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }

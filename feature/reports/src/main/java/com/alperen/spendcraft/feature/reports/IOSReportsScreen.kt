@@ -90,8 +90,12 @@ fun IOSReportsScreen(
         fraction = collapsedFraction
     )
     
+    // iOS VStack pattern: Column { Scaffold + AdaptiveBannerAdView }
+    Column(modifier = Modifier.fillMaxSize()) {
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .weight(1f)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = {
@@ -135,27 +139,6 @@ fun IOSReportsScreen(
                     scrolledContainerColor = MaterialTheme.colorScheme.surface
                 )
             )
-        },
-        // iOS'taki AdaptiveBannerAdView ile birebir aynı - ReportsView.swift:183-187
-        bottomBar = {
-            // iOS: AdsManager.shared.shouldShowAds()
-            val isPremiumForAd = com.alperen.spendcraft.core.ui.rememberIsPremium()
-            
-            androidx.compose.foundation.layout.Column(
-                modifier = androidx.compose.ui.Modifier
-                    .fillMaxWidth()
-                    .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
-            ) {
-                androidx.compose.material3.Divider(
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
-                    thickness = 1.dp
-                )
-                
-                com.alperen.spendcraft.core.ui.AdMobBanner(
-                    modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
-                    isPremium = isPremiumForAd
-                )
-            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -239,6 +222,27 @@ fun IOSReportsScreen(
             }
         }
     }
+    
+    // iOS: AdaptiveBannerAdView() - ReportsView.swift:183-187
+    // Banner ad scroll edilmez, her zaman altta sabit kalır
+    val isPremiumForAd = com.alperen.spendcraft.core.ui.rememberIsPremium()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        // Shadow effect - iOS: .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
+        Divider(
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+            thickness = 1.dp
+        )
+        
+        AdMobBanner(
+            modifier = Modifier.fillMaxWidth(),
+            isPremium = isPremiumForAd
+        )
+    }
+    } // Column (VStack) end
 }
 
 @Composable

@@ -89,8 +89,13 @@ fun DashboardScreen(
         fraction = collapsedFraction
     )
     
+    // iOS VStack pattern: Column { ScrollView + AdaptiveBannerAdView }
+    // Banner ad scroll edilmez, her zaman altta sabit - iOS DashboardView.swift:42-282
+    Column(modifier = Modifier.fillMaxSize()) {
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .weight(1f)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = {
@@ -134,28 +139,6 @@ fun DashboardScreen(
                     scrolledContainerColor = MaterialTheme.colorScheme.surface
                 )
             )
-        },
-        // iOS'taki AdaptiveBannerAdView ile birebir aynı - DashboardView.swift:278-282
-        bottomBar = {
-            // iOS: AdsManager.shared.shouldShowAds()
-            val isPremiumForAd = rememberIsPremium()
-            
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                // Shadow effect - iOS: .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
-                Divider(
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
-                    thickness = 1.dp
-                )
-                
-                AdMobBanner(
-                    modifier = Modifier.fillMaxWidth(),
-                    isPremium = isPremiumForAd
-                )
-            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -233,6 +216,27 @@ fun DashboardScreen(
             }
         }
     }
+    
+    // iOS: AdaptiveBannerAdView() - DashboardView.swift:278-282
+    // Banner ad scroll edilmez, her zaman altta sabit kalır
+    val isPremiumForAd = rememberIsPremium()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        // Shadow effect - iOS: .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
+        Divider(
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+            thickness = 1.dp
+        )
+        
+        AdMobBanner(
+            modifier = Modifier.fillMaxWidth(),
+            isPremium = isPremiumForAd
+        )
+    }
+    } // Column (VStack) end
 }
 
 /**

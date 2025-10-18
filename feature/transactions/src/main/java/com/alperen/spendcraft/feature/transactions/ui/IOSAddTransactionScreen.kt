@@ -57,9 +57,17 @@ fun IOSAddTransactionScreen(
     
     var amount by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
+    val isIncomeState = remember { mutableStateOf(initialTransactionType ?: false) }
+    var isIncome by isIncomeState
     var selectedCategory by remember { mutableStateOf<Category?>(categories.firstOrNull()) }
-    var isIncome by remember { mutableStateOf(initialTransactionType ?: false) }
     var selectedDate by remember { mutableStateOf(Date()) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showAddCategory by remember { mutableStateOf(false) }
+    
+    // iOS: filteredCategories based on transaction type
+    val filteredCategories = remember(categories, isIncomeState.value) {
+        categories.filter { it.isIncome == isIncomeState.value }
+    }
     
     val isValid = amount.isNotEmpty() && 
                   amount.toDoubleOrNull() != null && 
@@ -97,7 +105,11 @@ fun IOSAddTransactionScreen(
                 FormSection(title = null) {
                     SegmentedControl(
                         selectedIsIncome = isIncome,
-                        onSelectionChange = { isIncome = it }
+                        onSelectionChange = { newType ->
+                            // iOS: Clear category when type changes
+                            isIncome = newType
+                            selectedCategory = null
+                        }
                     )
                 }
             }
@@ -135,27 +147,67 @@ fun IOSAddTransactionScreen(
             }
             
             // 3. Category Section (Horizontal Buttons)
+            // iOS: AddTransactionView.swift:146-183
             item {
                 FormSection(title = "Kategori") {
-                    if (categories.isEmpty()) {
-                        Text(
-                            text = "Kategori bulunamadı",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    } else {
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(categories) { category ->
-                                CategoryButton(
-                                    category = category,
-                                    isSelected = selectedCategory?.id == category.id,
-                                    onClick = { selectedCategory = category }
-                                )
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        // "Yeni" button - iOS: AddTransactionView.swift:150-169
+                        // iOS Pattern: Image(systemName: "plus.circle.fill") + Circle background
+                        item {
+                            Button(
+                                onClick = { showAddCategory = true },
+                                modifier = Modifier.width(80.dp),
+                                shape = RoundedCornerShape(0.dp),  // No shape for the button itself
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.Transparent,
+                                    contentColor = IOSColors.Blue
+                                ),
+                                contentPadding = PaddingValues(0.dp),
+                                elevation = null
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    modifier = Modifier.padding(0.dp)
+                                ) {
+                                    // iOS: Image(systemName: "plus.circle.fill").font(.title2)
+                                    Box(
+                                        modifier = Modifier
+                                            .size(50.dp)  // iOS: frame(width: 50, height: 50)
+                                            .background(
+                                                color = IOSColors.Blue.copy(alpha = 0.2f),  // iOS: Circle().fill(Color.blue.opacity(0.2))
+                                                shape = CircleShape
+                                            ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_plus_circle_fill),
+                                            contentDescription = "Yeni Kategori",
+                                            tint = IOSColors.Blue,
+                                            modifier = Modifier.size(28.dp)  // iOS: .title2 font size
+                                        )
+                                    }
+                                    // iOS: Text("Yeni").font(.caption).foregroundColor(.blue).fontWeight(.medium)
+                                    Text(
+                                        text = "Yeni",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Medium,
+                                        color = IOSColors.Blue
+                                    )
+                                }
                             }
+                        }
+                        
+                        // Filtered categories - iOS: ForEach(filteredCategories)
+                        items(filteredCategories) { category ->
+                            CategoryButton(
+                                category = category,
+                                isSelected = selectedCategory?.id == category.id,
+                                onClick = { selectedCategory = category }
+                            )
                         }
                     }
                 }
@@ -178,17 +230,27 @@ fun IOSAddTransactionScreen(
             }
             
             // 5. Date Section
+            // iOS: DatePicker("Tarih", selection: $date)
             item {
                 FormSection(title = "Tarih") {
-                    Box(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .clickable { showDatePicker = true }
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         val dateFormat = remember { SimpleDateFormat("d MMM yyyy, HH:mm", Locale("tr")) }
                         Text(
                             text = dateFormat.format(selectedDate),
                             style = MaterialTheme.typography.bodyMedium
+                        )
+                        Icon(
+                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_right),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
@@ -248,6 +310,121 @@ fun IOSAddTransactionScreen(
                 }
             }
         }
+    }
+    
+    // Dialogs outside Scaffold
+    
+    // DatePicker Dialog - iOS: AddTransactionView.swift:196-198
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedDate.time
+        )
+        val timePickerState = rememberTimePickerState(
+            initialHour = selectedDate.hours,
+            initialMinute = selectedDate.minutes
+        )
+        
+        var showTimePicker by remember { mutableStateOf(false) }
+        
+        if (!showTimePicker) {
+            // Date Picker
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        datePickerState.selectedDateMillis?.let {
+                            selectedDate = Date(it)
+                        }
+                        showTimePicker = true  // Move to time picker
+                    }) {
+                        Text("İleri")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDatePicker = false }) {
+                        Text("İptal")
+                    }
+                }
+            ) {
+                DatePicker(state = datePickerState)
+            }
+        } else {
+            // Time Picker
+            AlertDialog(
+                onDismissRequest = {
+                    showDatePicker = false
+                    showTimePicker = false
+                },
+                title = { Text("Saat Seç") },
+                text = {
+                    TimePicker(state = timePickerState)
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        val calendar = java.util.Calendar.getInstance()
+                        calendar.time = selectedDate
+                        calendar.set(java.util.Calendar.HOUR_OF_DAY, timePickerState.hour)
+                        calendar.set(java.util.Calendar.MINUTE, timePickerState.minute)
+                        selectedDate = calendar.time
+                        showDatePicker = false
+                        showTimePicker = false
+                    }) {
+                        Text("Tamam")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showDatePicker = false
+                        showTimePicker = false
+                    }) {
+                        Text("İptal")
+                    }
+                }
+            )
+        }
+    }
+    
+    // Add Category Dialog - iOS: AddTransactionView.swift:329-380
+    if (showAddCategory) {
+        var newCategoryName by remember { mutableStateOf("") }
+        
+        AlertDialog(
+            onDismissRequest = { showAddCategory = false },
+            title = { Text("Yeni Kategori") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                        value = newCategoryName,
+                        onValueChange = { newCategoryName = it },
+                        label = { Text("Kategori Adı") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Text(
+                        text = "Tip: ${if (isIncome) "Gelir" else "Gider"}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // TODO: Add category via ViewModel
+                        // transactionsViewModel.addCategory(newCategoryName, "tag.fill", if (isIncome) "#00C853" else "#FF0000", isIncome)
+                        showAddCategory = false
+                    },
+                    enabled = newCategoryName.isNotEmpty()
+                ) {
+                    Text("Ekle")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAddCategory = false }) {
+                    Text("İptal")
+                }
+            }
+        )
     }
 }
 
