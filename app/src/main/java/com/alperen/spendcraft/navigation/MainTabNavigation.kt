@@ -17,7 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.ui.iosTheme.IOSColors
 import com.alperen.spendcraft.ui.icons.SFSymbolsTabBar
-import com.alperen.spendcraft.ui.components.IOSBottomNavigationBar
+import com.alperen.spendcraft.ui.components.liquidglass.LiquidGlassBottomBar
+import com.alperen.spendcraft.ui.components.liquidglass.paratikBottomNavItems
+import com.alperen.spendcraft.ui.components.liquidglass.rememberBottomBarVisibility
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -116,6 +118,9 @@ fun MainTabNavigation(
     
     // Tab index state
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    
+    // Bottom bar visibility (hidden when keyboard is open)
+    val isBottomBarVisible by rememberBottomBarVisibility()
     
     // iOS VStack pattern: Column { content + banner + tabBar }
     Column(
@@ -337,10 +342,11 @@ fun MainTabNavigation(
             )
         }
         
-        // iOS UITabBar - En altta
-        IOSBottomNavigationBar(
+        // Liquid Glass Bottom Bar - Premium blur effect
+        LiquidGlassBottomBar(
+            items = paratikBottomNavItems,
             selectedIndex = selectedTabIndex,
-            onTabSelected = { index ->
+            onItemSelected = { index ->
                 selectedTabIndex = index
                 val route = when (index) {
                     0 -> TabScreen.Dashboard.route
@@ -357,7 +363,10 @@ fun MainTabNavigation(
                     launchSingleTop = true
                     restoreState = true
                 }
-            }
+            },
+            floating = true,
+            handleSafeInsets = true,
+            visible = isBottomBarVisible
         )
     } // Column end
 }
