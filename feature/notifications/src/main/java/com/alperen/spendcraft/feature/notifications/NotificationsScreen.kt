@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
+import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.notifications.NotificationType
 // import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
 import java.text.SimpleDateFormat
@@ -96,6 +97,7 @@ fun NotificationsScreen(
                 val unreadNotifications = displayNotifications.filter { !it.isRead }
                 val readNotifications = displayNotifications.filter { it.isRead }
 
+                // iOS: Section("Okunmamış") - NotificationsView.swift:90-119
                 if (unreadNotifications.isNotEmpty()) {
                     item {
                         Text(
@@ -140,6 +142,7 @@ fun NotificationsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NotificationCard(
     notification: NotificationItem,
@@ -148,6 +151,44 @@ private fun NotificationCard(
 ) {
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     
+    // iOS swipe: .swipeActions(edge: .trailing, allowsFullSwipe: true)
+    // NotificationsView.swift:190-205
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { value ->
+            when (value) {
+                SwipeToDismissBoxValue.EndToStart -> {
+                    onDelete()
+                    true
+                }
+                else -> false
+            }
+        }
+    )
+    
+    SwipeToDismissBox(
+        state = dismissState,
+        backgroundContent = {
+            // iOS: Button(role: .destructive) - Red background
+            val color = when (dismissState.targetValue) {
+                SwipeToDismissBoxValue.EndToStart -> IOSColors.Red
+                else -> Color.Transparent
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color)
+                    .padding(horizontal = 20.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Sil",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    ) {
     ModernCard(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -241,6 +282,7 @@ private fun NotificationCard(
             }
         }
     }
+    } // SwipeToDismissBox end
 }
 
 @Composable

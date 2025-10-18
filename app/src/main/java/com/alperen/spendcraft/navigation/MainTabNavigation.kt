@@ -117,44 +117,19 @@ fun MainTabNavigation(
     // Tab index state
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     
-    Scaffold(
-        modifier = Modifier.systemBarsPadding(), // Safe area için
-        bottomBar = {
-            // iOS UITabBar birebir karşılığı - Exact match to iOS design
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Transparent) // Transparent background so content shows through
+    // iOS VStack pattern: Column { content + banner + tabBar }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding() // Safe area için
+    ) {
+        // Content area - takes remaining space
+        Box(modifier = Modifier.weight(1f)) {
+            NavHost(
+                navController = navController,
+                startDestination = TabScreen.Dashboard.route,
+                modifier = Modifier.fillMaxSize()
             ) {
-                IOSBottomNavigationBar(
-                    selectedIndex = selectedTabIndex,
-                    onTabSelected = { index ->
-                        selectedTabIndex = index
-                        val route = when (index) {
-                            0 -> TabScreen.Dashboard.route
-                            1 -> TabScreen.Transactions.route
-                            2 -> TabScreen.Reports.route
-                            3 -> TabScreen.Categories.route
-                            4 -> TabScreen.Settings.route
-                            else -> TabScreen.Dashboard.route
-                        }
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
-            }
-        }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = TabScreen.Dashboard.route,
-            modifier = Modifier.fillMaxSize() // Full screen so content shows through bottom bar
-        ) {
             // 1. Dashboard Tab
             composable(TabScreen.Dashboard.route) {
                 val context = LocalContext.current
@@ -308,8 +283,51 @@ fun MainTabNavigation(
                     unreadCount = unreadCount
                 )
             }
+        } // NavHost end
+        } // Box end
+        
+        // iOS: AdaptiveBannerAdView() - Bottom bar'ın ÜSTÜNDE sabit
+        // Reklam banner - scroll edilmez, her zaman görünür
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            // Shadow effect - iOS: .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
+            Divider(
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                thickness = 1.dp
+            )
+            
+            com.alperen.spendcraft.core.ui.AdMobBanner(
+                modifier = Modifier.fillMaxWidth(),
+                isPremium = isPremium
+            )
         }
-    }
+        
+        // iOS UITabBar - En altta
+        IOSBottomNavigationBar(
+            selectedIndex = selectedTabIndex,
+            onTabSelected = { index ->
+                selectedTabIndex = index
+                val route = when (index) {
+                    0 -> TabScreen.Dashboard.route
+                    1 -> TabScreen.Transactions.route
+                    2 -> TabScreen.Reports.route
+                    3 -> TabScreen.Categories.route
+                    4 -> TabScreen.Settings.route
+                    else -> TabScreen.Dashboard.route
+                }
+                navController.navigate(route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        )
+    } // Column end
 }
 
 /**

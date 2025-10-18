@@ -90,11 +90,10 @@ fun IOSReportsScreen(
         fraction = collapsedFraction
     )
     
-    // iOS VStack pattern: Column { Scaffold + AdaptiveBannerAdView }
-    Column(modifier = Modifier.fillMaxSize()) {
+    // iOS VStack pattern: Sadece scroll content, banner MainTabNavigation'da
     Scaffold(
         modifier = Modifier
-            .weight(1f)
+            .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
@@ -222,27 +221,6 @@ fun IOSReportsScreen(
             }
         }
     }
-    
-    // iOS: AdaptiveBannerAdView() - ReportsView.swift:183-187
-    // Banner ad scroll edilmez, her zaman altta sabit kalır
-    val isPremiumForAd = com.alperen.spendcraft.core.ui.rememberIsPremium()
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        // Shadow effect - iOS: .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
-        Divider(
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
-            thickness = 1.dp
-        )
-        
-        AdMobBanner(
-            modifier = Modifier.fillMaxWidth(),
-            isPremium = isPremiumForAd
-        )
-    }
-    } // Column (VStack) end
 }
 
 @Composable

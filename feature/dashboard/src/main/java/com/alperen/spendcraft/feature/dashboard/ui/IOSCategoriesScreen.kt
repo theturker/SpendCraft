@@ -73,8 +73,11 @@ fun IOSCategoriesScreen(
         fraction = collapsedFraction
     )
     
+    // iOS VStack pattern: Sadece scroll content, banner MainTabNavigation'da
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = {
