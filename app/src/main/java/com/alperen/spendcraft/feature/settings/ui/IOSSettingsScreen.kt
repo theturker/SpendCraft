@@ -146,15 +146,22 @@ fun IOSSettingsScreen(
             
             item {
                 // iOS'taki user profile card ile birebir aynı
-                Card(
+                // iOS card background rengi - diğer list item'larla aynı
+                val iosCardBackground = if (androidx.compose.foundation.isSystemInDarkTheme()) {
+                    Color(0xFF1C1C1E) // iOS dark card
+                } else {
+                    Color(0xFFFFFFFF) // iOS light card (pure white)
+                }
+                
+                Surface(
                     onClick = onNavigateToAccountInfo,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    )
+                        .padding(horizontal = 16.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    shape = RoundedCornerShape(10.dp),
+                    color = iosCardBackground,
+                    tonalElevation = 0.dp
                 ) {
                     Row(
                         modifier = Modifier
@@ -213,7 +220,7 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
-            // 2. Finans Section
+            // 2. Finans Section - iOS Grouped List Style
             item {
                 SettingsSectionHeader(title = "Finans")
             }
@@ -223,17 +230,22 @@ fun IOSSettingsScreen(
                     icon = CoreR.drawable.ic_creditcard_fill,
                     iconColor = IOSColors.Blue,
                     title = "Hesaplar",
+                    position = ListItemPosition.First,
                     onClick = onNavigateToAccounts
                 )
             }
             
-            // Para Birimi - iOS SettingsView.swift:88-100
+            item {
+                IOSListItemDivider()
+            }
+            
             item {
                 SettingsListItem(
                     icon = CoreR.drawable.ic_monetization_on_vector,
                     iconColor = IOSColors.Green,
                     title = "Para Birimi",
                     subtitle = selectedCurrency,
+                    position = ListItemPosition.Last,
                     onClick = onNavigateToCurrencySettings
                 )
             }
@@ -256,7 +268,7 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
-            // 4. Özellikler Section
+            // 4. Özellikler Section - iOS Grouped List
             item {
                 SettingsSectionHeader(title = "Özellikler")
             }
@@ -266,8 +278,13 @@ fun IOSSettingsScreen(
                     icon = CoreR.drawable.ic_repeat_circle_fill,
                     iconColor = IOSColors.Orange,
                     title = "Tekrarlayan İşlemler",
+                    position = ListItemPosition.First,
                     onClick = onNavigateToRecurring
                 )
+            }
+            
+            item {
+                IOSListItemDivider()
             }
             
             item {
@@ -275,9 +292,14 @@ fun IOSSettingsScreen(
                     icon = CoreR.drawable.ic_trophy_fill,
                     iconColor = IOSColors.Yellow,
                     title = "Başarılar",
-                    subtitle = "$totalPoints", // iOS: Text("\(achievementsViewModel.totalPoints)")
+                    subtitle = "$totalPoints",
+                    position = ListItemPosition.Middle,
                     onClick = onNavigateToAchievements
                 )
+            }
+            
+            item {
+                IOSListItemDivider()
             }
             
             item {
@@ -285,9 +307,14 @@ fun IOSSettingsScreen(
                     icon = CoreR.drawable.ic_bell_fill,
                     iconColor = IOSColors.Red,
                     title = "Bildirimler",
-                    badgeCount = if (unreadCount > 0) unreadCount else null, // iOS'taki badge
+                    badgeCount = if (unreadCount > 0) unreadCount else null,
+                    position = ListItemPosition.Middle,
                     onClick = onNavigateToNotifications
                 )
+            }
+            
+            item {
+                IOSListItemDivider()
             }
             
             item {
@@ -295,6 +322,7 @@ fun IOSSettingsScreen(
                     icon = CoreR.drawable.ic_bell,
                     iconColor = IOSColors.Blue,
                     title = "Bildirim Ayarları",
+                    position = ListItemPosition.Last,
                     onClick = onNavigateToNotificationSettings
                 )
             }
@@ -334,7 +362,7 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
-            // 7. Uygulama Section
+            // 7. Uygulama Section - iOS Grouped List
             item {
                 SettingsSectionHeader(title = "Uygulama")
             }
@@ -342,21 +370,32 @@ fun IOSSettingsScreen(
             item {
                 SettingsInfoRow(
                     title = "Versiyon",
-                    value = "1.0.0"
+                    value = "1.0.3",
+                    position = ListItemPosition.First
                 )
+            }
+            
+            item {
+                IOSListItemDivider()
             }
             
             item {
                 SettingsInfoRow(
                     title = "Toplam İşlem",
-                    value = "$totalTransactions"
+                    value = "$totalTransactions",
+                    position = ListItemPosition.Middle
                 )
+            }
+            
+            item {
+                IOSListItemDivider()
             }
             
             item {
                 SettingsInfoRow(
                     title = "Toplam Kategori",
-                    value = "$totalCategories"
+                    value = "$totalCategories",
+                    position = ListItemPosition.Last
                 )
             }
         }
@@ -469,6 +508,7 @@ private fun SettingsSectionHeader(
 
 /**
  * Settings List Item - iOS style
+ * @param position Item pozisyonu (First, Middle, Last, Single) - iOS grouped list için
  */
 @Composable
 private fun SettingsListItem(
@@ -477,23 +517,46 @@ private fun SettingsListItem(
     title: String,
     subtitle: String? = null,
     titleColor: Color? = null,
-    badgeCount: Int? = null, // iOS'taki notification badge için
+    badgeCount: Int? = null,
+    position: ListItemPosition = ListItemPosition.Single,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // iOS grouped list radius - sadece ilk/son item'da
+    val shape = when (position) {
+        ListItemPosition.First -> RoundedCornerShape(
+            topStart = 10.dp, topEnd = 10.dp,
+            bottomStart = 0.dp, bottomEnd = 0.dp
+        )
+        ListItemPosition.Middle -> RoundedCornerShape(0.dp)
+        ListItemPosition.Last -> RoundedCornerShape(
+            topStart = 0.dp, topEnd = 0.dp,
+            bottomStart = 10.dp, bottomEnd = 10.dp
+        )
+        ListItemPosition.Single -> RoundedCornerShape(10.dp)
+    }
+    
+    // iOS secondarySystemGroupedBackground renkleri
+    val iosCardBackground = if (androidx.compose.foundation.isSystemInDarkTheme()) {
+        Color(0xFF1C1C1E) // iOS dark card background
+    } else {
+        Color(0xFFFFFFFF) // iOS light card background (pure white)
+    }
+    
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = IOSSpacing.spacing16)
-            .clip(IOSRadius.medium)
+            .clip(shape)
             .clickable(onClick = onClick),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 1.dp
+        color = iosCardBackground,
+        tonalElevation = 0.dp, // iOS'ta elevation yok
+        shape = shape
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp), // 16dp -> 12dp (4dp düşüş)
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -563,26 +626,73 @@ private fun SettingsListItem(
 }
 
 /**
+ * List Item Position (iOS grouped list style)
+ */
+enum class ListItemPosition {
+    First,   // İlk item - üst köşeler yuvarlaklı
+    Middle,  // Ortadaki item - köşeler düz
+    Last,    // Son item - alt köşeler yuvarlaklı
+    Single   // Tek item - tüm köşeler yuvarlaklı
+}
+
+/**
+ * iOS List Divider - Items arası ayırıcı
+ * 30dp sağ-sol boşluk ile
+ */
+@Composable
+private fun IOSListItemDivider(modifier: Modifier = Modifier) {
+    HorizontalDivider(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 30.dp), // Sağ-sol 30dp boşluk
+        thickness = 0.5.dp,
+        color = Color(0xFFE5E5E5) // Beyaz-gray arası soft renk
+    )
+}
+
+/**
  * Settings Info Row (non-clickable) - iOS style
  */
 @Composable
 private fun SettingsInfoRow(
     title: String,
     value: String,
+    position: ListItemPosition = ListItemPosition.Single,
     modifier: Modifier = Modifier
 ) {
+    // iOS grouped list radius
+    val shape = when (position) {
+        ListItemPosition.First -> RoundedCornerShape(
+            topStart = 10.dp, topEnd = 10.dp,
+            bottomStart = 0.dp, bottomEnd = 0.dp
+        )
+        ListItemPosition.Middle -> RoundedCornerShape(0.dp)
+        ListItemPosition.Last -> RoundedCornerShape(
+            topStart = 0.dp, topEnd = 0.dp,
+            bottomStart = 10.dp, bottomEnd = 10.dp
+        )
+        ListItemPosition.Single -> RoundedCornerShape(10.dp)
+    }
+    
+    // iOS card background
+    val iosCardBackground = if (androidx.compose.foundation.isSystemInDarkTheme()) {
+        Color(0xFF1C1C1E)
+    } else {
+        Color(0xFFFFFFFF)
+    }
+    
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = IOSSpacing.spacing16, vertical = 4.dp),
-        color = MaterialTheme.colorScheme.surface,
-        shape = IOSRadius.medium,
-        tonalElevation = 1.dp
+            .padding(horizontal = IOSSpacing.spacing16, vertical = 0.dp),
+        color = iosCardBackground,
+        shape = shape,
+        tonalElevation = 0.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp), // 16dp -> 12dp
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
