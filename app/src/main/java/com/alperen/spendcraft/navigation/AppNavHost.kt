@@ -115,6 +115,9 @@ fun AppNavHost(
                         null -> navController.navigate(Routes.ADD)
                     }
                 },
+                onNavigateToEditTransaction = { transactionId ->
+                    navController.navigate("edit_transaction/$transactionId")
+                },
                 onNavigateToNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
                 onNavigateToAchievements = { navController.navigate(Routes.ACHIEVEMENTS) },
                 onNavigateToAISettings = { navController.navigate(Routes.AI_SUGGESTIONS) },
@@ -150,11 +153,21 @@ fun AppNavHost(
                 vm.loadCategories()
             }
             
+            val accounts by vm.accounts.collectAsState()
+            
             com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
                 categories = categories,
+                accounts = accounts.map { com.alperen.spendcraft.data.db.entities.AccountEntity(
+                    id = it.id ?: 0, 
+                    name = it.name, 
+                    type = "CASH", 
+                    currency = it.currency,
+                    isDefault = it.isDefault,
+                    archived = it.archived
+                ) },
                 initialTransactionType = null,
-                onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
+                onSave = { amountMinor, note, categoryId, accountId, date, isIncome, isRecurring, recurringFrequency ->
+                    vm.saveTransaction(amountMinor, note, categoryId, accountId, isIncome, date, isRecurring, recurringFrequency)
                     navController.popBackStack()
                 },
                 onDismiss = { navController.popBackStack() },
@@ -166,6 +179,7 @@ fun AppNavHost(
         }
         composable(Routes.ADD_INCOME) {
             val categories by vm.categories.collectAsState()
+            val accounts by vm.accounts.collectAsState()
             
             // iOS: Reload categories when returning from AddCategoryView
             LaunchedEffect(navController.currentBackStackEntry) {
@@ -174,9 +188,17 @@ fun AppNavHost(
             
             com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
                 categories = categories,
+                accounts = accounts.map { com.alperen.spendcraft.data.db.entities.AccountEntity(
+                    id = it.id ?: 0, 
+                    name = it.name, 
+                    type = "CASH", 
+                    currency = it.currency,
+                    isDefault = it.isDefault,
+                    archived = it.archived
+                ) },
                 initialTransactionType = true,
-                onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
+                onSave = { amountMinor, note, categoryId, accountId, date, isIncome, isRecurring, recurringFrequency ->
+                    vm.saveTransaction(amountMinor, note, categoryId, accountId, isIncome, date, isRecurring, recurringFrequency)
                     navController.popBackStack()
                 },
                 onDismiss = { navController.popBackStack() },
@@ -188,6 +210,7 @@ fun AppNavHost(
         }
         composable(Routes.ADD_EXPENSE) {
             val categories by vm.categories.collectAsState()
+            val accounts by vm.accounts.collectAsState()
             
             // iOS: Reload categories when returning from AddCategoryView
             LaunchedEffect(navController.currentBackStackEntry) {
@@ -196,9 +219,17 @@ fun AppNavHost(
             
             com.alperen.spendcraft.feature.transactions.ui.IOSAddTransactionScreen(
                 categories = categories,
+                accounts = accounts.map { com.alperen.spendcraft.data.db.entities.AccountEntity(
+                    id = it.id ?: 0, 
+                    name = it.name, 
+                    type = "CASH", 
+                    currency = it.currency,
+                    isDefault = it.isDefault,
+                    archived = it.archived
+                ) },
                 initialTransactionType = false,
-                onSave = { amountMinor, note, categoryId, isIncome ->
-                    vm.saveTransaction(amountMinor, note, categoryId, null, isIncome)
+                onSave = { amountMinor, note, categoryId, accountId, date, isIncome, isRecurring, recurringFrequency ->
+                    vm.saveTransaction(amountMinor, note, categoryId, accountId, isIncome, date, isRecurring, recurringFrequency)
                     navController.popBackStack()
                 },
                 onDismiss = { navController.popBackStack() },
@@ -208,6 +239,46 @@ fun AppNavHost(
                 }
             )
         }
+        
+        // Edit Transaction - iOS: EditTransactionView
+        composable("edit_transaction/{transactionId}") { backStackEntry ->
+            val transactionId = backStackEntry.arguments?.getString("transactionId")?.toLongOrNull()
+            val categories by vm.categories.collectAsState()
+            val accounts by vm.accounts.collectAsState()
+            val transactions by vm.items.collectAsState()
+            
+            val transaction = transactions.find { it.id == transactionId }
+            
+            if (transaction != null) {
+                com.alperen.spendcraft.feature.transactions.ui.IOSEditTransactionScreen(
+                    transaction = transaction,
+                    categories = categories,
+                    accounts = accounts.map { com.alperen.spendcraft.data.db.entities.AccountEntity(
+                        id = it.id ?: 0, 
+                        name = it.name, 
+                        type = "CASH", 
+                        currency = it.currency,
+                        isDefault = it.isDefault,
+                        archived = it.archived
+                    ) },
+                    onSave = { updatedTx ->
+                        vm.updateTransaction(updatedTx)
+                        navController.popBackStack()
+                    },
+                    onDelete = {
+                        transactionId?.let { vm.deleteTransaction(it) }
+                        navController.popBackStack()
+                    },
+                    onDismiss = { navController.popBackStack() }
+                )
+            } else {
+                // Transaction not found, go back
+                LaunchedEffect(Unit) {
+                    navController.popBackStack()
+                }
+            }
+        }
+        
         composable(Routes.REPORTS) {
             ReportsScreen(
                 transactionsFlow = vm.items,
@@ -385,9 +456,12 @@ fun AppNavHost(
                 accountsFlow = accountsFlow,
                 onAddAccount = { name, type, currency ->
                     // iOS: accountsViewModel.addAccount(name: name, type: type, currency: currency)
-                    vm.addAccount(name)  // TODO: Extend addAccount to support type and currency
+                    vm.addAccount(name, type, currency)
                 },
-                onEditAccount = { account -> vm.updateAccountName(account.id, account.name) },
+                onEditAccount = { account -> 
+                    vm.updateAccountName(account.id, account.name)
+                    // TODO: Update account type and currency too
+                },
                 onArchiveAccount = { account -> vm.removeAccount(account.id) },
                 onSetDefaultAccount = { _ -> /* TODO: implement set default when repo supports */ },
                 onBack = { navController.popBackStack() }

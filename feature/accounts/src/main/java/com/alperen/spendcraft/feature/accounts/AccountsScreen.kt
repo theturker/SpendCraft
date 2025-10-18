@@ -245,8 +245,11 @@ fun AccountsScreen(
                         selectedAccount = null
                     },
                     onSave = { name, type, currency ->
-                        // Update account
-                        selectedAccount?.let { onEditAccount(it) }
+                        // Update account with new values
+                        selectedAccount?.let { acc ->
+                            val updated = acc.copy(name = name, type = type, currency = currency)
+                            onEditAccount(updated)
+                        }
                         showEditAccountDialog = false
                         selectedAccount = null
                     }

@@ -99,6 +99,7 @@ private val tabScreens = listOf(
 @Composable
 fun MainTabNavigation(
     onNavigateToAddTransaction: (Boolean?) -> Unit = {},
+    onNavigateToEditTransaction: (Long) -> Unit = {},  // ✅ YENİ: Edit transaction callback
     onNavigateToNotifications: () -> Unit = {},
     onNavigateToAchievements: () -> Unit = {},
     onNavigateToAISettings: () -> Unit = {},
@@ -116,8 +117,21 @@ fun MainTabNavigation(
 ) {
     val navController = rememberNavController()
     
-    // Tab index state
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    // Listen to navigation changes and update selected tab
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    
+    // Tab index state - sync with current route
+    val selectedTabIndex = remember(currentRoute) {
+        when (currentRoute) {
+            TabScreen.Dashboard.route -> 0
+            TabScreen.Transactions.route -> 1
+            TabScreen.Reports.route -> 2
+            TabScreen.Categories.route -> 3
+            TabScreen.Settings.route -> 4
+            else -> 0
+        }
+    }
     
     // Bottom bar visibility (hidden when keyboard is open)
     val isBottomBarVisible by rememberBottomBarVisibility()
@@ -151,8 +165,13 @@ fun MainTabNavigation(
                 val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
                 val unreadCount by notificationsViewModel.unreadCount.collectAsState()
                 
+                val categories by dashboardViewModel.categories.collectAsState()
+                val accounts by dashboardViewModel.accounts.collectAsState()
+                
                 DashboardScreen(
                     transactions = transactions,
+                    categories = categories,
+                    accounts = accounts,
                     currentBalance = currentBalance,
                     totalIncome = totalIncome,
                     totalExpense = totalExpense,
@@ -160,15 +179,19 @@ fun MainTabNavigation(
                     longestStreak = longestStreak,
                     achievementsCount = achievementsCount,
                     totalPoints = totalPoints,
-                    achievements = achievements, // Gerçek achievement verisi
+                    achievements = achievements,
                     profilingCompleted = context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
                         .getBoolean("profilingCompleted", false),
-                    unreadCount = unreadCount, // iOS'taki badge
+                    unreadCount = unreadCount,
                     onAddIncome = { onNavigateToAddTransaction(true) },
                     onAddExpense = { onNavigateToAddTransaction(false) },
                     onNotifications = onNavigateToNotifications,
                     onAchievements = onNavigateToAchievements,
-                    onUserProfiling = onNavigateToUserProfiling  // iOS: .sheet(isPresented: $showUserProfiling)
+                    onUserProfiling = onNavigateToUserProfiling,
+                    onTransactionClick = { transaction ->
+                        // ✅ Use parent callback instead of nested navController
+                        transaction.id?.let { onNavigateToEditTransaction(it) }
+                    }
                 )
             }
             
@@ -176,17 +199,25 @@ fun MainTabNavigation(
             composable(TabScreen.Transactions.route) {
                 val transactionsViewModel: TransactionsViewModel = hiltViewModel()
                 val transactions by transactionsViewModel.items.collectAsState()
+                val categories by transactionsViewModel.categories.collectAsState()
+                val accounts by transactionsViewModel.accounts.collectAsState()
                 val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
                 val unreadCount by notificationsViewModel.unreadCount.collectAsState()
                 
                 com.alperen.spendcraft.feature.transactions.ui.TransactionsListScreen(
                     transactions = transactions,
+                    categories = categories,
+                    accounts = accounts,
+                    unreadCount = unreadCount,
+                    onNotifications = onNavigateToNotifications,
+                    onTransactionClick = { transaction ->
+                        // ✅ Use parent callback instead of nested navController
+                        transaction.id?.let { onNavigateToEditTransaction(it) }
+                    },
                     onAddTransaction = { onNavigateToAddTransaction(null) },
                     onDeleteTransaction = { transaction ->
-                        // TODO: Implement delete functionality
-                    },
-                    onNotifications = onNavigateToNotifications, // iOS'taki notification button
-                    unreadCount = unreadCount // iOS'taki badge
+                        transaction.id?.let { transactionsViewModel.deleteTransaction(it) }
+                    }
                 )
             }
             
@@ -347,7 +378,6 @@ fun MainTabNavigation(
             items = paratikBottomNavItems,
             selectedIndex = selectedTabIndex,
             onItemSelected = { index ->
-                selectedTabIndex = index
                 val route = when (index) {
                     0 -> TabScreen.Dashboard.route
                     1 -> TabScreen.Transactions.route

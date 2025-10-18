@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core:ui"))
     implementation(project(":core:notifications"))
+    implementation(project(":data:db"))  // AccountEntity için
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.lerp
+import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
@@ -54,8 +55,11 @@ enum class TransactionFilter(val label: String) {
 @Composable
 fun TransactionsListScreen(
     transactions: List<Transaction>,
+    categories: List<Category> = emptyList(),
+    accounts: List<com.alperen.spendcraft.core.model.Account> = emptyList(),
     onAddTransaction: () -> Unit,
     onDeleteTransaction: (Transaction) -> Unit,
+    onTransactionClick: (Transaction) -> Unit = {},
     onNotifications: () -> Unit = {}, // iOS'taki notificationToolbarItem
     unreadCount: Int = 0, // iOS: notificationsViewModel.unreadCount
     modifier: Modifier = Modifier
@@ -208,7 +212,10 @@ fun TransactionsListScreen(
                             key = { it.id ?: it.hashCode() }
                         ) { transaction ->
                             TransactionListRow(
-                                transaction = transaction
+                                transaction = transaction,
+                                categories = categories,
+                                accounts = accounts,
+                                onClick = { onTransactionClick(transaction) }
                             )
                         }
                     }
@@ -288,6 +295,9 @@ private fun FilterPill(
 @Composable
 private fun TransactionListRow(
     transaction: Transaction,
+    categories: List<Category>,
+    accounts: List<com.alperen.spendcraft.core.model.Account>,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -304,25 +314,40 @@ private fun TransactionListRow(
         timeFormat.format(Date(transaction.timestampUtcMillis))
     }
     
+    // Find category and account for this transaction
+    val category = categories.find { it.id == transaction.categoryId }
+    val account = accounts.find { it.id == transaction.accountId }
+    
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Category Icon - iOS: 44×44dp, 12dp radius
+        val categoryColor = category?.color?.let { colorStr ->
+            try { Color(android.graphics.Color.parseColor(colorStr)) } 
+            catch (e: Exception) { IOSColors.Blue }
+        } ?: IOSColors.Blue
+        
         Box(
             modifier = Modifier
                 .size(44.dp)
-                .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))  // IOSRadius.medium
-                .background(IOSColors.Blue.copy(alpha = 0.2f)),
+                .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                .background(categoryColor.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
+            // TODO: Kategori ikonunu göster (şimdilik varsayılan)
             Icon(
-                imageVector = Icons.Default.ShoppingCart,
+                imageVector = if (transaction.type == TransactionType.INCOME) {
+                    Icons.Default.Add
+                } else {
+                    Icons.Default.ShoppingCart
+                },
                 contentDescription = null,
-                tint = IOSColors.Blue,
+                tint = categoryColor,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -334,13 +359,21 @@ private fun TransactionListRow(
         ) {
             // Category name - iOS: .subheadline, .medium
             Text(
-                text = "İşlem", // TODO: Kategori adı eklenecek
+                text = category?.name ?: "Kategori Yok",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
             
             // Note (if available) - iOS: .caption, .secondary, lineLimit(1)
-            // TODO: Note eklenecek
+            transaction.note?.let { noteText ->
+                Text(
+                    text = noteText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
+            }
             
             // Time - iOS: .caption2, .secondary
             Text(
@@ -364,7 +397,13 @@ private fun TransactionListRow(
             )
             
             // Account name - iOS: .caption2, .secondary
-            // TODO: Account bilgisi eklenecek
+            if (account != null) {
+                Text(
+                    text = account.name,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

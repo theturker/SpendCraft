@@ -17,9 +17,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.model.Transaction
@@ -42,6 +47,7 @@ enum class ExportFormat(val displayName: String, val icon: ImageVector, val desc
     EXCEL("Excel", ExcelIcon, "Microsoft Excel formatı")
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExportReportScreen(
     transactions: List<Transaction>,
@@ -57,14 +63,63 @@ fun ExportReportScreen(
     var customEndDate by remember { mutableStateOf(System.currentTimeMillis()) }
     var isExporting by remember { mutableStateOf(false) }
     var exportMessage by remember { mutableStateOf<String?>(null) }
+    
+    // iOS scroll behavior
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+    val titleFontSize = lerp(start = 34.sp, stop = 17.sp, fraction = collapsedFraction)
 
-    AppScaffold(
-        title = "Rapor İndir",
-        onBack = onNavigateBack
-    ) {
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            Box {
+                LargeTopAppBar(
+                    title = { Spacer(modifier = Modifier) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
+                                contentDescription = "Geri"
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.largeTopAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
+                )
+                
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(if (collapsedFraction > 0.5f) 64.dp else 152.dp)
+                        .align(Alignment.BottomCenter),
+                    contentAlignment = if (collapsedFraction > 0.5f) {
+                        Alignment.Center
+                    } else {
+                        Alignment.BottomStart
+                    }
+                ) {
+                    Text(
+                        text = "Dışa Aktar",
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        modifier = if (collapsedFraction > 0.5f) {
+                            Modifier
+                        } else {
+                            Modifier.padding(start = 16.dp, bottom = 8.dp)
+                        }
+                    )
+                }
+            }
+        }
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

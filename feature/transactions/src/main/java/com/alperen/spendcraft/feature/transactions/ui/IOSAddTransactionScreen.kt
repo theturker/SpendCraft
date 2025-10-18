@@ -1,6 +1,7 @@
 package com.alperen.spendcraft.feature.transactions.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,12 +22,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
-// import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
+import com.alperen.spendcraft.data.db.entities.AccountEntity
 import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,8 +50,9 @@ import java.util.*
 @Composable
 fun IOSAddTransactionScreen(
     categories: List<Category>,
+    accounts: List<AccountEntity> = emptyList(),
     initialTransactionType: Boolean? = null,
-    onSave: (amountMinor: Long, note: String?, categoryId: Long?, isIncome: Boolean) -> Unit,
+    onSave: (amountMinor: Long, note: String?, categoryId: Long?, accountId: Long?, date: Long, isIncome: Boolean, isRecurring: Boolean, recurringFrequency: String?) -> Unit,
     onDismiss: () -> Unit,
     onNavigateToAddCategory: (Boolean) -> Unit = {}, // iOS: isIncome type'ı geç
     modifier: Modifier = Modifier
@@ -61,8 +64,18 @@ fun IOSAddTransactionScreen(
     val isIncomeState = remember { mutableStateOf(initialTransactionType ?: false) }
     var isIncome by isIncomeState
     var selectedCategory by remember { mutableStateOf<Category?>(categories.firstOrNull()) }
+    var selectedAccount by remember { mutableStateOf<AccountEntity?>(null) }
     var selectedDate by remember { mutableStateOf(Date()) }
     var showDatePicker by remember { mutableStateOf(false) }
+    var isRecurring by remember { mutableStateOf(false) }
+    var recurringFrequency by remember { mutableStateOf("MONTHLY") }
+    
+    // Auto-select first account when accounts list changes
+    LaunchedEffect(accounts) {
+        if (selectedAccount == null && accounts.isNotEmpty()) {
+            selectedAccount = accounts.firstOrNull()
+        }
+    }
     
     // iOS: filteredCategories based on transaction type
     val filteredCategories = remember(categories, isIncomeState.value) {
@@ -280,7 +293,85 @@ fun IOSAddTransactionScreen(
                 }
             }
             
-            // 7. Save Button
+            // 7. Recurring Section - iOS: AddTransactionView.swift:206-224
+            item {
+                FormSection(title = null) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Tekrarlayan İşlem",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Switch(
+                            checked = isRecurring,
+                            onCheckedChange = { isRecurring = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color.White,
+                                checkedTrackColor = IOSColors.Blue
+                            )
+                        )
+                    }
+                    
+                    if (isRecurring) {
+                        HorizontalDivider(color = Color(0xFFE5E5E5))
+                        
+                        var expandedFreq by remember { mutableStateOf(false) }
+                        ExposedDropdownMenuBox(
+                            expanded = expandedFreq,
+                            onExpandedChange = { expandedFreq = it },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            OutlinedTextField(
+                                value = when (recurringFrequency) {
+                                    "DAILY" -> "Günlük"
+                                    "WEEKLY" -> "Haftalık"
+                                    "MONTHLY" -> "Aylık"
+                                    "YEARLY" -> "Yıllık"
+                                    else -> "Aylık"
+                                },
+                                onValueChange = {},
+                                readOnly = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(),
+                                label = { Text("Tekrarlama Sıklığı") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedFreq) },
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color.Transparent,
+                                    unfocusedBorderColor = Color.Transparent
+                                )
+                            )
+                            
+                            ExposedDropdownMenu(
+                                expanded = expandedFreq,
+                                onDismissRequest = { expandedFreq = false }
+                            ) {
+                                listOf(
+                                    "DAILY" to "Günlük",
+                                    "WEEKLY" to "Haftalık",
+                                    "MONTHLY" to "Aylık",
+                                    "YEARLY" to "Yıllık"
+                                ).forEach { (key, label) ->
+                                    DropdownMenuItem(
+                                        text = { Text(label) },
+                                        onClick = {
+                                            recurringFrequency = key
+                                            expandedFreq = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 8. Save Button
             item {
                 FormSection(title = null) {
                     Button(
@@ -293,7 +384,11 @@ fun IOSAddTransactionScreen(
                                 amountMinor,
                                 note.ifEmpty { null },
                                 selectedCategory?.id,
-                                isIncome
+                                selectedAccount?.id,
+                                selectedDate.time,
+                                isIncome,
+                                isRecurring,
+                                if (isRecurring) recurringFrequency else null
                             )
                         },
                         enabled = isValid,
@@ -397,7 +492,7 @@ fun IOSAddTransactionScreen(
  * Form Section Container - iOS Form style
  */
 @Composable
-private fun FormSection(
+internal fun FormSection(
     title: String?,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
@@ -431,7 +526,7 @@ private fun FormSection(
  * Segmented Control - iOS style
  */
 @Composable
-private fun SegmentedControl(
+internal fun SegmentedControl(
     selectedIsIncome: Boolean,
     onSelectionChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -642,8 +737,12 @@ private fun IOSAddTransactionScreenPreview() {
             Category(id = 1, name = "Yemek", color = "#FF9500", icon = "fork.knife"),
             Category(id = 2, name = "Ulaşım", color = "#007AFF", icon = "car.fill")
         ),
+        accounts = listOf(
+            AccountEntity(id = 1, name = "Nakit", type = "CASH", currency = "TRY"),
+            AccountEntity(id = 2, name = "Banka", type = "BANK", currency = "TRY")
+        ),
         initialTransactionType = false,
-        onSave = { _, _, _, _ -> },
+        onSave = { _, _, _, _, _, _, _, _ -> },
         onDismiss = {}
     )
 }

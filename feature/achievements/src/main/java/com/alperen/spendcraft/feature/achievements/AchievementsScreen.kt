@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,11 +20,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.IOSColors
@@ -65,6 +67,7 @@ enum class AchievementRarity {
  * iOS'taki AchievementsListView'in birebir aynısı
  * ScrollView + VStack + Total Points Card + LazyVGrid (2 column) + AchievementCardLarge
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AchievementsScreen(
     onBack: () -> Unit = {},
@@ -82,6 +85,11 @@ fun AchievementsScreen(
     val unlockedCount by (viewModel?.unlockedCount ?: remember { 
         kotlinx.coroutines.flow.MutableStateFlow(0) 
     }).collectAsState(initial = 0)
+    
+    // iOS scroll behavior
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+    val titleFontSize = lerp(start = 34.sp, stop = 17.sp, fraction = collapsedFraction)
 
     // Mock data - gerçek uygulamada repository'den gelecek
     val mockAchievements = listOf(
@@ -273,12 +281,57 @@ fun AchievementsScreen(
     }
 
     // iOS'taki AchievementsListView yapısı
-    AppScaffold(
-        title = "Başarılar",
-        onBack = onBack
-    ) { _ ->
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            Box {
+                LargeTopAppBar(
+                    title = { Spacer(modifier = Modifier) },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
+                                contentDescription = "Geri"
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.largeTopAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
+                )
+                
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(if (collapsedFraction > 0.5f) 64.dp else 152.dp)
+                        .align(Alignment.BottomCenter),
+                    contentAlignment = if (collapsedFraction > 0.5f) {
+                        Alignment.Center
+                    } else {
+                        Alignment.BottomStart
+                    }
+                ) {
+                    Text(
+                        text = "Başarılar",
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        modifier = if (collapsedFraction > 0.5f) {
+                            Modifier
+                        } else {
+                            Modifier.padding(start = 16.dp, bottom = 8.dp)
+                        }
+                    )
+                }
+            }
+        }
+    ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

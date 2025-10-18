@@ -10,7 +10,12 @@ data class Category(
 
 data class Account(
     val id: Long?,
-    val name: String
+    val name: String,
+    val balance: Long = 0,
+    val currency: String = "TRY",
+    val color: String = "#007AFF",
+    val isDefault: Boolean = false,
+    val archived: Boolean = false
 )
 
 data class Streak(

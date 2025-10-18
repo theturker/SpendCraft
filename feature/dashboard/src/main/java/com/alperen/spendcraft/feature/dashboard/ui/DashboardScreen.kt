@@ -51,6 +51,8 @@ import java.util.*
 @Composable
 fun DashboardScreen(
     transactions: List<Transaction>,
+    categories: List<com.alperen.spendcraft.core.model.Category> = emptyList(),
+    accounts: List<com.alperen.spendcraft.core.model.Account> = emptyList(),
     currentBalance: Double,
     totalIncome: Double,
     totalExpense: Double,
@@ -66,6 +68,7 @@ fun DashboardScreen(
     onNotifications: () -> Unit = {},
     onAchievements: () -> Unit = {},
     onUserProfiling: () -> Unit = {},
+    onTransactionClick: (Transaction) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -229,6 +232,9 @@ fun DashboardScreen(
             item {
                 RecentTransactionsSection(
                     transactions = recentTransactions,
+                    categories = categories,
+                    accounts = accounts,
+                    onTransactionClick = onTransactionClick,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
@@ -1039,6 +1045,9 @@ private fun getAchievementIconResource(icon: String): Int {
 @Composable
 private fun RecentTransactionsSection(
     transactions: List<Transaction>,
+    categories: List<com.alperen.spendcraft.core.model.Category>,
+    accounts: List<com.alperen.spendcraft.core.model.Account>,
+    onTransactionClick: (Transaction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -1066,7 +1075,12 @@ private fun RecentTransactionsSection(
             }
         } else {
             transactions.forEach { transaction ->
-                TransactionRow(transaction = transaction)
+                TransactionRow(
+                    transaction = transaction,
+                    categories = categories,
+                    accounts = accounts,
+                    onClick = { onTransactionClick(transaction) }
+                )
             }
         }
     }
@@ -1078,6 +1092,9 @@ private fun RecentTransactionsSection(
 @Composable
 private fun TransactionRow(
     transaction: Transaction,
+    categories: List<com.alperen.spendcraft.core.model.Category>,
+    accounts: List<com.alperen.spendcraft.core.model.Account>,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -1093,25 +1110,39 @@ private fun TransactionRow(
         dateFormat.format(Date(transaction.timestampUtcMillis))
     }
     
+    // Find category and account
+    val category = categories.find { it.id == transaction.categoryId }
+    val account = accounts.find { it.id == transaction.accountId }
+    
+    val categoryColor = category?.color?.let { colorStr ->
+        try { Color(android.graphics.Color.parseColor(colorStr)) } 
+        catch (e: Exception) { IOSColors.Blue }
+    } ?: IOSColors.Blue
+    
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Category Icon (placeholder for now)
+        // Category Icon with category color
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .clip(RoundedCornerShape(10.dp))  // IOSRadius.radius10
-                .background(IOSColors.Blue.copy(alpha = 0.2f)),
+                .clip(RoundedCornerShape(10.dp))
+                .background(categoryColor.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = Icons.Default.ShoppingCart,
+                imageVector = if (transaction.type == TransactionType.INCOME) {
+                    Icons.Default.Add
+                } else {
+                    Icons.Default.ShoppingCart
+                },
                 contentDescription = null,
-                tint = IOSColors.Blue,
+                tint = categoryColor,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -1122,16 +1153,44 @@ private fun TransactionRow(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "İşlem", // TODO: Kategori adı eklenecek
+                text = category?.name ?: "Kategori Yok",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
             
-            Text(
-                text = formattedDate,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            // Note if available
+            transaction.note?.let { noteText ->
+                Text(
+                    text = noteText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
+            }
+            
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = formattedDate,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (account != null) {
+                    Text(
+                        text = "•",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = account.name,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
         
         // Amount

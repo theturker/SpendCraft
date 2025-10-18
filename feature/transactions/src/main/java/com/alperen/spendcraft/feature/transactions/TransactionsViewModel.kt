@@ -83,19 +83,28 @@ class TransactionsViewModel @Inject constructor(
         note: String?,
         categoryId: Long?,
         accountId: Long?,
-        isIncome: Boolean
+        isIncome: Boolean,
+        date: Long = System.currentTimeMillis(),
+        isRecurring: Boolean = false,
+        recurringFrequency: String? = null
     ) {
         viewModelScope.launch {
             val tx = Transaction(
                 id = null,
                 amount = Money(amountMinor),
-                timestampUtcMillis = System.currentTimeMillis(),
+                timestampUtcMillis = date,
                 note = note,
                 categoryId = categoryId,
                 accountId = accountId,
                 type = if (isIncome) TransactionType.INCOME else TransactionType.EXPENSE
             )
             upsert(tx)
+            
+            // Recurring transaction logic
+            if (isRecurring && recurringFrequency != null) {
+                // TODO: Create recurring transaction entry
+                // createRecurringTransaction(tx, recurringFrequency)
+            }
             
             // Mark today as logged for streak
             markTodayLogged()
@@ -105,6 +114,12 @@ class TransactionsViewModel @Inject constructor(
         }
     }
 
+    fun updateTransaction(transaction: Transaction) {
+        viewModelScope.launch {
+            upsert(transaction)
+        }
+    }
+    
     fun deleteTransaction(id: Long) {
         viewModelScope.launch { delete(id) }
     }
@@ -140,9 +155,15 @@ class TransactionsViewModel @Inject constructor(
         }
     }
 
-    fun addAccount(name: String) {
+    fun addAccount(name: String, type: String = "CASH", currency: String = "TRY") {
         viewModelScope.launch {
-            insertAccount(com.alperen.spendcraft.core.model.Account(id = null, name = name))
+            insertAccount(com.alperen.spendcraft.core.model.Account(
+                id = null, 
+                name = name,
+                balance = 0,
+                currency = currency,
+                color = "#007AFF"
+            ))
         }
     }
 

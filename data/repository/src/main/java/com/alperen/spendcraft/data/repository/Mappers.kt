@@ -60,15 +60,21 @@ object CategoryMapper {
 object AccountMapper {
     fun fromEntity(e: AccountEntity): Account = Account(
         id = e.id,
-        name = e.name
+        name = e.name,
+        balance = 0,  // TODO: Add balance field to AccountEntity
+        currency = e.currency,
+        color = "#007AFF",  // TODO: Add color field to AccountEntity
+        isDefault = e.isDefault,
+        archived = e.archived
     )
     
-    fun toEntity(a: Account, isDefault: Boolean = false): AccountEntity = AccountEntity(
+    fun toEntity(a: Account): AccountEntity = AccountEntity(
         id = a.id ?: 0,
         name = a.name,
-        type = "CASH",
-        currency = "TRY",
-        isDefault = isDefault
+        type = "CASH",  // TODO: Get from Account
+        currency = a.currency,
+        isDefault = a.isDefault,
+        archived = a.archived
     )
 }
 

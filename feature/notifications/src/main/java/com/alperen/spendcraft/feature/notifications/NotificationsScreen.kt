@@ -7,16 +7,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.IOSColors
@@ -26,6 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsScreen(
     onBack: () -> Unit = {},
@@ -38,27 +42,77 @@ fun NotificationsScreen(
     
     // Gerçek veri kullan
     val displayNotifications = notifications
+    
+    // iOS scroll behavior
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+    val titleFontSize = lerp(start = 34.sp, stop = 17.sp, fraction = collapsedFraction)
 
-    AppScaffold(
-        title = "Bildirimler",
-        onBack = onBack,
-        actions = {
-            IconButton(onClick = { 
-                displayNotifications.forEach { notification ->
-                    if (!notification.isRead) {
-                        viewModel?.markAsRead(notification.id)
-                    }
-                }
-            }) {
-                Icon(
-                    painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_done_all_vector),
-                    contentDescription = "Tümünü okundu işaretle"
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            Box {
+                LargeTopAppBar(
+                    title = { Spacer(modifier = Modifier) },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
+                                contentDescription = "Geri"
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { 
+                            displayNotifications.forEach { notification ->
+                                if (!notification.isRead) {
+                                    viewModel?.markAsRead(notification.id)
+                                }
+                            }
+                        }) {
+                            Icon(
+                                painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_done_all_vector),
+                                contentDescription = "Tümünü okundu işaretle"
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.largeTopAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
                 )
+                
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(if (collapsedFraction > 0.5f) 64.dp else 152.dp)
+                        .align(Alignment.BottomCenter),
+                    contentAlignment = if (collapsedFraction > 0.5f) {
+                        Alignment.Center
+                    } else {
+                        Alignment.BottomStart
+                    }
+                ) {
+                    Text(
+                        text = "Bildirimler",
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        modifier = if (collapsedFraction > 0.5f) {
+                            Modifier
+                        } else {
+                            Modifier.padding(start = 16.dp, bottom = 8.dp)
+                        }
+                    )
+                }
             }
         }
-    ) {
+    ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
