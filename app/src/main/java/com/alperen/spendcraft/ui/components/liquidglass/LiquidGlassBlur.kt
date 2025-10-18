@@ -68,18 +68,12 @@ private fun RealBackdropBlur(
     }
     
     Box(modifier = modifier) {
-        // Background layer: Translucent glass effect
+        // Background layer: Temiz translucent glass (noise YOK - şerit pattern'i kaldırıldı)
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundColor)
-        ) {
-            // Noise overlay (2–3% alpha)
-            ProceduralNoiseOverlay(
-                modifier = Modifier.fillMaxSize(),
-                alpha = LiquidGlassThemeTokens.noiseAlpha
-            )
-        }
+        )
         
         // Content on top (NOT blurred - stays sharp!)
         content()
@@ -106,19 +100,7 @@ private fun FallbackGlassEffect(
         modifier = modifier
             .background(backgroundColor)
     ) {
-        // Top highlight gradient (specular rim)
-        TopHighlightGradient(
-            modifier = Modifier.fillMaxSize(),
-            isDarkMode = isDarkMode
-        )
-        
-        // Noise overlay
-        ProceduralNoiseOverlay(
-            modifier = Modifier.fillMaxSize(),
-            alpha = LiquidGlassThemeTokens.noiseAlpha
-        )
-        
-        // Content
+        // Content (noise ve gradient kaldırıldı - temiz arka plan)
         content()
     }
 }

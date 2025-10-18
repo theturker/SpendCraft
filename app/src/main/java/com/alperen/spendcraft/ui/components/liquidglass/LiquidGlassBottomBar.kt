@@ -14,6 +14,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
@@ -296,8 +299,8 @@ val paratikBottomNavItems = listOf(
     LiquidGlassNavItem(
         route = "settings",
         title = "Ayarlar",
-        icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.GearshapeOutline,
-        selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.GearshapeFill
+        icon = androidx.compose.material.icons.Icons.Outlined.Settings,
+        selectedIcon = androidx.compose.material.icons.Icons.Filled.Settings
     )
 )
 

@@ -21,14 +21,14 @@ object LiquidGlassThemeTokens {
         val glassBorder = Color(0x40FFFFFF) // Subtle white rim
         
         // Vibrancy adjustments for icons/labels
-        val iconDefault = Color(0xFF8E8E93) // iOS gray
+        val iconDefault = Color(0xFF000000) // Siyah (light mode)
         val iconSelected = Color(0xFF007AFF) // iOS blue
-        val labelDefault = Color(0xFF8E8E93)
+        val labelDefault = Color(0xFF000000) // Siyah (light mode)
         val labelSelected = Color(0xFF007AFF)
         
-        // Selected pill indicator
-        val pillBackground = Color(0x26007AFF) // 15% blue
-        val pillGlow = Color(0x40007AFF) // Outer glow
+        // Selected pill indicator - iOS systemGray5 (subtle gray, not blue)
+        val pillBackground = Color(0x28000000) // ~15% black (subtle gray)
+        val pillGlow = Color(0x14000000) // Very subtle dark glow
     }
     
     // ============================================
@@ -40,14 +40,14 @@ object LiquidGlassThemeTokens {
         val glassBorder = Color(0x33FFFFFF) // Subtle white rim
         
         // Vibrancy adjustments
-        val iconDefault = Color(0xFFAEAEB2) // iOS light gray
+        val iconDefault = Color(0xFFFFFFFF) // Beyaz (dark mode)
         val iconSelected = Color(0xFF0A84FF) // iOS blue (dark variant)
-        val labelDefault = Color(0xFFAEAEB2)
+        val labelDefault = Color(0xFFFFFFFF) // Beyaz (dark mode)
         val labelSelected = Color(0xFF0A84FF)
         
-        // Selected pill
-        val pillBackground = Color(0x330A84FF) // 20% blue
-        val pillGlow = Color(0x4D0A84FF) // Outer glow
+        // Selected pill - iOS tertiarySystemFill (subtle light gray)
+        val pillBackground = Color(0x33FFFFFF) // ~20% white (subtle gray)
+        val pillGlow = Color(0x1AFFFFFF) // Very subtle white glow
     }
     
     // ============================================
@@ -58,12 +58,12 @@ object LiquidGlassThemeTokens {
     val barHorizontalPadding: Dp = 12.dp
     val barBottomOffset: Dp = 12.dp // Floating offset from screen bottom
     
-    val pillCornerRadius: Dp = 20.dp
+    val pillCornerRadius: Dp = 28.dp // Daha yuvarlak
     val pillPaddingHorizontal: Dp = 10.dp
     val pillPaddingVertical: Dp = 6.dp
     
     val iconSize: Dp = 26.dp // Daha büyük icon
-    val iconLabelSpacing: Dp = 1.dp // Daha az boşluk
+    val iconLabelSpacing: Dp = 0.1.dp // Çok az boşluk (yarısı)
     val labelFontSize = 8 // sp - Küçültüldü ki sığsın
     
     // Shadow & Blur
