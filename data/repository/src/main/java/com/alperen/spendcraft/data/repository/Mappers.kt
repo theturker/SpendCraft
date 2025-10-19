@@ -58,24 +58,31 @@ object CategoryMapper {
 }
 
 object AccountMapper {
-    fun fromEntity(e: AccountEntity): Account = Account(
-        id = e.id,
-        name = e.name,
-        balance = 0,  // TODO: Add balance field to AccountEntity
-        currency = e.currency,
-        color = "#007AFF",  // TODO: Add color field to AccountEntity
-        isDefault = e.isDefault,
-        archived = e.archived
-    )
+    fun fromEntity(e: AccountEntity): Account {
+        android.util.Log.d("AccountMapper", "🟠 Entity → Account: name=${e.name}, type=${e.type}, currency=${e.currency}")
+        return Account(
+            id = e.id,
+            name = e.name,
+            type = e.type,  // ✅ iOS: CASH, BANK, CREDIT_CARD, SAVINGS
+            balance = 0,  // TODO: Add balance field to AccountEntity
+            currency = e.currency,
+            color = "#007AFF",  // TODO: Add color field to AccountEntity
+            isDefault = e.isDefault,
+            archived = e.archived
+        )
+    }
     
-    fun toEntity(a: Account): AccountEntity = AccountEntity(
-        id = a.id ?: 0,
-        name = a.name,
-        type = "CASH",  // TODO: Get from Account
-        currency = a.currency,
-        isDefault = a.isDefault,
-        archived = a.archived
-    )
+    fun toEntity(a: Account): AccountEntity {
+        android.util.Log.d("AccountMapper", "🟠 Account → Entity: name=${a.name}, type=${a.type}, currency=${a.currency}")
+        return AccountEntity(
+            id = a.id ?: 0,
+            name = a.name,
+            type = a.type,  // ✅ iOS: CASH, BANK, CREDIT_CARD, SAVINGS
+            currency = a.currency,
+            isDefault = a.isDefault,
+            archived = a.archived
+        )
+    }
 }
 
 

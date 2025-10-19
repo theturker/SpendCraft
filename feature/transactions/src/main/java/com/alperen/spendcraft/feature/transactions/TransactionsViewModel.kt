@@ -154,16 +154,26 @@ class TransactionsViewModel @Inject constructor(
             updateAccount(account)
         }
     }
+    
+    fun updateAccountFull(account: com.alperen.spendcraft.core.model.Account) {
+        viewModelScope.launch {
+            updateAccount(account)
+        }
+    }
 
     fun addAccount(name: String, type: String = "CASH", currency: String = "TRY") {
+        android.util.Log.d("TransactionsViewModel", "🟢 addAccount called: name=$name, type=$type, currency=$currency")
         viewModelScope.launch {
-            insertAccount(com.alperen.spendcraft.core.model.Account(
+            val account = com.alperen.spendcraft.core.model.Account(
                 id = null, 
                 name = name,
+                type = type,  // ✅ iOS: CASH, BANK, CREDIT_CARD, SAVINGS
                 balance = 0,
                 currency = currency,
                 color = "#007AFF"
-            ))
+            )
+            android.util.Log.d("TransactionsViewModel", "🟢 Account created: $account")
+            insertAccount(account)
         }
     }
 

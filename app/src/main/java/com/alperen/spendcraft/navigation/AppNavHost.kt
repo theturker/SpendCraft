@@ -439,17 +439,11 @@ fun AppNavHost(
         // AI Settings removed - API key is hardcoded
         composable(Routes.ACCOUNTS) {
             val context = androidx.compose.ui.platform.LocalContext.current
+            // ✅ iOS: Use AccountMapper to convert Account → AccountEntity
             val accountsFlow = vm.accounts
                 .map { list ->
                     list.map { acc ->
-                        com.alperen.spendcraft.data.db.entities.AccountEntity(
-                            id = acc.id ?: 0,
-                            name = acc.name,
-                            type = "CASH",
-                            currency = com.alperen.spendcraft.core.ui.CurrencyFormatter.getCurrencySymbol(context),
-                            isDefault = false,
-                            archived = false
-                        )
+                        com.alperen.spendcraft.data.repository.AccountMapper.toEntity(acc)
                     }
                 }
             AccountsScreen(
@@ -459,8 +453,16 @@ fun AppNavHost(
                     vm.addAccount(name, type, currency)
                 },
                 onEditAccount = { account -> 
-                    vm.updateAccountName(account.id, account.name)
-                    // TODO: Update account type and currency too
+                    // ✅ iOS: Update all fields (name, type, currency)
+                    val accountModel = com.alperen.spendcraft.core.model.Account(
+                        id = account.id,
+                        name = account.name,
+                        type = account.type,
+                        currency = account.currency,
+                        isDefault = account.isDefault,
+                        archived = account.archived
+                    )
+                    vm.updateAccountFull(accountModel)
                 },
                 onArchiveAccount = { account -> vm.removeAccount(account.id) },
                 onSetDefaultAccount = { _ -> /* TODO: implement set default when repo supports */ },

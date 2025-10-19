@@ -11,6 +11,7 @@ data class Category(
 data class Account(
     val id: Long?,
     val name: String,
+    val type: String = "CASH",  // ✅ iOS: CASH, BANK, CREDIT_CARD, SAVINGS
     val balance: Long = 0,
     val currency: String = "TRY",
     val color: String = "#007AFF",

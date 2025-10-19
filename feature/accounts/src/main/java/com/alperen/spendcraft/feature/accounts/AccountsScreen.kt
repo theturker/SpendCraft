@@ -474,10 +474,12 @@ fun AccountEditorScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     
+                    // ✅ iOS AddAccountView.swift:382 ile birebir aynı
                     val accountTypes = listOf(
                         "CASH" to "Nakit",
-                        "CARD" to "Kredi Kartı",
-                        "BANK" to "Banka"
+                        "BANK" to "Banka",
+                        "CREDIT_CARD" to "Kredi Kartı",
+                        "SAVINGS" to "Tasarruf"
                     )
                     
                     accountTypes.forEach { (typeValue, typeName) ->
@@ -505,12 +507,45 @@ fun AccountEditorScreen(
                     
                     Spacer(modifier = Modifier.height(16.dp))
                     
-                    OutlinedTextField(
-                        value = currency,
-                        onValueChange = { currency = it },
-                        label = { Text("Para Birimi") },
-                        modifier = Modifier.fillMaxWidth()
+                    // ✅ iOS: Currency Picker (AddAccountView.swift:398-402)
+                    Text(
+                        text = "Para Birimi",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    val currencies = listOf("TRY", "USD", "EUR")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        currencies.forEach { curr ->
+                            Surface(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(8.dp)),
+                                color = if (currency == curr) {
+                                    IOSColors.Blue.copy(alpha = 0.2f)
+                                } else {
+                                    Color.Gray.copy(alpha = 0.1f)
+                                },
+                                onClick = { currency = curr }
+                            ) {
+                                Box(
+                                    modifier = Modifier.padding(12.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = curr,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = if (currency == curr) FontWeight.Bold else FontWeight.Normal,
+                                        color = if (currency == curr) IOSColors.Blue else MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
             
@@ -546,16 +581,18 @@ fun AccountEditorScreen(
 
 @Composable
 private fun getAccountTypeIcon(type: String) = when (type) {
-    "CASH" -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector)
-    "CARD" -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector)
+    "CASH" -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_banknote)
     "BANK" -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector)
+    "CREDIT_CARD", "CARD" -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector)
+    "SAVINGS" -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_savings)
     else -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector)
 }
 
 private fun getAccountTypeDisplayName(type: String) = when (type) {
     "CASH" -> "Nakit"
-    "CARD" -> "Kredi Kartı"
     "BANK" -> "Banka"
+    "CREDIT_CARD", "CARD" -> "Kredi Kartı"
+    "SAVINGS" -> "Tasarruf"
     else -> type
 }
 
@@ -575,10 +612,12 @@ private fun IOSAccountDialog(
     
     data class AccountTypeItem(val typeValue: String, val typeName: String, val iconRes: Int)
     
+    // ✅ iOS AddAccountView.swift:382 ile birebir aynı
     val accountTypes = listOf(
         AccountTypeItem("CASH", "Nakit", com.alperen.spendcraft.core.ui.R.drawable.ic_banknote),
-        AccountTypeItem("BANK", "Banka Hesabı", com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector),
-        AccountTypeItem("CARD", "Kredi Kartı", com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector)
+        AccountTypeItem("BANK", "Banka", com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector),
+        AccountTypeItem("CREDIT_CARD", "Kredi Kartı", com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector),
+        AccountTypeItem("SAVINGS", "Tasarruf", com.alperen.spendcraft.core.ui.R.drawable.ic_savings)
     )
     
     AlertDialog(
@@ -667,15 +706,49 @@ private fun IOSAccountDialog(
                     }
                 }
                 
-                // Currency
-                OutlinedTextField(
-                    value = currency,
-                    onValueChange = { currency = it },
-                    label = { Text("Para Birimi") },
-                    placeholder = { Text("TRY") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
+                // Currency Picker - iOS AddAccountView.swift:398-402
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Para Birimi",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    
+                    // iOS: Picker with TRY, USD, EUR
+                    val currencies = listOf("TRY", "USD", "EUR")
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        currencies.forEach { curr ->
+                            Surface(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(12.dp)),
+                                color = if (currency == curr) {
+                                    IOSColors.Blue.copy(alpha = 0.1f)
+                                } else {
+                                    MaterialTheme.colorScheme.surfaceVariant
+                                },
+                                shape = RoundedCornerShape(12.dp),
+                                onClick = { currency = curr }
+                            ) {
+                                Box(
+                                    modifier = Modifier.padding(12.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = curr,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = if (currency == curr) FontWeight.SemiBold else FontWeight.Normal,
+                                        color = if (currency == curr) IOSColors.Blue else MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
                 
                 // Buttons
                 Row(
