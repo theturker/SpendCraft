@@ -91,13 +91,36 @@ object DbModule {
             """)
         }
     }
+    
+    // Migration to add default income categories if missing
+    private val MIGRATION_8_9 = object : Migration(8, 9) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Check if income categories exist
+            val cursor = database.query("SELECT COUNT(*) FROM categories WHERE isIncome = 1")
+            cursor.moveToFirst()
+            val incomeCount = cursor.getInt(0)
+            cursor.close()
+            
+            // If no income categories, add default ones
+            if (incomeCount == 0) {
+                database.execSQL("INSERT INTO categories (name, color, icon, isIncome) VALUES ('Maaş', '#008000', 'ic_banknote', 1)")
+                database.execSQL("INSERT INTO categories (name, color, icon, isIncome) VALUES ('Kira', '#32CD32', 'ic_house_fill', 1)")
+                database.execSQL("INSERT INTO categories (name, color, icon, isIncome) VALUES ('Prim', '#FFD700', 'ic_star_fill', 1)")
+                database.execSQL("INSERT INTO categories (name, color, icon, isIncome) VALUES ('Yatırım', '#4169E1', 'ic_chart_line_uptrend', 1)")
+                database.execSQL("INSERT INTO categories (name, color, icon, isIncome) VALUES ('İkramiye', '#FFA500', 'ic_gift_fill', 1)")
+                database.execSQL("INSERT INTO categories (name, color, icon, isIncome) VALUES ('Serbest Çalışma', '#9370DB', 'ic_briefcase_fill', 1)")
+                database.execSQL("INSERT INTO categories (name, color, icon, isIncome) VALUES ('Kira Geliri', '#20B2AA', 'ic_building_2_fill', 1)")
+                database.execSQL("INSERT INTO categories (name, color, icon, isIncome) VALUES ('Diğer Gelir', '#808080', 'ic_ellipsis_circle_fill', 1)")
+            }
+        }
+    }
 
 
     @Provides
     @Singleton
     fun provideDb(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "spendcraft.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_TO_5, MIGRATION_7_8)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_TO_5, MIGRATION_7_8, MIGRATION_8_9)
             .fallbackToDestructiveMigration()
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {

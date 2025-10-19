@@ -405,17 +405,16 @@ internal fun CategoryButtonEdit(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            // TODO: Show category icon when available
             Icon(
-                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_plus_circle_fill),
+                painter = painterResource(id = getCategoryIconResource(category.icon ?: "circle.fill")),
                 contentDescription = null,
                 tint = if (isSelected) {
+                    Color.White
+                } else {
                     try { Color(android.graphics.Color.parseColor(category.color)) }
                     catch (e: Exception) { IOSColors.Blue }
-                } else {
-                    Color.Gray
                 },
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
         
@@ -435,3 +434,59 @@ internal fun CategoryButtonEdit(
     }
 }
 
+/**
+ * Category icon mapping - Android category verilerindeki emoji iconları ve iOS SF Symbol isimlerini Android drawable'lara çevirir
+ */
+private fun getCategoryIconResource(icon: String): Int {
+    return when (icon) {
+        // Emoji iconlar
+        "🍔", "🍽️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_fork_knife
+        "🚌", "🚋" -> com.alperen.spendcraft.core.ui.R.drawable.ic_tram_fill
+        "🎬" -> com.alperen.spendcraft.core.ui.R.drawable.ic_film_fill
+        "💼" -> com.alperen.spendcraft.core.ui.R.drawable.ic_briefcase_fill
+        "🛒" -> com.alperen.spendcraft.core.ui.R.drawable.ic_cart_fill
+        "🏠" -> com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill
+        "🚗" -> com.alperen.spendcraft.core.ui.R.drawable.ic_car_fill
+        "✈️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_airplane
+        "⚡" -> com.alperen.spendcraft.core.ui.R.drawable.ic_bolt_fill
+        "👜" -> com.alperen.spendcraft.core.ui.R.drawable.ic_bag_fill
+        "🎁" -> com.alperen.spendcraft.core.ui.R.drawable.ic_gift_fill
+        "📚" -> com.alperen.spendcraft.core.ui.R.drawable.ic_book_fill
+        "🎮" -> com.alperen.spendcraft.core.ui.R.drawable.ic_gamecontroller_fill
+        "❤️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_heart_fill
+        "💳" -> com.alperen.spendcraft.core.ui.R.drawable.ic_creditcard_fill
+        "💊" -> com.alperen.spendcraft.core.ui.R.drawable.ic_pills_fill
+        "🎓" -> com.alperen.spendcraft.core.ui.R.drawable.ic_graduationcap_fill
+        "📱" -> com.alperen.spendcraft.core.ui.R.drawable.ic_phone_fill
+        
+        // Android drawable isimleri (DbModule'de kullanılan format)
+        "ic_fork_knife", "fork.knife" -> com.alperen.spendcraft.core.ui.R.drawable.ic_fork_knife
+        "ic_car_fill", "car.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_car_fill
+        "ic_doc_text_fill", "doc.text.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_doc_text_fill
+        "ic_gamecontroller_fill", "gamecontroller.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_gamecontroller_fill
+        "ic_cart_fill", "cart.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_cart_fill
+        "ic_heart_fill", "heart.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_heart_fill
+        "ic_book_closed_fill", "book.closed.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_book_closed_fill
+        "ic_book_fill", "book.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_book_fill
+        "ic_creditcard_fill", "creditcard.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_creditcard_fill
+        "ic_ellipsis_circle_fill", "ellipsis.circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_ellipsis_circle_fill
+        "ic_banknote", "banknote", "banknote.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
+        "ic_house_fill", "house.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill
+        "ic_star_fill", "star.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
+        "ic_chart_line_uptrend", "chart.line.uptrend.xyaxis" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_line_uptrend
+        "ic_gift_fill", "gift.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_gift_fill
+        "ic_briefcase_fill", "briefcase.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_briefcase_fill
+        "ic_building_2_fill", "building.2.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_building_2_fill
+        "ic_tram_fill", "tram.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_tram_fill
+        "ic_airplane", "airplane" -> com.alperen.spendcraft.core.ui.R.drawable.ic_airplane
+        "ic_bolt_fill", "bolt.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_bolt_fill
+        "ic_bag_fill", "bag.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_bag_fill
+        "ic_film_fill", "film.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_film_fill
+        "ic_pills_fill", "pills.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_pills_fill
+        "ic_graduationcap_fill", "graduationcap.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_graduationcap_fill
+        "ic_phone_fill", "phone.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_phone_fill
+        "ic_circle_fill", "circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_circle_fill
+        
+        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_circle_fill // Default
+    }
+}

@@ -40,7 +40,7 @@ import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity
         RecurringTransactionEntity::class,
         AIUsageEntity::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = false
 )
 @TypeConverters()
