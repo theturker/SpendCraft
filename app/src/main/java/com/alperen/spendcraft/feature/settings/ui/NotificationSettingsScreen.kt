@@ -233,7 +233,10 @@ private fun AuthorizationStatusCard(
                 )
             }
             Icon(
-                imageVector = if (isAuthorized) Icons.Filled.CheckCircle else Icons.Filled.Close,
+                painter = painterResource(
+                    id = if (isAuthorized) CoreR.drawable.ic_checkmark_circle_fill 
+                    else CoreR.drawable.ic_xmark_circle_fill
+                ),
                 contentDescription = null,
                 tint = if (isAuthorized) IOSColors.Green else IOSColors.Red,
                 modifier = Modifier.size(32.dp)
@@ -371,7 +374,10 @@ private fun NotificationTemplateRow(
                 }
             }
             Icon(
-                imageVector = if (template.isEnabled) Icons.Filled.CheckCircle else Icons.Filled.FavoriteBorder,
+                painter = painterResource(
+                    id = if (template.isEnabled) CoreR.drawable.ic_checkmark_circle_fill 
+                    else CoreR.drawable.ic_circle
+                ),
                 contentDescription = null,
                 tint = if (template.isEnabled) IOSColors.Green else MaterialTheme.colorScheme.outline
             )
@@ -404,7 +410,7 @@ private fun CustomNotificationRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Filled.Notifications,
+                painter = painterResource(id = CoreR.drawable.ic_bell_badge_fill),
                 contentDescription = null,
                 tint = IOSColors.Purple,
                 modifier = Modifier.size(24.dp)
@@ -435,9 +441,10 @@ private fun CustomNotificationRow(
             }
             IconButton(onClick = { showDeleteConfirm = true }) {
                 Icon(
-                    imageVector = Icons.Filled.Delete,
+                    painter = painterResource(id = CoreR.drawable.ic_trash_fill),
                     contentDescription = "Sil",
-                    tint = IOSColors.Red
+                    tint = IOSColors.Red,
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }
@@ -484,7 +491,7 @@ private fun AddCustomNotificationButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Filled.AddCircle,
+                painter = painterResource(id = CoreR.drawable.ic_plus_circle_fill),
                 contentDescription = null,
                 tint = IOSColors.Blue,
                 modifier = Modifier.size(24.dp)
@@ -502,14 +509,14 @@ private fun AddCustomNotificationButton(
 // MARK: - Helper Functions
 
 private fun categoryIcon(category: String): Int = when (category) {
-    "Sabah" -> CoreR.drawable.ic_whatshot_vector // Sun equivalent
-    "Öğlen" -> CoreR.drawable.ic_lightbulb_fill // Light equivalent
-    "Akşam" -> CoreR.drawable.ic_bell_badge_fill // Evening
-    "Haftalık" -> CoreR.drawable.ic_calendar_month_vector
-    "Aylık" -> CoreR.drawable.ic_calendar_month_vector
-    "Motivasyon" -> CoreR.drawable.ic_star_fill
-    "Özel" -> CoreR.drawable.ic_gift_fill
-    else -> CoreR.drawable.ic_bell_fill
+    "Sabah" -> CoreR.drawable.ic_sun_max_fill // SF Symbol: sun.max.fill
+    "Öğlen" -> CoreR.drawable.ic_sun_min_fill // SF Symbol: sun.min.fill
+    "Akşam" -> CoreR.drawable.ic_moon_stars_fill // SF Symbol: moon.stars.fill
+    "Haftalık" -> CoreR.drawable.ic_calendar // SF Symbol: calendar
+    "Aylık" -> CoreR.drawable.ic_calendar_badge_clock // SF Symbol: calendar.badge.clock
+    "Motivasyon" -> CoreR.drawable.ic_star_fill // SF Symbol: star.fill
+    "Özel" -> CoreR.drawable.ic_gift_fill // SF Symbol: gift.fill
+    else -> CoreR.drawable.ic_bell_fill // SF Symbol: bell.fill
 }
 
 private fun categoryColor(category: String): Color = when (category) {

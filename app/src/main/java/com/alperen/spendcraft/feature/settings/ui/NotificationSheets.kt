@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.feature.notifications.CustomNotification
 import com.alperen.spendcraft.feature.notifications.NotificationTemplate
+import com.alperen.spendcraft.core.ui.R as CoreR
 
 /**
  * iOS NotificationSettingsView sheet'lerinin Android karşılıkları
@@ -591,7 +593,11 @@ private fun NumberPicker(
             IconButton(
                 onClick = { if (value > range.first) onValueChange(value - 1) }
             ) {
-                Icon(Icons.Filled.Clear, "Azalt")
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = "Azalt",
+                    tint = IOSColors.Blue
+                )
             }
             
             Text(
@@ -605,7 +611,11 @@ private fun NumberPicker(
             IconButton(
                 onClick = { if (value < range.last) onValueChange(value + 1) }
             ) {
-                Icon(Icons.Filled.Add, "Artır")
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowUp,
+                    contentDescription = "Artır",
+                    tint = IOSColors.Blue
+                )
             }
         }
     }

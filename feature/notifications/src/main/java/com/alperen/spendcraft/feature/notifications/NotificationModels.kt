@@ -31,7 +31,7 @@ data class NotificationTemplate(
                 category = "Sabah",
                 title = "Günaydın! ☀️",
                 body = "Yeni güne harcama hedeflerinizle başlayın",
-                icon = "sun.max.fill",
+                icon = "ic_sun_max_fill",
                 hour = 8,
                 minute = 0
             ),
@@ -39,7 +39,7 @@ data class NotificationTemplate(
                 category = "Sabah",
                 title = "Kahvaltı Hatırlatması ☕",
                 body = "Kahvaltı harcamanızı kaydetmeyi unutmayın",
-                icon = "cup.and.saucer.fill",
+                icon = "ic_cup_and_saucer_fill",
                 hour = 9,
                 minute = 0
             ),
@@ -49,7 +49,7 @@ data class NotificationTemplate(
                 category = "Öğlen",
                 title = "Öğle Yemeği 🍽️",
                 body = "Bugünkü öğle yemeği bütçenizi kontrol edin",
-                icon = "fork.knife",
+                icon = "ic_fork_knife",
                 hour = 12,
                 minute = 30
             ),
@@ -57,7 +57,7 @@ data class NotificationTemplate(
                 category = "Öğlen",
                 title = "Harcama Kontrolü 💰",
                 body = "Bugün ne kadar harcadınız? Kontrol edin",
-                icon = "chart.bar.fill",
+                icon = "ic_chart_bar_fill",
                 hour = 14,
                 minute = 0
             ),
@@ -67,7 +67,7 @@ data class NotificationTemplate(
                 category = "Akşam",
                 title = "Akşam Özeti 🌙",
                 body = "Günlük harcamalarınızı gözden geçirin",
-                icon = "moon.stars.fill",
+                icon = "ic_moon_stars_fill",
                 hour = 20,
                 minute = 0
             ),
@@ -75,7 +75,7 @@ data class NotificationTemplate(
                 category = "Akşam",
                 title = "Yarının Planı 📝",
                 body = "Yarın için bütçenizi planlayın",
-                icon = "calendar.badge.clock",
+                icon = "ic_calendar_badge_clock",
                 hour = 21,
                 minute = 30
             ),
@@ -85,7 +85,7 @@ data class NotificationTemplate(
                 category = "Haftalık",
                 title = "Hafta Sonu Özeti 📊",
                 body = "Bu hafta toplam harcamanız: Raporlara göz atın",
-                icon = "calendar",
+                icon = "ic_calendar",
                 hour = 18,
                 minute = 0,
                 daysOfWeek = listOf(7) // Cumartesi
@@ -94,7 +94,7 @@ data class NotificationTemplate(
                 category = "Haftalık",
                 title = "Haftalık Hedefler 🎯",
                 body = "Yeni haftanın bütçe hedeflerini belirleyin",
-                icon = "target",
+                icon = "ic_target",
                 hour = 10,
                 minute = 0,
                 daysOfWeek = listOf(2) // Pazartesi
@@ -105,7 +105,7 @@ data class NotificationTemplate(
                 category = "Aylık",
                 title = "Ay Başı Bütçe 💵",
                 body = "Yeni ay bütçenizi planlayın",
-                icon = "calendar.badge.clock",
+                icon = "ic_calendar_badge_clock",
                 hour = 9,
                 minute = 0,
                 daysOfMonth = listOf(1)
@@ -114,7 +114,7 @@ data class NotificationTemplate(
                 category = "Aylık",
                 title = "Ay Ortası Kontrolü 📈",
                 body = "Aylık bütçenizin yarısına ulaştınız",
-                icon = "chart.line.uptrend.xyaxis",
+                icon = "ic_chart_line_uptrend",
                 hour = 20,
                 minute = 0,
                 daysOfMonth = listOf(15)
@@ -123,7 +123,7 @@ data class NotificationTemplate(
                 category = "Aylık",
                 title = "Ay Sonu Raporu 📑",
                 body = "Aylık harcama raporunuzu inceleyin",
-                icon = "doc.text.fill",
+                icon = "ic_doc_text_fill",
                 hour = 19,
                 minute = 0,
                 daysOfMonth = listOf(28, 29, 30, 31)
@@ -134,7 +134,7 @@ data class NotificationTemplate(
                 category = "Motivasyon",
                 title = "Harika Gidiyorsun! 🌟",
                 body = "Bütçe hedeflerinize sadık kalıyorsunuz",
-                icon = "star.fill",
+                icon = "ic_star_fill",
                 hour = 12,
                 minute = 0
             ),
@@ -142,7 +142,7 @@ data class NotificationTemplate(
                 category = "Motivasyon",
                 title = "Tasarruf Zamanı 🐷",
                 body = "Her küçük tasarruf büyük hedeflere götürür",
-                icon = "dollarsign.circle.fill",
+                icon = "ic_dollarsign_circle_fill",
                 hour = 15,
                 minute = 0
             ),
@@ -150,7 +150,7 @@ data class NotificationTemplate(
                 category = "Motivasyon",
                 title = "Düzenli Kayıt 📱",
                 body = "Harcamalarınızı düzenli kaydetmeye devam edin",
-                icon = "checkmark.seal.fill",
+                icon = "ic_checkmark_seal_fill",
                 hour = 17,
                 minute = 0
             ),
@@ -160,7 +160,7 @@ data class NotificationTemplate(
                 category = "Özel",
                 title = "Hafta Sonu Uyarısı 🎉",
                 body = "Hafta sonu harcamalarına dikkat edin",
-                icon = "gift.fill",
+                icon = "ic_gift_fill",
                 hour = 10,
                 minute = 0,
                 daysOfWeek = listOf(6, 7) // Cuma-Cumartesi
@@ -169,7 +169,7 @@ data class NotificationTemplate(
                 category = "Özel",
                 title = "Maaş Günü 💰",
                 body = "Maaşınızı akıllıca planlamayı unutmayın",
-                icon = "banknote.fill",
+                icon = "ic_banknote",
                 hour = 9,
                 minute = 0,
                 daysOfMonth = listOf(1, 15)

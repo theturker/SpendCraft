@@ -1,0 +1,28 @@
+<!-- SF Symbol: moon.stars.fill - iOS Akşam kategori icon'u -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- Moon crescent -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M21,12.79A9,9 0,1,1 11.21,3a7,7 0,1,0 9.79,9.79z"/>
+    
+    <!-- Star 1 (top right) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M18,2 L18.5,3.5 L20,4 L18.5,4.5 L18,6 L17.5,4.5 L16,4 L17.5,3.5 Z"/>
+    
+    <!-- Star 2 (right) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M22,8 L22.35,9 L23.35,9.35 L22.35,9.7 L22,10.7 L21.65,9.7 L20.65,9.35 L21.65,9 Z"/>
+    
+    <!-- Star 3 (bottom right) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M20,15 L20.3,15.8 L21.1,16.1 L20.3,16.4 L20,17.2 L19.7,16.4 L18.9,16.1 L19.7,15.8 Z"/>
+</vector>
+

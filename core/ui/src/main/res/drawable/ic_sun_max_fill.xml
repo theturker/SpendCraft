@@ -1,0 +1,63 @@
+<!-- SF Symbol: sun.max.fill - iOS Sabah kategori icon'u -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- Rays -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M12,2 L12,5" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M12,19 L12,22" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M5,12 L2,12" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M22,12 L19,12" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M5.64,5.64 L7.76,7.76" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M16.24,16.24 L18.36,18.36" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M5.64,18.36 L7.76,16.24" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M16.24,7.76 L18.36,5.64" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"/>
+    
+    <!-- Center circle (filled) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M12,12m-5,0a5,5 0,1,1 10,0a5,5 0,1,1 -10,0"/>
+</vector>
+
