@@ -254,7 +254,9 @@ fun AchievementsScreen(
                 id = entity.id.toString(),
                 title = entity.name,
                 description = entity.description,
-                icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_vector),
+                // iOS: Image(systemName: achievement.icon ?? "star.fill")
+                // Android: Dynamic icon mapping (DashboardScreen.kt gibi)
+                icon = painterResource(getAchievementIconResource(entity.icon)),
                 category = when (entity.category) {
                     com.alperen.spendcraft.data.db.entities.AchievementCategory.SPENDING -> AchievementCategory.TRACKING
                     com.alperen.spendcraft.data.db.entities.AchievementCategory.BUDGET -> AchievementCategory.BUDGETING
@@ -804,6 +806,41 @@ private fun AchievementDetailSheet(
                 }
             }
         }
+    }
+}
+
+/**
+ * Achievement icon mapping - iOS SF Symbol isimlerini Android drawable'lara çevirir
+ * iOS AchievementsViewModel.swift:38-45 - seedAchievements()
+ */
+private fun getAchievementIconResource(icon: String): Int {
+    return when (icon) {
+        // iOS SF Symbol Isimleri (Database'de saklanıyor)
+        "ic_checkmark_circle_fill", "checkmark.circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
+        "ic_flame_fill", "flame.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
+        "ic_star_fill", "star.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
+        "ic_crown_fill", "crown.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_crown_fill
+        "ic_folder_badge_plus", "folder.badge.plus" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_badge_plus
+        "ic_chart_bar_fill", "chart.bar.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
+        "ic_shield_fill", "shield.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_shield_fill
+        "ic_banknote", "banknote.fill", "banknote" -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
+        "ic_trophy_fill", "trophy.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill
+        "ic_piggybank_fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_piggybank_fill
+        "ic_binoculars_fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_binoculars_fill
+        
+        // Legacy Emoji İconlar
+        "🎯" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
+        "📊" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
+        "📈" -> com.alperen.spendcraft.core.ui.R.drawable.ic_binoculars_fill
+        "⚔️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
+        "🏆" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill
+        "🏷️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_badge_plus
+        "💰" -> com.alperen.spendcraft.core.ui.R.drawable.ic_piggybank_fill
+        "👑" -> com.alperen.spendcraft.core.ui.R.drawable.ic_crown_fill
+        "🛡️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_shield_fill
+        "💵", "💸" -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
+        
+        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
     }
 }
 
