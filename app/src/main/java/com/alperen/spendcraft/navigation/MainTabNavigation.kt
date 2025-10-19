@@ -354,12 +354,13 @@ fun MainTabNavigation(
         } // NavHost end
         } // Box end
         
-        // iOS: AdaptiveBannerAdView() - Bottom bar'ın ÜSTÜNDE sabit
-        // Reklam banner - scroll edilmez, her zaman görünür
+        // iOS: AdaptiveBannerAdView() + TabView bitişik
+        // Reklam ve bottom bar bitişik olmalı, aralarında boşluk yok
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
+            verticalArrangement = Arrangement.spacedBy(0.dp)  // ✅ Boşluk YOK
         ) {
             // Shadow effect - iOS: .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
             Divider(
@@ -371,33 +372,34 @@ fun MainTabNavigation(
                 modifier = Modifier.fillMaxWidth(),
                 isPremium = isPremium
             )
-        }
-        
-        // Liquid Glass Bottom Bar - Premium blur effect
-        LiquidGlassBottomBar(
-            items = paratikBottomNavItems,
-            selectedIndex = selectedTabIndex,
-            onItemSelected = { index ->
-                val route = when (index) {
-                    0 -> TabScreen.Dashboard.route
-                    1 -> TabScreen.Transactions.route
-                    2 -> TabScreen.Reports.route
-                    3 -> TabScreen.Categories.route
-                    4 -> TabScreen.Settings.route
-                    else -> TabScreen.Dashboard.route
-                }
-                navController.navigate(route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
+            
+            // Liquid Glass Bottom Bar - Premium blur effect
+            // ✅ floating = false, handleSafeInsets = false (üst Column zaten handle ediyor)
+            LiquidGlassBottomBar(
+                items = paratikBottomNavItems,
+                selectedIndex = selectedTabIndex,
+                onItemSelected = { index ->
+                    val route = when (index) {
+                        0 -> TabScreen.Dashboard.route
+                        1 -> TabScreen.Transactions.route
+                        2 -> TabScreen.Reports.route
+                        3 -> TabScreen.Categories.route
+                        4 -> TabScreen.Settings.route
+                        else -> TabScreen.Dashboard.route
                     }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            },
-            floating = true,
-            handleSafeInsets = true,
-            visible = isBottomBarVisible
-        )
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                floating = false,  // ✅ Bitişik olması için floating kapalı (0.dp offset)
+                handleSafeInsets = false,  // ✅ Üst Column zaten systemBarsPadding() ile handle ediyor
+                visible = isBottomBarVisible
+            )
+        }
     } // Column end
 }
 
