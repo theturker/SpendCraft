@@ -1135,12 +1135,12 @@ private fun TransactionRow(
                 .background(categoryColor.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
+            // ✅ Kategori ikonunu SF Symbol'den Material Icon'a çeviriyoruz
             Icon(
-                imageVector = if (transaction.type == TransactionType.INCOME) {
-                    Icons.Default.Add
-                } else {
-                    Icons.Default.ShoppingCart
-                },
+                imageVector = com.alperen.spendcraft.core.ui.IconMapper.getIconFromSFSymbol(
+                    category?.icon,
+                    transaction.type == TransactionType.INCOME
+                ),
                 contentDescription = null,
                 tint = categoryColor,
                 modifier = Modifier.size(24.dp)
