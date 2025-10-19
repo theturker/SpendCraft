@@ -648,8 +648,10 @@ private fun CategorySpendingRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // iOS: Image(systemName: category.icon ?? "circle.fill")
+                // Android: Use getCategoryIconResource for proper icon mapping
                 Icon(
-                    painter = painterResource(id = CoreR.drawable.ic_category_vector),
+                    painter = painterResource(id = getCategoryIconResource(category.icon ?: "circle.fill")),
                     contentDescription = null,
                     tint = categoryColor,
                     modifier = Modifier.size(20.dp)
@@ -689,6 +691,63 @@ private fun CategorySpendingRow(
     }
 }
 
+/**
+ * Category icon mapping - iOS SF Symbol isimlerini Android drawable'lara çevirir
+ * iOS ReportsView.swift:245 - Image(systemName: category.icon ?? "circle.fill")
+ */
+private fun getCategoryIconResource(icon: String): Int {
+    return when (icon) {
+        // Emoji iconlar
+        "🍔", "🍽️" -> CoreR.drawable.ic_fork_knife
+        "🚌", "🚋" -> CoreR.drawable.ic_tram_fill
+        "🎬" -> CoreR.drawable.ic_film_fill
+        "💼" -> CoreR.drawable.ic_briefcase_fill
+        "🛒" -> CoreR.drawable.ic_cart_fill
+        "🏠" -> CoreR.drawable.ic_house_fill
+        "🚗" -> CoreR.drawable.ic_car_fill
+        "✈️" -> CoreR.drawable.ic_airplane
+        "⚡" -> CoreR.drawable.ic_bolt_fill
+        "👜" -> CoreR.drawable.ic_bag_fill
+        "🎁" -> CoreR.drawable.ic_gift_fill
+        "📚" -> CoreR.drawable.ic_book_fill
+        "🎮" -> CoreR.drawable.ic_gamecontroller_fill
+        "❤️" -> CoreR.drawable.ic_heart_fill
+        "💳" -> CoreR.drawable.ic_creditcard_fill
+        "💊" -> CoreR.drawable.ic_pills_fill
+        "🎓" -> CoreR.drawable.ic_graduationcap_fill
+        "📱" -> CoreR.drawable.ic_phone_fill
+        
+        // Android drawable isimleri (DbModule'de kullanılan format)
+        "ic_fork_knife", "fork.knife" -> CoreR.drawable.ic_fork_knife
+        "ic_car_fill", "car.fill" -> CoreR.drawable.ic_car_fill
+        "ic_doc_text_fill", "doc.text.fill" -> CoreR.drawable.ic_doc_text_fill
+        "ic_gamecontroller_fill", "gamecontroller.fill" -> CoreR.drawable.ic_gamecontroller_fill
+        "ic_cart_fill", "cart.fill" -> CoreR.drawable.ic_cart_fill
+        "ic_heart_fill", "heart.fill" -> CoreR.drawable.ic_heart_fill
+        "ic_book_closed_fill", "book.closed.fill" -> CoreR.drawable.ic_book_closed_fill
+        "ic_book_fill", "book.fill" -> CoreR.drawable.ic_book_fill
+        "ic_creditcard_fill", "creditcard.fill" -> CoreR.drawable.ic_creditcard_fill
+        "ic_ellipsis_circle_fill", "ellipsis.circle.fill" -> CoreR.drawable.ic_ellipsis_circle_fill
+        "ic_banknote", "banknote", "banknote.fill" -> CoreR.drawable.ic_banknote
+        "ic_house_fill", "house.fill" -> CoreR.drawable.ic_house_fill
+        "ic_star_fill", "star.fill" -> CoreR.drawable.ic_star_fill
+        "ic_chart_line_uptrend", "chart.line.uptrend.xyaxis" -> CoreR.drawable.ic_chart_line_uptrend
+        "ic_gift_fill", "gift.fill" -> CoreR.drawable.ic_gift_fill
+        "ic_briefcase_fill", "briefcase.fill" -> CoreR.drawable.ic_briefcase_fill
+        "ic_building_2_fill", "building.2.fill" -> CoreR.drawable.ic_building_2_fill
+        "ic_tram_fill", "tram.fill" -> CoreR.drawable.ic_tram_fill
+        "ic_airplane", "airplane" -> CoreR.drawable.ic_airplane
+        "ic_bolt_fill", "bolt.fill" -> CoreR.drawable.ic_bolt_fill
+        "ic_bag_fill", "bag.fill" -> CoreR.drawable.ic_bag_fill
+        "ic_film_fill", "film.fill" -> CoreR.drawable.ic_film_fill
+        "ic_pills_fill", "pills.fill" -> CoreR.drawable.ic_pills_fill
+        "ic_graduationcap_fill", "graduationcap.fill" -> CoreR.drawable.ic_graduationcap_fill
+        "ic_phone_fill", "phone.fill" -> CoreR.drawable.ic_phone_fill
+        "ic_circle_fill", "circle.fill" -> CoreR.drawable.ic_circle_fill
+        
+        else -> CoreR.drawable.ic_circle_fill // Default
+    }
+}
 
 @Preview(name = "Reports - Light")
 @Composable
