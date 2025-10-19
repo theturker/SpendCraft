@@ -121,26 +121,26 @@ object DbModule {
                         // ✅ iOS CoreDataStack.swift:147-167 ile birebir aynı
                         database.categoryDao().insertAll(
                             listOf(
-                                // Gider Kategorileri (iOS: Expense)
-                                CategoryEntity(name = "Gıda", color = "#FF6347", icon = "fork.knife", isIncome = false),
-                                CategoryEntity(name = "Ulaşım", color = "#4682B4", icon = "car.fill", isIncome = false),
-                                CategoryEntity(name = "Fatura", color = "#DAA520", icon = "doc.text.fill", isIncome = false),
-                                CategoryEntity(name = "Eğlence", color = "#9370DB", icon = "gamecontroller.fill", isIncome = false),
-                                CategoryEntity(name = "Alışveriş", color = "#3CB371", icon = "cart.fill", isIncome = false),
-                                CategoryEntity(name = "Sağlık", color = "#FF69B4", icon = "heart.fill", isIncome = false),
-                                CategoryEntity(name = "Eğitim", color = "#8B4513", icon = "book.closed.fill", isIncome = false),
-                                CategoryEntity(name = "Kredi", color = "#DC143C", icon = "creditcard.fill", isIncome = false),
-                                CategoryEntity(name = "Diğer Gider", color = "#808080", icon = "ellipsis.circle.fill", isIncome = false),
+                                // Gider Kategorileri (iOS: Expense) - SF Symbol drawable references
+                                CategoryEntity(name = "Gıda", color = "#FF6347", icon = "ic_fork_knife", isIncome = false),
+                                CategoryEntity(name = "Ulaşım", color = "#4682B4", icon = "ic_car_fill", isIncome = false),
+                                CategoryEntity(name = "Fatura", color = "#DAA520", icon = "ic_doc_text_fill", isIncome = false),
+                                CategoryEntity(name = "Eğlence", color = "#9370DB", icon = "ic_gamecontroller_fill", isIncome = false),
+                                CategoryEntity(name = "Alışveriş", color = "#3CB371", icon = "ic_cart_fill", isIncome = false),
+                                CategoryEntity(name = "Sağlık", color = "#FF69B4", icon = "ic_heart_fill", isIncome = false),
+                                CategoryEntity(name = "Eğitim", color = "#8B4513", icon = "ic_book_closed_fill", isIncome = false),
+                                CategoryEntity(name = "Kredi", color = "#DC143C", icon = "ic_creditcard_fill", isIncome = false),
+                                CategoryEntity(name = "Diğer Gider", color = "#808080", icon = "ic_ellipsis_circle_fill", isIncome = false),
                                 
-                                // Gelir Kategorileri (iOS: Income)
-                                CategoryEntity(name = "Maaş", color = "#008000", icon = "banknote.fill", isIncome = true),
-                                CategoryEntity(name = "Kira", color = "#32CD32", icon = "house.fill", isIncome = true),
-                                CategoryEntity(name = "Prim", color = "#FFD700", icon = "star.fill", isIncome = true),
-                                CategoryEntity(name = "Yatırım", color = "#4169E1", icon = "chart.line.uptrend.xyaxis", isIncome = true),
-                                CategoryEntity(name = "İkramiye", color = "#FFA500", icon = "gift.fill", isIncome = true),
-                                CategoryEntity(name = "Serbest Çalışma", color = "#9370DB", icon = "briefcase.fill", isIncome = true),
-                                CategoryEntity(name = "Kira Geliri", color = "#20B2AA", icon = "building.2.fill", isIncome = true),
-                                CategoryEntity(name = "Diğer Gelir", color = "#808080", icon = "ellipsis.circle.fill", isIncome = true)
+                                // Gelir Kategorileri (iOS: Income) - SF Symbol drawable references
+                                CategoryEntity(name = "Maaş", color = "#008000", icon = "ic_banknote", isIncome = true),
+                                CategoryEntity(name = "Kira", color = "#32CD32", icon = "ic_house_fill", isIncome = true),
+                                CategoryEntity(name = "Prim", color = "#FFD700", icon = "ic_star_fill", isIncome = true),
+                                CategoryEntity(name = "Yatırım", color = "#4169E1", icon = "ic_chart_line_uptrend", isIncome = true),
+                                CategoryEntity(name = "İkramiye", color = "#FFA500", icon = "ic_gift_fill", isIncome = true),
+                                CategoryEntity(name = "Serbest Çalışma", color = "#9370DB", icon = "ic_briefcase_fill", isIncome = true),
+                                CategoryEntity(name = "Kira Geliri", color = "#20B2AA", icon = "ic_building_2_fill", isIncome = true),
+                                CategoryEntity(name = "Diğer Gelir", color = "#808080", icon = "ic_ellipsis_circle_fill", isIncome = true)
                             )
                         )
                         database.close()

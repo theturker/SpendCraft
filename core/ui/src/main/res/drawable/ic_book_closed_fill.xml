@@ -1,0 +1,24 @@
+<!-- SF Symbol: book.closed.fill - iOS Eğitim category icon -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- Book cover -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M18,2H6C4.9,2 4,2.9 4,4v16c0,1.1 0.9,2 2,2h12c1.1,0 2,-0.9 2,-2V4C20,2.9 19.1,2 18,2z"/>
+    
+    <!-- Book spine (left side, darker) -->
+    <path
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.3"
+        android:pathData="M6,2h2v20H6c-1.1,0 -2,-0.9 -2,-2V4C4,2.9 4.9,2 6,2z"/>
+    
+    <!-- Bookmark -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M14,2h2v8l-1,-1l-1,1V2z"/>
+</vector>
+

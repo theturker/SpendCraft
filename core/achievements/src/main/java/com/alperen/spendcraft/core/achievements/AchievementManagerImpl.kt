@@ -58,14 +58,14 @@ class AchievementManagerImpl @Inject constructor(
             AchievementEntity(
                 id = 3,
                 name = "Süper İzleyici",
-                description = "50 işlem kaydedin",
-                icon = "📈",
-                points = 50,
+                description = "100 işlem kaydedin",
+                icon = "ic_binoculars_fill",
+                points = 150,
                 category = AchievementCategory.SPENDING,
                 isUnlocked = false,
                 unlockedAt = null,
                 progress = 0,
-                maxProgress = 50
+                maxProgress = 100
             ),
             AchievementEntity(
                 id = 4,
@@ -119,7 +119,7 @@ class AchievementManagerImpl @Inject constructor(
                 id = 8,
                 name = "Tasarruf Ustası",
                 description = "Bir ay boyunca bütçenizi aşmayın",
-                icon = "💰",
+                icon = "ic_piggybank_fill",
                 points = 100,
                 category = AchievementCategory.SAVING,
                 isUnlocked = false,
@@ -170,9 +170,9 @@ class AchievementManagerImpl @Inject constructor(
             updateAchievementProgress("İşlem Ustası", 10, 10)
         }
         
-        // 50 işlem
-        if (transactionCount >= 50) {
-            updateAchievementProgress("Süper İzleyici", 50, 50)
+        // 100 işlem - Süper İzleyici
+        if (transactionCount >= 100) {
+            updateAchievementProgress("Süper İzleyici", 100, 100)
         }
     }
     

@@ -702,42 +702,84 @@ private fun Color.toHexString(): String {
 }
 
 /**
- * Category icon mapping - Android category verilerindeki emoji iconları ve iOS SF Symbol isimlerini Android drawable'lara çevirir
+ * Category icon mapping - iOS SF Symbol isimlerini ve emoji'leri Android drawable'lara çevirir
+ * iOS CoreDataStack.swift:147-167 ile %100 uyumlu
  */
 private fun getCategoryIconResource(icon: String): Int {
     return when (icon) {
-        // Emoji iconlar (veritabanında saklanıyor)
-        "🍔" -> CoreR.drawable.ic_fork_knife // Yemek
-        "🚌" -> CoreR.drawable.ic_tram_fill // Ulaşım
-        "🎬" -> CoreR.drawable.ic_film_fill // Eğlence
-        "💼" -> CoreR.drawable.ic_briefcase_fill // Maaş / İş
-        "🛒" -> CoreR.drawable.ic_cart_fill // Alışveriş
-        "🏠" -> CoreR.drawable.ic_house_fill // Ev
-        "🚗" -> CoreR.drawable.ic_car_fill // Araba
-        "✈️" -> CoreR.drawable.ic_airplane // Uçak / Seyahat
-        "⚡" -> CoreR.drawable.ic_bolt_fill // Elektrik / Faturalar
-        "👜" -> CoreR.drawable.ic_bag_fill // Çanta / Moda
-        "🎁" -> CoreR.drawable.ic_gift_fill // Hediye
-        "📚" -> CoreR.drawable.ic_book_fill // Kitap / Eğitim
-        "🎮" -> CoreR.drawable.ic_gamecontroller_fill // Oyun
-        "❤️" -> CoreR.drawable.ic_heart_fill // Sağlık / Sevgi
-        "💳" -> CoreR.drawable.ic_creditcard_fill // Kredi Kartı
-        "💊" -> CoreR.drawable.ic_pills_fill // İlaç / Sağlık
-        "🎓" -> CoreR.drawable.ic_graduationcap_fill // Eğitim
-        "📱" -> CoreR.drawable.ic_phone_fill // Telefon / İletişim
+        // ===============================================
+        // iOS SF Symbol İsimleri (Database'de saklanıyor)
+        // ===============================================
         
-        // iOS SF Symbol isimleri (fallback)
-        "cart.fill" -> CoreR.drawable.ic_cart_fill
-        "fork.knife" -> CoreR.drawable.ic_fork_knife
-        "house.fill" -> CoreR.drawable.ic_house_fill
-        "car.fill" -> CoreR.drawable.ic_car_fill
-        "tram.fill" -> CoreR.drawable.ic_tram_fill
-        "airplane" -> CoreR.drawable.ic_airplane
-        "bolt.fill" -> CoreR.drawable.ic_bolt_fill
-        "bag.fill" -> CoreR.drawable.ic_bag_fill
-        "gift.fill" -> CoreR.drawable.ic_gift_fill
-        "book.fill" -> CoreR.drawable.ic_book_fill
-        "gamecontroller.fill" -> CoreR.drawable.ic_gamecontroller_fill
+        // Gıda & Yemek
+        "ic_fork_knife", "fork.knife" -> CoreR.drawable.ic_fork_knife
+        "ic_cup_and_saucer_fill" -> CoreR.drawable.ic_cup_and_saucer_fill
+        
+        // Ulaşım
+        "ic_car_fill", "car.fill" -> CoreR.drawable.ic_car_fill
+        "ic_tram_fill", "tram.fill" -> CoreR.drawable.ic_tram_fill
+        "ic_airplane", "airplane" -> CoreR.drawable.ic_airplane
+        
+        // Ev & Emlak
+        "ic_house_fill", "house.fill" -> CoreR.drawable.ic_house_fill
+        "ic_building_2_fill", "building.2.fill" -> CoreR.drawable.ic_building_2_fill
+        
+        // Fatura & Dokümanlar
+        "ic_doc_text_fill", "doc.text.fill" -> CoreR.drawable.ic_doc_text_fill
+        "ic_bolt_fill", "bolt.fill" -> CoreR.drawable.ic_bolt_fill
+        
+        // Eğlence
+        "ic_gamecontroller_fill", "gamecontroller.fill" -> CoreR.drawable.ic_gamecontroller_fill
+        "ic_film_fill", "film.fill" -> CoreR.drawable.ic_film_fill
+        
+        // Alışveriş
+        "ic_cart_fill", "cart.fill" -> CoreR.drawable.ic_cart_fill
+        "ic_bag_fill", "bag.fill" -> CoreR.drawable.ic_bag_fill
+        
+        // Sağlık
+        "ic_heart_fill", "heart.fill" -> CoreR.drawable.ic_heart_fill
+        "ic_pills_fill", "pills.fill" -> CoreR.drawable.ic_pills_fill
+        
+        // Eğitim
+        "ic_book_closed_fill", "book.closed.fill" -> CoreR.drawable.ic_book_closed_fill
+        "ic_book_fill", "book.fill" -> CoreR.drawable.ic_book_fill
+        "ic_graduationcap_fill", "graduationcap.fill" -> CoreR.drawable.ic_graduationcap_fill
+        
+        // Finans - Kredi
+        "ic_creditcard_fill", "creditcard.fill" -> CoreR.drawable.ic_creditcard_fill
+        
+        // Finans - Gelir
+        "ic_banknote", "banknote.fill", "banknote" -> CoreR.drawable.ic_banknote
+        "ic_star_fill", "star.fill" -> CoreR.drawable.ic_star_fill
+        "ic_chart_line_uptrend", "chart.line.uptrend.xyaxis" -> CoreR.drawable.ic_chart_line_uptrend
+        "ic_gift_fill", "gift.fill" -> CoreR.drawable.ic_gift_fill
+        "ic_briefcase_fill", "briefcase.fill" -> CoreR.drawable.ic_briefcase_fill
+        
+        // Diğer
+        "ic_ellipsis_circle_fill", "ellipsis.circle.fill" -> CoreR.drawable.ic_ellipsis_circle_fill
+        "ic_phone_fill", "phone.fill" -> CoreR.drawable.ic_phone_fill
+        
+        // ===============================================
+        // Legacy Emoji İconlar (Backward compatibility)
+        // ===============================================
+        "🍔", "🍽️" -> CoreR.drawable.ic_fork_knife
+        "🚌", "🚋" -> CoreR.drawable.ic_tram_fill
+        "🎬" -> CoreR.drawable.ic_film_fill
+        "💼" -> CoreR.drawable.ic_briefcase_fill
+        "🛒" -> CoreR.drawable.ic_cart_fill
+        "🏠" -> CoreR.drawable.ic_house_fill
+        "🚗" -> CoreR.drawable.ic_car_fill
+        "✈️" -> CoreR.drawable.ic_airplane
+        "⚡" -> CoreR.drawable.ic_bolt_fill
+        "👜" -> CoreR.drawable.ic_bag_fill
+        "🎁" -> CoreR.drawable.ic_gift_fill
+        "📚" -> CoreR.drawable.ic_book_fill
+        "🎮" -> CoreR.drawable.ic_gamecontroller_fill
+        "❤️" -> CoreR.drawable.ic_heart_fill
+        "💳" -> CoreR.drawable.ic_creditcard_fill
+        "💊" -> CoreR.drawable.ic_pills_fill
+        "🎓" -> CoreR.drawable.ic_graduationcap_fill
+        "📱" -> CoreR.drawable.ic_phone_fill
         "film.fill" -> CoreR.drawable.ic_film_fill
         "heart.fill" -> CoreR.drawable.ic_heart_fill
         "creditcard.fill" -> CoreR.drawable.ic_creditcard_fill

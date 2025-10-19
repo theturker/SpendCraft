@@ -1015,27 +1015,32 @@ private fun DashboardAchievementDetailSheet(
  */
 private fun getAchievementIconResource(icon: String): Int {
     return when (icon) {
-        // Achievement verilerindeki emoji iconlar
-        "🎯" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill // İlk Adım
-        "📊" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill // İşlem Ustası, Süper İzleyici, Bütçe Planlayıcısı
-        "📈" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trending_up_vector // Süper İzleyici
-        "⚔️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill // Hafta Savaşçısı
-        "🏆" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill // Aylık Şampiyon
-        "🏷️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill // Kategori Uzmanı
-        "💰" -> com.alperen.spendcraft.core.ui.R.drawable.ic_monetization_on_vector // Tasarruf Ustası
+        // iOS SF Symbol Drawable Referansları (Database'de saklanıyor)
+        "ic_checkmark_circle_fill", "checkmark.circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
+        "ic_flame_fill", "flame.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
+        "ic_star_fill", "star.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
+        "ic_crown_fill", "crown.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_crown_fill
+        "ic_folder_badge_plus", "folder.badge.plus" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_badge_plus
+        "ic_chart_bar_fill", "chart.bar.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
+        "ic_shield_fill", "shield.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_shield_fill
+        "ic_banknote", "banknote.fill", "banknote" -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
+        "ic_trophy_fill", "trophy.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill
+        "ic_piggybank_fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_piggybank_fill
+        "ic_binoculars_fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_binoculars_fill
         
-        // iOS SF Symbol isimleri (fallback)
-        "checkmark.circle.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
-        "flame.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
-        "star.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
-        "crown.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector
-        "folder.badge.plus" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill
-        "chart.bar.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
-        "shield.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_shield_vector
-        "banknote.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_monetization_on_vector
-        "trophy.fill" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill
+        // Legacy Emoji İconlar
+        "🎯" -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
+        "📊" -> com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
+        "📈" -> com.alperen.spendcraft.core.ui.R.drawable.ic_binoculars_fill
+        "⚔️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_flame_fill
+        "🏆" -> com.alperen.spendcraft.core.ui.R.drawable.ic_trophy_fill
+        "🏷️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_folder_badge_plus
+        "💰" -> com.alperen.spendcraft.core.ui.R.drawable.ic_piggybank_fill
+        "👑" -> com.alperen.spendcraft.core.ui.R.drawable.ic_crown_fill
+        "🛡️" -> com.alperen.spendcraft.core.ui.R.drawable.ic_shield_fill
+        "💵", "💸" -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
         
-        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill // Default
+        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
     }
 }
 

@@ -1,0 +1,31 @@
+<!-- SF Symbol: chart.pie.fill - iOS Pie chart icon -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- Pie chart circle -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10s10,-4.48 10,-10S17.52,2 12,2z"/>
+    
+    <!-- Pie slice 1 (top) - lighter -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M12,12 L12,2 A10,10 0,0,1 19.66,6.34 Z"/>
+    
+    <!-- Pie slice 2 (right) - medium -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillAlpha="0.2"
+        android:pathData="M12,12 L19.66,6.34 A10,10 0,0,1 19.66,17.66 Z"/>
+    
+    <!-- Lines separating slices -->
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M12,12 L12,2 M12,12 L19.66,6.34 M12,12 L19.66,17.66"/>
+</vector>
+
