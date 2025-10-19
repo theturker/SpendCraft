@@ -44,8 +44,13 @@ class BudgetViewModel @Inject constructor(
     private val _budgetBreaches = MutableStateFlow<List<String>>(emptyList())
     val budgetBreaches: StateFlow<List<String>> = _budgetBreaches.asStateFlow()
 
-    private val _spentAmounts = MutableStateFlow<Map<String, Long>>(emptyMap())
-    val spentAmounts: StateFlow<Map<String, Long>> = _spentAmounts.asStateFlow()
+    // iOS pattern: Reactive spent amounts - otomatik güncelleniyor!
+    val spentAmounts: StateFlow<Map<String, Long>> = getSpentAmountsUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyMap()
+        )
 
     init {
         // Check for budget breaches periodically
@@ -135,16 +140,6 @@ class BudgetViewModel @Inject constructor(
             checkBudgetBreaches()
         }
     }
-
-    fun calculateSpentAmounts() {
-        viewModelScope.launch {
-            try {
-                val spentAmounts = getSpentAmountsUseCase()
-                _spentAmounts.value = spentAmounts
-            } catch (e: Exception) {
-                // Handle error
-                _spentAmounts.value = emptyMap()
-            }
-        }
-    }
+    
+    // calculateSpentAmounts artık gerekli değil - spentAmounts otomatik güncelleniyor (iOS pattern)
 }

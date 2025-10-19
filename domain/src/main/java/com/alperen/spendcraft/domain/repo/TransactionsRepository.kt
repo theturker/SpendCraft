@@ -22,7 +22,11 @@ interface TransactionsRepository {
     // CSV Import/Export
     suspend fun getAllAscending(): List<Transaction>
     
-    // Budget calculations
+    // Budget calculations - Reactive (iOS pattern)
+    fun observeSpentAmountsByCategory(): Flow<Map<String, Long>>
+    
+    // Legacy - kullanılmayacak
+    @Deprecated("Use observeSpentAmountsByCategory() for reactive updates")
     suspend fun getSpentAmountsByCategory(): Map<String, Long>
 }
 

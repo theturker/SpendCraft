@@ -257,10 +257,8 @@ fun MainTabNavigation(
                 val budgets by budgetViewModel.budgets.collectAsState()
                 val spentAmountsRaw by budgetViewModel.spentAmounts.collectAsState()
                 
-                // iOS: Load spent amounts on appear
-                LaunchedEffect(Unit) {
-                    budgetViewModel.calculateSpentAmounts()
-                }
+                // iOS pattern: spentAmounts artık otomatik güncelleniyor (reactive Flow)
+                // calculateSpentAmounts çağrısına gerek yok!
                 
                 // Convert budget list to map: categoryId (Long) -> budget limit (Double)
                 val budgetMap: Map<Long, Double> = budgets.associate { budget ->

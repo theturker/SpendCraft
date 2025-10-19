@@ -35,15 +35,13 @@ fun BudgetManagementScreen(
     onUpdateBudget: (Budget) -> Unit = {},
     onDeleteBudget: (String) -> Unit = {},
     onBack: () -> Unit,
-    onNavigateToPaywall: () -> Unit = {},
-    onCalculateSpentAmounts: () -> Unit = {}
+    onNavigateToPaywall: () -> Unit = {}
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var selectedBudget by remember { mutableStateOf<Budget?>(null) }
     
-    LaunchedEffect(Unit) {
-        onCalculateSpentAmounts()
-    }
+    // iOS pattern: spentAmounts artık otomatik güncelleniyor (reactive Flow)
+    // onCalculateSpentAmounts çağrısına gerek yok!
 
     Scaffold(
         topBar = {

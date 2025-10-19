@@ -385,8 +385,8 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() },
                 onNavigateToPaywall = { 
                     // iOS'ta Paywall yok - boş bırakıldı
-                },
-                onCalculateSpentAmounts = { budgetViewModel.calculateSpentAmounts() }
+                }
+                // onCalculateSpentAmounts artık gerekli değil - otomatik güncelleniyor (iOS pattern)
             )
         }
         composable(Routes.ALL_TRANSACTIONS) {

@@ -76,6 +76,42 @@ class TransactionsRepositoryImpl(
         }
     }
     
+    // iOS pattern: Reactive spent amounts by category
+    override fun observeSpentAmountsByCategory(): Flow<Map<String, Long>> {
+        return txDao.observeAll()
+            .map { transactions ->
+                val categories = categoryDao.getAllAscending()
+                
+                // Get current month boundaries
+                val now = java.time.Instant.now().atZone(java.time.ZoneOffset.UTC)
+                val monthStart = now.with(java.time.temporal.TemporalAdjusters.firstDayOfMonth())
+                    .withHour(0).withMinute(0).withSecond(0).withNano(0)
+                val monthEnd = now.with(java.time.temporal.TemporalAdjusters.firstDayOfNextMonth())
+                    .withHour(0).withMinute(0).withSecond(0).withNano(0)
+                
+                val monthStartMillis = monthStart.toInstant().toEpochMilli()
+                val monthEndMillis = monthEnd.toInstant().toEpochMilli()
+                
+                // Filter transactions for current month (expenses only)
+                val monthTransactions = transactions.filter { tx ->
+                    tx.timestampUtcMillis >= monthStartMillis && 
+                    tx.timestampUtcMillis < monthEndMillis && 
+                    !tx.isIncome
+                }
+                
+                // Group by category ID and sum amounts
+                val spentAmounts = mutableMapOf<String, Long>()
+                
+                monthTransactions.forEach { tx ->
+                    val categoryId = tx.categoryId?.toString() ?: "0"
+                    spentAmounts[categoryId] = (spentAmounts[categoryId] ?: 0L) + tx.amountMinor
+                }
+                
+                spentAmounts
+            }
+    }
+    
+    @Deprecated("Use observeSpentAmountsByCategory() for reactive updates")
     override suspend fun getSpentAmountsByCategory(): Map<String, Long> {
         val transactions = txDao.getAllAscending()
         val categories = categoryDao.getAllAscending()
