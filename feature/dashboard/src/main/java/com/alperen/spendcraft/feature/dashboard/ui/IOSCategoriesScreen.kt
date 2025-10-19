@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -32,6 +33,7 @@ import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.CurrencyFormatter
 // import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
 import com.alperen.spendcraft.core.ui.R as CoreR
+
 
 /**
  * iOS CategoriesView'in birebir Android karşılığı
@@ -425,7 +427,7 @@ private fun CategoryRow(
 /**
  * iOS AddCategoryView - Grid layout for icons and colors
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun AddCategoryDialog(
     onDismiss: () -> Unit,
