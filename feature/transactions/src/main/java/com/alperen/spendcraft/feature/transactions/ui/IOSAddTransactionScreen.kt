@@ -231,18 +231,96 @@ fun IOSAddTransactionScreen(
                 }
             }
             
-            // 4. Account Section (Placeholder)
+            // 4. Account Picker - iOS: Picker("Hesap Seç", selection: $selectedAccount)
+            // AddTransactionView.swift:186-193
             item {
                 FormSection(title = "Hesap") {
-                    Box(
+                    var expanded by remember { mutableStateOf(false) }
+                    
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { expanded = !expanded },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .padding(horizontal = 16.dp, vertical = 4.dp)
                     ) {
-                        Text(
-                            text = "Varsayılan Hesap",
-                            style = MaterialTheme.typography.bodyMedium
+                        OutlinedTextField(
+                            value = selectedAccount?.name ?: "Hesap Seç",
+                            onValueChange = {},
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                            },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = IOSColors.Blue,
+                                unfocusedBorderColor = Color.Gray.copy(alpha = 0.3f)
+                            ),
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth()
                         )
+                        
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            accounts.forEach { account ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(
+                                                    when (account.type) {
+                                                        "CASH" -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
+                                                        "BANK" -> com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector
+                                                        "CREDIT_CARD" -> com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector
+                                                        "SAVINGS" -> com.alperen.spendcraft.core.ui.R.drawable.ic_savings
+                                                        else -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
+                                                    }
+                                                ),
+                                                contentDescription = null,
+                                                tint = IOSColors.Blue,
+                                                modifier = Modifier.size(20.dp)
+                                            )
+                                            Column {
+                                                Text(
+                                                    text = account.name,
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    fontWeight = FontWeight.Medium
+                                                )
+                                                Text(
+                                                    text = when (account.type) {
+                                                        "CASH" -> "Nakit"
+                                                        "BANK" -> "Banka"
+                                                        "CREDIT_CARD" -> "Kredi Kartı"
+                                                        "SAVINGS" -> "Tasarruf"
+                                                        else -> account.type
+                                                    },
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = Color.Gray
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.weight(1f))
+                                            if (account.isDefault) {
+                                                Icon(
+                                                    painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill),
+                                                    contentDescription = "Varsayılan",
+                                                    tint = Color(0xFFFFD700),
+                                                    modifier = Modifier.size(16.dp)
+                                                )
+                                            }
+                                        }
+                                    },
+                                    onClick = {
+                                        selectedAccount = account
+                                        expanded = false
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
