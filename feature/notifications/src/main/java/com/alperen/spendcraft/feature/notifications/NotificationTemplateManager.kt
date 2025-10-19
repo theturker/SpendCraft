@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.asStateFlow
 /**
  * iOS NotificationManager.swift'in Android karşılığı
  * Singleton pattern ile bildirim template'lerini yönetir
+ * 
+ * NOT: core.notifications.NotificationManager ile karışmaması için
+ * NotificationTemplateManager olarak yeniden adlandırıldı
  */
-class NotificationManager private constructor(context: Context) {
+class NotificationTemplateManager private constructor(context: Context) {
     
     private val prefs: SharedPreferences = context.getSharedPreferences(
         "notification_prefs",
@@ -32,11 +35,11 @@ class NotificationManager private constructor(context: Context) {
     
     companion object {
         @Volatile
-        private var instance: NotificationManager? = null
+        private var instance: NotificationTemplateManager? = null
         
-        fun getInstance(context: Context): NotificationManager {
+        fun getInstance(context: Context): NotificationTemplateManager {
             return instance ?: synchronized(this) {
-                instance ?: NotificationManager(context.applicationContext).also { 
+                instance ?: NotificationTemplateManager(context.applicationContext).also { 
                     instance = it 
                 }
             }

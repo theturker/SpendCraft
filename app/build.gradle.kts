@@ -17,7 +17,7 @@ android {
         applicationId = "com.alperen.spendcraft"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = 36
-        versionCode = 5
+        versionCode = 8
         versionName = "1.0.3"
 
         vectorDrawables { useSupportLibrary = true }
@@ -30,9 +30,17 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Native debug sembolleri ekle (Play Console crash tracking için)
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
         debug {
             isMinifyEnabled = false
+            // Debug build için de semboller ekle
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
     compileOptions {

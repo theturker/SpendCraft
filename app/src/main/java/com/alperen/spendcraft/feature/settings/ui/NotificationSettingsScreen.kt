@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.feature.notifications.CustomNotification
-import com.alperen.spendcraft.feature.notifications.NotificationManager
+import com.alperen.spendcraft.feature.notifications.NotificationTemplateManager
 import com.alperen.spendcraft.feature.notifications.NotificationTemplate
 import com.alperen.spendcraft.core.ui.R as CoreR
 
@@ -44,7 +44,7 @@ fun NotificationSettingsScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val notificationManager = remember { NotificationManager.getInstance(context) }
+    val notificationManager = remember { NotificationTemplateManager.getInstance(context) }
     
     val templates by notificationManager.templates.collectAsState()
     val customNotifications by notificationManager.customNotifications.collectAsState()

@@ -90,6 +90,20 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
     }
     
+    buildTypes {
+        release {
+            // Native debug sembolleri ekle (KMP için)
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
+        }
+        debug {
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
+        }
+    }
+    
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
