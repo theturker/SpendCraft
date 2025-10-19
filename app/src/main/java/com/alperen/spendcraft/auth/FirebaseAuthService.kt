@@ -83,6 +83,36 @@ class FirebaseAuthService @Inject constructor() {
         }
     }
     
+    /**
+     * Re-authenticate user with email and password
+     * Required before sensitive operations like password change
+     * iOS: user.reauthenticate(with: credential)
+     */
+    suspend fun reAuthenticateUser(email: String, currentPassword: String): Result<Unit> {
+        return try {
+            val user = currentUser ?: return Result.failure(Exception("No user signed in"))
+            val credential = com.google.firebase.auth.EmailAuthProvider.getCredential(email, currentPassword)
+            user.reauthenticate(credential).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * Send email verification to current user
+     * iOS: currentUser?.sendEmailVerification
+     */
+    suspend fun sendEmailVerification(): Result<Unit> {
+        return try {
+            val user = currentUser ?: return Result.failure(Exception("No user signed in"))
+            user.sendEmailVerification().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
     suspend fun deleteUser(): Result<Unit> {
         return try {
             val user = currentUser ?: return Result.failure(Exception("No user signed in"))

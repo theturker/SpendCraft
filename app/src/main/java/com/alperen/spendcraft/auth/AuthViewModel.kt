@@ -204,6 +204,113 @@ class AuthViewModel @Inject constructor(
         _errorMessage.value = null
     }
     
+    // MARK: - Account Info Operations (iOS AccountInfoView.swift)
+    
+    /**
+     * iOS: EditNameSheet - AccountInfoView.swift:221-234
+     * Update user display name in Firebase
+     */
+    suspend fun updateDisplayName(newName: String): Result<Unit> {
+        if (newName.isBlank()) {
+            return Result.failure(Exception("İsim boş olamaz"))
+        }
+        
+        return try {
+            val result = authService.updateUserProfile(newName)
+            result.fold(
+                onSuccess = {
+                    // Refresh auth state
+                    checkAuthState()
+                    analyticsService.logEvent("update_display_name_success")
+                    Result.success(Unit)
+                },
+                onFailure = { exception ->
+                    analyticsService.logEvent("update_display_name_failed")
+                    crashlyticsService.recordException(exception)
+                    Result.failure(exception)
+                }
+            )
+        } catch (e: Exception) {
+            crashlyticsService.recordException(e)
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * iOS: ChangePasswordSheet - AccountInfoView.swift:299-332
+     * Update user password with re-authentication
+     */
+    suspend fun updatePassword(currentPassword: String, newPassword: String): Result<Unit> {
+        if (currentPassword.isBlank() || newPassword.isBlank()) {
+            return Result.failure(Exception("Şifreler boş olamaz"))
+        }
+        
+        if (newPassword.length < 6) {
+            return Result.failure(Exception("Yeni şifre en az 6 karakter olmalıdır"))
+        }
+        
+        val user = authService.currentUser
+        val email = user?.email
+        
+        if (user == null || email == null) {
+            return Result.failure(Exception("Kullanıcı bilgileri alınamadı"))
+        }
+        
+        return try {
+            // Re-authenticate first - iOS: user.reauthenticate
+            val reAuthResult = authService.reAuthenticateUser(email, currentPassword)
+            reAuthResult.fold(
+                onSuccess = {
+                    // Update password
+                    val updateResult = authService.updatePassword(newPassword)
+                    updateResult.fold(
+                        onSuccess = {
+                            analyticsService.logEvent("update_password_success")
+                            Result.success(Unit)
+                        },
+                        onFailure = { exception ->
+                            analyticsService.logEvent("update_password_failed")
+                            crashlyticsService.recordException(exception)
+                            Result.failure(Exception("Şifre güncellenemedi: ${exception.message}"))
+                        }
+                    )
+                },
+                onFailure = { exception ->
+                    analyticsService.logEvent("reauth_failed")
+                    crashlyticsService.recordException(exception)
+                    Result.failure(Exception("Mevcut şifre hatalı"))
+                }
+            )
+        } catch (e: Exception) {
+            crashlyticsService.recordException(e)
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * iOS: sendVerificationEmail() - AccountInfoView.swift:157-168
+     * Send email verification to user
+     */
+    suspend fun sendEmailVerification(): Result<Unit> {
+        return try {
+            val result = authService.sendEmailVerification()
+            result.fold(
+                onSuccess = {
+                    analyticsService.logEvent("send_verification_email_success")
+                    Result.success(Unit)
+                },
+                onFailure = { exception ->
+                    analyticsService.logEvent("send_verification_email_failed")
+                    crashlyticsService.recordException(exception)
+                    Result.failure(Exception("Doğrulama e-postası gönderilemedi: ${exception.message}"))
+                }
+            )
+        } catch (e: Exception) {
+            crashlyticsService.recordException(e)
+            Result.failure(e)
+        }
+    }
+    
     private fun getErrorMessage(exception: Throwable): String {
         return when (exception.message) {
             "The email address is badly formatted." -> "Geçersiz e-posta adresi"

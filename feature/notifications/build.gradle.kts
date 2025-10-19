@@ -49,4 +49,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    
+    // JSON serialization for notification preferences
+    implementation("com.google.code.gson:gson:2.10.1")
 }
