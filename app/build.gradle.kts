@@ -17,7 +17,7 @@ android {
         applicationId = "com.alperen.spendcraft"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = 36
-        versionCode = 9
+        versionCode = 10
         versionName = "1.0.3"
 
         vectorDrawables { useSupportLibrary = true }
