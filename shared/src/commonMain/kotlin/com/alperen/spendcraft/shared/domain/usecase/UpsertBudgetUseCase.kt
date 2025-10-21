@@ -1,16 +1,16 @@
 package com.alperen.spendcraft.shared.domain.usecase
 
-import com.alperen.spendcraft.shared.domain.model.Transaction
-import com.alperen.spendcraft.shared.domain.repository.TransactionsRepository
+import com.alperen.spendcraft.shared.domain.model.Budget
+import com.alperen.spendcraft.shared.domain.repository.BudgetRepository
 import com.alperen.spendcraft.shared.domain.util.AchievementManager
 
-class UpsertTransactionUseCase(
-    private val repo: TransactionsRepository,
+class UpsertBudgetUseCase(
+    private val repository: BudgetRepository,
     private val achievementManager: AchievementManager? = null // Optional for platforms without achievements
 ) {
-    suspend operator fun invoke(tx: Transaction) {
-        // Transaction'ı kaydet
-        repo.upsert(tx)
+    suspend operator fun invoke(budget: Budget) {
+        // Bütçeyi kaydet
+        repository.upsertBudget(budget)
         
         // Achievement'ları kontrol et (optional, platform-specific)
         try {
@@ -20,3 +20,5 @@ class UpsertTransactionUseCase(
         }
     }
 }
+
+

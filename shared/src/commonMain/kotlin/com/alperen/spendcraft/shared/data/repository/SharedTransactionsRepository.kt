@@ -39,10 +39,7 @@ class SharedTransactionsRepository(
                 entities.map { entity ->
                     Transaction(
                         id = entity.id,
-                        amount = Money(
-                            minorUnits = entity.amountMinorUnits,
-                            currencyCode = "TRY" // TODO: Get from account
-                        ),
+                        amount = Money(minorUnits = entity.amountMinorUnits),
                         timestampUtcMillis = entity.timestampUtcMillis,
                         note = entity.note,
                         categoryId = entity.categoryId,
@@ -65,10 +62,7 @@ class SharedTransactionsRepository(
                 entities.map { entity ->
                     Transaction(
                         id = entity.id,
-                        amount = Money(
-                            minorUnits = entity.amountMinorUnits,
-                            currencyCode = "TRY"
-                        ),
+                        amount = Money(minorUnits = entity.amountMinorUnits),
                         timestampUtcMillis = entity.timestampUtcMillis,
                         note = entity.note,
                         categoryId = entity.categoryId,
@@ -92,9 +86,7 @@ class SharedTransactionsRepository(
                 note = transaction.note,
                 categoryId = transaction.categoryId,
                 accountId = transaction.accountId,
-                type = transaction.type.name,
-                isRecurring = 0,
-                recurringFrequency = null
+                type = transaction.type.name
             )
         } else {
             // Update existing transaction
@@ -105,8 +97,6 @@ class SharedTransactionsRepository(
                 categoryId = transaction.categoryId,
                 accountId = transaction.accountId,
                 type = transaction.type.name,
-                isRecurring = 0,
-                recurringFrequency = null,
                 id = transaction.id
             )
         }
@@ -120,10 +110,7 @@ class SharedTransactionsRepository(
         transactionQueries.selectAllAscending().executeAsList().map { entity ->
             Transaction(
                 id = entity.id,
-                amount = Money(
-                    minorUnits = entity.amountMinorUnits,
-                    currencyCode = "TRY"
-                ),
+                amount = Money(minorUnits = entity.amountMinorUnits),
                 timestampUtcMillis = entity.timestampUtcMillis,
                 note = entity.note,
                 categoryId = entity.categoryId,
@@ -150,8 +137,7 @@ class SharedTransactionsRepository(
                         name = entity.name,
                         color = entity.color,
                         icon = entity.icon,
-                        type = if (entity.type == "INCOME") TransactionType.INCOME else TransactionType.EXPENSE,
-                        isDefault = entity.isDefault == 1L
+                        isIncome = entity.isIncome == 1L
                     )
                 }
             }
@@ -162,11 +148,7 @@ class SharedTransactionsRepository(
             name = category.name,
             color = category.color,
             icon = category.icon,
-            type = when (category.type) {
-                TransactionType.INCOME -> "INCOME"
-                TransactionType.EXPENSE -> "EXPENSE"
-            },
-            isDefault = if (category.isDefault) 1 else 0
+            isIncome = if (category.isIncome) 1 else 0
         )
         categoryQueries.getLastInsertRowId().executeAsOne()
     }
@@ -187,7 +169,9 @@ class SharedTransactionsRepository(
                         id = entity.id,
                         name = entity.name,
                         type = entity.type,
+                        balance = entity.balance,
                         currency = entity.currency,
+                        color = entity.color,
                         isDefault = entity.isDefault == 1L,
                         archived = entity.archived == 1L
                     )
@@ -199,7 +183,9 @@ class SharedTransactionsRepository(
         accountQueries.insert(
             name = account.name,
             type = account.type,
+            balance = account.balance,
             currency = account.currency,
+            color = account.color,
             isDefault = if (account.isDefault) 1 else 0,
             archived = if (account.archived) 1 else 0
         )
@@ -210,7 +196,9 @@ class SharedTransactionsRepository(
         accountQueries.update(
             name = account.name,
             type = account.type,
+            balance = account.balance,
             currency = account.currency,
+            color = account.color,
             isDefault = if (account.isDefault) 1 else 0,
             archived = if (account.archived) 1 else 0,
             id = account.id!!
@@ -229,7 +217,9 @@ class SharedTransactionsRepository(
                     id = entity.id,
                     name = entity.name,
                     type = entity.type,
+                    balance = entity.balance,
                     currency = entity.currency,
+                    color = entity.color,
                     isDefault = entity.isDefault == 1L,
                     archived = entity.archived == 1L
                 )
@@ -237,6 +227,17 @@ class SharedTransactionsRepository(
     }
     
     // MARK: - Budget Calculations
+    
+    override fun observeSpentAmountsByCategory(): Flow<Map<String, Long>> {
+        return transactionQueries.getSpentByCategory()
+            .asFlow()
+            .mapToList(Dispatchers.Default)
+            .map { results ->
+                results.associate { 
+                    (it.categoryId?.toString() ?: "0") to (it.totalAmount ?: 0L)
+                }
+            }
+    }
     
     override suspend fun getSpentAmountsByCategory(): Map<String, Long> = withContext(Dispatchers.Default) {
         transactionQueries.getSpentByCategory()

@@ -22,7 +22,10 @@ interface TransactionsRepository {
     // CSV Import/Export
     suspend fun getAllAscending(): List<Transaction>
     
-    // Budget calculations
+    // Budget calculations - Reactive (iOS pattern)
+    fun observeSpentAmountsByCategory(): Flow<Map<String, Long>>
+    
+    // Budget calculations - Legacy
     suspend fun getSpentAmountsByCategory(): Map<String, Long>
 }
 

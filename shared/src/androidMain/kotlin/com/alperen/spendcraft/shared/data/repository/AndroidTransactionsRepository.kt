@@ -69,6 +69,10 @@ class AndroidTransactionsRepository : TransactionsRepository {
         return emptyList()
     }
     
+    override fun observeSpentAmountsByCategory(): Flow<Map<String, Long>> {
+        return flowOf(emptyMap())
+    }
+    
     override suspend fun getSpentAmountsByCategory(): Map<String, Long> {
         return emptyMap()
     }

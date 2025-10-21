@@ -1,6 +1,5 @@
 package com.alperen.spendcraft.shared.domain.model
 
-import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,7 +7,7 @@ data class AnalyticsEvent(
     val id: Long? = null,
     val eventName: String,
     val eventData: Map<String, String> = emptyMap(),
-    val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
+    val timestamp: Long,
     val sessionId: String,
     val userId: String = "default_user"
 )
@@ -65,13 +64,5 @@ enum class EventType(val eventName: String) {
     
     // Error Events
     ERROR_OCCURRED("error_occurred"),
-    CRASH_OCCURRED("crash_occurred"),
-    
-    // Premium Events
-    PREMIUM_FEATURE_CLICKED("premium_feature_clicked"),
-    PAYWALL_SHOWN("paywall_shown"),
-    PURCHASE_INITIATED("purchase_initiated"),
-    PURCHASE_COMPLETED("purchase_completed"),
-    PURCHASE_FAILED("purchase_failed")
+    CRASH_OCCURRED("crash_occurred")
 }
-

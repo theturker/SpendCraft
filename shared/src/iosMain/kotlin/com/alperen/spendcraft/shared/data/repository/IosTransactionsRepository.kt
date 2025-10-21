@@ -75,6 +75,20 @@ class IosTransactionsRepository : TransactionsRepository {
         return _transactions.value.sortedBy { it.timestampUtcMillis }
     }
     
+    override fun observeSpentAmountsByCategory(): Flow<Map<String, Long>> {
+        return kotlinx.coroutines.flow.flow {
+            _transactions.collect { transactions ->
+                val spentByCategory = transactions
+                    .filter { it.type == TransactionType.EXPENSE }
+                    .groupBy { it.categoryId?.toString() ?: "0" }
+                    .mapValues { entry ->
+                        entry.value.sumOf { it.amount.minorUnits }
+                    }
+                emit(spentByCategory)
+            }
+        }
+    }
+    
     override suspend fun getSpentAmountsByCategory(): Map<String, Long> {
         return _transactions.value
             .filter { it.type == TransactionType.EXPENSE }

@@ -140,7 +140,7 @@ class SharedTransactionsViewModel(
                 
                 val transaction = Transaction(
                     id = null,
-                    amount = Money(minorUnits = amountMinor, currencyCode = "TRY"),
+                    amount = Money(minorUnits = amountMinor),
                     timestampUtcMillis = timestampUtcMillis,
                     note = note,
                     categoryId = categoryId,
@@ -198,8 +198,7 @@ class SharedTransactionsViewModel(
                     name = name,
                     color = color,
                     icon = icon,
-                    type = if (isIncome) TransactionType.INCOME else TransactionType.EXPENSE,
-                    isDefault = false
+                    isIncome = isIncome
                 )
                 
                 repository.insertCategory(category)
@@ -280,8 +279,7 @@ class SharedTransactionsViewModel(
     // MARK: - Helper Methods
     
     fun categoriesForType(isIncome: Boolean): List<Category> {
-        val targetType = if (isIncome) TransactionType.INCOME else TransactionType.EXPENSE
-        return _categories.value.filter { it.type == targetType }
+        return _categories.value.filter { it.isIncome == isIncome }
     }
     
     fun totalSpentForCategory(categoryId: Long): Long {

@@ -2,7 +2,8 @@ CREATE TABLE CategoryEntity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     color TEXT NOT NULL,
-    icon TEXT
+    icon TEXT,
+    isIncome INTEGER NOT NULL DEFAULT 0
 );
 
 selectAll:
@@ -12,12 +13,12 @@ selectById:
 SELECT * FROM CategoryEntity WHERE id = ?;
 
 insert:
-INSERT INTO CategoryEntity(name, color, icon)
-VALUES (?, ?, ?);
+INSERT INTO CategoryEntity(name, color, icon, isIncome)
+VALUES (?, ?, ?, ?);
 
 update:
 UPDATE CategoryEntity
-SET name = ?, color = ?, icon = ?
+SET name = ?, color = ?, icon = ?, isIncome = ?
 WHERE id = ?;
 
 delete:
