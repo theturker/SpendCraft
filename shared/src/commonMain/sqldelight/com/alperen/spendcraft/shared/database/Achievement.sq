@@ -1,0 +1,56 @@
+CREATE TABLE AchievementEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    icon TEXT NOT NULL,
+    category TEXT NOT NULL,
+    maxProgress INTEGER NOT NULL,
+    progress INTEGER NOT NULL DEFAULT 0,
+    points INTEGER NOT NULL,
+    isUnlocked INTEGER NOT NULL DEFAULT 0,
+    unlockedAt INTEGER
+);
+
+selectAll:
+SELECT * FROM AchievementEntity ORDER BY isUnlocked DESC, points DESC;
+
+selectUnlocked:
+SELECT * FROM AchievementEntity WHERE isUnlocked = 1 ORDER BY unlockedAt DESC;
+
+selectLocked:
+SELECT * FROM AchievementEntity WHERE isUnlocked = 0 ORDER BY progress DESC;
+
+selectById:
+SELECT * FROM AchievementEntity WHERE id = ?;
+
+getTotalPoints:
+SELECT SUM(points) AS totalPoints FROM AchievementEntity WHERE isUnlocked = 1;
+
+getUnlockedCount:
+SELECT COUNT(*) AS count FROM AchievementEntity WHERE isUnlocked = 1;
+
+insert:
+INSERT INTO AchievementEntity(name, description, icon, category, maxProgress, progress, points, isUnlocked, unlockedAt)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE AchievementEntity
+SET name = ?, description = ?, icon = ?, category = ?, maxProgress = ?, progress = ?, points = ?, isUnlocked = ?, unlockedAt = ?
+WHERE id = ?;
+
+updateProgress:
+UPDATE AchievementEntity
+SET progress = ?
+WHERE id = ?;
+
+unlock:
+UPDATE AchievementEntity
+SET isUnlocked = 1, unlockedAt = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM AchievementEntity WHERE id = ?;
+
+getLastInsertRowId:
+SELECT last_insert_rowid();
+

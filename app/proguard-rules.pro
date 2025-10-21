@@ -1,42 +1,74 @@
-# Keep Room models and Dao
--keep class androidx.room.** { *; }
+# ========== Android & Jetpack Core ==========
+# Keep source file names and line numbers for crash reports
+-keepattributes SourceFile,LineNumberTable,Signature,Exceptions,*Annotation*
+-renamesourcefileattribute SourceFile
+
+# Keep Room
 -keep class * extends androidx.room.RoomDatabase
 -keep @androidx.room.Dao class *
 -keep class **_Impl { *; }
 
 # Keep Firebase
--keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
+-dontwarn com.google.android.gms.**
 
-# Keep Moshi/Retrofit models (if any in future)
--keep class com.squareup.moshi.** { *; }
--keep class retrofit2.** { *; }
+# ========== Navigation Compose (FIX FOR CRASH) ==========
+# Keep navigation compose to fix: "Navigation destination cannot be found" crash
+-keep class androidx.navigation.compose.** { *; }
+-keep class com.alperen.spendcraft.navigation.** { *; }
 
-# Proto/DataStore
+# Keep NavController methods (critical for navigation)
+-keepclassmembers class androidx.navigation.NavController {
+    public <methods>;
+}
+
+# ========== App Models & Entities (CRITICAL FOR NAVIGATION ARGS) ==========
+# Keep all data models used in navigation
+-keep class com.alperen.spendcraft.core.model.** { *; }
+-keep class com.alperen.spendcraft.data.db.entities.** { *; }
+
+# ========== Compose & ViewModels ==========
+# Keep Composable functions
+-keepclassmembers class * {
+    @androidx.compose.runtime.Composable <methods>;
+}
+
+# Keep ViewModels and Hilt
+-keep class * extends androidx.lifecycle.ViewModel { *; }
+-keep @dagger.hilt.android.lifecycle.HiltViewModel class * { *; }
+
+# ========== DataStore & Proto ==========
 -keep class com.alperen.spendcraft.feature.settings.SettingsOuterClass$Settings { *; }
 -keepclassmembers class com.alperen.spendcraft.feature.settings.SettingsOuterClass$Settings { *; }
 
-# Play Billing
+# ========== Play Billing ==========
 -keep class com.android.billingclient.** { *; }
 -dontwarn com.android.billingclient.**
 
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ========== Common Android ==========
+# Keep Parcelable
+-keepclassmembers class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator CREATOR;
+}
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep Enums
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Keep Serializable
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ========== Google Common & Guava ==========
+-dontwarn com.google.common.**
+-dontwarn sun.misc.Unsafe
+-dontwarn javax.annotation.**
+
+# ========== Kotlin ==========
+-dontwarn kotlin.**
+-dontwarn kotlinx.**

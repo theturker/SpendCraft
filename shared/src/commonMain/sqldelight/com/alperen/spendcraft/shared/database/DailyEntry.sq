@@ -1,0 +1,37 @@
+CREATE TABLE DailyEntryEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date INTEGER NOT NULL UNIQUE,
+    hasTransaction INTEGER NOT NULL DEFAULT 0
+);
+
+selectAll:
+SELECT * FROM DailyEntryEntity ORDER BY date DESC;
+
+selectByDate:
+SELECT * FROM DailyEntryEntity WHERE date = ?;
+
+selectLast30Days:
+SELECT * FROM DailyEntryEntity 
+WHERE date >= ? 
+ORDER BY date DESC;
+
+getCurrentStreak:
+SELECT * FROM DailyEntryEntity 
+WHERE hasTransaction = 1 
+ORDER BY date DESC;
+
+insert:
+INSERT OR REPLACE INTO DailyEntryEntity(date, hasTransaction)
+VALUES (?, ?);
+
+markHasTransaction:
+UPDATE DailyEntryEntity
+SET hasTransaction = 1
+WHERE date = ?;
+
+delete:
+DELETE FROM DailyEntryEntity WHERE id = ?;
+
+getLastInsertRowId:
+SELECT last_insert_rowid();
+

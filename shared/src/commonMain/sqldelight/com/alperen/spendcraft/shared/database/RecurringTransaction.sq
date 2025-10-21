@@ -1,0 +1,54 @@
+CREATE TABLE RecurringTransactionEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    amountMinorUnits INTEGER NOT NULL,
+    note TEXT,
+    categoryId INTEGER,
+    accountId INTEGER,
+    type TEXT NOT NULL CHECK(type IN ('INCOME', 'EXPENSE')),
+    frequency TEXT NOT NULL CHECK(frequency IN ('DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY')),
+    lastExecutionDate INTEGER,
+    nextExecutionDate INTEGER NOT NULL,
+    isEnabled INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY (categoryId) REFERENCES CategoryEntity(id) ON DELETE CASCADE,
+    FOREIGN KEY (accountId) REFERENCES AccountEntity(id) ON DELETE CASCADE
+);
+
+selectAll:
+SELECT * FROM RecurringTransactionEntity ORDER BY nextExecutionDate ASC;
+
+selectAllEnabled:
+SELECT * FROM RecurringTransactionEntity WHERE isEnabled = 1 ORDER BY nextExecutionDate ASC;
+
+selectDue:
+SELECT * FROM RecurringTransactionEntity 
+WHERE isEnabled = 1 AND nextExecutionDate <= ? 
+ORDER BY nextExecutionDate ASC;
+
+selectById:
+SELECT * FROM RecurringTransactionEntity WHERE id = ?;
+
+insert:
+INSERT INTO RecurringTransactionEntity(amountMinorUnits, note, categoryId, accountId, type, frequency, lastExecutionDate, nextExecutionDate, isEnabled)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE RecurringTransactionEntity
+SET amountMinorUnits = ?, note = ?, categoryId = ?, accountId = ?, type = ?, frequency = ?, lastExecutionDate = ?, nextExecutionDate = ?, isEnabled = ?
+WHERE id = ?;
+
+updateExecutionDates:
+UPDATE RecurringTransactionEntity
+SET lastExecutionDate = ?, nextExecutionDate = ?
+WHERE id = ?;
+
+toggleEnabled:
+UPDATE RecurringTransactionEntity
+SET isEnabled = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM RecurringTransactionEntity WHERE id = ?;
+
+getLastInsertRowId:
+SELECT last_insert_rowid();
+
