@@ -162,84 +162,85 @@ fun IOSSettingsScreen(
                 .padding(paddingValues),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
+            // TODO: Kullanıcı Profili geçici olarak devre dışı
             // 1. User Profile Section - iOS SettingsView.swift:34-73
-            item {
-                SettingsSectionHeader(title = "Kullanıcı Profili")
-            }
-            
-            item {
-                // iOS'taki user profile card ile birebir aynı
-                // iOS card background rengi - diğer list item'larla aynı
-                val iosCardBackground = if (androidx.compose.foundation.isSystemInDarkTheme()) {
-                    Color(0xFF1C1C1E) // iOS dark card
-                } else {
-                    Color(0xFFFFFFFF) // iOS light card (pure white)
-                }
-                
-                Surface(
-                    onClick = onNavigateToAccountInfo,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    shape = RoundedCornerShape(10.dp),
-                    color = iosCardBackground,
-                    tonalElevation = 0.dp
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Avatar circle - iOS: Circle with gradient
-                        Box(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    androidx.compose.ui.graphics.Brush.linearGradient(
-                                        colors = listOf(IOSColors.Blue, IOSColors.Purple)
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = userName.take(1).uppercase(),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                        }
-                        
-                        // User info
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                text = userName,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Text(
-                                text = userEmail,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        
-                        // Chevron
-                        Icon(
-                            painter = painterResource(id = CoreR.drawable.ic_chevron_right),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
-            }
+            // item {
+            //     SettingsSectionHeader(title = "Kullanıcı Profili")
+            // }
+            // 
+            // item {
+            //     // iOS'taki user profile card ile birebir aynı
+            //     // iOS card background rengi - diğer list item'larla aynı
+            //     val iosCardBackground = if (androidx.compose.foundation.isSystemInDarkTheme()) {
+            //         Color(0xFF1C1C1E) // iOS dark card
+            //     } else {
+            //         Color(0xFFFFFFFF) // iOS light card (pure white)
+            //     }
+            //     
+            //     Surface(
+            //         onClick = onNavigateToAccountInfo,
+            //         modifier = Modifier
+            //             .fillMaxWidth()
+            //             .padding(horizontal = 16.dp)
+            //             .clip(RoundedCornerShape(10.dp)),
+            //         shape = RoundedCornerShape(10.dp),
+            //         color = iosCardBackground,
+            //         tonalElevation = 0.dp
+            //     ) {
+            //         Row(
+            //             modifier = Modifier
+            //                 .fillMaxWidth()
+            //                 .padding(12.dp),
+            //             horizontalArrangement = Arrangement.spacedBy(12.dp),
+            //             verticalAlignment = Alignment.CenterVertically
+            //         ) {
+            //             // Avatar circle - iOS: Circle with gradient
+            //             Box(
+            //                 modifier = Modifier
+            //                     .size(50.dp)
+            //                     .clip(CircleShape)
+            //                     .background(
+            //                         androidx.compose.ui.graphics.Brush.linearGradient(
+            //                             colors = listOf(IOSColors.Blue, IOSColors.Purple)
+            //                         )
+            //                     ),
+            //                 contentAlignment = Alignment.Center
+            //             ) {
+            //                 Text(
+            //                     text = userName.take(1).uppercase(),
+            //                     style = MaterialTheme.typography.titleLarge,
+            //                     fontWeight = FontWeight.Bold,
+            //                     color = Color.White
+            //                 )
+            //             }
+            //             
+            //             // User info
+            //             Column(
+            //                 modifier = Modifier.weight(1f),
+            //                 verticalArrangement = Arrangement.spacedBy(4.dp)
+            //             ) {
+            //                 Text(
+            //                     text = userName,
+            //                     style = MaterialTheme.typography.titleMedium,
+            //                     fontWeight = FontWeight.SemiBold
+            //                 )
+            //                 Text(
+            //                     text = userEmail,
+            //                     style = MaterialTheme.typography.bodySmall,
+            //                     color = MaterialTheme.colorScheme.onSurfaceVariant
+            //                 )
+            //             }
+            //             
+            //             // Chevron
+            //             Icon(
+            //                 painter = painterResource(id = CoreR.drawable.ic_chevron_right),
+            //                 contentDescription = null,
+            //                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            //                 modifier = Modifier.size(16.dp)
+            //             )
+            //         }
+            //     }
+            // }
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
@@ -368,20 +369,21 @@ fun IOSSettingsScreen(
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
+            // TODO: Çıkış Yap butonu geçici olarak devre dışı
             // 6. Hesap Section
-            item {
-                SettingsSectionHeader(title = "Hesap")
-            }
-            
-            item {
-                SettingsListItem(
-                    icon = CoreR.drawable.ic_key_fill,
-                    iconColor = IOSColors.Red,
-                    title = "Çıkış Yap",
-                    titleColor = IOSColors.Red,
-                    onClick = { showSignOutDialog = true }
-                )
-            }
+            // item {
+            //     SettingsSectionHeader(title = "Hesap")
+            // }
+            // 
+            // item {
+            //     SettingsListItem(
+            //         icon = CoreR.drawable.ic_key_fill,
+            //         iconColor = IOSColors.Red,
+            //         title = "Çıkış Yap",
+            //         titleColor = IOSColors.Red,
+            //         onClick = { showSignOutDialog = true }
+            //     )
+            // }
             
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
@@ -424,32 +426,33 @@ fun IOSSettingsScreen(
         }
     }
     
+    // TODO: Çıkış Yap dialog'u geçici olarak devre dışı
     // Sign Out Confirmation Dialog
-    if (showSignOutDialog) {
-        AlertDialog(
-            onDismissRequest = { showSignOutDialog = false },
-            title = { Text("Çıkış yapılsın mı?") },
-            text = { Text("Hesabınızdan çıkış yapacaksınız.") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showSignOutDialog = false
-                        onSignOut()
-                    },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = IOSColors.Red
-                    )
-                ) {
-                    Text("Çıkış Yap")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showSignOutDialog = false }) {
-                    Text("İptal")
-                }
-            }
-        )
-    }
+    // if (showSignOutDialog) {
+    //     AlertDialog(
+    //         onDismissRequest = { showSignOutDialog = false },
+    //         title = { Text("Çıkış yapılsın mı?") },
+    //         text = { Text("Hesabınızdan çıkış yapacaksınız.") },
+    //         confirmButton = {
+    //             TextButton(
+    //                 onClick = {
+    //                     showSignOutDialog = false
+    //                     onSignOut()
+    //                 },
+    //                 colors = ButtonDefaults.textButtonColors(
+    //                     contentColor = IOSColors.Red
+    //                 )
+    //             ) {
+    //                 Text("Çıkış Yap")
+    //             }
+    //         },
+    //         dismissButton = {
+    //             TextButton(onClick = { showSignOutDialog = false }) {
+    //                 Text("İptal")
+    //             }
+    //         }
+    //     )
+    // }
     
     // Theme Selection Dialog (iOS-style)
     if (showThemeDialog) {

@@ -190,53 +190,57 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        authState is AuthState.Unauthenticated -> {
-                            val isLoading by authViewModel.isLoading.collectAsState()
-                            val errorMessage by authViewModel.errorMessage.collectAsState()
-                            
-                            when (currentAuthScreen) {
-                                "login" -> {
-                                    com.alperen.spendcraft.auth.ui.IOSLoginScreen(
-                                        onLoginClick = { email, password ->
-                                            scope.launch {
-                                                authViewModel.signIn(email, password)
-                                            }
-                                        },
-                                        onNavigateToRegister = { currentAuthScreen = "register" },
-                                        onNavigateToForgotPassword = { currentAuthScreen = "forgot" },
-                                        isLoading = isLoading,
-                                        errorMessage = errorMessage
-                                    )
-                                }
-                                "register" -> {
-                                    com.alperen.spendcraft.auth.ui.IOSRegisterScreen(
-                                        onRegisterClick = { name, email, password ->
-                                            scope.launch {
-                                                authViewModel.register(name, email, password, password)
-                                            }
-                                        },
-                                        onNavigateToLogin = { currentAuthScreen = "login" },
-                                        isLoading = isLoading,
-                                        errorMessage = errorMessage
-                                    )
-                                }
-                                "forgot" -> {
-                                    com.alperen.spendcraft.auth.ui.IOSForgotPasswordScreen(
-                                        onSendResetLink = { email ->
-                                            scope.launch {
-                                                authViewModel.sendPasswordReset(email)
-                                            }
-                                        },
-                                        onNavigateToLogin = { currentAuthScreen = "login" },
-                                        isLoading = isLoading,
-                                        errorMessage = errorMessage
-                                    )
-                                }
-                            }
-                        }
-                        authState is AuthState.Authenticated -> {
+                        // TODO: Authentication geçici olarak devre dışı - kullanıcılar direkt girebilsin
+                        // authState is AuthState.Unauthenticated -> {
+                        //     val isLoading by authViewModel.isLoading.collectAsState()
+                        //     val errorMessage by authViewModel.errorMessage.collectAsState()
+                        //     
+                        //     when (currentAuthScreen) {
+                        //         "login" -> {
+                        //             com.alperen.spendcraft.auth.ui.IOSLoginScreen(
+                        //                 onLoginClick = { email, password ->
+                        //                     scope.launch {
+                        //                         authViewModel.signIn(email, password)
+                        //                     }
+                        //                 },
+                        //                 onNavigateToRegister = { currentAuthScreen = "register" },
+                        //                 onNavigateToForgotPassword = { currentAuthScreen = "forgot" },
+                        //                 isLoading = isLoading,
+                        //                 errorMessage = errorMessage
+                        //             )
+                        //         }
+                        //         "register" -> {
+                        //             com.alperen.spendcraft.auth.ui.IOSRegisterScreen(
+                        //                 onRegisterClick = { name, email, password ->
+                        //                     scope.launch {
+                        //                         authViewModel.register(name, email, password, password)
+                        //                     }
+                        //                 },
+                        //                 onNavigateToLogin = { currentAuthScreen = "login" },
+                        //                 isLoading = isLoading,
+                        //                 errorMessage = errorMessage
+                        //             )
+                        //         }
+                        //         "forgot" -> {
+                        //             com.alperen.spendcraft.auth.ui.IOSForgotPasswordScreen(
+                        //                 onSendResetLink = { email ->
+                        //                     scope.launch {
+                        //                         authViewModel.sendPasswordReset(email)
+                        //                     }
+                        //                 },
+                        //                 onNavigateToLogin = { currentAuthScreen = "login" },
+                        //                 isLoading = isLoading,
+                        //                 errorMessage = errorMessage
+                        //             )
+                        //         }
+                        //     }
+                        // }
+                        // TODO: Authentication geçici olarak devre dışı - her zaman AppNavHost'u göster
+                        // authState is AuthState.Authenticated -> {
+                        else -> {
                             AppNavHost()
                         }
+                        // }
                     }
                 }
             }

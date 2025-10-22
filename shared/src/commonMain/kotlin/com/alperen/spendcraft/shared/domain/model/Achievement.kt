@@ -15,3 +15,4 @@ data class Achievement(
     val unlockedAt: Long? = null,
     val points: Int = 0
 )
+

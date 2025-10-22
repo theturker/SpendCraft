@@ -31,46 +31,47 @@ struct SettingsView: View {
 
     var body: some View {
         List {
+            // TODO: Kullanıcı Profili geçici olarak devre dışı
             // User Profile Section
-            Section {
-                NavigationLink {
-                    AccountInfoView()
-                        .environmentObject(authViewModel)
-                } label: {
-                    HStack(spacing: 12) {
-                        Circle()
-                            .fill(LinearGradient(
-                                colors: [.blue, .purple],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ))
-                            .frame(width: 50, height: 50)
-                            .overlay(
-                                Text(authViewModel.userDisplayName.prefix(1).uppercased())
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
-                            )
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(authViewModel.userDisplayName)
-                                .font(.headline)
-                            Text(authViewModel.userEmail)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        Spacer()
-                        
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.vertical, 4)
-                }
-            } header: {
-                Text("Kullanıcı Profili")
-            }
+            // Section {
+            //     NavigationLink {
+            //         AccountInfoView()
+            //             .environmentObject(authViewModel)
+            //     } label: {
+            //         HStack(spacing: 12) {
+            //             Circle()
+            //                 .fill(LinearGradient(
+            //                     colors: [.blue, .purple],
+            //                     startPoint: .topLeading,
+            //                     endPoint: .bottomTrailing
+            //                 ))
+            //                 .frame(width: 50, height: 50)
+            //                 .overlay(
+            //                     Text(authViewModel.userDisplayName.prefix(1).uppercased())
+            //                         .font(.title3)
+            //                         .fontWeight(.bold)
+            //                         .foregroundColor(.white)
+            //                 )
+            //             
+            //             VStack(alignment: .leading, spacing: 4) {
+            //                 Text(authViewModel.userDisplayName)
+            //                     .font(.headline)
+            //                 Text(authViewModel.userEmail)
+            //                     .font(.caption)
+            //                     .foregroundColor(.secondary)
+            //             }
+            //             
+            //             Spacer()
+            //             
+            //             Image(systemName: "chevron.right")
+            //                 .font(.caption)
+            //                 .foregroundColor(.secondary)
+            //         }
+            //         .padding(.vertical, 4)
+            //     }
+            // } header: {
+            //     Text("Kullanıcı Profili")
+            // }
             
             // Accounts Section
             Section {
@@ -217,27 +218,28 @@ struct SettingsView: View {
                 Text("Veri Yönetimi")
             }
             
+            // TODO: Çıkış Yap butonu geçici olarak devre dışı
             // Account Section - Sign Out
-            Section {
-                Button(role: .destructive) {
-                    showSignOutConfirm = true
-                } label: {
-                    HStack {
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
-                            .foregroundColor(.red)
-                        Text("Çıkış Yap")
-                            .foregroundColor(.red)
-                    }
-                }
-            } header: {
-                Text("Hesap")
-            } footer: {
-                if let error = signOutError {
-                    Text(error)
-                        .font(.caption)
-                        .foregroundColor(.red)
-                }
-            }
+            // Section {
+            //     Button(role: .destructive) {
+            //         showSignOutConfirm = true
+            //     } label: {
+            //         HStack {
+            //             Image(systemName: "rectangle.portrait.and.arrow.right")
+            //                 .foregroundColor(.red)
+            //             Text("Çıkış Yap")
+            //                 .foregroundColor(.red)
+            //         }
+            //     }
+            // } header: {
+            //     Text("Hesap")
+            // } footer: {
+            //     if let error = signOutError {
+            //         Text(error)
+            //             .font(.caption)
+            //             .foregroundColor(.red)
+            //     }
+            // }
             
             // App Info
             Section {
@@ -286,16 +288,17 @@ struct SettingsView: View {
             NotificationSettingsView()
                 .environmentObject(transactionsViewModel)
         }
-        .alert("Çıkış yapılsın mı?", isPresented: $showSignOutConfirm) {
-            Button("Çıkış Yap", role: .destructive) {
-                Task {
-                    await signOut()
-                }
-            }
-            Button("İptal", role: .cancel) {}
-        } message: {
-            Text("Hesabınızdan çıkış yapacaksınız.")
-        }
+        // TODO: Çıkış Yap alert dialog'u geçici olarak devre dışı
+        // .alert("Çıkış yapılsın mı?", isPresented: $showSignOutConfirm) {
+        //     Button("Çıkış Yap", role: .destructive) {
+        //         Task {
+        //             await signOut()
+        //         }
+        //     }
+        //     Button("İptal", role: .cancel) {}
+        // } message: {
+        //     Text("Hesabınızdan çıkış yapacaksınız.")
+        // }
     }
     
     private func signOut() async {

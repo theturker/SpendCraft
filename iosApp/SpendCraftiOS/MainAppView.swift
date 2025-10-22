@@ -24,19 +24,22 @@ struct MainAppView: View {
                         insertion: .move(edge: .bottom),
                         removal: .move(edge: .top)
                     ))
-            } else if authViewModel.isAuthenticated {
+            } else {
+                // TODO: Authentication geçici olarak devre dışı - kullanıcılar direkt girebilsin
+                // } else if authViewModel.isAuthenticated {
                 AuthenticatedAppView()
                     .environmentObject(authViewModel)
                     .transition(.asymmetric(
                         insertion: .move(edge: .trailing),
                         removal: .move(edge: .leading)
                     ))
-            } else {
-                AuthFlowView()
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .leading),
-                        removal: .move(edge: .trailing)
-                    ))
+                // } else {
+                //     AuthFlowView()
+                //         .transition(.asymmetric(
+                //             insertion: .move(edge: .leading),
+                //             removal: .move(edge: .trailing)
+                //         ))
+                // }
             }
         }
         .animation(.easeInOut(duration: 0.5), value: authViewModel.isAuthenticated)

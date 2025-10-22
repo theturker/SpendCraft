@@ -67,8 +67,9 @@ object Routes {
     const val NOTIFICATIONS = "notifications"
     const val ONBOARDING = "onboarding"
     const val ACHIEVEMENTS = "achievements"
-    const val USER_PROFILING = "user_profiling"  // iOS UserProfilingView
-    const val ACCOUNT_INFO = "account_info"  // iOS AccountInfoView
+    // TODO: Authentication geçici olarak devre dışı
+    // const val USER_PROFILING = "user_profiling"  // iOS UserProfilingView
+    // const val ACCOUNT_INFO = "account_info"  // iOS AccountInfoView
     const val NOTIFICATION_SETTINGS = "notification_settings"  // iOS NotificationSettingsView
     const val CURRENCY_PICKER = "currency_picker"  // iOS CurrencyPickerView
     const val ADD_CATEGORY = "add_category/{isIncome}"  // iOS AddCategoryView
@@ -127,8 +128,9 @@ fun AppNavHost(
                 onNavigateToRecurring = { navController.navigate(Routes.RECURRING) },
                 onNavigateToSharing = { navController.navigate(Routes.SHARING) },
                 onNavigateToExport = { navController.navigate(Routes.EXPORT_REPORT) },
-                onNavigateToUserProfiling = { navController.navigate(Routes.USER_PROFILING) },  // iOS UserProfilingView
-                onNavigateToAccountInfo = { navController.navigate(Routes.ACCOUNT_INFO) },  // iOS AccountInfoView
+                // TODO: Authentication geçici olarak devre dışı
+                // onNavigateToUserProfiling = { navController.navigate(Routes.USER_PROFILING) },  // iOS UserProfilingView
+                // onNavigateToAccountInfo = { navController.navigate(Routes.ACCOUNT_INFO) },  // iOS AccountInfoView
                 onNavigateToNotificationSettings = { navController.navigate(Routes.NOTIFICATION_SETTINGS) },  // iOS NotificationSettingsView
                 onNavigateToCurrencyPicker = { navController.navigate(Routes.CURRENCY_PICKER) },  // iOS CurrencyPickerView
                 isPremium = isPremium
@@ -555,26 +557,27 @@ fun AppNavHost(
             )
         }
         
+        // TODO: Authentication geçici olarak devre dışı
         // iOS UserProfilingView - Ana sayfadan açılır
-        composable(Routes.USER_PROFILING) {
-            val ctx = LocalContext.current
-            com.alperen.spendcraft.feature.ai.UserProfilingScreen(
-                onComplete = {
-                    // iOS: @AppStorage("userProfilingCompleted") = true
-                    val prefs = ctx.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
-                    prefs.edit().putBoolean("userProfilingCompleted", true).apply()
-                    navController.popBackStack()
-                },
-                onDismiss = { navController.popBackStack() }
-            )
-        }
+        // composable(Routes.USER_PROFILING) {
+        //     val ctx = LocalContext.current
+        //     com.alperen.spendcraft.feature.ai.UserProfilingScreen(
+        //         onComplete = {
+        //             // iOS: @AppStorage("userProfilingCompleted") = true
+        //             val prefs = ctx.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+        //             prefs.edit().putBoolean("userProfilingCompleted", true).apply()
+        //             navController.popBackStack()
+        //         },
+        //         onDismiss = { navController.popBackStack() }
+        //     )
+        // }
         
         // iOS AccountInfoView - Settings'den açılır
-        composable(Routes.ACCOUNT_INFO) {
-            com.alperen.spendcraft.feature.settings.ui.AccountInfoScreen(
-                onBack = { navController.popBackStack() }
-            )
-        }
+        // composable(Routes.ACCOUNT_INFO) {
+        //     com.alperen.spendcraft.feature.settings.ui.AccountInfoScreen(
+        //         onBack = { navController.popBackStack() }
+        //     )
+        // }
         
         // iOS NotificationSettingsView - Settings > Bildirim Ayarları
         composable(Routes.NOTIFICATION_SETTINGS) {
