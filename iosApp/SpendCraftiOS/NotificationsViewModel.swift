@@ -17,6 +17,9 @@ class NotificationsViewModel: ObservableObject {
     private let userDefaults = UserDefaults.standard
     private let notificationsKey = "saved_notifications"
     
+    // Shared business logic - NO PLATFORM DEPENDENCIES
+    private let sharedBusinessLogic = SharedNotificationBusinessLogic()
+    
     init() {
         loadNotifications()
         requestNotificationPermission()

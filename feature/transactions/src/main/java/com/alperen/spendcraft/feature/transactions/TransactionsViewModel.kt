@@ -32,6 +32,7 @@ import javax.inject.Inject
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import com.alperen.spendcraft.core.common.NotificationTester
+import com.alperen.spendcraft.shared.presentation.SharedTransactionBusinessLogic
 // import com.alperen.spendcraft.core.billing.BillingRepository
 
 @HiltViewModel
@@ -55,6 +56,9 @@ class TransactionsViewModel @Inject constructor(
     private val notificationEventBus: NotificationEventBus,
     // private val billingRepository: BillingRepository
 ) : ViewModel() {
+    
+    // Shared business logic - NO PLATFORM DEPENDENCIES
+    private val sharedBusinessLogic = SharedTransactionBusinessLogic()
 
     val items: StateFlow<List<Transaction>> = observeTransactions()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())

@@ -16,6 +16,9 @@ class BudgetViewModel: ObservableObject {
     private let context = CoreDataStack.shared.container.viewContext
     private let transactionsViewModel: TransactionsViewModel
     
+    // Shared business logic - NO PLATFORM DEPENDENCIES
+    private let sharedBusinessLogic = SharedBudgetBusinessLogic()
+    
     init(transactionsViewModel: TransactionsViewModel) {
         self.transactionsViewModel = transactionsViewModel
     }

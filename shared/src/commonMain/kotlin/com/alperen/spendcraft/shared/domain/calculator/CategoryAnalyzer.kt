@@ -3,6 +3,7 @@ package com.alperen.spendcraft.shared.domain.calculator
 import com.alperen.spendcraft.shared.domain.model.Category
 import com.alperen.spendcraft.shared.domain.model.Transaction
 import com.alperen.spendcraft.shared.domain.model.TransactionType
+import kotlinx.datetime.*
 
 /**
  * Category analysis engine
@@ -51,29 +52,21 @@ object CategoryAnalyzer {
                     (categorySpent.toDouble() / totalSpent * 100)
                 } else 0.0
                 
+                val averageTransaction = categorySpent / categoryTransactions.size
+                val trend = calculateTrend(categoryTransactions)
+                val lastTransaction = categoryTransactions.maxOfOrNull { it.timestampUtcMillis }
+                
                 CategoryInsight(
                     category = category,
                     totalSpent = categorySpent,
                     percentage = percentage,
-                    averageTransaction = categorySpent / categoryTransactions.size,
+                    averageTransaction = averageTransaction,
                     transactionCount = categoryTransactions.size,
-                    trend = calculateTrend(categoryTransactions),
-                    lastTransaction = categoryTransactions.maxOfOrNull { it.timestampUtcMillis }
+                    trend = trend,
+                    lastTransaction = lastTransaction
                 )
             }
-        }
-        .sortedByDescending { it.totalSpent }
-    }
-    
-    /**
-     * Get top N categories by spending
-     */
-    fun getTopCategories(
-        transactions: List<Transaction>,
-        categories: List<Category>,
-        limit: Int = 5
-    ): List<CategoryInsight> {
-        return analyzeCategories(transactions, categories).take(limit)
+        }.sortedByDescending { it.totalSpent }
     }
     
     /**
@@ -112,8 +105,53 @@ object CategoryAnalyzer {
             insight.category to insight.percentage
         }
     }
+    
+    /**
+     * Get top spending categories
+     */
+    fun getTopCategories(transactions: List<Transaction>, limit: Int = 5): List<Pair<Category, Long>> {
+        val expenseTransactions = transactions.filter { it.type == TransactionType.EXPENSE }
+        val categorySpending = expenseTransactions
+            .groupBy { it.categoryId }
+            .mapValues { (_, transactions) -> transactions.sumOf { it.amount.minorUnits } }
+            .toList()
+            .sortedByDescending { it.second }
+            .take(limit)
+        
+        // Convert category IDs to Category objects (simplified)
+        return categorySpending.map { (categoryId, amount) ->
+            Category(id = categoryId, name = "Category $categoryId", color = "#007AFF") to amount
+        }
+    }
+    
+    /**
+     * Get category spending trend
+     */
+    fun getCategorySpendingTrend(
+        transactions: List<Transaction>, 
+        categoryId: Long, 
+        days: Int = 30
+    ): Map<LocalDate, Long> {
+        val now = Clock.System.now()
+        val timeZone = TimeZone.currentSystemDefault()
+        val today = now.toLocalDateTime(timeZone).date
+        val startDate = today.minus(days, DateTimeUnit.DAY)
+        
+        val categoryTransactions = transactions.filter { 
+            it.categoryId == categoryId && it.type == TransactionType.EXPENSE
+        }
+        
+        return (0 until days).associate { dayOffset ->
+            val date = startDate.plus(dayOffset, DateTimeUnit.DAY)
+            val dayStart = date.atStartOfDayIn(timeZone).toEpochMilliseconds()
+            val dayEnd = date.plus(1, DateTimeUnit.DAY).atStartOfDayIn(timeZone).toEpochMilliseconds() - 1
+            
+            val dayTransactions = categoryTransactions.filter { 
+                it.timestampUtcMillis in dayStart..dayEnd
+            }
+            
+            val daySpent = dayTransactions.sumOf { it.amount.minorUnits }
+            date to daySpent
+        }
+    }
 }
-
-
-
-

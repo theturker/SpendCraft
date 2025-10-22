@@ -95,6 +95,18 @@ object BudgetCalculator {
     }
     
     /**
+     * Calculate daily allowance
+     */
+    fun calculateDailyAllowance(budgetLimit: Long, spent: Long, daysRemaining: Int): Long {
+        val remaining = budgetLimit - spent
+        return if (daysRemaining > 0) {
+            remaining / daysRemaining
+        } else {
+            0L
+        }
+    }
+    
+    /**
      * Calculate savings potential
      */
     fun calculateSavingsPotential(

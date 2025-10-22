@@ -143,6 +143,42 @@ object StreakCalculator {
         
         return streak
     }
+    
+    /**
+     * Calculate best streak from daily entries
+     */
+    fun calculateBestStreak(dailyEntries: List<Instant>): Int {
+        if (dailyEntries.isEmpty()) {
+            return 0
+        }
+        
+        val sortedEntries = dailyEntries
+            .map { it.toLocalDateTime(TimeZone.currentSystemDefault()).date }
+            .distinct()
+            .sorted()
+            .reversed()
+        
+        var bestStreak = 0
+        var currentStreak = 0
+        var lastDate: LocalDate? = null
+        
+        for (entryDate in sortedEntries) {
+            if (lastDate == null) {
+                currentStreak = 1
+            } else {
+                val diffDays = (lastDate.toEpochDays() - entryDate.toEpochDays()).toInt()
+                if (diffDays == 1) {
+                    currentStreak++
+                } else {
+                    bestStreak = maxOf(bestStreak, currentStreak)
+                    currentStreak = 1
+                }
+            }
+            lastDate = entryDate
+        }
+        
+        return maxOf(bestStreak, currentStreak)
+    }
 }
 
 

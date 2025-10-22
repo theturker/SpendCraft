@@ -97,6 +97,49 @@ object AchievementRules {
         return localDateTime.hour >= 22
     }
     
+    /**
+     * Check if "Daily Streak" achievement should be unlocked
+     */
+    fun checkDailyStreak(lastLoggedDate: Instant, today: Instant): Boolean {
+        val daysDiff = (today.toEpochMilliseconds() - lastLoggedDate.toEpochMilliseconds()) / (24 * 60 * 60 * 1000)
+        return daysDiff <= 1 // Within 24 hours
+    }
+    
+    /**
+     * Check if "Category Explorer" achievement should be unlocked
+     */
+    fun checkCategoryExplorer(categoryCount: Int): Boolean {
+        return categoryCount >= 10
+    }
+    
+    /**
+     * Check if "High Roller" achievement should be unlocked
+     */
+    fun checkHighRoller(totalSpent: Long): Boolean {
+        return totalSpent >= 1000000 // 10,000 TL in minor units
+    }
+    
+    /**
+     * Check if "Savings Champion" achievement should be unlocked
+     */
+    fun checkSavingsChampion(totalSaved: Long): Boolean {
+        return totalSaved >= 500000 // 5,000 TL in minor units
+    }
+    
+    /**
+     * Check if "No Spend Day" achievement should be unlocked
+     */
+    fun checkNoSpendDay(noSpendDays: Int): Boolean {
+        return noSpendDays >= 5
+    }
+    
+    /**
+     * Check if "Referral Master" achievement should be unlocked
+     */
+    fun checkReferralMaster(referralCount: Int): Boolean {
+        return referralCount >= 3
+    }
+    
     sealed class AchievementLevel {
         data class StreakDays(val days: Int) : AchievementLevel()
         data class TransactionCount(val count: Int) : AchievementLevel()

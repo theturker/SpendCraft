@@ -17,6 +17,9 @@ class AchievementsViewModel: ObservableObject {
     
     private let context = CoreDataStack.shared.container.viewContext
     
+    // Shared business logic - NO PLATFORM DEPENDENCIES
+    private let sharedBusinessLogic = SharedAchievementBusinessLogic()
+    
     func loadAchievements() {
         let fetchRequest: NSFetchRequest<AchievementEntity> = AchievementEntity.fetchRequest() as! NSFetchRequest<AchievementEntity>
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \AchievementEntity.points, ascending: false)]

@@ -8,6 +8,7 @@ import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import com.alperen.spendcraft.domain.achievements.AchievementManager
 import com.alperen.spendcraft.shared.domain.calculator.TransactionAnalyzer as SharedTransactionAnalyzer
 import com.alperen.spendcraft.shared.domain.calculator.StreakCalculator as SharedStreakCalculator
+import com.alperen.spendcraft.shared.presentation.SharedTransactionBusinessLogic
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -21,6 +22,9 @@ class DashboardViewModel @Inject constructor(
     private val transactionsRepository: TransactionsRepository,
     private val achievementManager: AchievementManager
 ) : ViewModel() {
+    
+    // Shared business logic - NO PLATFORM DEPENDENCIES
+    private val sharedBusinessLogic = SharedTransactionBusinessLogic()
 
     // Transactions flow
     val transactions: StateFlow<List<Transaction>> = transactionsRepository.observeTransactions()

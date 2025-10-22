@@ -33,6 +33,16 @@ object NotificationRules {
     }
     
     /**
+     * Check if budget alert should be sent (overloaded for BudgetAnalysis)
+     */
+    fun shouldSendBudgetAlert(
+        analysis: com.alperen.spendcraft.shared.domain.calculator.BudgetCalculator.BudgetAnalysis,
+        alertLevel: Int
+    ): Boolean {
+        return shouldSendBudgetAlert(analysis.breachLevel, 0L)
+    }
+    
+    /**
      * Check if daily spending reminder should be sent
      * iOS pattern: Send at 8 PM if no transaction today
      */

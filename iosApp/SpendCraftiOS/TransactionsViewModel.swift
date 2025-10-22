@@ -17,6 +17,9 @@ class TransactionsViewModel: ObservableObject {
     
     private let context = CoreDataStack.shared.container.viewContext
     
+    // Shared business logic - NO PLATFORM DEPENDENCIES
+    private let sharedBusinessLogic = SharedTransactionBusinessLogic()
+    
     // Computed properties - NOW USING SHARED KMP CALCULATORS! 🎉
     var totalIncome: Double {
         // Delegate to shared calculator
