@@ -22,6 +22,7 @@ import com.alperen.spendcraft.auth.AuthViewModel
 import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.ui.R as CoreR
 import kotlinx.coroutines.launch
+import com.alperen.spendcraft.shared.domain.validation.AccountValidator as SharedAccountValidator
 
 /**
  * iOS AccountInfoView'in birebir Android karşılığı

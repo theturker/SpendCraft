@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import shared
 
 // MARK: - AuthViewModel
 
@@ -66,22 +67,19 @@ class AuthViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        // Basit validation
-        guard !email.isEmpty, !password.isEmpty else {
-            isLoading = false
-            errorMessage = "E-posta ve şifre gerekli"
-            throw AuthError.invalidInput
-        }
+        // NOW USING SHARED KMP VALIDATORS! 🎉
+        let emailValidation = shared.AccountValidator.shared.validateEmail(email: email)
+        let passwordValidation = shared.AccountValidator.shared.validatePassword(password: password)
         
-        guard email.contains("@") else {
+        guard emailValidation.isValid else {
             isLoading = false
-            errorMessage = "Geçerli bir e-posta adresi girin"
+            errorMessage = emailValidation.errorMessage ?? "Geçerli bir e-posta adresi girin"
             throw AuthError.invalidEmail
         }
         
-        guard password.count >= 6 else {
+        guard passwordValidation.isValid else {
             isLoading = false
-            errorMessage = "Şifre en az 6 karakter olmalı"
+            errorMessage = passwordValidation.errorMessage ?? "Şifre en az 6 karakter olmalı"
             throw AuthError.weakPassword
         }
         
@@ -1295,13 +1293,13 @@ struct RegisterView: View {
     }
     
     private var isFormValid: Bool {
-        !name.isEmpty &&
-        !email.isEmpty &&
-        !password.isEmpty &&
-        !confirmPassword.isEmpty &&
-        password == confirmPassword &&
-        password.count >= 6 &&
-        email.contains("@")
+        // NOW USING SHARED KMP VALIDATORS! 🎉
+        let nameValid = shared.AccountValidator.shared.validateName(name: name).isValid
+        let emailValid = shared.AccountValidator.shared.validateEmail(email: email).isValid
+        let passwordValid = shared.AccountValidator.shared.validatePassword(password: password).isValid
+        let passwordsMatch = password == confirmPassword && !password.isEmpty
+        
+        return nameValid && emailValid && passwordValid && passwordsMatch
     }
     
     private var passwordsMatch: Bool {

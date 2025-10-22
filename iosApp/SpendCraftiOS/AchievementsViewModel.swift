@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import SwiftUI
+import shared
 
 class AchievementsViewModel: ObservableObject {
     @Published var achievements: [AchievementEntity] = []
@@ -158,19 +159,20 @@ class AchievementsViewModel: ObservableObject {
     }
     
     func updateStreak() {
+        // NOW USING SHARED KMP CALCULATOR! 🎉
         let lastDate = UserDefaults.standard.object(forKey: "lastStreakDate") as? Date ?? Date.distantPast
-        let calendar = Calendar.current
+        let today = Date()
         
-        if calendar.isDateInToday(lastDate) {
-            // Already updated today
-            return
-        } else if calendar.isDateInYesterday(lastDate) {
-            // Continue streak
-            currentStreak += 1
-        } else {
-            // Reset streak
-            currentStreak = 1
-        }
+        // Delegate to shared calculator
+        let lastStreakDate = shared.DateTimeFormatter.shared.dateToInstant(date: lastDate)
+        let todayInstant = shared.DateTimeFormatter.shared.dateToInstant(date: today)
+        
+        let streakResult = shared.StreakCalculator.shared.calculateCurrentStreak(
+            dailyEntries: [lastStreakDate],
+            today: todayInstant
+        )
+        
+        currentStreak = Int(streakResult)
         
         // Update longest streak
         if currentStreak > longestStreak {

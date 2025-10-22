@@ -65,6 +65,7 @@ class TransactionsViewModel @Inject constructor(
     val accounts: StateFlow<List<com.alperen.spendcraft.core.model.Account>> = observeAccounts()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    // Streak - SIMPLIFIED FOR NOW
     val streak: StateFlow<com.alperen.spendcraft.core.model.Streak> = observeStreak()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), com.alperen.spendcraft.core.model.Streak(0, 0))
     

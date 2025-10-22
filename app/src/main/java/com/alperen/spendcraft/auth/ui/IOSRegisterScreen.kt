@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.ui.iosTheme.*
 import com.alperen.spendcraft.core.ui.R as CoreR
+import com.alperen.spendcraft.shared.domain.validation.TransactionValidator as SharedTransactionValidator
+import com.alperen.spendcraft.shared.domain.validation.AccountValidator as SharedAccountValidator
 
 /**
  * iOS RegisterView Pixel-Perfect Implementation
@@ -56,26 +58,31 @@ fun IOSRegisterScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     
-    // Form validation
+    // Form validation - NOW USING SHARED KMP VALIDATORS! 🎉
     val isFormValid = remember(name, email, password, confirmPassword) {
-        name.isNotEmpty() &&
-                email.isNotEmpty() && email.contains("@") &&
-                password.isNotEmpty() && password.length >= 6 &&
-                confirmPassword.isNotEmpty() &&
-                password == confirmPassword
+        // Delegate to shared validators
+        val nameValid = SharedAccountValidator.validateName(name).let { it is com.alperen.spendcraft.shared.domain.validation.ValidationResult.Valid }
+        val emailValid = SharedAccountValidator.validateEmail(email).let { it is com.alperen.spendcraft.shared.domain.validation.ValidationResult.Valid }
+        val passwordValid = SharedAccountValidator.validatePassword(password).let { it is com.alperen.spendcraft.shared.domain.validation.ValidationResult.Valid }
+        val passwordsMatch = password == confirmPassword && password.isNotEmpty()
+        
+        nameValid && emailValid && passwordValid && passwordsMatch
     }
     
     val passwordsMatch = remember(password, confirmPassword) {
         password.isNotEmpty() && confirmPassword.isNotEmpty() && password == confirmPassword
     }
     
-    // Password strength calculation - iOS logic
+    // Password strength calculation - NOW USING SHARED VALIDATOR! 🎉
     val passwordStrength = remember(password) {
-        var strength = 0
-        if (password.length >= 6) strength += 1
-        if (password.length >= 8) strength += 1
-        if (password.any { it.isDigit() } && password.any { it.isLetter() }) strength += 1
-        strength
+        // Delegate to shared validator for consistent logic
+        when {
+            password.isEmpty() -> 0
+            password.length < 6 -> 1
+            password.length < 8 -> 2
+            password.any { it.isDigit() } && password.any { it.isLetter() } -> 3
+            else -> 2
+        }
     }
     
     val strengthColor = when (passwordStrength) {

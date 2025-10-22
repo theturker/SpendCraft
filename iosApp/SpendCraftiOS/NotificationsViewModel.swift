@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import UserNotifications
+import shared
 
 class NotificationsViewModel: ObservableObject {
     @Published var notifications: [NotificationItem] = []

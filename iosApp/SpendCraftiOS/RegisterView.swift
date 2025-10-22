@@ -1,4 +1,5 @@
 import SwiftUI
+import shared
 
 struct RegisterView: View {
     @StateObject private var authViewModel = AuthViewModel()
@@ -194,13 +195,13 @@ struct RegisterView: View {
     }
     
     private var isFormValid: Bool {
-        !name.isEmpty &&
-        !email.isEmpty &&
-        !password.isEmpty &&
-        !confirmPassword.isEmpty &&
-        password == confirmPassword &&
-        password.count >= 6 &&
-        email.contains("@")
+        // NOW USING SHARED KMP VALIDATORS! 🎉
+        let nameValid = shared.AccountValidator.shared.validateName(name: name).isValid
+        let emailValid = shared.AccountValidator.shared.validateEmail(email: email).isValid
+        let passwordValid = shared.AccountValidator.shared.validatePassword(password: password).isValid
+        let passwordsMatch = password == confirmPassword && !password.isEmpty
+        
+        return nameValid && emailValid && passwordValid && passwordsMatch
     }
     
     private func handleRegister() {

@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import shared
 
 @objc(TransactionEntity)
 public class TransactionEntity: NSManagedObject {
@@ -24,35 +25,33 @@ extension TransactionEntity {
         return Double(amountMinor) / 100.0
     }
     
+    /// NOW USES SHARED KMP FORMATTER! 🎉
     var formattedAmount: String {
-        let currencySymbol = getCurrentCurrencySymbol()
         let currencyCode = getCurrentCurrencyCode()
         
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        
-        // Türk Lirası için özel format
-        if currencyCode == "TRY" {
-            formatter.locale = Locale(identifier: "tr_TR")
-            formatter.groupingSeparator = "."
-            formatter.decimalSeparator = ","
-        } else {
-            formatter.locale = Locale(identifier: "en_US")
-            formatter.groupingSeparator = ","
-            formatter.decimalSeparator = "."
-        }
-        
-        let formattedNumber = formatter.string(from: NSNumber(value: amount)) ?? "0.00"
-        return "\(isIncome ? "+" : "-")\(formattedNumber) \(currencySymbol)"
+        // Delegate to shared KMP formatter
+        return shared.CurrencyFormatter.shared.format(
+            minorUnits: amountMinor,
+            currencyCode: currencyCode,
+            showSign: true,
+            isIncome: isIncome
+        )
     }
     
+    /// NOW USES SHARED KMP FORMATTER! 🎉
     var formattedDate: String {
-        let date = Date(timeIntervalSince1970: TimeInterval(timestampUtcMillis / 1000))
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM yyyy"
-        formatter.locale = Locale(identifier: "tr_TR")
-        return formatter.string(from: date)
+        // Delegate to shared KMP DateTimeFormatter
+        return shared.DateTimeFormatter.shared.format(
+            timestampMillis: timestampUtcMillis,
+            format: .medium,
+            locale: "tr_TR"
+        )
+    }
+    
+    /// NEW: Relative time format ("5 dakika önce")
+    var formattedDateRelative: String {
+        return shared.DateTimeFormatter.shared.formatRelative(
+            timestampMillis: timestampUtcMillis
+        )
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import SwiftUI
+import shared
 
 class TransactionsViewModel: ObservableObject {
     @Published var transactions: [TransactionEntity] = []
@@ -16,17 +17,56 @@ class TransactionsViewModel: ObservableObject {
     
     private let context = CoreDataStack.shared.container.viewContext
     
-    // Computed properties
+    // Computed properties - NOW USING SHARED KMP CALCULATORS! 🎉
     var totalIncome: Double {
-        transactions.filter { $0.isIncome }.reduce(0) { $0 + ($1.amount) }
+        // Delegate to shared calculator
+        let sharedTransactions = transactions.map { transaction in
+            shared.Transaction(
+                id: KotlinLong(value: transaction.id),
+                amount: shared.Money(minorUnits: transaction.amountMinor),
+                timestampUtcMillis: transaction.timestampUtcMillis,
+                note: transaction.note,
+                categoryId: KotlinLong(value: transaction.categoryId),
+                accountId: KotlinLong(value: transaction.accountId),
+                type: transaction.isIncome ? shared.TransactionType.income : shared.TransactionType.expense
+            )
+        }
+        
+        return Double(shared.TransactionAnalyzer.shared.calculateTotalIncome(transactions: sharedTransactions)) / 100.0
     }
     
     var totalExpense: Double {
-        transactions.filter { !$0.isIncome }.reduce(0) { $0 + ($1.amount) }
+        // Delegate to shared calculator
+        let sharedTransactions = transactions.map { transaction in
+            shared.Transaction(
+                id: KotlinLong(value: transaction.id),
+                amount: shared.Money(minorUnits: transaction.amountMinor),
+                timestampUtcMillis: transaction.timestampUtcMillis,
+                note: transaction.note,
+                categoryId: KotlinLong(value: transaction.categoryId),
+                accountId: KotlinLong(value: transaction.accountId),
+                type: transaction.isIncome ? shared.TransactionType.income : shared.TransactionType.expense
+            )
+        }
+        
+        return Double(shared.TransactionAnalyzer.shared.calculateTotalExpense(transactions: sharedTransactions)) / 100.0
     }
     
     var currentBalance: Double {
-        totalIncome - totalExpense
+        // Delegate to shared calculator
+        let sharedTransactions = transactions.map { transaction in
+            shared.Transaction(
+                id: KotlinLong(value: transaction.id),
+                amount: shared.Money(minorUnits: transaction.amountMinor),
+                timestampUtcMillis: transaction.timestampUtcMillis,
+                note: transaction.note,
+                categoryId: KotlinLong(value: transaction.categoryId),
+                accountId: KotlinLong(value: transaction.accountId),
+                type: transaction.isIncome ? shared.TransactionType.income : shared.TransactionType.expense
+            )
+        }
+        
+        return Double(shared.TransactionAnalyzer.shared.calculateCurrentBalance(transactions: sharedTransactions)) / 100.0
     }
     
     func loadData() {

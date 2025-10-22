@@ -2,6 +2,7 @@ import CoreData
 import Foundation
 import UIKit
 import SwiftUI
+import shared
 
 class CoreDataStack: ObservableObject {
     static let shared = CoreDataStack()
@@ -245,27 +246,43 @@ func getCurrentCurrencyCode() -> String {
 }
 
 /// Tutarı seçilen para birimine göre formatla
+/// NOW USES SHARED KMP FORMATTER! 🎉
+/// Benefits: Consistent with Android, locale-aware, compact format support
 func formatCurrency(_ amount: Double) -> String {
     let selectedCurrency = getCurrentCurrencyCode()
-    let selectedSymbol = getCurrentCurrencySymbol()
+    let minorUnits = Int64(amount * 100)
     
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .decimal
-    formatter.minimumFractionDigits = 2
-    formatter.maximumFractionDigits = 2
+    // Delegate to shared KMP formatter
+    return shared.CurrencyFormatter.shared.format(
+        minorUnits: minorUnits,
+        currencyCode: selectedCurrency,
+        showSign: false,
+        isIncome: false
+    )
+}
+
+/// Format amount with sign (+ for income, - for expense)
+/// NEW FEATURE: Now available from shared formatter
+func formatCurrencyWithSign(_ amount: Double, isIncome: Bool) -> String {
+    let selectedCurrency = getCurrentCurrencyCode()
+    let minorUnits = Int64(amount * 100)
     
-    // Türk Lirası için özel format
-    if selectedCurrency == "TRY" {
-        formatter.locale = Locale(identifier: "tr_TR")
-        formatter.groupingSeparator = "."
-        formatter.decimalSeparator = ","
-    } else {
-        // Diğer para birimleri için varsayılan format
-        formatter.locale = Locale(identifier: "en_US")
-        formatter.groupingSeparator = ","
-        formatter.decimalSeparator = "."
-    }
+    return shared.CurrencyFormatter.shared.format(
+        minorUnits: minorUnits,
+        currencyCode: selectedCurrency,
+        showSign: true,
+        isIncome: isIncome
+    )
+}
+
+/// Format in compact form (1.5K ₺)
+/// NEW FEATURE: Compact notation from shared
+func formatCurrencyCompact(_ amount: Double) -> String {
+    let selectedCurrency = getCurrentCurrencyCode()
+    let minorUnits = Int64(amount * 100)
     
-    let formattedNumber = formatter.string(from: NSNumber(value: abs(amount))) ?? "0.00"
-    return "\(formattedNumber) \(selectedSymbol)"
+    return shared.CurrencyFormatter.shared.formatCompact(
+        minorUnits: minorUnits,
+        currencyCode: selectedCurrency
+    )
 }

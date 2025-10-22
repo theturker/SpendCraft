@@ -62,6 +62,9 @@ android {
 }
 
 dependencies {
+    // KMP Shared module (Domain + Business Logic)
+    implementation(project(":shared"))
+    
     implementation(project(":core:ui"))
     implementation(project(":core:analytics"))
     implementation(project(":core:model"))

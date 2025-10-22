@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import SwiftUI
+import shared
 
 class BudgetViewModel: ObservableObject {
     @Published var budgets: [BudgetEntity] = []
@@ -64,6 +65,20 @@ class BudgetViewModel: ObservableObject {
         guard let category = budget.category else { return 0 }
         let spent = spentForCategory(category)
         let limit = Double(budget.monthlyLimitMinor) / 100.0
-        return limit > 0 ? min(spent / limit, 1.0) : 0
+        
+        // NOW USING SHARED KMP CALCULATOR! 🎉
+        let sharedBudget = shared.Budget(
+            categoryId: budget.categoryId ?? "0",
+            monthlyLimitMinor: budget.monthlyLimitMinor
+        )
+        
+        // Delegate to shared calculator
+        let analysis = shared.BudgetCalculator.shared.analyze(
+            budget: sharedBudget,
+            spent: Int64(spent * 100),
+            timestampMillis: Int64(Date().timeIntervalSince1970 * 1000)
+        )
+        
+        return analysis.percentage / 100.0
     }
 }
