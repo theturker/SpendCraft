@@ -117,6 +117,9 @@ fun MainTabNavigation(
 ) {
     val navController = rememberNavController()
     
+    // Shared ViewModel to avoid duplicate Hilt registration
+    val transactionsViewModel: TransactionsViewModel = hiltViewModel()
+    
     // Listen to navigation changes and update selected tab
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -197,7 +200,6 @@ fun MainTabNavigation(
             
             // 2. Transactions Tab
             composable(TabScreen.Transactions.route) {
-                val transactionsViewModel: TransactionsViewModel = hiltViewModel()
                 val transactions by transactionsViewModel.items.collectAsState()
                 val categories by transactionsViewModel.categories.collectAsState()
                 val accounts by transactionsViewModel.accounts.collectAsState()
@@ -223,7 +225,6 @@ fun MainTabNavigation(
             
             // 3. Reports Tab
             composable(TabScreen.Reports.route) {
-                val transactionsViewModel: TransactionsViewModel = hiltViewModel()
                 val transactions by transactionsViewModel.items.collectAsState()
                 val categories by transactionsViewModel.categories.collectAsState()
                 val notificationsViewModel: com.alperen.spendcraft.feature.notifications.NotificationsViewModel = androidx.hilt.navigation.compose.hiltViewModel()

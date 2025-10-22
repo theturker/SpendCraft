@@ -50,5 +50,5 @@ Pod::Spec.new do |spec|
             SCRIPT
         }
     ]
-    spec.libraries = 'sqlite3'
+    spec.libraries = sqlite3
 end
