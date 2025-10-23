@@ -45,15 +45,8 @@ import com.alperen.spendcraft.reminder.ReminderScheduler
 import com.alperen.spendcraft.feature.welcome.ui.WelcomeScreen
 import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
 import com.alperen.spendcraft.FirstLaunchHelper
-import com.alperen.spendcraft.auth.AuthViewModel
-import com.alperen.spendcraft.auth.AuthState
-import com.alperen.spendcraft.auth.ui.LoginScreen
-import com.alperen.spendcraft.auth.ui.RegisterScreen
-import com.alperen.spendcraft.auth.ui.ForgotPasswordScreen
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.common.api.ApiException
-import android.content.Intent
+// Authentication imports removed - auth is disabled
+// Google Auth imports removed - auth is disabled
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -63,29 +56,17 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var firstLaunchHelper: FirstLaunchHelper
     
-    @Inject
-    lateinit var googleAuthService: com.alperen.spendcraft.auth.GoogleAuthService
+    // GoogleAuthService removed - auth is disabled
     
     @Inject
     lateinit var billingRepository: com.alperen.spendcraft.core.billing.BillingRepository
     
-    private var googleSignInResult by mutableStateOf<GoogleSignInAccount?>(null)
+    // googleSignInResult removed - auth is disabled
     
     // Native splash ekranı için ready flag
     private var isReady = false
     
-    private val googleSignInLauncher = registerForActivityResult(
-        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        try {
-            val account = task.getResult(ApiException::class.java)
-            googleSignInResult = account
-        } catch (e: ApiException) {
-            println("Google Sign-In failed: ${e.message}")
-            googleSignInResult = null
-        }
-    }
+    // googleSignInLauncher removed - auth is disabled
     
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -119,8 +100,6 @@ class MainActivity : ComponentActivity() {
             val scope = rememberCoroutineScope()
             val themeMode by ThemeHelper.getThemeMode(context).collectAsState(initial = ThemeMode.SYSTEM)
             val isFirstLaunch by firstLaunchHelper.isFirstLaunch.collectAsState(initial = true)
-            val authViewModel: AuthViewModel = viewModel()
-            val authState by authViewModel.authState.collectAsState()
             
             // Calculate isDarkMode based on theme mode
             val systemInDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
@@ -130,12 +109,9 @@ class MainActivity : ComponentActivity() {
                 ThemeMode.DARK -> true
             }
             
-            var currentAuthScreen by remember { mutableStateOf("login") }
+            // currentAuthScreen removed - auth is disabled
             
-            // Google Auth Service'i initialize et
-            LaunchedEffect(Unit) {
-                googleAuthService.initialize(context)
-            }
+            // Google Auth Service removed - auth is disabled
             
             // BillingRepository'yi initialize et
             LaunchedEffect(Unit) {
@@ -147,13 +123,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             
-            // Google Sign-In result'u handle et
-            LaunchedEffect(googleSignInResult) {
-                googleSignInResult?.let { account ->
-                    authViewModel.signInWithGoogle(account)
-                    googleSignInResult = null
-                }
-            }
+            // Google Sign-In result handling removed - auth is disabled
 
             SpendCraftTheme(darkTheme = isDarkMode) {
                 // Sistem barlarının rengini ve ikon renklerini ayarla
@@ -190,57 +160,10 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        // TODO: Authentication geçici olarak devre dışı - kullanıcılar direkt girebilsin
-                        // authState is AuthState.Unauthenticated -> {
-                        //     val isLoading by authViewModel.isLoading.collectAsState()
-                        //     val errorMessage by authViewModel.errorMessage.collectAsState()
-                        //     
-                        //     when (currentAuthScreen) {
-                        //         "login" -> {
-                        //             com.alperen.spendcraft.auth.ui.IOSLoginScreen(
-                        //                 onLoginClick = { email, password ->
-                        //                     scope.launch {
-                        //                         authViewModel.signIn(email, password)
-                        //                     }
-                        //                 },
-                        //                 onNavigateToRegister = { currentAuthScreen = "register" },
-                        //                 onNavigateToForgotPassword = { currentAuthScreen = "forgot" },
-                        //                 isLoading = isLoading,
-                        //                 errorMessage = errorMessage
-                        //             )
-                        //         }
-                        //         "register" -> {
-                        //             com.alperen.spendcraft.auth.ui.IOSRegisterScreen(
-                        //                 onRegisterClick = { name, email, password ->
-                        //                     scope.launch {
-                        //                         authViewModel.register(name, email, password, password)
-                        //                     }
-                        //                 },
-                        //                 onNavigateToLogin = { currentAuthScreen = "login" },
-                        //                 isLoading = isLoading,
-                        //                 errorMessage = errorMessage
-                        //             )
-                        //         }
-                        //         "forgot" -> {
-                        //             com.alperen.spendcraft.auth.ui.IOSForgotPasswordScreen(
-                        //                 onSendResetLink = { email ->
-                        //                     scope.launch {
-                        //                         authViewModel.sendPasswordReset(email)
-                        //                     }
-                        //                 },
-                        //                 onNavigateToLogin = { currentAuthScreen = "login" },
-                        //                 isLoading = isLoading,
-                        //                 errorMessage = errorMessage
-                        //             )
-                        //         }
-                        //     }
-                        // }
-                        // TODO: Authentication geçici olarak devre dışı - her zaman AppNavHost'u göster
-                        // authState is AuthState.Authenticated -> {
                         else -> {
+                            // Authentication tamamen devre dışı - kullanıcılar direkt ana ekrana girer
                             AppNavHost()
                         }
-                        // }
                     }
                 }
             }
