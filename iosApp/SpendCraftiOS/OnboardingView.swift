@@ -484,15 +484,22 @@ struct RootView: View {
                     }
             } else if !hasCompletedOnboarding {
                 OnboardingView()
-            } else if authViewModel.isAuthenticated {
+            } else {
+                // TODO: Authentication geçici olarak devre dışı - kullanıcılar direkt girebilsin
+                // Authentication kontrolü kaldırıldı, direkt ContentView gösteriliyor
                 ContentView()
                     .environmentObject(authViewModel)
-            } else {
-                AuthFlowView()
-                    .environmentObject(authViewModel)
+                
+                // AUTH DEVRE DIŞI - ESKİ KOD:
+                // } else if authViewModel.isAuthenticated {
+                //     ContentView()
+                //         .environmentObject(authViewModel)
+                // } else {
+                //     AuthFlowView()
+                //         .environmentObject(authViewModel)
+                // }
             }
         }
-        .animation(.easeInOut(duration: 0.5), value: authViewModel.isAuthenticated)
         .animation(.easeInOut(duration: 0.5), value: hasCompletedOnboarding)
         .animation(.easeInOut(duration: 0.5), value: showSplash)
     }

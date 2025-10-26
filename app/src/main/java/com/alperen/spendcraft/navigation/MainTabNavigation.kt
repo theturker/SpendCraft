@@ -310,18 +310,11 @@ fun MainTabNavigation(
                 val unreadCount by notificationsViewModel.unreadCount.collectAsState()
                 val dashboardViewModel: com.alperen.spendcraft.feature.dashboard.DashboardViewModel = androidx.hilt.navigation.compose.hiltViewModel()
                 val totalPoints by dashboardViewModel.totalPoints.collectAsState()
-                val authViewModel: com.alperen.spendcraft.auth.AuthViewModel = androidx.hilt.navigation.compose.hiltViewModel()
-                val authState by authViewModel.authState.collectAsState()
                 
-                // iOS'ta authViewModel'den user bilgileri
-                val userName: String = when (val state = authState) {
-                    is com.alperen.spendcraft.auth.AuthState.Authenticated -> state.user.displayName ?: "Kullanıcı"
-                    else -> "Kullanıcı"
-                }
-                val userEmail: String = when (val state = authState) {
-                    is com.alperen.spendcraft.auth.AuthState.Authenticated -> state.user.email ?: ""
-                    else -> ""
-                }
+                // TODO: Authentication geçici olarak devre dışı - Login/Register kullanılmıyor
+                // AuthViewModel kaldırıldı, artık varsayılan kullanıcı bilgileri kullanılıyor
+                val userName: String = "Kullanıcı"
+                val userEmail: String = ""
                 
                 // Para birimi - iOS @AppStorage("selectedCurrency")
                 val prefs = ctx.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
@@ -338,8 +331,8 @@ fun MainTabNavigation(
                     onNavigateToCurrencySettings = onNavigateToCurrencyPicker,  // iOS CurrencyPickerView
                     onNavigateToAccountInfo = onNavigateToAccountInfo,  // iOS AccountInfoView
                     onSignOut = {
-                        // iOS'taki sign out - AuthViewModel.signOut()
-                        authViewModel.signOut()
+                        // TODO: Authentication devre dışı - Çıkış Yap butonu da devre dışı
+                        // authViewModel.signOut()
                     },
                     userName = userName,
                     userEmail = userEmail,
