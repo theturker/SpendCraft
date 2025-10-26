@@ -468,8 +468,12 @@ struct OnboardingPageView: View {
 // Main app entry point düzenlemesi
 struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage("biometric_enabled") private var biometricEnabled = false
     @State private var showSplash = true
+    @State private var showBiometricAuth = false
+    @State private var biometricAuthenticated = false
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var biometricManager = BiometricManager.shared
     
     var body: some View {
         Group {
@@ -485,23 +489,43 @@ struct RootView: View {
             } else if !hasCompletedOnboarding {
                 OnboardingView()
             } else {
-                // TODO: Authentication geçici olarak devre dışı - kullanıcılar direkt girebilsin
-                // Authentication kontrolü kaldırıldı, direkt ContentView gösteriliyor
-                ContentView()
-                    .environmentObject(authViewModel)
-                
-                // AUTH DEVRE DIŞI - ESKİ KOD:
-                // } else if authViewModel.isAuthenticated {
-                //     ContentView()
-                //         .environmentObject(authViewModel)
-                // } else {
-                //     AuthFlowView()
-                //         .environmentObject(authViewModel)
-                // }
+                // Biometric kontrolü - eğer etkinse
+                if biometricEnabled && biometricManager.isAvailable && !biometricAuthenticated {
+                    // Biometric authentication ekranı göster
+                    BiometricAuthView(
+                        onAuthenticated: {
+                            biometricAuthenticated = true
+                        }
+                    )
+                    .environmentObject(biometricManager)
+                } else {
+                    // Ana uygulama
+                    ContentView()
+                        .environmentObject(authViewModel)
+                        .onAppear {
+                            // Uygulama açıldığında biometric kontrolü yap
+                            if biometricEnabled && biometricManager.isAvailable {
+                                Task {
+                                    do {
+                                        let success = try await biometricManager.authenticate(reason: "Uygulamaya giriş yapın")
+                                        if success {
+                                            biometricAuthenticated = true
+                                        }
+                                    } catch {
+                                        // Biometric başarısız olursa yine de uygulamayı aç
+                                        biometricAuthenticated = true
+                                    }
+                                }
+                            } else {
+                                biometricAuthenticated = true
+                            }
+                        }
+                }
             }
         }
         .animation(.easeInOut(duration: 0.5), value: hasCompletedOnboarding)
         .animation(.easeInOut(duration: 0.5), value: showSplash)
+        .animation(.easeInOut(duration: 0.5), value: biometricAuthenticated)
     }
 }
 

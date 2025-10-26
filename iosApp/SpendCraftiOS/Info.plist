@@ -41,6 +41,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Uygulamanıza güvenli giriş yapmanız için Face ID kullanılacaktır.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>AI önerileri için internet bağlantısı gereklidir.</string>
 	<key>NSUserNotificationsUsageDescription</key>

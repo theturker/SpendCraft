@@ -16,6 +16,8 @@
 		90417A522E9E5FF600418F07 /* CurrencySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90417A512E9E5FF600418F07 /* CurrencySettingsView.swift */; };
 		904C84332E9DA105008F6F01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 904C84322E9DA105008F6F01 /* GoogleService-Info.plist */; };
 		905181052E98529900F81AAC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 905181042E98529900F81AAC /* Media.xcassets */; };
+		9056134F2EAEBE6600B340FF /* BiometricAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9056134D2EAEBE6600B340FF /* BiometricAuthView.swift */; };
+		905613502EAEBE6600B340FF /* BiometricManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9056134E2EAEBE6600B340FF /* BiometricManager.swift */; };
 		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
 		908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908773A62E95857B00AB0783 /* CoreDataStack.swift */; };
 		90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BBB2E9666EC005C595F /* OnboardingView.swift */; };
@@ -68,6 +70,8 @@
 		90417A512E9E5FF600418F07 /* CurrencySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySettingsView.swift; sourceTree = "<group>"; };
 		904C84322E9DA105008F6F01 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		905181042E98529900F81AAC /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		9056134D2EAEBE6600B340FF /* BiometricAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAuthView.swift; sourceTree = "<group>"; };
+		9056134E2EAEBE6600B340FF /* BiometricManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricManager.swift; sourceTree = "<group>"; };
 		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		908773A62E95857B00AB0783 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpendCraft.xcdatamodeld; sourceTree = "<group>"; };
@@ -133,6 +137,8 @@
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
+				9056134D2EAEBE6600B340FF /* BiometricAuthView.swift */,
+				9056134E2EAEBE6600B340FF /* BiometricManager.swift */,
 				90E41C7C2E9E90FB001188EB /* BannerAdView.swift */,
 				90E41C7A2E9E8B87001188EB /* AdsManager.swift */,
 				90417A512E9E5FF600418F07 /* CurrencySettingsView.swift */,
@@ -397,6 +403,8 @@
 				90A11BC22E966712005C595F /* AIManager.swift in Sources */,
 				90AB66EC2E9599940063F8A7 /* BudgetEntity+CoreDataClass.swift in Sources */,
 				90AB66EE2E9599940063F8A7 /* BudgetEntity+CoreDataProperties.swift in Sources */,
+				9056134F2EAEBE6600B340FF /* BiometricAuthView.swift in Sources */,
+				905613502EAEBE6600B340FF /* BiometricManager.swift in Sources */,
 				90A11BC62E966743005C595F /* ExportView.swift in Sources */,
 				90AB66F02E9599950063F8A7 /* RecurringTransactionEntity+CoreDataClass.swift in Sources */,
 				90AB66F22E9599950063F8A7 /* RecurringTransactionEntity+CoreDataProperties.swift in Sources */,

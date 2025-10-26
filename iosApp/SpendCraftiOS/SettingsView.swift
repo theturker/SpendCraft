@@ -17,8 +17,10 @@ struct SettingsView: View {
     @EnvironmentObject var notificationsViewModel: NotificationsViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var notificationManager = NotificationManager.shared
+    @StateObject private var biometricManager = BiometricManager.shared
     
     @AppStorage("selectedCurrency") private var selectedCurrency: String = "TRY"
+    @AppStorage("biometric_enabled") private var biometricEnabled = false
     
     @State private var showAISettings = false
     @State private var showAISuggestions = false
@@ -28,6 +30,8 @@ struct SettingsView: View {
     @State private var showSignOutConfirm = false
     @State private var signOutError: String?
     @State private var showCategoryDebug = false
+    @State private var showBiometricError = false
+    @State private var biometricError: String?
 
     var body: some View {
         List {
@@ -198,6 +202,44 @@ struct SettingsView: View {
                 Text("Özellikler")
             }
             
+            // Security Section - Face ID / Touch ID
+            if biometricManager.isAvailable {
+                Section {
+                    Toggle(isOn: $biometricEnabled) {
+                        HStack {
+                            Image(systemName: biometricManager.biometricType == .faceID ? "faceid" : "touchid")
+                                .foregroundColor(.blue)
+                            Text(biometricManager.getBiometricTypeName())
+                        }
+                    }
+                    .onChange(of: biometricEnabled) { newValue in
+                        if newValue {
+                            // Biometric'i test et
+                            Task {
+                                do {
+                                    let success = try await biometricManager.authenticate(reason: "Face ID / Touch ID'yi etkinleştirmek için kimlik doğrulaması yapın")
+                                    if !success {
+                                        biometricEnabled = false
+                                    }
+                                } catch {
+                                    biometricEnabled = false
+                                    biometricError = "Biometric etkinleştirilemedi"
+                                    showBiometricError = true
+                                }
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Güvenlik")
+                } footer: {
+                    if biometricEnabled {
+                        Text("Uygulamaya her giriş yaptığınızda \(biometricManager.getBiometricTypeName()) ile kimlik doğrulaması gerekecek.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            
             // Data Management
             Section {
                 Button {
@@ -287,6 +329,13 @@ struct SettingsView: View {
         .sheet(isPresented: $showNotificationSettings) {
             NotificationSettingsView()
                 .environmentObject(transactionsViewModel)
+        }
+        .alert("Biometric Hatası", isPresented: $showBiometricError) {
+            Button("Tamam", role: .cancel) {}
+        } message: {
+            if let error = biometricError {
+                Text(error)
+            }
         }
         // TODO: Çıkış Yap alert dialog'u geçici olarak devre dışı
         // .alert("Çıkış yapılsın mı?", isPresented: $showSignOutConfirm) {
