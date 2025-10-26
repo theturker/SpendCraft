@@ -71,6 +71,7 @@ struct UserProfilingView: View {
                             Text(questions[currentPage].question)
                                 .font(.title2)
                                 .fontWeight(.semibold)
+                                .foregroundColor(.primary)  // Light ve dark mod için okunabilir
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
                         }
@@ -83,33 +84,36 @@ struct UserProfilingView: View {
                                 Button {
                                     selectOption(option)
                                 } label: {
+                                    let isSelected = answers[questions[currentPage].id]?.contains(option) ?? false
                                     HStack {
                                         Text(option)
                                             .fontWeight(.medium)
+                                            .foregroundColor(isSelected ? .white : .primary)  // Seçili: beyaz, değil: sistem rengi (dark/light otomatik)
                                         Spacer()
-                                        let isSelected = answers[questions[currentPage].id]?.contains(option) ?? false
                                         if isSelected {
                                             Image(systemName: "checkmark.circle.fill")
                                                 .foregroundColor(.white)
                                         } else {
                                             Image(systemName: "circle")
-                                                .foregroundColor(.white.opacity(0.5))
+                                                .foregroundColor(.primary.opacity(0.5))
                                         }
                                     }
                                     .padding()
                                     .background(
-                                        (answers[questions[currentPage].id]?.contains(option) ?? false) ?
-                                        Color.purple : Color.white.opacity(0.2)
+                                        isSelected ? Color.purple : Color(uiColor: .systemBackground).opacity(0.8)  // Light modda beyaz, dark modda siyah
                                     )
                                     .cornerRadius(12)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color.primary.opacity(0.1), lineWidth: 1)  // Hafif kenarlık
+                                    )
                                 }
-                                .foregroundColor(.white)
                             }
                             
                             // Multiple selection hint
                             Text("* Birden fazla seçenek işaretleyebilirsiniz")
                                 .font(.caption)
-                                .foregroundColor(.white.opacity(0.7))
+                                .foregroundColor(.secondary)  // Light ve dark mod için uyumlu
                                 .padding(.top, 4)
                         }
                         .padding(.horizontal)
@@ -128,10 +132,10 @@ struct UserProfilingView: View {
                                     }
                                     .frame(maxWidth: .infinity)
                                     .padding()
-                                    .background(Color.white.opacity(0.2))
+                                    .background(Color.secondary.opacity(0.2))  // Light/dark mod uyumlu
+                                    .foregroundColor(.primary)  // Light modda siyah, dark modda beyaz
                                     .cornerRadius(12)
                                 }
-                                .foregroundColor(.white)
                             }
                             
                             Button {
@@ -144,9 +148,9 @@ struct UserProfilingView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding()
                                     .background((answers[questions[currentPage].id]?.isEmpty ?? true) ? Color.gray : Color.purple)
+                                    .foregroundColor(.white)  // Buton metni her zaman beyaz
                                     .cornerRadius(12)
                             }
-                            .foregroundColor(.white)
                             .disabled(answers[questions[currentPage].id]?.isEmpty ?? true)
                         }
                         .padding(.horizontal)
