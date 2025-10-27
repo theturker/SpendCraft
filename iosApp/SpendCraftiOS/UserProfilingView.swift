@@ -44,7 +44,7 @@ struct UserProfilingView: View {
                         // Progress Bar
                         VStack(spacing: 8) {
                             HStack {
-                                Text("Soru \(currentPage + 1) / \(questions.count)")
+                                Text(String(format: NSLocalizedString("profiling.question.number", comment: "Question X / Y"), currentPage + 1, questions.count))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Spacer()
@@ -68,7 +68,7 @@ struct UserProfilingView: View {
                                 .font(.system(size: 60))
                                 .foregroundColor(.purple)
                             
-                            Text(questions[currentPage].question)
+                            Text(NSLocalizedString(questions[currentPage].question, comment: ""))
                                 .font(.title2)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.primary)  // Light ve dark mod için okunabilir
@@ -86,9 +86,9 @@ struct UserProfilingView: View {
                                 } label: {
                                     let isSelected = answers[questions[currentPage].id]?.contains(option) ?? false
                                     HStack {
-                                        Text(option)
-                                            .fontWeight(.medium)
-                                            .foregroundColor(isSelected ? .white : .primary)  // Seçili: beyaz, değil: sistem rengi (dark/light otomatik)
+                                                                        Text(NSLocalizedString(option, comment: ""))
+                                    .fontWeight(.medium)
+                                    .foregroundColor(isSelected ? .white : .primary)  // Seçili: beyaz, değil: sistem rengi (dark/light otomatik)
                                         Spacer()
                                         if isSelected {
                                             Image(systemName: "checkmark.circle.fill")
@@ -111,7 +111,7 @@ struct UserProfilingView: View {
                             }
                             
                             // Multiple selection hint
-                            Text("* Birden fazla seçenek işaretleyebilirsiniz")
+                            Text(NSLocalizedString("profiling.multiple.selection", comment: "Multiple selection hint"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)  // Light ve dark mod için uyumlu
                                 .padding(.top, 4)
@@ -128,7 +128,7 @@ struct UserProfilingView: View {
                                 } label: {
                                     HStack {
                                         Image(systemName: "chevron.left")
-                                        Text("Geri")
+                                        Text(NSLocalizedString("common.back", comment: "Back"))
                                     }
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -142,7 +142,7 @@ struct UserProfilingView: View {
                                 nextQuestion()
                             } label: {
                                 HStack {
-                                    Text(currentPage == questions.count - 1 ? "Bitir" : "İleri")
+                                    Text(currentPage == questions.count - 1 ? NSLocalizedString("common.finish", comment: "Finish") : NSLocalizedString("common.next", comment: "Next"))
                                     Image(systemName: "chevron.right")
                                 }
                                     .frame(maxWidth: .infinity)
@@ -164,11 +164,11 @@ struct UserProfilingView: View {
                             .font(.system(size: 80))
                             .foregroundColor(.green)
                         
-                        Text("Profilleme Tamamlandı!")
+                        Text(NSLocalizedString("profiling.completed", comment: "Profiling Completed"))
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         
-                        Text("Cevaplarınız AI önerilerimizi kişiselleştirmek için kullanılacak.")
+                        Text(NSLocalizedString("profiling.completed.description", comment: "Profiling completed description"))
                             .font(.body)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
@@ -177,7 +177,7 @@ struct UserProfilingView: View {
                         Button {
                             saveAndClose()
                         } label: {
-                            Text("Tamam")
+                            Text(NSLocalizedString("common.ok", comment: "OK"))
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity)
                                 .padding()

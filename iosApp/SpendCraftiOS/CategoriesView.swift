@@ -24,11 +24,11 @@ struct CategoriesView: View {
                         .font(.system(size: 60))
                         .foregroundColor(.gray)
                     
-                    Text("Henüz kategori yok")
+                    Text(NSLocalizedString("categories.no.categories", comment: "No categories"))
                         .font(.title2)
                         .fontWeight(.semibold)
                     
-                    Text("Kategoriler oluşturup harcamalarınızı organize edin")
+                    Text(NSLocalizedString("categories.no.categories.hint", comment: "No categories hint"))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -37,7 +37,7 @@ struct CategoriesView: View {
                     Button {
                         showAddCategory = true
                     } label: {
-                        Text("İlk Kategoriyi Ekle")
+                        Text(NSLocalizedString("categories.add.first", comment: "Add First Category"))
                             .fontWeight(.semibold)
                             .foregroundColor(.white)
                             .padding()
@@ -63,14 +63,14 @@ struct CategoriesView: View {
                             Button(role: .destructive) {
                                 deleteCategory(category)
                             } label: {
-                                Label("Sil", systemImage: "trash")
+                                Label(NSLocalizedString("common.delete", comment: "Delete"), systemImage: "trash")
                             }
                         }
                     }
                 }
             }
         }
-        .navigationTitle("Kategoriler")
+        .navigationTitle(NSLocalizedString("categories.title", comment: "Categories"))
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -122,11 +122,11 @@ struct CategoryRow: View {
                             .fontWeight(.medium)
                         
                         if let budget = budget {
-                            Text("Bütçe: \(formatCurrency(Double(budget.monthlyLimitMinor) / 100.0))")
+                            Text(String(format: NSLocalizedString("categories.budget", comment: "Budget"), formatCurrency(Double(budget.monthlyLimitMinor) / 100.0)))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         } else {
-                            Text("Bütçe yok")
+                            Text(NSLocalizedString("categories.no.budget", comment: "No budget"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -219,7 +219,7 @@ struct AddBudgetView: View {
                     }
                 }
                 
-                Section("Aylık Bütçe Limiti") {
+                Section(NSLocalizedString("add.budget.monthly", comment: "Monthly Budget")) {
                     HStack {
                         TextField("0.00", text: $budgetAmount)
                             .keyboardType(.decimalPad)
@@ -231,7 +231,7 @@ struct AddBudgetView: View {
                     if let amount = Double(budgetAmount), amount > 0 {
                         let remaining = amount - currentSpent
                         HStack {
-                            Text("Kalan:")
+                            Text(NSLocalizedString("add.budget.remaining", comment: "Remaining") + ":")
                                 .foregroundColor(.secondary)
                             Spacer()
                             Text(formatCurrency(remaining))
@@ -245,18 +245,18 @@ struct AddBudgetView: View {
                     Button {
                         saveBudget()
                     } label: {
-                        Text("Kaydet")
+                        Text(NSLocalizedString("common.save", comment: "Save"))
                             .frame(maxWidth: .infinity)
                             .font(.subheadline)
                     }
                     .disabled(budgetAmount.isEmpty || Double(budgetAmount) == nil || Double(budgetAmount) ?? 0 <= 0)
                 }
             }
-            .navigationTitle("Bütçe Yönet")
+            .navigationTitle(NSLocalizedString("add.budget.title", comment: "Manage Budget"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
+                    Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                         dismiss()
                     }
                 }
@@ -301,27 +301,27 @@ struct AddCategoryView: View {
     ]
     
     let categoryColors: [(String, Color)] = [
-        ("Mavi", .blue), ("Yeşil", .green), ("Kırmızı", .red),
-        ("Turuncu", .orange), ("Mor", .purple), ("Pembe", .pink),
-        ("Sarı", .yellow), ("Kahverengi", .brown), ("İndigo", .indigo),
-        ("Cyan", .cyan), ("Mint", .mint), ("Teal", .teal)
+        ("colors.blue", .blue), ("colors.green", .green), ("colors.red", .red),
+        ("colors.orange", .orange), ("colors.purple", .purple), ("colors.pink", .pink),
+        ("colors.yellow", .yellow), ("colors.brown", .brown), ("colors.indigo", .indigo),
+        ("colors.cyan", .cyan), ("colors.mint", .mint), ("colors.teal", .teal)
     ]
     
     var body: some View {
         NavigationStack {
             Form {
-                Section("Kategori Bilgileri") {
-                    TextField("Kategori Adı", text: $categoryName)
+                Section(NSLocalizedString("add.category.info", comment: "Category Information")) {
+                    TextField(NSLocalizedString("add.category.name", comment: "Category Name"), text: $categoryName)
                         .font(.body)
                     
-                    Picker("Kategori Tipi", selection: $categoryType) {
-                        Text("Gider").tag("expense")
-                        Text("Gelir").tag("income")
+                    Picker(NSLocalizedString("add.category.type", comment: "Category Type"), selection: $categoryType) {
+                        Text(NSLocalizedString("categories.expense", comment: "Expense")).tag("expense")
+                                                 Text(NSLocalizedString("categories.income", comment: "Income")).tag("income")
                     }
                     .pickerStyle(.segmented)
                 }
                 
-                Section("İkon Seç") {
+                Section(NSLocalizedString("add.category.select.icon", comment: "Select Icon")) {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 12) {
                         ForEach(categoryIcons, id: \.self) { icon in
                             Button {
@@ -342,7 +342,7 @@ struct AddCategoryView: View {
                     .padding(.vertical, 8)
                 }
                 
-                Section("Renk Seç") {
+                Section(NSLocalizedString("add.category.select.color", comment: "Select Color")) {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))], spacing: 12) {
                         ForEach(categoryColors, id: \.0) { colorItem in
                             Button {
@@ -358,7 +358,7 @@ struct AddCategoryView: View {
                                         )
                                         .shadow(color: selectedColor == colorItem.1 ? colorItem.1.opacity(0.5) : .clear, radius: 5)
                                     
-                                    Text(colorItem.0)
+                                    Text(NSLocalizedString(colorItem.0, comment: ""))
                                         .font(.caption2)
                                         .foregroundColor(.primary)
                                 }
@@ -369,7 +369,7 @@ struct AddCategoryView: View {
                     .padding(.vertical, 8)
                 }
                 
-                Section("Önizleme") {
+                Section(NSLocalizedString("add.category.preview", comment: "Preview")) {
                     HStack(spacing: 12) {
                         Image(systemName: selectedIcon)
                             .font(.title2)
@@ -378,7 +378,7 @@ struct AddCategoryView: View {
                             .background(selectedColor.opacity(0.2))
                             .cornerRadius(12)
                         
-                        Text(categoryName.isEmpty ? "Kategori Adı" : categoryName)
+                        Text(categoryName.isEmpty ? NSLocalizedString("add.category.name", comment: "Category Name") : categoryName)
                             .font(.headline)
                     }
                     .padding(.vertical, 8)
@@ -388,7 +388,7 @@ struct AddCategoryView: View {
                     Button {
                         saveCategory()
                     } label: {
-                        Text("Kategori Ekle")
+                        Text(NSLocalizedString("add.category.add", comment: "Add Category"))
                             .frame(maxWidth: .infinity)
                             .font(.subheadline)
                             .fontWeight(.semibold)
@@ -396,11 +396,11 @@ struct AddCategoryView: View {
                     .disabled(categoryName.isEmpty)
                 }
             }
-            .navigationTitle("Yeni Kategori")
+            .navigationTitle(NSLocalizedString("add.category.title", comment: "New Category"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
+                    Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                         dismiss()
                     }
                 }

@@ -19,6 +19,7 @@
 "settings.version" = "Version";
 "settings.total.transactions" = "Total Transactions";
 "settings.total.categories" = "Total Categories";
+"settings.biometric.help" = "You will be required to authenticate with %@ every time you access the app.";
 
 /* Language Selection */
 "language.turkish" = "Turkish";
@@ -35,9 +36,11 @@
 
 /* Features */
 "features.title" = "Features";
+"features.section.header" = "Features";
 
 /* Common */
 "common.ok" = "OK";
+"common.info" = "Info";
 "common.cancel" = "Cancel";
 "common.save" = "Save";
 "common.edit" = "Edit";
@@ -46,6 +49,33 @@
 "common.back" = "Back";
 "common.yes" = "Yes";
 "common.no" = "No";
+"common.other" = "Other";
+"common.back" = "Back";
+"common.next" = "Next";
+"common.finish" = "Finish";
+
+/* Biometric Auth */
+"biometric.auth.message" = "To access the app, please";
+"biometric.auth.message.end" = "authenticate with";
+
+/* Achievements */
+"Uzman" = "Expert";
+"Kategori Ustası" = "Category Master";
+"Bütçe Bilinci" = "Budget Conscious";
+"Tutumlu" = "Thrifty";
+"Yatırımcı" = "Investor";
+"Gelir Makinası" = "Income Machine";
+"Düzenli" = "Regular";
+"50 işlem kaydedin" = "Record 50 transactions";
+"5 farklı kategori kullanın" = "Use 5 different categories";
+"İlk bütçenizi oluşturun" = "Create your first budget";
+"Aylık bütçenize uyun" = "Stay within your monthly budget";
+"5000 TL tasarruf yapın" = "Save 5000 TL";
+"10 gelir kaydedin" = "Record 10 incomes";
+"7 gün üst üste işlem kaydedin" = "Record transactions for 7 days straight";
+
+/* Errors */
+"error.biometric" = "Biometric Error";
 
 /* Tabs */
 "tab.dashboard" = "Dashboard";
@@ -66,6 +96,18 @@
 "dashboard.this.month" = "This Month";
 "dashboard.recent.transactions" = "Recent Transactions";
 "dashboard.add.transaction" = "Add Transaction";
+"dashboard.ai.profiling" = "AI Profiling Survey";
+"dashboard.ai.profiling.description" = "Answer 7 questions for better recommendations";
+"dashboard.quick.actions" = "Quick Actions";
+"dashboard.add.income" = "Add Income";
+"dashboard.add.expense" = "Add Expense";
+"dashboard.streak.title" = "Daily Streak";
+"dashboard.streak.current" = "Current";
+"dashboard.streak.longest" = "Longest";
+"dashboard.budget.status" = "Budget Status";
+"dashboard.achievements" = "Achievements";
+"dashboard.achievements.points" = "%d Points";
+"dashboard.recent.transactions.title" = "Recent Transactions";
 
 /* Settings - Security */
 "settings.security.biometric" = "Biometric Authentication";
@@ -94,3 +136,258 @@
 
 /* Currency */
 "currency.selection" = "Currency Selection";
+"currency.search" = "Search currency...";
+"currency.available" = "Available Currencies";
+"currency.info" = "The selected currency will be used throughout the app.";
+"Türk Lirası" = "Turkish Lira";
+"Amerikan Doları" = "US Dollar";
+"Euro" = "Euro";
+"İngiliz Sterlini" = "British Pound";
+"Japon Yeni" = "Japanese Yen";
+"İsviçre Frangı" = "Swiss Franc";
+"Kanada Doları" = "Canadian Dollar";
+"Avustralya Doları" = "Australian Dollar";
+"Çin Yuanı" = "Chinese Yuan";
+"Rus Rublesi" = "Russian Ruble";
+"Suudi Arabistan Riyali" = "Saudi Riyal";
+"BAE Dirhemi" = "UAE Dirham";
+
+/* Transactions */
+"transactions.title" = "Transactions";
+"transactions.no.transactions" = "No transactions yet";
+"transactions.no.transactions.hint" = "Press + to add your first transaction";
+"transactions.filter.all" = "All";
+"transactions.filter.income" = "Income";
+"transactions.filter.expense" = "Expense";
+
+/* Categories */
+"categories.title" = "Categories";
+"categories.no.categories" = "No categories yet";
+"categories.no.categories.hint" = "Create categories to organize your expenses";
+"categories.add.first" = "Add First Category";
+"categories.add.category" = "Add Category";
+"categories.budget" = "Budget: %@";
+"categories.no.budget" = "No budget";
+"categories.remaining" = "Remaining:";
+"categories.income" = "Income";
+"categories.expense" = "Expense";
+"categories.save" = "Save";
+
+/* Reports */
+"reports.title" = "Reports";
+"reports.overview" = "Overview";
+"reports.monthly.summary" = "Monthly Summary";
+"reports.category.breakdown" = "Category Breakdown";
+"reports.income" = "Income";
+"reports.expense" = "Expense";
+"reports.balance" = "Balance";
+"reports.select.month" = "Select Month";
+"reports.no.data" = "No data for this month";
+"reports.ai.suggestions" = "AI Suggestions";
+"reports.ai.description" = "Get recommendations about your spending habits";
+"reports.category.expenses" = "Expenses by Category";
+"reports.budget.status" = "Budget Status";
+"reports.top.categories" = "Most Spent Categories";
+"reports.income.expense.trend" = "Income & Expense Trend";
+"reports.no.data.yet" = "No data yet";
+"reports.income.short" = "Income";
+"reports.expense.short" = "Expense";
+"reports.category.distribution" = "Category Distribution";
+"reports.no.spending" = "No spending yet";
+"reports.category.comparison" = "Category Comparison";
+"reports.period" = "Period";
+"reports.period.week" = "Week";
+"reports.period.month" = "Month";
+"reports.period.year" = "Year";
+"reports.chart.type" = "Chart Type";
+"reports.chart.trend" = "Trend";
+"reports.chart.category" = "Category";
+"reports.chart.comparison" = "Comparison";
+"reports.total.income" = "Total Income";
+"reports.total.expense" = "Total Expense";
+
+/* Add Transaction */
+"add.transaction.title" = "New Transaction";
+"add.transaction.type" = "Transaction Type";
+"add.transaction.amount" = "Amount";
+"add.transaction.category" = "Category";
+"add.transaction.date" = "Date";
+"add.transaction.description" = "Description";
+"add.transaction.account" = "Account";
+"add.transaction.save" = "Save";
+"add.transaction.cancel" = "Cancel";
+"add.transaction.income" = "Income";
+"add.transaction.expense" = "Expense";
+
+/* Achievements */
+"achievements.title" = "Achievements";
+"achievements.points.format" = "%d Points";
+"achievements.points" = "Points";
+"achievements.level" = "Level";
+"achievements.unlocked" = "Unlocked";
+"achievements.locked" = "Locked";
+"achievements.progress" = "Progress";
+"achievements.description" = "Description";
+
+/* AI Profiling */
+"ai.profiling.title" = "AI Profiling";
+"ai.profiling.question" = "Question";
+"ai.profiling.next" = "Next";
+"ai.profiling.finish" = "Finish";
+"profiling.question.number" = "Question %d / %d";
+"profiling.multiple.selection" = "* You can select multiple options";
+"profiling.completed" = "Profiling Completed!";
+"profiling.completed.description" = "Your answers will be used to personalize our AI recommendations.";
+
+/* Profiling Questions and Answers */
+"Geliriniz ne sıklıkta oluyor?" = "How often do you receive income?";
+"Haftalık" = "Weekly";
+"2 Haftada bir" = "Bi-weekly";
+"Aylık" = "Monthly";
+"Düzensiz" = "Irregular";
+
+"Harcama alışkanlığınız nasıl?" = "How do you spend?";
+"Planlı harcıyorum" = "I spend planned";
+"Anlık kararlar alırım" = "I make instant decisions";
+"Karışık" = "Mixed";
+"İhtiyaç olunca harcıyorum" = "I spend when needed";
+
+"Tasarruf hedefiniz var mı?" = "Do you have a savings goal?";
+"Evet, belirli bir hedefim var" = "Yes, I have a specific goal";
+"Bazen tasarruf yaparım" = "I sometimes save";
+"Hayır, henüz başlamadım" = "No, haven't started yet";
+"Tasarruf yapmakta zorlanıyorum" = "I struggle to save";
+
+"En çok neye harcama yapıyorsunuz?" = "What do you spend most on?";
+"Yemek & Market" = "Food & Groceries";
+"Kira & Faturalar" = "Rent & Bills";
+"Eğlence & Sosyal" = "Entertainment & Social";
+"Ulaşım" = "Transportation";
+
+"Bütçe yönetiminizi nasıl değerlendirirsiniz?" = "How do you rate your budget management?";
+"Çok iyi" = "Very Good";
+"İyi" = "Good";
+"Orta" = "Average";
+"Geliştirilmeli" = "Needs Improvement";
+
+"Ana finansal hedefiniz nedir?" = "What is your main financial goal?";
+"Borç ödemek" = "Pay off debt";
+"Tasarruf yapmak" = "Save money";
+"Yatırım yapmak" = "Invest";
+"Gelir-gider dengesini sağlamak" = "Balance income and expenses";
+
+"Borç durumunuz nasıl?" = "What is your debt situation?";
+"Borcum yok" = "No debt";
+"Az borcum var" = "Little debt";
+"Orta seviye borcum var" = "Moderate debt";
+"Yüksek borcum var" = "High debt";
+
+/* Notifications */
+"notifications.title" = "Notifications";
+"notifications.no.notifications" = "No notifications";
+"notifications.mark.read" = "Mark as Read";
+"notifications.filter.all" = "All";
+"notifications.no.notifications.title" = "No Notifications";
+"notifications.no.notifications.message" = "You don't have any notifications yet";
+"notifications.unread" = "Unread";
+"notifications.read" = "Read";
+
+/* Export */
+"export.title" = "Export";
+"export.description" = "Export your transactions in different formats";
+"export.button" = "Export";
+"export.stats" = "Statistics";
+"export.stats.transactions" = "Total Transactions";
+"export.stats.categories" = "Total Categories";
+"export.type.json" = "Full Backup (JSON)";
+"export.type.json.description" = "Backup all your data (transactions, categories, accounts)";
+"export.type.csv" = "CSV";
+"export.type.csv.description" = "Can be opened in Excel and other spreadsheet applications";
+"export.type.pdf" = "PDF";
+"export.type.pdf.description" = "Ideal for professional reports";
+
+/* Import */
+"import.title" = "Import";
+"import.description" = "Restore your data from a backup file";
+"import.important" = "⚠️ Important:";
+"import.warning" = "JSON backup file contains all your data (transactions, categories, accounts). CSV file only contains transactions.";
+"import.replace" = "Delete and replace existing data";
+"import.select.file" = "Select File (JSON/CSV)";
+
+/* Recurring Transactions */
+"recurring.title" = "Recurring Transactions";
+"recurring.add" = "Add Recurring Transaction";
+"recurring.frequency" = "Frequency";
+"recurring.next.date" = "Next Date";
+"recurring.amount" = "Amount";
+"recurring.category" = "Category";
+
+/* Notification Settings */
+"notification.settings.title" = "Notification Settings";
+"notification.settings.enable" = "Enable Notifications";
+"notification.settings.budget.alerts" = "Budget Alerts";
+"notification.settings.recurring" = "Recurring Transaction Reminders";
+
+/* Export */
+"export.title" = "Export/Import";
+"export.export" = "Export";
+"export.import" = "Import";
+"export.format" = "Format";
+"export.csv" = "CSV";
+"export.json" = "JSON";
+
+/* More common strings */
+"section.amount" = "Amount";
+"section.category" = "Category";
+"section.account" = "Account";
+"section.date" = "Date";
+"section.note" = "Note";
+"section.recurring" = "Recurring Transaction";
+"section.recurring.frequency" = "Recurrence Frequency";
+"new.category" = "New";
+"select.account" = "Select Account";
+"select.category" = "Select";
+"optional.note" = "Optional note";
+"this.month.spent" = "Spent This Month";
+"section.recurring.settings" = "Recurrence Settings";
+"recurring.info" = "This transaction will automatically repeat at the selected frequency";
+"save.transaction" = "Save";
+"cancel" = "Cancel";
+"frequency.daily" = "Daily";
+"frequency.weekly" = "Weekly";
+"frequency.monthly" = "Monthly";
+"frequency.yearly" = "Yearly";
+
+/* Add Category */
+"add.category.title" = "New Category";
+"add.category.name" = "Category Name";
+"add.category.icon" = "Icon";
+"add.category.color" = "Color";
+"add.category.type" = "Category Type";
+
+/* Add Budget */
+"add.budget.title" = "Manage Budget";
+"add.budget.monthly" = "Monthly Budget";
+"add.budget.current" = "Spent This Month";
+"add.budget.remaining" = "Remaining";
+"add.budget.amount.placeholder" = "0.00";
+"add.budget.monthly.limit" = "Monthly Budget Limit";
+"add.category.info" = "Category Information";
+"add.category.select.icon" = "Select Icon";
+"add.category.select.color" = "Select Color";
+"add.category.preview" = "Preview";
+"add.category.add" = "Add Category";
+
+/* Colors */
+"colors.blue" = "Blue";
+"colors.green" = "Green";
+"colors.red" = "Red";
+"colors.orange" = "Orange";
+"colors.purple" = "Purple";
+"colors.pink" = "Pink";
+"colors.yellow" = "Yellow";
+"colors.brown" = "Brown";
+"colors.indigo" = "Indigo";
+"colors.cyan" = "Cyan";
+"colors.mint" = "Mint";
+"colors.teal" = "Teal";

@@ -60,7 +60,7 @@ struct CurrencySettingsView: View {
                                 .font(.system(size: 32))
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(currency.name)
+                                Text(NSLocalizedString(currency.name, comment: ""))
                                     .font(.subheadline)
                                     .fontWeight(.medium)
                                     .foregroundColor(.primary)
@@ -83,14 +83,14 @@ struct CurrencySettingsView: View {
                     .buttonStyle(.plain)
                 }
             } header: {
-                Text("Kullanılabilir Para Birimleri")
+                Text(NSLocalizedString("currency.available", comment: "Available Currencies"))
             } footer: {
-                Text("Seçtiğiniz para birimi tüm uygulamada kullanılacaktır.")
+                Text(NSLocalizedString("currency.info", comment: "Currency info"))
             }
         }
-        .navigationTitle("Para Birimi")
+        .navigationTitle(NSLocalizedString("currency.selection", comment: "Currency Selection"))
         .navigationBarTitleDisplayMode(.large)
-        .searchable(text: $searchText, prompt: "Para birimi ara...")
+        .searchable(text: $searchText, prompt: NSLocalizedString("currency.search", comment: "Search currency"))
     }
     
     private func selectCurrency(_ currency: Currency) {

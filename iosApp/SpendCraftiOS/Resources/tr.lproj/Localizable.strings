@@ -19,6 +19,7 @@
 "settings.version" = "Versiyon";
 "settings.total.transactions" = "Toplam İşlem";
 "settings.total.categories" = "Toplam Kategori";
+"settings.biometric.help" = "Uygulamaya her giriş yaptığınızda %@ ile kimlik doğrulaması gerekecek.";
 
 /* Language Selection */
 "language.turkish" = "Türkçe";
@@ -35,9 +36,11 @@
 
 /* Features */
 "features.title" = "Özellikler";
+"features.section.header" = "Özellikler";
 
 /* Common */
 "common.ok" = "Tamam";
+"common.info" = "Bilgi";
 "common.cancel" = "İptal";
 "common.save" = "Kaydet";
 "common.edit" = "Düzenle";
@@ -46,6 +49,33 @@
 "common.back" = "Geri";
 "common.yes" = "Evet";
 "common.no" = "Hayır";
+"common.other" = "Diğer";
+"common.back" = "Geri";
+"common.next" = "İleri";
+"common.finish" = "Bitir";
+
+/* Biometric Auth */
+"biometric.auth.message" = "Uygulamaya giriş yapmak için";
+"biometric.auth.message.end" = "ile kimlik doğrulaması yapın";
+
+/* Achievements */
+"Uzman" = "Uzman";
+"Kategori Ustası" = "Kategori Ustası";
+"Bütçe Bilinci" = "Bütçe Bilinci";
+"Tutumlu" = "Tutumlu";
+"Yatırımcı" = "Yatırımcı";
+"Gelir Makinası" = "Gelir Makinası";
+"Düzenli" = "Düzenli";
+"50 işlem kaydedin" = "50 işlem kaydedin";
+"5 farklı kategori kullanın" = "5 farklı kategori kullanın";
+"İlk bütçenizi oluşturun" = "İlk bütçenizi oluşturun";
+"Aylık bütçenize uyun" = "Aylık bütçenize uyun";
+"5000 TL tasarruf yapın" = "5000 TL tasarruf yapın";
+"10 gelir kaydedin" = "10 gelir kaydedin";
+"7 gün üst üste işlem kaydedin" = "7 gün üst üste işlem kaydedin";
+
+/* Errors */
+"error.biometric" = "Biyometrik Hata";
 
 /* Tabs */
 "tab.dashboard" = "Ana Sayfa";
@@ -66,6 +96,20 @@
 "dashboard.this.month" = "Bu Ay";
 "dashboard.recent.transactions" = "Son İşlemler";
 "dashboard.add.transaction" = "İşlem Ekle";
+"dashboard.ai.profiling" = "AI Profilleme Anketi";
+"dashboard.ai.profiling.description" = "Daha iyi öneriler için 7 soruyu cevaplayın";
+"dashboard.quick.actions" = "Hızlı İşlemler";
+"dashboard.add.income" = "Gelir Ekle";
+"dashboard.add.expense" = "Gider Ekle";
+"dashboard.streak.title" = "Günlük Seri";
+"dashboard.streak.current" = "Güncel";
+"dashboard.streak.longest" = "En Uzun";
+"dashboard.budget.status" = "Bütçe Durumu";
+"dashboard.achievements" = "Başarılar";
+"dashboard.achievements.points" = "%d Puan";
+"achievements.points.single" = "Puan";
+"achievements.points.format" = "%d Puan";
+"dashboard.recent.transactions.title" = "Son İşlemler";
 
 /* Settings - Security */
 "settings.security.biometric" = "Biyometrik Kimlik Doğrulama";
@@ -94,3 +138,257 @@
 
 /* Currency */
 "currency.selection" = "Para Birimi Seçimi";
+"currency.search" = "Para birimi ara...";
+"currency.available" = "Kullanılabilir Para Birimleri";
+"currency.info" = "Seçtiğiniz para birimi tüm uygulamada kullanılacaktır.";
+"Türk Lirası" = "Türk Lirası";
+"Amerikan Doları" = "Amerikan Doları";
+"Euro" = "Euro";
+"İngiliz Sterlini" = "İngiliz Sterlini";
+"Japon Yeni" = "Japon Yeni";
+"İsviçre Frangı" = "İsviçre Frangı";
+"Kanada Doları" = "Kanada Doları";
+"Avustralya Doları" = "Avustralya Doları";
+"Çin Yuanı" = "Çin Yuanı";
+"Rus Rublesi" = "Rus Rublesi";
+"Suudi Arabistan Riyali" = "Suudi Arabistan Riyali";
+"BAE Dirhemi" = "BAE Dirhemi";
+
+/* Transactions */
+"transactions.title" = "İşlemler";
+"transactions.no.transactions" = "Henüz işlem yok";
+"transactions.no.transactions.hint" = "+ butonuna basarak ilk işleminizi ekleyin";
+"transactions.filter.all" = "Tümü";
+"transactions.filter.income" = "Gelir";
+"transactions.filter.expense" = "Gider";
+
+/* Categories */
+"categories.title" = "Kategoriler";
+"categories.no.categories" = "Henüz kategori yok";
+"categories.no.categories.hint" = "Kategoriler oluşturup harcamalarınızı organize edin";
+"categories.add.first" = "İlk Kategoriyi Ekle";
+"categories.add.category" = "Kategori Ekle";
+"categories.budget" = "Bütçe: %@";
+"categories.no.budget" = "Bütçe yok";
+"categories.remaining" = "Kalan:";
+"categories.income" = "Gelir";
+"categories.expense" = "Gider";
+"categories.save" = "Kaydet";
+
+/* Reports */
+"reports.title" = "Raporlar";
+"reports.overview" = "Genel Bakış";
+"reports.monthly.summary" = "Aylık Özet";
+"reports.category.breakdown" = "Kategori Dağılımı";
+"reports.income" = "Gelir";
+"reports.expense" = "Gider";
+"reports.balance" = "Bakiye";
+"reports.select.month" = "Ay Seçin";
+"reports.no.data" = "Bu ay için veri yok";
+"reports.ai.suggestions" = "AI Önerileri";
+"reports.ai.description" = "Harcama alışkanlıklarınız hakkında öneriler alın";
+"reports.category.expenses" = "Kategoriye Göre Harcamalar";
+"reports.budget.status" = "Bütçe Durumu";
+"reports.top.categories" = "En Çok Harcanan Kategoriler";
+"reports.income.expense.trend" = "Gelir & Gider Trendi";
+"reports.no.data.yet" = "Henüz veri yok";
+"reports.income.short" = "Gelir";
+"reports.expense.short" = "Gider";
+"reports.category.distribution" = "Kategori Dağılımı";
+"reports.no.spending" = "Henüz harcama yok";
+"reports.category.comparison" = "Kategori Karşılaştırması";
+"reports.period" = "Dönem";
+"reports.period.week" = "Hafta";
+"reports.period.month" = "Ay";
+"reports.period.year" = "Yıl";
+"reports.chart.type" = "Grafik Tipi";
+"reports.chart.trend" = "Trend";
+"reports.chart.category" = "Kategori";
+"reports.chart.comparison" = "Karşılaştırma";
+"reports.total.income" = "Toplam Gelir";
+"reports.total.expense" = "Toplam Gider";
+
+/* Add Transaction */
+"add.transaction.title" = "Yeni İşlem";
+"add.transaction.type" = "İşlem Tipi";
+"add.transaction.amount" = "Tutar";
+"add.transaction.category" = "Kategori";
+"add.transaction.date" = "Tarih";
+"add.transaction.description" = "Açıklama";
+"add.transaction.account" = "Hesap";
+"add.transaction.save" = "Kaydet";
+"add.transaction.cancel" = "İptal";
+"add.transaction.income" = "Gelir";
+"add.transaction.expense" = "Gider";
+
+/* Achievements */
+"achievements.title" = "Başarılar";
+"achievements.points" = "Puan";
+"achievements.level" = "Seviye";
+"achievements.unlocked" = "Kilidi Açıldı";
+"achievements.locked" = "Kilitli";
+"achievements.progress" = "İlerleme";
+"achievements.description" = "Açıklama";
+
+/* AI Profiling */
+"ai.profiling.title" = "AI Profilleme";
+"ai.profiling.question" = "Soru";
+"ai.profiling.next" = "İleri";
+"ai.profiling.finish" = "Bitir";
+"profiling.question.number" = "Soru %d / %d";
+"profiling.multiple.selection" = "* Birden fazla seçenek işaretleyebilirsiniz";
+"profiling.completed" = "Profilleme Tamamlandı!";
+"profiling.completed.description" = "Cevaplarınız AI önerilerimizi kişiselleştirmek için kullanılacak.";
+
+/* Profiling Questions and Answers */
+"Geliriniz ne sıklıkta oluyor?" = "Geliriniz ne sıklıkta oluyor?";
+"Haftalık" = "Haftalık";
+"2 Haftada bir" = "2 Haftada bir";
+"Aylık" = "Aylık";
+"Düzensiz" = "Düzensiz";
+
+"Harcama alışkanlığınız nasıl?" = "Harcama alışkanlığınız nasıl?";
+"Planlı harcıyorum" = "Planlı harcıyorum";
+"Anlık kararlar alırım" = "Anlık kararlar alırım";
+"Karışık" = "Karışık";
+"İhtiyaç olunca harcıyorum" = "İhtiyaç olunca harcıyorum";
+
+"Tasarruf hedefiniz var mı?" = "Tasarruf hedefiniz var mı?";
+"Evet, belirli bir hedefim var" = "Evet, belirli bir hedefim var";
+"Bazen tasarruf yaparım" = "Bazen tasarruf yaparım";
+"Hayır, henüz başlamadım" = "Hayır, henüz başlamadım";
+"Tasarruf yapmakta zorlanıyorum" = "Tasarruf yapmakta zorlanıyorum";
+
+"En çok neye harcama yapıyorsunuz?" = "En çok neye harcama yapıyorsunuz?";
+"Yemek & Market" = "Yemek & Market";
+"Kira & Faturalar" = "Kira & Faturalar";
+"Eğlence & Sosyal" = "Eğlence & Sosyal";
+"Ulaşım" = "Ulaşım";
+
+"Bütçe yönetiminizi nasıl değerlendirirsiniz?" = "Bütçe yönetiminizi nasıl değerlendirirsiniz?";
+"Çok iyi" = "Çok iyi";
+"İyi" = "İyi";
+"Orta" = "Orta";
+"Geliştirilmeli" = "Geliştirilmeli";
+
+"Ana finansal hedefiniz nedir?" = "Ana finansal hedefiniz nedir?";
+"Borç ödemek" = "Borç ödemek";
+"Tasarruf yapmak" = "Tasarruf yapmak";
+"Yatırım yapmak" = "Yatırım yapmak";
+"Gelir-gider dengesini sağlamak" = "Gelir-gider dengesini sağlamak";
+
+"Borç durumunuz nasıl?" = "Borç durumunuz nasıl?";
+"Borcum yok" = "Borcum yok";
+"Az borcum var" = "Az borcum var";
+"Orta seviye borcum var" = "Orta seviye borcum var";
+"Yüksek borcum var" = "Yüksek borcum var";
+
+/* Notifications */
+"notifications.title" = "Bildirimler";
+"notifications.no.notifications" = "Bildirim yok";
+"notifications.mark.read" = "Okundu İşaretle";
+"notifications.filter.all" = "Tümü";
+"notifications.no.notifications.title" = "Bildirim Yok";
+"notifications.no.notifications.message" = "Henüz hiç bildiriminiz yok";
+"notifications.unread" = "Okunmamış";
+"notifications.read" = "Okunmuş";
+
+/* Export */
+"export.title" = "Dışa Aktar";
+"export.description" = "İşlemlerinizi farklı formatlarda dışa aktarın";
+"export.button" = "Dışa Aktar";
+"export.stats" = "İstatistikler";
+"export.stats.transactions" = "Toplam İşlem";
+"export.stats.categories" = "Toplam Kategori";
+"export.type.json" = "Tam Yedekleme (JSON)";
+"export.type.json.description" = "Tüm verilerinizi yedekleyin (işlemler, kategoriler, hesaplar)";
+"export.type.csv" = "CSV";
+"export.type.csv.description" = "Excel ve diğer tablolama uygulamalarında açılabilir";
+"export.type.pdf" = "PDF";
+"export.type.pdf.description" = "Profesyonel raporlar için ideal";
+
+/* Import */
+"import.title" = "İçe Aktar";
+"import.description" = "Yedekleme dosyasından verilerinizi geri yükleyin";
+"import.important" = "⚠️ Önemli:";
+"import.warning" = "JSON yedekleme dosyası tüm verilerinizi (işlemler, kategoriler, hesaplar) içerir. CSV dosyası ise sadece işlemleri içerir.";
+"import.replace" = "Mevcut verileri sil ve değiştir";
+"import.select.file" = "Dosya Seç (JSON/CSV)";
+
+/* Recurring Transactions */
+"recurring.title" = "Tekrarlayan İşlemler";
+"recurring.add" = "Tekrarlayan İşlem Ekle";
+"recurring.frequency" = "Sıklık";
+"recurring.next.date" = "Sonraki Tarih";
+"recurring.amount" = "Tutar";
+"recurring.category" = "Kategori";
+
+/* Notification Settings */
+"notification.settings.title" = "Bildirim Ayarları";
+"notification.settings.enable" = "Bildirimleri Etkinleştir";
+"notification.settings.budget.alerts" = "Bütçe Uyarıları";
+"notification.settings.recurring" = "Tekrarlayan İşlem Hatırlatmaları";
+
+/* Export */
+"export.title" = "Dışa/İçe Aktar";
+"export.export" = "Dışa Aktar";
+"export.import" = "İçe Aktar";
+"export.format" = "Format";
+"export.csv" = "CSV";
+"export.json" = "JSON";
+
+/* More common strings */
+"section.amount" = "Miktar";
+"section.category" = "Kategori";
+"section.account" = "Hesap";
+"section.date" = "Tarih";
+"section.note" = "Not";
+"section.recurring" = "Tekrarlayan İşlem";
+"section.recurring.frequency" = "Tekrarlama Sıklığı";
+"new.category" = "Yeni";
+"select.account" = "Hesap Seç";
+"select.category" = "Seçiniz";
+"optional.note" = "İsteğe bağlı not";
+"this.month.spent" = "Bu Ay Harcanan";
+"section.recurring.settings" = "Tekrarlama Ayarları";
+"recurring.info" = "Bu işlem seçilen sıklıkta otomatik olarak tekrarlanacaktır";
+"save.transaction" = "Kaydet";
+"cancel" = "İptal";
+"frequency.daily" = "Günlük";
+"frequency.weekly" = "Haftalık";
+"frequency.monthly" = "Aylık";
+"frequency.yearly" = "Yıllık";
+
+/* Add Category */
+"add.category.title" = "Yeni Kategori";
+"add.category.name" = "Kategori Adı";
+"add.category.icon" = "Simge";
+"add.category.color" = "Renk";
+"add.category.type" = "Kategori Tipi";
+
+/* Add Budget */
+"add.budget.title" = "Bütçe Yönet";
+"add.budget.monthly" = "Aylık Bütçe";
+"add.budget.current" = "Bu Ay Harcanan";
+"add.budget.remaining" = "Kalan";
+"add.budget.amount.placeholder" = "0.00";
+"add.budget.monthly.limit" = "Aylık Bütçe Limiti";
+"add.category.info" = "Kategori Bilgileri";
+"add.category.select.icon" = "İkon Seç";
+"add.category.select.color" = "Renk Seç";
+"add.category.preview" = "Önizleme";
+"add.category.add" = "Kategori Ekle";
+
+/* Colors */
+"colors.blue" = "Mavi";
+"colors.green" = "Yeşil";
+"colors.red" = "Kırmızı";
+"colors.orange" = "Turuncu";
+"colors.purple" = "Mor";
+"colors.pink" = "Pembe";
+"colors.yellow" = "Sarı";
+"colors.brown" = "Kahverengi";
+"colors.indigo" = "İndigo";
+"colors.cyan" = "Cyan";
+"colors.mint" = "Mint";
+"colors.teal" = "Teal";

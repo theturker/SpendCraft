@@ -275,7 +275,7 @@ struct AISuggestionsView: View {
                     .padding(.vertical)
                 }
             }
-            .navigationTitle("AI Önerileri")
+            .navigationTitle(NSLocalizedString("features.ai.suggestions", comment: "AI Suggestions"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

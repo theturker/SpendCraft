@@ -17,15 +17,23 @@ struct ReportsView: View {
     @State private var showAISuggestions = false
     
     enum Period: String, CaseIterable {
-        case week = "Hafta"
-        case month = "Ay"
-        case year = "Yıl"
+        case week = "reports.period.week"
+        case month = "reports.period.month"
+        case year = "reports.period.year"
+        
+        var localizedName: String {
+            return NSLocalizedString(self.rawValue, comment: "")
+        }
     }
     
     enum ChartType: String, CaseIterable {
-        case trend = "Trend"
-        case category = "Kategori"
-        case comparison = "Karşılaştırma"
+        case trend = "reports.chart.trend"
+        case category = "reports.chart.category"
+        case comparison = "reports.chart.comparison"
+        
+        var localizedName: String {
+            return NSLocalizedString(self.rawValue, comment: "")
+        }
     }
     
     var body: some View {
@@ -33,9 +41,9 @@ struct ReportsView: View {
             ScrollView {
                 VStack(spacing: 16) {
                 // Period Selector
-                Picker("Dönem", selection: $selectedPeriod) {
+                Picker(NSLocalizedString("reports.period", comment: "Period"), selection: $selectedPeriod) {
                     ForEach(Period.allCases, id: \.self) { period in
-                        Text(period.rawValue).tag(period)
+                        Text(period.localizedName).tag(period)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -45,14 +53,14 @@ struct ReportsView: View {
                 // Summary Cards
                 HStack(spacing: 16) {
                     SummaryCard(
-                        title: "Toplam Gelir",
+                        title: NSLocalizedString("reports.total.income", comment: "Total Income"),
                         amount: transactionsViewModel.totalIncome,
                         color: .green,
                         icon: "arrow.down.circle.fill"
                     )
                     
                     SummaryCard(
-                        title: "Toplam Gider",
+                        title: NSLocalizedString("reports.total.expense", comment: "Total Expense"),
                         amount: transactionsViewModel.totalExpense,
                         color: .red,
                         icon: "arrow.up.circle.fill"
@@ -62,9 +70,9 @@ struct ReportsView: View {
                 .padding(.top, 4)
                 
                 // Chart Type Selector
-                Picker("Grafik Tipi", selection: $selectedChartType) {
+                Picker(NSLocalizedString("reports.chart.type", comment: "Chart Type"), selection: $selectedChartType) {
                     ForEach(ChartType.allCases, id: \.self) { type in
-                        Text(type.rawValue).tag(type)
+                        Text(type.localizedName).tag(type)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -100,9 +108,9 @@ struct ReportsView: View {
                         Image(systemName: "sparkles")
                             .font(.title3)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("AI Önerileri")
+                            Text(NSLocalizedString("reports.ai.suggestions", comment: "AI Suggestions"))
                                 .font(.headline)
-                            Text("Harcama alışkanlıklarınız hakkında öneriler alın")
+                            Text(NSLocalizedString("reports.ai.description", comment: "AI description"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -128,7 +136,7 @@ struct ReportsView: View {
                 
                 // Category Breakdown
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Kategoriye Göre Harcamalar")
+                    Text(NSLocalizedString("reports.category.expenses", comment: "Expenses by Category"))
                         .font(.headline)
                         .padding(.horizontal)
                     
@@ -148,7 +156,7 @@ struct ReportsView: View {
                 // Budget Status
                 if !budgetViewModel.budgets.isEmpty {
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Bütçe Durumu")
+                        Text(NSLocalizedString("reports.budget.status", comment: "Budget Status"))
                             .font(.headline)
                             .padding(.horizontal)
                         
@@ -168,7 +176,7 @@ struct ReportsView: View {
                 
                 // Top Categories
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("En Çok Harcanan Kategoriler")
+                    Text(NSLocalizedString("reports.top.categories", comment: "Top Categories"))
                         .font(.headline)
                         .padding(.horizontal)
                     
@@ -185,7 +193,7 @@ struct ReportsView: View {
             .background(Color(uiColor: .systemBackground))
             .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
         }
-        .navigationTitle("Raporlar")
+        .navigationTitle(NSLocalizedString("reports.title", comment: "Reports"))
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showAISuggestions) {
             AISuggestionsView()
@@ -372,11 +380,11 @@ struct TrendChartView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Gelir & Gider Trendi")
+            Text(NSLocalizedString("reports.income.expense.trend", comment: "Income & Expense Trend"))
                 .font(.headline)
             
             if trendData.isEmpty {
-                Text("Henüz veri yok")
+                Text(NSLocalizedString("reports.no.data.yet", comment: "No data yet"))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -456,7 +464,7 @@ struct TrendChartView: View {
                         Circle()
                             .fill(.green)
                             .frame(width: 10, height: 10)
-                        Text("Gelir")
+                        Text(NSLocalizedString("reports.income.short", comment: "Income"))
                             .font(.caption)
                     }
                     
@@ -464,7 +472,7 @@ struct TrendChartView: View {
                         Circle()
                             .fill(.red)
                             .frame(width: 10, height: 10)
-                        Text("Gider")
+                        Text(NSLocalizedString("reports.expense.short", comment: "Expense"))
                             .font(.caption)
                     }
                 }
@@ -489,11 +497,11 @@ struct CategoryPieChartView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Kategori Dağılımı")
+            Text(NSLocalizedString("reports.category.distribution", comment: "Category Distribution"))
                 .font(.headline)
             
             if categoryData.isEmpty {
-                Text("Henüz harcama yok")
+                Text(NSLocalizedString("reports.no.spending", comment: "No spending yet"))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -578,11 +586,11 @@ struct ComparisonBarChartView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Kategori Karşılaştırması")
+            Text(NSLocalizedString("reports.category.comparison", comment: "Category Comparison"))
                 .font(.headline)
             
             if categoryData.isEmpty {
-                Text("Henüz harcama yok")
+                Text(NSLocalizedString("reports.no.spending", comment: "No spending yet"))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)

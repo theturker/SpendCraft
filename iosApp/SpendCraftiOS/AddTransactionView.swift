@@ -118,9 +118,9 @@ struct AddTransactionView: View {
                 Form {
                     // Transaction Type
                     Section {
-                        Picker("İşlem Tipi", selection: $isIncome) {
-                            Text("Gider").tag(false)
-                            Text("Gelir").tag(true)
+                        Picker(NSLocalizedString("add.transaction.type", comment: "Transaction Type"), selection: $isIncome) {
+                            Text(NSLocalizedString("add.transaction.expense", comment: "Expense")).tag(false)
+                            Text(NSLocalizedString("add.transaction.income", comment: "Income")).tag(true)
                         }
                         .pickerStyle(.segmented)
                         .onChange(of: isIncome) { newValue in
@@ -133,7 +133,7 @@ struct AddTransactionView: View {
                     }
                     
                     // Amount
-                    Section("Miktar") {
+                    Section(NSLocalizedString("section.amount", comment: "Amount")) {
                         HStack {
                             CurrencyTextField(title: "0.00", value: $amount, isFocused: $isAmountFocused)
                             Text(getCurrentCurrencySymbol())
@@ -143,7 +143,7 @@ struct AddTransactionView: View {
                     }
                     
                     // Category
-                    Section("Kategori") {
+                    Section(NSLocalizedString("section.category", comment: "Category")) {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
                                 // New Category Button
@@ -160,7 +160,7 @@ struct AddTransactionView: View {
                                                     .fill(Color.blue.opacity(0.2))
                                             )
                                         
-                                        Text("Yeni")
+                                        Text(NSLocalizedString("new.category", comment: "New"))
                                             .font(.caption)
                                             .foregroundColor(.blue)
                                             .fontWeight(.medium)
@@ -183,9 +183,9 @@ struct AddTransactionView: View {
                     }
                     
                     // Account
-                    Section("Hesap") {
-                        Picker("Hesap Seç", selection: $selectedAccount) {
-                            Text("Seçiniz").tag(nil as CategoryEntity?)
+                    Section(NSLocalizedString("section.account", comment: "Account")) {
+                        Picker(NSLocalizedString("select.account", comment: "Select Account"), selection: $selectedAccount) {
+                            Text(NSLocalizedString("select.category", comment: "Select")).tag(nil as CategoryEntity?)
                             ForEach(transactionsViewModel.accounts, id: \.id) { account in
                                 Text(account.name ?? "").tag(account as AccountEntity?)
                             }
@@ -193,32 +193,32 @@ struct AddTransactionView: View {
                     }
                     
                     // Date
-                    Section("Tarih") {
-                        DatePicker("Tarih", selection: $date, displayedComponents: [.date, .hourAndMinute])
+                    Section(NSLocalizedString("section.date", comment: "Date")) {
+                        DatePicker(NSLocalizedString("section.date", comment: "Date"), selection: $date, displayedComponents: [.date, .hourAndMinute])
                     }
                     
                     // Note
-                    Section("Not") {
-                        TextField("İsteğe bağlı not", text: $note)
+                    Section(NSLocalizedString("section.note", comment: "Note")) {
+                        TextField(NSLocalizedString("optional.note", comment: "Optional note"), text: $note)
                     }
                     
                     // Recurring Transaction
                     Section {
-                        Toggle("Tekrarlayan İşlem", isOn: $isRecurring)
+                        Toggle(NSLocalizedString("section.recurring", comment: "Recurring Transaction"), isOn: $isRecurring)
                         
                         if isRecurring {
-                            Picker("Tekrarlama Sıklığı", selection: $recurringFrequency) {
-                                Text("Günlük").tag("DAILY")
-                                Text("Haftalık").tag("WEEKLY")
-                                Text("Aylık").tag("MONTHLY")
-                                Text("Yıllık").tag("YEARLY")
+                            Picker(NSLocalizedString("section.recurring.frequency", comment: "Recurrence Frequency"), selection: $recurringFrequency) {
+                                Text(NSLocalizedString("frequency.daily", comment: "Daily")).tag("DAILY")
+                                Text(NSLocalizedString("frequency.weekly", comment: "Weekly")).tag("WEEKLY")
+                                Text(NSLocalizedString("frequency.monthly", comment: "Monthly")).tag("MONTHLY")
+                                Text(NSLocalizedString("frequency.yearly", comment: "Yearly")).tag("YEARLY")
                             }
                         }
                     } header: {
-                        Text("Tekrarlama Ayarları")
+                        Text(NSLocalizedString("section.recurring.settings", comment: "Recurrence Settings"))
                     } footer: {
                         if isRecurring {
-                            Text("Bu işlem seçilen sıklıkta otomatik olarak tekrarlanacaktır")
+                            Text(NSLocalizedString("recurring.info", comment: "Recurring info"))
                                 .font(.caption)
                         }
                     }
@@ -238,7 +238,7 @@ struct AddTransactionView: View {
                     Button {
                         saveTransaction()
                     } label: {
-                        Text("Kaydet")
+                        Text(NSLocalizedString("save.transaction", comment: "Save"))
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -252,11 +252,11 @@ struct AddTransactionView: View {
                     .background(Color(uiColor: .systemBackground))
                 }
             }
-            .navigationTitle("Yeni İşlem")
+            .navigationTitle(NSLocalizedString("add.transaction.title", comment: "New Transaction"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
+                    Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                         dismiss()
                     }
                 }

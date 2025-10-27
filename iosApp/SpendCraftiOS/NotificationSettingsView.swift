@@ -115,7 +115,7 @@ struct NotificationSettingsView: View {
                     Text("Kendi özel hatırlatmalarınızı oluşturun.")
                 }
             }
-            .navigationTitle("Bildirim Ayarları")
+            .navigationTitle(NSLocalizedString("notification.settings.title", comment: "Notification Settings"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

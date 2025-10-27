@@ -32,7 +32,7 @@ struct NotificationsView: View {
                     notificationsList
                 }
             }
-            .navigationTitle("Bildirimler")
+            .navigationTitle(NSLocalizedString("notifications.title", comment: "Notifications"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -52,7 +52,7 @@ struct NotificationsView: View {
                             }
                         } label: {
                             Image(systemName: "checkmark.circle")
-                            Text("Tümü")
+                            Text(NSLocalizedString("notifications.filter.all", comment: "All"))
                         }
                     }
                 }
@@ -72,11 +72,11 @@ struct NotificationsView: View {
                 .font(.system(size: 70))
                 .foregroundColor(.secondary)
             
-            Text("Bildirim Yok")
+            Text(NSLocalizedString("notifications.no.notifications.title", comment: "No Notifications"))
                 .font(.title2)
                 .fontWeight(.semibold)
             
-            Text("Henüz hiç bildiriminiz yok")
+            Text(NSLocalizedString("notifications.no.notifications.message", comment: "No notifications message"))
                 .font(.body)
                 .foregroundColor(.secondary)
         }
@@ -106,7 +106,7 @@ struct NotificationsView: View {
                     }
                 } header: {
                     HStack {
-                        Text("Okunmamış")
+                        Text(NSLocalizedString("notifications.unread", comment: "Unread"))
                         Spacer()
                         Text("\(unreadNotifications.count)")
                             .font(.caption)
@@ -121,7 +121,7 @@ struct NotificationsView: View {
             
             // Read notifications
             if !readNotifications.isEmpty {
-                Section("Okunmuş") {
+                Section(NSLocalizedString("notifications.read", comment: "Read")) {
                     ForEach(readNotifications) { notification in
                         NotificationRow(
                             notification: notification,

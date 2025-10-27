@@ -44,7 +44,7 @@ struct DashboardView: View {
                 VStack(spacing: 12) {
                 // Balance Card
                 VStack(spacing: 12) {
-                    Text("Toplam Bakiye")
+                    Text(NSLocalizedString("dashboard.total.balance", comment: "Total Balance"))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     
@@ -72,7 +72,7 @@ struct DashboardView: View {
                         HStack {
                             Image(systemName: "arrow.down.circle.fill")
                                 .foregroundColor(.green)
-                            Text("Gelir")
+                            Text(NSLocalizedString("dashboard.income", comment: "Income"))
                                 .font(.subheadline)
                         }
                         Text(formatCurrency(transactionsViewModel.totalIncome))
@@ -91,7 +91,7 @@ struct DashboardView: View {
                         HStack {
                             Image(systemName: "arrow.up.circle.fill")
                                 .foregroundColor(.red)
-                            Text("Gider")
+                            Text(NSLocalizedString("dashboard.expense", comment: "Expense"))
                                 .font(.subheadline)
                         }
                         Text(formatCurrency(transactionsViewModel.totalExpense))
@@ -118,10 +118,10 @@ struct DashboardView: View {
                                 .foregroundColor(.purple)
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("AI Profilleme Anketi")
+                                Text(NSLocalizedString("dashboard.ai.profiling", comment: "AI Profiling"))
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text("Daha iyi öneriler için 7 soruyu cevaplayın")
+                                Text(NSLocalizedString("dashboard.ai.profiling.description", comment: "AI Profiling Description"))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -148,7 +148,7 @@ struct DashboardView: View {
                         HStack {
                             Image(systemName: "arrow.down.circle.fill")
                                 .foregroundColor(.white)
-                            Text("Gelir")
+                            Text(NSLocalizedString("dashboard.add.income", comment: "Add Income"))
                                 .foregroundColor(.white)
                         }
                         .frame(maxWidth: .infinity)
@@ -163,7 +163,7 @@ struct DashboardView: View {
                         HStack {
                             Image(systemName: "arrow.up.circle.fill")
                                 .foregroundColor(.white)
-                            Text("Gider")
+                            Text(NSLocalizedString("dashboard.add.expense", comment: "Add Expense"))
                                 .foregroundColor(.white)
                         }
                         .frame(maxWidth: .infinity)
@@ -180,7 +180,7 @@ struct DashboardView: View {
                         Image(systemName: "flame.fill")
                             .foregroundColor(.orange)
                             .font(.title2)
-                        Text("Günlük Seri")
+                        Text(NSLocalizedString("dashboard.streak.title", comment: "Daily Streak"))
                             .font(.headline)
                         Spacer()
                     }
@@ -190,7 +190,7 @@ struct DashboardView: View {
                             Text("\(achievementsViewModel.currentStreak)")
                                 .font(.title)
                                 .fontWeight(.bold)
-                            Text("Güncel")
+                            Text(NSLocalizedString("dashboard.streak.current", comment: "Current"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -202,7 +202,7 @@ struct DashboardView: View {
                             Text("\(achievementsViewModel.longestStreak)")
                                 .font(.title)
                                 .fontWeight(.bold)
-                            Text("En Uzun")
+                            Text(NSLocalizedString("dashboard.streak.longest", comment: "Longest"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -218,7 +218,7 @@ struct DashboardView: View {
                 // Budget Overview
                 if !budgetViewModel.budgets.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Bütçe Durumu")
+                        Text(NSLocalizedString("dashboard.budget.status", comment: "Budget Status"))
                             .font(.headline)
                             .padding(.horizontal, 16)
                         
@@ -239,10 +239,10 @@ struct DashboardView: View {
                 // Achievements
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("Başarılar")
+                        Text(NSLocalizedString("dashboard.achievements", comment: "Achievements"))
                             .font(.headline)
                         Spacer()
-                        Text("\(achievementsViewModel.totalPoints) Puan")
+                        Text(String(format: NSLocalizedString("dashboard.achievements.points", comment: "Points"), achievementsViewModel.totalPoints))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -262,7 +262,7 @@ struct DashboardView: View {
                 
                 // Recent Transactions
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Son İşlemler")
+                    Text(NSLocalizedString("dashboard.recent.transactions.title", comment: "Recent Transactions"))
                         .font(.headline)
                         .padding(.horizontal, 16)
                     
@@ -280,7 +280,7 @@ struct DashboardView: View {
             .background(Color(uiColor: .systemBackground))
             .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
         }
-        .navigationTitle("Ana Sayfa")
+        .navigationTitle(NSLocalizedString("tab.dashboard", comment: "Dashboard"))
         .navigationBarTitleDisplayMode(.large)
         .sheet(item: $transactionTypeToAdd, onDismiss: {
             // Small delay to ensure CoreData changes are committed
@@ -393,14 +393,14 @@ struct AchievementCard: View {
                     .font(.system(size: 32))
                     .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
                 
-                Text(achievement.name ?? "")
+                Text(NSLocalizedString(achievement.name ?? "", comment: ""))
                     .font(.caption)
                     .fontWeight(.semibold)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
                 
                 if achievement.isUnlocked {
-                    Text("\(achievement.points) Puan")
+                    Text(String(format: NSLocalizedString("achievements.points.format", comment: "%d Points"), achievement.points))
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 } else {
@@ -441,7 +441,7 @@ struct TransactionRow: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(transaction.category?.name ?? "Diğer")
+                Text(transaction.category?.name ?? NSLocalizedString("common.other", comment: "Other"))
                     .font(.subheadline)
                     .fontWeight(.medium)
                 

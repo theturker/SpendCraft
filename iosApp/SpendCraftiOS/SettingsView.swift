@@ -212,7 +212,7 @@ struct SettingsView: View {
                 }
                 .foregroundColor(.primary)
             } header: {
-                Text("Özellikler")
+                Text(NSLocalizedString("features.section.header", comment: "Features"))
             }
             
             // Security Section - Face ID / Touch ID
@@ -243,10 +243,10 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    Text("Güvenlik")
+                    Text(NSLocalizedString("settings.security", comment: "Security"))
                 } footer: {
                     if biometricEnabled {
-                        Text("Uygulamaya her giriş yaptığınızda \(biometricManager.getBiometricTypeName()) ile kimlik doğrulaması gerekecek.")
+                        Text(String(format: NSLocalizedString("settings.biometric.help", comment: "Biometric help"), biometricManager.getBiometricTypeName()))
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -261,7 +261,7 @@ struct SettingsView: View {
                     HStack {
                         Image(systemName: "square.and.arrow.up")
                             .foregroundColor(.green)
-                        Text("Dışa/İçe Aktar")
+                        Text(NSLocalizedString("settings.export.import", comment: "Export/Import"))
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.caption)
@@ -270,7 +270,7 @@ struct SettingsView: View {
                 }
                 .foregroundColor(.primary)
             } header: {
-                Text("Veri Yönetimi")
+                Text(NSLocalizedString("settings.data.management", comment: "Data Management"))
             }
             
             // TODO: Çıkış Yap butonu geçici olarak devre dışı
@@ -299,30 +299,30 @@ struct SettingsView: View {
             // App Info
             Section {
                 HStack {
-                    Text("Versiyon")
+                    Text(NSLocalizedString("settings.version", comment: "Version"))
                     Spacer()
                     Text("1.0.0")
                         .foregroundColor(.secondary)
                 }
                 
                 HStack {
-                    Text("Toplam İşlem")
+                    Text(NSLocalizedString("settings.total.transactions", comment: "Total Transactions"))
                     Spacer()
                     Text("\(transactionsViewModel.transactions.count)")
                         .foregroundColor(.secondary)
                 }
                 
                 HStack {
-                    Text("Toplam Kategori")
+                    Text(NSLocalizedString("settings.total.categories", comment: "Total Categories"))
                     Spacer()
                     Text("\(transactionsViewModel.categories.count)")
                         .foregroundColor(.secondary)
                 }
             } header: {
-                Text("Uygulama")
+                Text(NSLocalizedString("settings.app", comment: "App"))
             }
         }
-        .navigationTitle("Ayarlar")
+        .navigationTitle(NSLocalizedString("settings.title", comment: "Settings"))
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showAISuggestions) {
             AISuggestionsView()
@@ -343,8 +343,8 @@ struct SettingsView: View {
             NotificationSettingsView()
                 .environmentObject(transactionsViewModel)
         }
-        .alert("Biometric Hatası", isPresented: $showBiometricError) {
-            Button("Tamam", role: .cancel) {}
+        .alert(NSLocalizedString("error.biometric", comment: "Biometric Error"), isPresented: $showBiometricError) {
+            Button(NSLocalizedString("common.ok", comment: "OK"), role: .cancel) {}
         } message: {
             if let error = biometricError {
                 Text(error)
@@ -654,13 +654,13 @@ struct AccountsListView: View {
                     .font(.system(size: 40))
                     .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
                 
-                Text(achievement.name ?? "")
+                Text(NSLocalizedString(achievement.name ?? "", comment: ""))
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                 
-                Text(achievement.achievementDescription ?? "")
+                Text(NSLocalizedString(achievement.achievementDescription ?? "", comment: ""))
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -671,7 +671,7 @@ struct AccountsListView: View {
                         Image(systemName: "star.fill")
                             .font(.caption2)
                             .foregroundColor(.yellow)
-                        Text("\(achievement.points) Puan")
+                        Text("\(achievement.points) \(NSLocalizedString("achievements.points.single", comment: "Points"))")
                             .font(.caption)
                             .fontWeight(.medium)
                     }

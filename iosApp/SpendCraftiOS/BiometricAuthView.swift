@@ -29,14 +29,14 @@ struct BiometricAuthView: View {
                     .foregroundColor(.white)
                 
                 // Title
-                Text("Güvenlik")
+                Text(NSLocalizedString("settings.security", comment: "Security"))
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                 
                 // Message
                 VStack(spacing: 12) {
-                    Text("Uygulamaya giriş yapmak için")
+                    Text(NSLocalizedString("biometric.auth.message", comment: "Biometric auth message"))
                         .font(.body)
                         .foregroundColor(.white.opacity(0.8))
                     
@@ -45,7 +45,7 @@ struct BiometricAuthView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                     
-                    Text("ile kimlik doğrulaması yapın")
+                    Text(NSLocalizedString("biometric.auth.message.end", comment: "Biometric auth end"))
                         .font(.body)
                         .foregroundColor(.white.opacity(0.8))
                 }

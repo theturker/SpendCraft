@@ -18,10 +18,26 @@ struct TransactionsTabView: View {
     @State private var filterType: TransactionFilter = .all
     @State private var transactionToEdit: TransactionEntity?
     
-    enum TransactionFilter: String, CaseIterable {
-        case all = "Tümü"
-        case income = "Gelir"
-        case expense = "Gider"
+    enum TransactionFilter: CaseIterable, Identifiable {
+        case all
+        case income
+        case expense
+        
+        var id: String {
+            switch self {
+            case .all: return "all"
+            case .income: return "income"
+            case .expense: return "expense"
+            }
+        }
+        
+        var localizedTitle: String {
+            switch self {
+            case .all: return NSLocalizedString("transactions.filter.all", comment: "All")
+            case .income: return NSLocalizedString("transactions.filter.income", comment: "Income")
+            case .expense: return NSLocalizedString("transactions.filter.expense", comment: "Expense")
+            }
+        }
     }
     
     // Make the return type explicit and simplify each branch to help the compiler.
@@ -64,7 +80,7 @@ struct TransactionsTabView: View {
                 .background(Color(uiColor: .systemBackground))
                 .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
         }
-        .navigationTitle("İşlemler")
+        .navigationTitle(NSLocalizedString("transactions.title", comment: "Transactions"))
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             toolbarContent
@@ -100,9 +116,9 @@ struct TransactionsTabView: View {
     private var filterPillsView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(TransactionFilter.allCases, id: \.self) { filter in
+                ForEach(TransactionFilter.allCases) { filter in
                     FilterPill(
-                        title: filter.rawValue,
+                        title: filter.localizedTitle,
                         isSelected: filterType == filter
                     ) {
                         filterType = filter
@@ -130,10 +146,10 @@ struct TransactionsTabView: View {
             Image(systemName: "tray")
                 .font(.system(size: 60))
                 .foregroundColor(.gray)
-            Text("Henüz işlem yok")
+            Text(NSLocalizedString("transactions.no.transactions", comment: "No transactions"))
                 .font(.headline)
                 .foregroundColor(.secondary)
-            Text("+ butonuna basarak ilk işleminizi ekleyin")
+            Text(NSLocalizedString("transactions.no.transactions.hint", comment: "No transactions hint"))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -174,7 +190,7 @@ struct TransactionsTabView: View {
         Button(role: .destructive) {
             transactionsViewModel.deleteTransaction(transaction)
         } label: {
-            Label("Sil", systemImage: "trash")
+            Label(NSLocalizedString("common.delete", comment: "Delete"), systemImage: "trash")
         }
     }
     
@@ -182,7 +198,7 @@ struct TransactionsTabView: View {
         Button {
             transactionToEdit = transaction
         } label: {
-            Label("Düzenle", systemImage: "pencil")
+            Label(NSLocalizedString("common.edit", comment: "Edit"), systemImage: "pencil")
         }
         .tint(.blue)
     }

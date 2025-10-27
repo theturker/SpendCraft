@@ -23,9 +23,9 @@ struct ExportView: View {
     @State private var replaceExistingData = false
     
     enum ExportType: String, CaseIterable {
-        case json = "Tam Yedekleme (JSON)"
-        case csv = "CSV"
-        case pdf = "PDF"
+        case json = "export.type.json"
+        case csv = "export.type.csv"
+        case pdf = "export.type.pdf"
         
         var icon: String {
             switch self {
@@ -37,10 +37,14 @@ struct ExportView: View {
         
         var description: String {
             switch self {
-            case .json: return "Tüm verilerinizi yedekleyin (işlemler, kategoriler, hesaplar)"
-            case .csv: return "Excel ve diğer tablolama uygulamalarında açılabilir"
-            case .pdf: return "Profesyonel raporlar için ideal"
+            case .json: return NSLocalizedString("export.type.json.description", comment: "JSON description")
+            case .csv: return NSLocalizedString("export.type.csv.description", comment: "CSV description")
+            case .pdf: return NSLocalizedString("export.type.pdf.description", comment: "PDF description")
             }
+        }
+        
+        var localizedName: String {
+            return NSLocalizedString(self.rawValue, comment: "Export type")
         }
     }
     
@@ -58,13 +62,13 @@ struct ExportView: View {
                                 Image(systemName: "square.and.arrow.up")
                                     .font(.title2)
                                     .foregroundColor(.blue)
-                                Text("Dışa Aktar")
+                                Text(NSLocalizedString("export.title", comment: "Export"))
                                     .font(.title2)
                                     .fontWeight(.bold)
                             }
                             .padding(.horizontal)
                             
-                            Text("İşlemlerinizi farklı formatlarda dışa aktarın")
+                            Text(NSLocalizedString("export.description", comment: "Export description"))
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal)
@@ -81,7 +85,7 @@ struct ExportView: View {
                                             .foregroundColor(exportType == type ? .white : .blue)
                                         
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text(type.rawValue)
+                                            Text(type.localizedName)
                                                 .font(.headline)
                                                 .foregroundColor(exportType == type ? .white : .primary)
                                             
@@ -112,7 +116,7 @@ struct ExportView: View {
                             } label: {
                                 HStack {
                                     Image(systemName: "arrow.down.doc")
-                                    Text("Dışa Aktar")
+                                    Text(NSLocalizedString("export.button", comment: "Export Button"))
                                         .fontWeight(.semibold)
                                 }
                                 .frame(maxWidth: .infinity)
@@ -134,28 +138,28 @@ struct ExportView: View {
                                 Image(systemName: "square.and.arrow.down")
                                     .font(.title2)
                                     .foregroundColor(.green)
-                                Text("İçe Aktar")
+                                Text(NSLocalizedString("import.title", comment: "Import"))
                                     .font(.title2)
                                     .fontWeight(.bold)
                             }
                             .padding(.horizontal)
                             
-                            Text("Yedekleme dosyasından verilerinizi geri yükleyin")
+                            Text(NSLocalizedString("import.description", comment: "Import description"))
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal)
                             
                             VStack(alignment: .leading, spacing: 12) {
-                                Text("⚠️ Önemli:")
+                                Text(NSLocalizedString("import.important", comment: "Important"))
                                     .font(.caption)
                                     .fontWeight(.bold)
                                     .foregroundColor(.orange)
                                 
-                                Text("JSON yedekleme dosyası tüm verilerinizi (işlemler, kategoriler, hesaplar) içerir. CSV dosyası ise sadece işlemleri içerir.")
+                                Text(NSLocalizedString("import.warning", comment: "Import warning"))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 
-                                Toggle("Mevcut verileri sil ve değiştir", isOn: $replaceExistingData)
+                                Toggle(NSLocalizedString("import.replace", comment: "Replace data"), isOn: $replaceExistingData)
                                     .font(.caption)
                                     .tint(.red)
                             }
@@ -169,7 +173,7 @@ struct ExportView: View {
                             } label: {
                                 HStack {
                                     Image(systemName: "arrow.up.doc")
-                                    Text("Dosya Seç (JSON/CSV)")
+                                    Text(NSLocalizedString("import.select.file", comment: "Select File"))
                                         .fontWeight(.semibold)
                                 }
                                 .frame(maxWidth: .infinity)
@@ -184,20 +188,20 @@ struct ExportView: View {
                         
                         // Stats
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("İstatistikler")
+                            Text(NSLocalizedString("export.stats", comment: "Statistics"))
                                 .font(.headline)
                                 .padding(.horizontal)
                             
                             HStack(spacing: 16) {
                                 StatCard(
-                                    title: "Toplam İşlem",
+                                    title: NSLocalizedString("export.stats.transactions", comment: "Total Transactions"),
                                     value: "\(transactionsViewModel.transactions.count)",
                                     icon: "list.bullet",
                                     color: .blue
                                 )
                                 
                                 StatCard(
-                                    title: "Kategori",
+                                    title: NSLocalizedString("export.stats.categories", comment: "Total Categories"),
                                     value: "\(transactionsViewModel.categories.count)",
                                     icon: "folder",
                                     color: .orange
@@ -210,7 +214,7 @@ struct ExportView: View {
                     .padding(.vertical)
                 }
             }
-            .navigationTitle("Dışa/İçe Aktar")
+            .navigationTitle(NSLocalizedString("export.title", comment: "Export/Import"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -234,8 +238,8 @@ struct ExportView: View {
             ) { result in
                 handleImport(result)
             }
-            .alert("Bilgi", isPresented: $showAlert) {
-                Button("Tamam", role: .cancel) {}
+            .alert(NSLocalizedString("common.info", comment: "Info"), isPresented: $showAlert) {
+                Button(NSLocalizedString("common.ok", comment: "OK"), role: .cancel) {}
             } message: {
                 Text(alertMessage)
             }
