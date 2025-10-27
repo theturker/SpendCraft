@@ -291,6 +291,7 @@
 "settings.security.biometric.description" = "Uygulamaya giriş için Face ID/Touch ID kullanın";
 
 /* Features Section */
+"settings.features" = "Özellikler";
 "features.recurring.transactions" = "Tekrarlayan İşlemler";
 "features.achievements" = "Başarılar";
 "features.notifications" = "Bildirimler";
