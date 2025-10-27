@@ -242,7 +242,7 @@ struct DashboardView: View {
                         Text(NSLocalizedString("dashboard.achievements", comment: "Achievements"))
                             .font(.headline)
                         Spacer()
-                        Text(String(format: NSLocalizedString("achievements.total.points", comment: "%d Points"), achievementsViewModel.totalPoints))
+                        Text(String(format: NSLocalizedString("achievements.total.points.format", comment: "%d Points"), achievementsViewModel.totalPoints))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }

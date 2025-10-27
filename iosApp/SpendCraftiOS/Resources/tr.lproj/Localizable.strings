@@ -277,6 +277,13 @@
 "dashboard.achievements.points" = "%d Puan";
 "achievements.points.single" = "Puan";
 "achievements.points.format" = "%d Puan";
+"achievements.total.points" = "Puan";
+"achievements.total.points.format" = "%d Puan";
+"achievements.remaining" = "Kalan";
+"achievements.motivational.locked" = "Bu başarımı açmak için daha fazla ilerleme kaydedin";
+"achievements.unlocked.count" = "%d Açıldı";
+"achievements.unlocked.count.format" = "%d / %d Başarım";
+"achievements.points.display" = "%d Puan";
 "dashboard.recent.transactions.title" = "Son İşlemler";
 
 /* Settings - Security */
@@ -303,6 +310,9 @@
 "accounts.bank" = "Banka";
 "accounts.credit.card" = "Kredi Kartı";
 "accounts.savings" = "Tasarruf";
+"accounts.account.info" = "Hesap Bilgileri";
+"accounts.account.name" = "Hesap Adı";
+"accounts.account.type" = "Hesap Tipi";
 
 /* Currency */
 "currency.selection" = "Para Birimi Seçimi";
@@ -460,6 +470,7 @@
 "notifications.no.notifications.message" = "Henüz hiç bildiriminiz yok";
 "notifications.unread" = "Okunmamış";
 "notifications.read" = "Okunmuş";
+"notifications.every.day" = "Her gün";
 
 /* Export */
 "export.title" = "Dışa Aktar";
@@ -490,12 +501,37 @@
 "recurring.next.date" = "Sonraki Tarih";
 "recurring.amount" = "Tutar";
 "recurring.category" = "Kategori";
+"recurring.no.transactions" = "Henüz tekrarlayan işlem yok";
+"recurring.no.transactions.hint" = "+ butonuna basarak ilk tekrarlayan işleminizi ekleyin";
+"recurring.select" = "Seçiniz";
+"recurring.select.category" = "Kategori Seç";
+"recurring.change" = "Değiştir";
+"recurring.daily" = "Günlük";
+"recurring.weekly" = "Haftalık";
+"recurring.monthly" = "Aylık";
+"recurring.yearly" = "Yıllık";
+"recurring.add.transaction" = "Tekrarlayan İşlem Ekle";
+"recurring.transaction.info" = "İşlem Bilgileri";
+"recurring.transaction.name" = "İşlem Adı";
+"recurring.start.date" = "Başlangıç Tarihi";
+"recurring.status" = "Durum";
+"recurring.active" = "Aktif";
 
 /* Notification Settings */
 "notification.settings.title" = "Bildirim Ayarları";
 "notification.settings.enable" = "Bildirimleri Etkinleştir";
 "notification.settings.budget.alerts" = "Bütçe Uyarıları";
 "notification.settings.recurring" = "Tekrarlayan İşlem Hatırlatmaları";
+"notification.status" = "Durum";
+"notification.active" = "Aktif";
+"notification.inactive" = "Pasif";
+"notification.open.settings" = "Ayarlarda Bildirimleri Aç";
+"notification.templates" = "Hazır Bildirimler (%d)";
+"notification.templates.description" = "Hazır bildirim senaryolarını etkinleştirebilir ve saatlerini ayarlayabilirsiniz.";
+"notification.custom" = "Özel Bildirimlerim (%d)";
+"notification.custom.description" = "Kendi özel hatırlatmalarınızı oluşturun.";
+"notification.add.custom" = "Özel Bildirim Ekle";
+"notification.close" = "Kapat";
 
 /* Export */
 "export.title" = "Dışa/İçe Aktar";

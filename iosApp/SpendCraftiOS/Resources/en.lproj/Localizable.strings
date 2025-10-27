@@ -456,10 +456,15 @@
 "recurring.weekly" = "Weekly";
 "recurring.monthly" = "Monthly";
 "recurring.yearly" = "Yearly";
+"recurring.add.transaction" = "Add Recurring Transaction";
+"recurring.no.transactions" = "No recurring transactions yet";
+"recurring.no.transactions.hint" = "Tap + button to add your first recurring transaction";
 
 /* Achievements Hardcoded Strings */
-"achievements.total.points" = "%d Points";
-"achievements.unlocked.count" = "%d / %d Achievement";
+"achievements.total.points" = "Points";
+"achievements.total.points.format" = "%d Points";
+"achievements.unlocked.count" = "Unlocked";
+"achievements.unlocked.count.format" = "%d / %d Achievement";
 "achievements.points" = "Points";
 "achievements.unlocked" = "Unlocked";
 "achievements.locked" = "Locked";
@@ -492,6 +497,14 @@
 "notification.recurrence" = "Recurrence";
 "notification.create" = "Create";
 "notification.close" = "Close";
+"notifications.every.day" = "Every day";
+"day.sun" = "Sun";
+"day.mon" = "Mon";
+"day.tue" = "Tue";
+"day.wed" = "Wed";
+"day.thu" = "Thu";
+"day.fri" = "Fri";
+"day.sat" = "Sat";
 "notification.morning" = "Morning";
 "notification.noon" = "Noon";
 "notification.evening" = "Evening";

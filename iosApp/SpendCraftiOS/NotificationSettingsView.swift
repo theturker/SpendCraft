@@ -294,7 +294,15 @@ struct CustomNotificationRow: View {
     }
     
     private func daysText(_ days: [Int]) -> String {
-        let dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"]
+        let dayNames = [
+            NSLocalizedString("day.sun", comment: "Sunday"),
+            NSLocalizedString("day.mon", comment: "Monday"),
+            NSLocalizedString("day.tue", comment: "Tuesday"),
+            NSLocalizedString("day.wed", comment: "Wednesday"),
+            NSLocalizedString("day.thu", comment: "Thursday"),
+            NSLocalizedString("day.fri", comment: "Friday"),
+            NSLocalizedString("day.sat", comment: "Saturday")
+        ]
         return days.map { dayNames[$0 - 1] }.joined(separator: ", ")
     }
 }

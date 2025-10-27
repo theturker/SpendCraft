@@ -605,11 +605,11 @@ struct AccountsListView: View {
                             .font(.system(size: 50))
                             .foregroundColor(.yellow)
                         
-                        Text(String(format: NSLocalizedString("achievements.total.points", comment: "%d Points"), achievementsViewModel.totalPoints))
+                        Text(String(format: NSLocalizedString("achievements.total.points.format", comment: "%d Points"), achievementsViewModel.totalPoints))
                             .font(.title)
                             .fontWeight(.bold)
                         
-                        Text(String(format: NSLocalizedString("achievements.unlocked.count", comment: "%d / %d Achievement"), achievementsViewModel.achievements.filter { $0.isUnlocked }.count, achievementsViewModel.achievements.count))
+                        Text(String(format: NSLocalizedString("achievements.unlocked.count.format", comment: "%d / %d Achievement"), achievementsViewModel.achievements.filter { $0.isUnlocked }.count, achievementsViewModel.achievements.count))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
