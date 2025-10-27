@@ -39,6 +39,18 @@ object LocaleHelper {
     
     fun getLanguage(context: Context): String {
         val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        return prefs.getString(SELECTED_LANGUAGE, "tr") ?: "tr"
+        val savedLanguage = prefs.getString(SELECTED_LANGUAGE, null)
+        
+        // Eğer kullanıcı bir dil seçmişse onu kullan
+        if (savedLanguage != null) {
+            return savedLanguage
+        }
+        
+        // Yoksa sistem dilini al
+        val systemLanguage = java.util.Locale.getDefault().language
+        return when (systemLanguage) {
+            "tr", "en" -> systemLanguage
+            else -> "tr" // Default Turkish
+        }
     }
 }

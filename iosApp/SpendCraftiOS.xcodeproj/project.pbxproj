@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,6 +18,8 @@
 		905181052E98529900F81AAC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 905181042E98529900F81AAC /* Media.xcassets */; };
 		9056134F2EAEBE6600B340FF /* BiometricAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9056134D2EAEBE6600B340FF /* BiometricAuthView.swift */; };
 		905613502EAEBE6600B340FF /* BiometricManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9056134E2EAEBE6600B340FF /* BiometricManager.swift */; };
+		905613522EAECB7F00B340FF /* LanguageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 905613512EAECB7F00B340FF /* LanguageSettingsView.swift */; };
+		9056135B2EAF6BFF00B340FF /* LanguageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9056135A2EAF6BFF00B340FF /* LanguageHelper.swift */; };
 		908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */; };
 		908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908773A62E95857B00AB0783 /* CoreDataStack.swift */; };
 		90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A11BBB2E9666EC005C595F /* OnboardingView.swift */; };
@@ -72,6 +74,8 @@
 		905181042E98529900F81AAC /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		9056134D2EAEBE6600B340FF /* BiometricAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAuthView.swift; sourceTree = "<group>"; };
 		9056134E2EAEBE6600B340FF /* BiometricManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricManager.swift; sourceTree = "<group>"; };
+		905613512EAECB7F00B340FF /* LanguageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSettingsView.swift; sourceTree = "<group>"; };
+		9056135A2EAF6BFF00B340FF /* LanguageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageHelper.swift; sourceTree = "<group>"; };
 		908773A52E95787500AB0783 /* SpendCraftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpendCraftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		908773A62E95857B00AB0783 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		908773A72E95857B00AB0783 /* SpendCraft.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpendCraft.xcdatamodeld; sourceTree = "<group>"; };
@@ -114,6 +118,10 @@
 		AFD4B289D948BBA5DC77D2FD /* Pods_SpendCraftiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpendCraftiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		905613582EAF6B6800B340FF /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		D5CB89385649D0445ECD4AC9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -137,6 +145,9 @@
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
+				9056135A2EAF6BFF00B340FF /* LanguageHelper.swift */,
+				905613582EAF6B6800B340FF /* Resources */,
+				905613512EAECB7F00B340FF /* LanguageSettingsView.swift */,
 				9056134D2EAEBE6600B340FF /* BiometricAuthView.swift */,
 				9056134E2EAEBE6600B340FF /* BiometricManager.swift */,
 				90E41C7C2E9E90FB001188EB /* BannerAdView.swift */,
@@ -228,6 +239,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				905613582EAF6B6800B340FF /* Resources */,
+			);
 			name = SpendCraftiOS;
 			productName = SpendCraftiOS;
 			productReference = 908773A52E95787500AB0783 /* SpendCraftiOS.app */;
@@ -249,6 +263,7 @@
 			knownRegions = (
 				en,
 				Base,
+				tr,
 			);
 			mainGroup = 7555FF72242A565900829871;
 			productRefGroup = 7555FF72242A565900829871;
@@ -387,6 +402,7 @@
 				90AB66D92E95998A0063F8A7 /* ReportsView.swift in Sources */,
 				90A11BC42E966725005C595F /* ExportManager.swift in Sources */,
 				90AB66D12E9599890063F8A7 /* CategoryEntity.swift in Sources */,
+				905613522EAECB7F00B340FF /* LanguageSettingsView.swift in Sources */,
 				9037B6A12E9DCEF20087D68B /* NotificationSettingsView.swift in Sources */,
 				900445872E9C6F68003DFAFC /* AccountInfoView.swift in Sources */,
 				90AB66DF2E95998B0063F8A7 /* TransactionsViewModel.swift in Sources */,
@@ -396,6 +412,7 @@
 				90B99D2C2E9D12B800EE7EC6 /* NotificationManager.swift in Sources */,
 				2152FB062600AC8F00CF470E /* ContentView.swift in Sources */,
 				90AB66D72E95998A0063F8A7 /* TransactionsTabView.swift in Sources */,
+				9056135B2EAF6BFF00B340FF /* LanguageHelper.swift in Sources */,
 				90AB66E82E9599930063F8A7 /* DailyEntryEntity+CoreDataClass.swift in Sources */,
 				90AB66EA2E9599930063F8A7 /* DailyEntryEntity+CoreDataProperties.swift in Sources */,
 				90A11BC02E966712005C595F /* AISettingsView.swift in Sources */,

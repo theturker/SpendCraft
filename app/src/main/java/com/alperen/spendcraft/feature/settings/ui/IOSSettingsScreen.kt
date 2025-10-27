@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.lerp
+import com.alperen.spendcraft.LocaleHelper
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.ui.iosTheme.*
@@ -53,6 +54,7 @@ fun IOSSettingsScreen(
     onNavigateToExport: () -> Unit,
     onNavigateToCurrencySettings: () -> Unit = {}, // iOS'ta CurrencySettingsView var
     onNavigateToAccountInfo: () -> Unit = {}, // iOS'ta AccountInfoView var
+    onNavigateToLanguageSettings: () -> Unit = {}, // iOS'ta LanguageSettingsView var
     onSignOut: () -> Unit,
     userName: String = "Kullanıcı", // iOS'ta authViewModel.userDisplayName
     userEmail: String = "", // iOS'ta authViewModel.userEmail
@@ -786,6 +788,9 @@ private fun IOSSettingsScreenPreview() {
             onNavigateToNotifications = {},
             onNavigateToNotificationSettings = {},
             onNavigateToExport = {},
+            onNavigateToCurrencySettings = {},
+            onNavigateToAccountInfo = {},
+            onNavigateToLanguageSettings = {},
             onSignOut = {},
             totalTransactions = 142,
             totalCategories = 12
@@ -805,6 +810,9 @@ private fun IOSSettingsScreenDarkPreview() {
             onNavigateToNotifications = {},
             onNavigateToNotificationSettings = {},
             onNavigateToExport = {},
+            onNavigateToCurrencySettings = {},
+            onNavigateToAccountInfo = {},
+            onNavigateToLanguageSettings = {},
             onSignOut = {},
             totalTransactions = 89,
             totalCategories = 8

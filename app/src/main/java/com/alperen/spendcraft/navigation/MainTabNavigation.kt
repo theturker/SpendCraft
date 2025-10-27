@@ -113,6 +113,7 @@ fun MainTabNavigation(
     onNavigateToAccountInfo: () -> Unit = {},  // iOS AccountInfoView
     onNavigateToNotificationSettings: () -> Unit = {},  // iOS NotificationSettingsView
     onNavigateToCurrencyPicker: () -> Unit = {},  // iOS CurrencyPickerView
+    onNavigateToLanguagePicker: () -> Unit = {},  // Language Picker
     isPremium: Boolean = false
 ) {
     val navController = rememberNavController()
@@ -329,6 +330,7 @@ fun MainTabNavigation(
                     onNavigateToNotificationSettings = onNavigateToNotificationSettings,  // iOS NotificationSettingsView
                     onNavigateToExport = onNavigateToExport,
                     onNavigateToCurrencySettings = onNavigateToCurrencyPicker,  // iOS CurrencyPickerView
+                    onNavigateToLanguageSettings = onNavigateToLanguagePicker,  // Language Picker
                     onNavigateToAccountInfo = onNavigateToAccountInfo,  // iOS AccountInfoView
                     onSignOut = {
                         // TODO: Authentication devre dışı - Çıkış Yap butonu da devre dışı

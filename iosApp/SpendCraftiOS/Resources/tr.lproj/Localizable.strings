@@ -1,0 +1,96 @@
+/* Turkish Localization */
+
+/* Settings */
+"settings.title" = "Ayarlar";
+"settings.accounts" = "Hesaplar";
+"settings.currency" = "Para Birimi";
+"settings.language" = "Dil";
+"settings.language.selection" = "Dil Seçimi";
+"settings.language.restart.message" = "Uygulamayı kapatıp yeniden açarak değişiklikleri uygulayın.";
+"settings.ai.suggestions" = "AI Önerileri";
+"settings.recurring.transactions" = "Tekrarlayan İşlemler";
+"settings.achievements" = "Başarılar";
+"settings.notifications" = "Bildirimler";
+"settings.notification.settings" = "Bildirim Ayarları";
+"settings.security" = "Güvenlik";
+"settings.data.management" = "Veri Yönetimi";
+"settings.export.import" = "Dışa/İçe Aktar";
+"settings.app" = "Uygulama";
+"settings.version" = "Versiyon";
+"settings.total.transactions" = "Toplam İşlem";
+"settings.total.categories" = "Toplam Kategori";
+
+/* Language Selection */
+"language.turkish" = "Türkçe";
+"language.english" = "English";
+"language.select" = "Dil seçin. Seçiminiz kaydedilecek.";
+"language.changed" = "Dil Değiştirildi";
+"language.changed.message" = "Değişikliklerin uygulanması için uygulamayı yeniden başlatın.";
+
+/* Finance */
+"finance.title" = "Finans";
+
+/* AI */
+"ai.title" = "Yapay Zeka";
+
+/* Features */
+"features.title" = "Özellikler";
+
+/* Common */
+"common.ok" = "Tamam";
+"common.cancel" = "İptal";
+"common.save" = "Kaydet";
+"common.edit" = "Düzenle";
+"common.delete" = "Sil";
+"common.add" = "Ekle";
+"common.back" = "Geri";
+"common.yes" = "Evet";
+"common.no" = "Hayır";
+
+/* Tabs */
+"tab.dashboard" = "Ana Sayfa";
+"tab.transactions" = "İşlemler";
+"tab.reports" = "Raporlar";
+"tab.categories" = "Kategoriler";
+"tab.settings" = "Ayarlar";
+"tab.notifications" = "Bildirimler";
+"tab.achievements" = "Başarılar";
+
+/* Dashboard */
+"dashboard.title" = "Dashboard";
+"dashboard.total.balance" = "Toplam Bakiye";
+"dashboard.income" = "Gelir";
+"dashboard.expense" = "Gider";
+"dashboard.today" = "Bugün";
+"dashboard.this.week" = "Bu Hafta";
+"dashboard.this.month" = "Bu Ay";
+"dashboard.recent.transactions" = "Son İşlemler";
+"dashboard.add.transaction" = "İşlem Ekle";
+
+/* Settings - Security */
+"settings.security.biometric" = "Biyometrik Kimlik Doğrulama";
+"settings.security.biometric.description" = "Uygulamaya giriş için Face ID/Touch ID kullanın";
+
+/* Features Section */
+"features.recurring.transactions" = "Tekrarlayan İşlemler";
+"features.achievements" = "Başarılar";
+"features.notifications" = "Bildirimler";
+"features.notification.settings" = "Bildirim Ayarları";
+"features.ai.suggestions" = "AI Önerileri";
+"ai.title" = "Yapay Zeka";
+
+/* Accounts */
+"accounts.title" = "Hesaplar";
+"accounts.add" = "Hesap Ekle";
+"accounts.add.new" = "Yeni Hesap";
+"accounts.name" = "Hesap Adı";
+"accounts.type" = "Hesap Tipi";
+"accounts.currency" = "Para Birimi";
+"accounts.default" = "Varsayılan";
+"accounts.cash" = "Nakit";
+"accounts.bank" = "Banka";
+"accounts.credit.card" = "Kredi Kartı";
+"accounts.savings" = "Tasarruf";
+
+/* Currency */
+"currency.selection" = "Para Birimi Seçimi";

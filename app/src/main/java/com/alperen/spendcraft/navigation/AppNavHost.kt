@@ -72,6 +72,7 @@ object Routes {
     // const val ACCOUNT_INFO = "account_info"  // iOS AccountInfoView
     const val NOTIFICATION_SETTINGS = "notification_settings"  // iOS NotificationSettingsView
     const val CURRENCY_PICKER = "currency_picker"  // iOS CurrencyPickerView
+    const val LANGUAGE_PICKER = "language_picker"  // Language Picker
     const val ADD_CATEGORY = "add_category/{isIncome}"  // iOS AddCategoryView
 }
 
@@ -133,6 +134,7 @@ fun AppNavHost(
                 // onNavigateToAccountInfo = { navController.navigate(Routes.ACCOUNT_INFO) },  // iOS AccountInfoView
                 onNavigateToNotificationSettings = { navController.navigate(Routes.NOTIFICATION_SETTINGS) },  // iOS NotificationSettingsView
                 onNavigateToCurrencyPicker = { navController.navigate(Routes.CURRENCY_PICKER) },  // iOS CurrencyPickerView
+                onNavigateToLanguagePicker = { navController.navigate(Routes.LANGUAGE_PICKER) },  // Language Picker
                 isPremium = isPremium
             )
         }
@@ -589,6 +591,13 @@ fun AppNavHost(
         // iOS CurrencyPickerView - Settings > Para Birimi
         composable(Routes.CURRENCY_PICKER) {
             com.alperen.spendcraft.feature.settings.ui.CurrencyPickerScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
+        // Language Picker - Settings > Dil
+        composable(Routes.LANGUAGE_PICKER) {
+            com.alperen.spendcraft.feature.settings.ui.LanguagePickerScreen(
                 onBack = { navController.popBackStack() }
             )
         }

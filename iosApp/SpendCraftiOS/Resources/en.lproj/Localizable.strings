@@ -1,0 +1,96 @@
+/* English Localization */
+
+/* Settings */
+"settings.title" = "Settings";
+"settings.accounts" = "Accounts";
+"settings.currency" = "Currency";
+"settings.language" = "Language";
+"settings.language.selection" = "Language Selection";
+"settings.language.restart.message" = "Close and reopen the app to apply changes.";
+"settings.ai.suggestions" = "AI Suggestions";
+"settings.recurring.transactions" = "Recurring Transactions";
+"settings.achievements" = "Achievements";
+"settings.notifications" = "Notifications";
+"settings.notification.settings" = "Notification Settings";
+"settings.security" = "Security";
+"settings.data.management" = "Data Management";
+"settings.export.import" = "Export/Import";
+"settings.app" = "App";
+"settings.version" = "Version";
+"settings.total.transactions" = "Total Transactions";
+"settings.total.categories" = "Total Categories";
+
+/* Language Selection */
+"language.turkish" = "Turkish";
+"language.english" = "English";
+"language.select" = "Select a language. Your choice will be saved.";
+"language.changed" = "Language Changed";
+"language.changed.message" = "Please restart the app to apply changes.";
+
+/* Finance */
+"finance.title" = "Finance";
+
+/* AI */
+"ai.title" = "Artificial Intelligence";
+
+/* Features */
+"features.title" = "Features";
+
+/* Common */
+"common.ok" = "OK";
+"common.cancel" = "Cancel";
+"common.save" = "Save";
+"common.edit" = "Edit";
+"common.delete" = "Delete";
+"common.add" = "Add";
+"common.back" = "Back";
+"common.yes" = "Yes";
+"common.no" = "No";
+
+/* Tabs */
+"tab.dashboard" = "Dashboard";
+"tab.transactions" = "Transactions";
+"tab.reports" = "Reports";
+"tab.categories" = "Categories";
+"tab.settings" = "Settings";
+"tab.notifications" = "Notifications";
+"tab.achievements" = "Achievements";
+
+/* Dashboard */
+"dashboard.title" = "Dashboard";
+"dashboard.total.balance" = "Total Balance";
+"dashboard.income" = "Income";
+"dashboard.expense" = "Expense";
+"dashboard.today" = "Today";
+"dashboard.this.week" = "This Week";
+"dashboard.this.month" = "This Month";
+"dashboard.recent.transactions" = "Recent Transactions";
+"dashboard.add.transaction" = "Add Transaction";
+
+/* Settings - Security */
+"settings.security.biometric" = "Biometric Authentication";
+"settings.security.biometric.description" = "Use Face ID/Touch ID to access the app";
+
+/* Features Section */
+"features.recurring.transactions" = "Recurring Transactions";
+"features.achievements" = "Achievements";
+"features.notifications" = "Notifications";
+"features.notification.settings" = "Notification Settings";
+"features.ai.suggestions" = "AI Suggestions";
+"ai.title" = "Artificial Intelligence";
+
+/* Accounts */
+"accounts.title" = "Accounts";
+"accounts.add" = "Add Account";
+"accounts.add.new" = "New Account";
+"accounts.name" = "Account Name";
+"accounts.type" = "Account Type";
+"accounts.currency" = "Currency";
+"accounts.default" = "Default";
+"accounts.cash" = "Cash";
+"accounts.bank" = "Bank";
+"accounts.credit.card" = "Credit Card";
+"accounts.savings" = "Savings";
+
+/* Currency */
+"currency.selection" = "Currency Selection";

@@ -469,6 +469,7 @@ struct OnboardingPageView: View {
 struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("biometric_enabled") private var biometricEnabled = false
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = ""
     @State private var showSplash = true
     @State private var showBiometricAuth = false
     @State private var biometricAuthenticated = false
@@ -480,6 +481,10 @@ struct RootView: View {
             if showSplash {
                 SplashView()
                     .onAppear {
+                        // Uygulama açıldığında seçili dili ayarla
+                        let currentLang = selectedLanguage.isEmpty ? "tr" : selectedLanguage
+                        LanguageHelper.shared.setLanguage(currentLang)
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             withAnimation {
                                 showSplash = false
@@ -499,27 +504,9 @@ struct RootView: View {
                     )
                     .environmentObject(biometricManager)
                 } else {
-                    // Ana uygulama
+                    // Ana uygulama - Face ID zaten BiometricAuthView'da kontrol edildi
                     ContentView()
                         .environmentObject(authViewModel)
-                        .onAppear {
-                            // Uygulama açıldığında biometric kontrolü yap
-                            if biometricEnabled && biometricManager.isAvailable {
-                                Task {
-                                    do {
-                                        let success = try await biometricManager.authenticate(reason: "Uygulamaya giriş yapın")
-                                        if success {
-                                            biometricAuthenticated = true
-                                        }
-                                    } catch {
-                                        // Biometric başarısız olursa yine de uygulamayı aç
-                                        biometricAuthenticated = true
-                                    }
-                                }
-                            } else {
-                                biometricAuthenticated = true
-                            }
-                        }
                 }
             }
         }

@@ -38,7 +38,7 @@ struct ContentView: View {
                     }
             }
             .tabItem {
-                Label("Ana Sayfa", systemImage: "house.fill")
+                Label(NSLocalizedString("tab.dashboard", comment: "Dashboard"), systemImage: "house.fill")
             }
             .tag(0)
 
@@ -53,7 +53,7 @@ struct ContentView: View {
                     }
             }
             .tabItem {
-                Label("İşlemler", systemImage: "list.bullet")
+                Label(NSLocalizedString("tab.transactions", comment: "Transactions"), systemImage: "list.bullet")
             }
             .tag(1)
 
@@ -66,7 +66,7 @@ struct ContentView: View {
                     }
             }
             .tabItem {
-                Label("Raporlar", systemImage: "chart.bar.fill")
+                Label(NSLocalizedString("tab.reports", comment: "Reports"), systemImage: "chart.bar.fill")
             }
             .tag(2)
 
@@ -79,7 +79,7 @@ struct ContentView: View {
                     }
             }
             .tabItem {
-                Label("Kategoriler", systemImage: "folder.fill")
+                Label(NSLocalizedString("tab.categories", comment: "Categories"), systemImage: "folder.fill")
             }
             .tag(3)
 
@@ -97,7 +97,7 @@ struct ContentView: View {
                     }
             }
             .tabItem {
-                Label("Ayarlar", systemImage: "gearshape.fill")
+                Label(NSLocalizedString("tab.settings", comment: "Settings"), systemImage: "gearshape.fill")
             }
             .tag(4)
         }
