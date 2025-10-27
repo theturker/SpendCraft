@@ -19,7 +19,11 @@
 "settings.version" = "Versiyon";
 "settings.total.transactions" = "Toplam İşlem";
 "settings.total.categories" = "Toplam Kategori";
-"settings.biometric.help" = "Uygulamaya her giriş yaptığınızda %@ ile kimlik doğrulaması gerekecek.";
+"settings.biometric.error.message" = "Biyometrik kimlik doğrulaması etkinleştirilemedi";
+
+/* Notification Settings - Extra Keys */
+"notification.month.days" = "Ayın";
+"notification.days" = "günleri";
 
 /* Language Selection */
 "language.turkish" = "Türkçe";
@@ -58,9 +62,173 @@
 "biometric.auth.message" = "Uygulamaya giriş yapmak için";
 "biometric.auth.message.end" = "ile kimlik doğrulaması yapın";
 
-/* Achievements */
-"Uzman" = "Uzman";
-"Kategori Ustası" = "Kategori Ustası";
+/* Day Names */
+"day.sun" = "Paz";
+"day.mon" = "Pzt";
+"day.tue" = "Sal";
+"day.wed" = "Çar";
+"day.thu" = "Per";
+"day.fri" = "Cum";
+"day.sat" = "Cmt";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Paratik'e Hoş Geldiniz";
+"onboarding.welcome.description" = "Kişisel finans yönetiminizi kolaylaştıran akıllı asistanınız. Harcamalarınızı takip edin, bütçe oluşturun ve finansal hedeflerinize ulaşın.";
+"onboarding.smart.categorization.title" = "Akıllı Kategorilendirme";
+"onboarding.smart.categorization.description" = "İşlemlerinizi otomatik olarak kategorilere ayırın. Harcama alışkanlıklarınızı analiz edin ve nerede tasarruf edebileceğinizi keşfedin.";
+"onboarding.budget.management.title" = "Bütçe Yönetimi";
+"onboarding.budget.management.description" = "Kategoriler için bütçe belirleyin ve harcamalarınızı kontrol altında tutun. Bütçe aşımlarında anında bildirim alın.";
+"onboarding.ai.recommendations.title" = "AI Destekli Öneriler";
+"onboarding.ai.recommendations.description" = "Yapay zeka teknolojisi ile kişiselleştirilmiş finansal öneriler alın. Harcama alışkanlıklarınızı optimize edin.";
+"onboarding.detailed.reports.title" = "Detaylı Raporlar";
+"onboarding.detailed.reports.description" = "Gelir-gider analizleri, kategori bazında harcama dağılımları ve trend analizleri ile finansal durumunuzu takip edin.";
+"onboarding.get.started.title" = "Hemen Başlayın";
+"onboarding.get.started.description" = "Tüm özellikler sizin için hazır! Finansal özgürlük yolculuğunuza şimdi başlayın.";
+"onboarding.skip" = "Atla";
+"onboarding.next" = "İleri";
+"onboarding.start" = "Başla";
+
+/* Auth */
+"auth.welcome.back" = "Tekrar Hoş Geldiniz";
+"auth.continue.journey" = "Finansal yolculuğunuza devam edin";
+"auth.email" = "E-posta";
+"auth.password" = "Şifre";
+"auth.forgot.password" = "Şifremi Unuttum";
+"auth.sign.in" = "Giriş Yap";
+"auth.no.account" = "Hesabınız yok mu?";
+"auth.register" = "Kayıt Ol";
+"auth.create.account" = "Hesap Oluştur";
+"auth.start.journey" = "Finansal özgürlük yolculuğunuza başlayın";
+"auth.full.name" = "Ad Soyad";
+"auth.password.repeat" = "Şifre Tekrar";
+"auth.password.repeat.placeholder" = "Şifrenizi tekrar girin";
+"auth.already.have.account" = "Zaten hesabınız var mı?";
+"auth.sign.in.link" = "Giriş Yap";
+"auth.forgot.password.title" = "Şifrenizi mi Unuttunuz?";
+"auth.forgot.password.description" = "E-posta adresinizi girin, size şifre sıfırlama bağlantısı gönderelim";
+"auth.email.sent" = "E-posta Gönderildi";
+"auth.email.sent.description" = "E-posta adresinize şifre sıfırlama bağlantısı gönderildi. Lütfen gelen kutunuzu kontrol edin.";
+"auth.back.to.login" = "Giriş Sayfasına Dön";
+"auth.check.spam" = "E-posta gelmediyse spam klasörünü kontrol edin";
+"auth.send.reset.link" = "Sıfırlama Bağlantısı Gönder";
+"auth.use.registered.email" = "Kayıtlı e-posta adresinizi kullanın";
+"auth.link.valid.24h" = "Bağlantı 24 saat geçerli olacaktır";
+
+/* Error Messages */
+"error.invalid.input" = "Geçersiz giriş bilgileri";
+"error.invalid.email" = "Geçersiz e-posta adresi";
+"error.weak.password" = "Şifre çok zayıf";
+"error.password.mismatch" = "Şifreler eşleşmiyor";
+"error.user.not.found" = "Kullanıcı bulunamadı";
+"error.network.error" = "Ağ hatası";
+"error.email.already.in.use" = "Bu e-posta adresi zaten kullanımda";
+"error.wrong.password" = "E-posta veya şifre hatalı";
+"error.too.many.requests" = "Çok fazla deneme yapıldı. Lütfen sonra tekrar deneyin.";
+"error.user.disabled" = "Bu kullanıcı devre dışı bırakılmış.";
+"error.all.fields.required" = "Tüm alanlar gerekli";
+"error.valid.email.required" = "Geçerli bir e-posta adresi girin";
+"error.password.min.6.chars" = "Şifre en az 6 karakter olmalı";
+"error.password.strength.weak" = "Zayıf";
+"error.password.strength.medium" = "Orta";
+"error.password.strength.strong" = "Güçlü";
+
+/* Common User */
+"user.default" = "Kullanıcı";
+
+"achievement.default.title" = "Başarım";
+
+/* Achievement Names */
+"achievement.expert" = "Uzman";
+"achievement.category.master" = "Kategori Ustası";
+"achievement.budget.conscious" = "Bütçe Bilinci";
+"achievement.thrifty" = "Tutumlu";
+"achievement.investor" = "Yatırımcı";
+"achievement.income.machine" = "Gelir Makinası";
+"achievement.regular" = "Düzenli";
+"achievement.beginner" = "Başlangıç";
+
+/* Achievement Descriptions */
+"achievement.expert.description" = "50 işlem kaydedin";
+"achievement.category.master.description" = "5 farklı kategori kullanın";
+"achievement.budget.conscious.description" = "Aylık bütçenize uyun";
+"achievement.thrifty.description" = "Tutarlı şekilde tasarruf edin";
+"achievement.investor.description" = "İlk yatırımınızı yapın";
+"achievement.income.machine.description" = "Gelirinizi artırın";
+"achievement.regular.description" = "10 işlem kaydedin";
+"achievement.beginner.description" = "İlk işleminizi tamamlayın";
+
+/* Category Names */
+"category.shopping" = "Alışveriş";
+"category.other.income" = "Diğer Gelir";
+"category.other.expense" = "Diğer Gider";
+"category.education" = "Eğitim";
+"category.entertainment" = "Eğlence";
+"category.bill" = "Fatura";
+"category.food" = "Gıda";
+"category.salary" = "Maaş";
+"category.transportation" = "Ulaşım";
+"category.health" = "Sağlık";
+"category.clothing" = "Giyim";
+"category.travel" = "Seyahat";
+"category.credit" = "Kredi";
+"category.rent" = "Kira";
+"category.bonus" = "Prim";
+"category.investment" = "Yatırım";
+"category.gift" = "İkramiye";
+"category.freelance" = "Serbest Çalışma";
+"category.rental.income" = "Kira Geliri";
+
+/* Notification Template Names */
+"notification.evening" = "Akşam";
+"notification.monthly" = "Aylık";
+"notification.weekly" = "Haftalık";
+"notification.motivation" = "Motivasyon";
+"notification.morning" = "Sabah";
+"notification.special" = "Özel";
+"notification.noon" = "Öğlen";
+
+/* Notification Template Titles and Bodies */
+"notification.morning.title.1" = "Günaydın! ☀️";
+"notification.morning.body.1" = "Yeni bir gün, yeni bir başlangıç! Harcamalarınızı takip etmeye hazır mısınız?";
+"notification.morning.title.2" = "Kahve Molası ☕️";
+"notification.morning.body.2" = "Kahvenizi içerken bugünkü bütçenizi kontrol edin!";
+"notification.noon.title.1" = "Öğle Arası 🍽️";
+"notification.noon.body.1" = "Yemek harcamanızı kaydetmeyi unutmayın!";
+"notification.noon.title.2" = "Harcama Kontrolü 💰";
+"notification.noon.body.2" = "Bugüne kadar ne kadar harcadınız? Kontrol edin!";
+"notification.evening.title.1" = "Günün Özeti 🌙";
+"notification.evening.body.1" = "Bugünkü harcamalarınızı gözden geçirme zamanı!";
+"notification.evening.title.2" = "Günlük Hedef 🎯";
+"notification.evening.body.2" = "Bugünkü bütçe hedefinize ulaştınız mı?";
+"notification.weekly.title.1" = "Haftalık Rapor 📊";
+"notification.weekly.body.1" = "Bu haftaki harcamalarınızı inceleyin!";
+"notification.weekly.title.2" = "Hafta Sonu Planı 🎉";
+"notification.weekly.body.2" = "Hafta sonu harcamalarınızı planlayın!";
+"notification.monthly.title.1" = "Maaş Günü 💸";
+"notification.monthly.body.1" = "Gelirinizi kaydetmeyi unutmayın!";
+"notification.monthly.title.2" = "Fatura Ödemeleri 🧾";
+"notification.monthly.body.2" = "Ay sonuna yaklaştık, faturalarınızı kontrol edin!";
+"notification.motivation.title.1" = "Tasarruf Hedefi 🎯";
+"notification.motivation.body.1" = "Küçük tasarruflar büyük sonuçlar doğurur! Devam edin!";
+"notification.motivation.title.2" = "Finansal Özgürlük 🚀";
+"notification.motivation.body.2" = "Her kaydettiğiniz işlem sizi hedefinize bir adım yaklaştırıyor!";
+"notification.special.title.1" = "Hafta Sonu Başladı! 🎊";
+"notification.special.body.1" = "Hafta sonu harcamalarınızı takip etmeyi unutmayın!";
+"notification.special.title.2" = "Pazar Günü 🏡";
+"notification.special.body.2" = "Haftayı değerlendirin ve yeni haftayı planlayın!";
+
+/* AI Suggestions */
+"ai.financial.advisor" = "AI Finansal Danışman";
+"ai.powered.suggestions" = "Yapay zeka destekli kişiselleştirilmiş finansal öneriler";
+"ai.select.suggestion.type" = "Öneri Türü Seçin";
+"ai.expense.analysis" = "Harcama Analizi";
+"ai.expense.analysis.description" = "Kategori bazında harcama alışkanlıklarınızı detaylı analiz eder";
+"ai.budget.optimization" = "Bütçe Optimizasyonu";
+"ai.budget.optimization.description" = "Gelir-gider dengesini optimize etmek için öneriler verir";
+"ai.savings.suggestions" = "Tasarruf Önerileri";
+"ai.savings.suggestions.description" = "Daha fazla tasarruf yapmak için pratik öneriler sunar";
+"ai.get.suggestion" = "AI Önerisi Al";
+"ai.financial.status.summary" = "Finansal Durum Özeti";
 "Bütçe Bilinci" = "Bütçe Bilinci";
 "Tutumlu" = "Tutumlu";
 "Yatırımcı" = "Yatırımcı";

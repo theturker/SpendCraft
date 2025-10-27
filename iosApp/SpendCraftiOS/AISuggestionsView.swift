@@ -26,7 +26,7 @@ struct AISuggestionsView: View {
     
     var categoryBreakdown: [(category: String, amount: Double)] {
         let categories = Dictionary(grouping: transactionsViewModel.transactions.filter { !$0.isIncome }) { transaction -> String in
-            transaction.category?.name ?? "Diğer"
+            transaction.category?.name ?? NSLocalizedString("common.other", comment: "Other")
         }
         
         return categories.map { (category: $0.key, amount: $0.value.reduce(0) { $0 + $1.amount }) }
@@ -58,11 +58,11 @@ struct AISuggestionsView: View {
                                     )
                                 )
                             
-                            Text("AI Finansal Danışman")
+                            Text(NSLocalizedString("ai.financial.advisor", comment: "AI Financial Advisor"))
                                 .font(.title)
                                 .fontWeight(.bold)
                             
-                            Text("Yapay zeka destekli kişiselleştirilmiş finansal öneriler")
+                            Text(NSLocalizedString("ai.powered.suggestions", comment: "AI-powered personalized financial suggestions"))
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
@@ -72,7 +72,7 @@ struct AISuggestionsView: View {
                         
                         // Advice Type Selection
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Öneri Türü Seçin")
+                            Text(NSLocalizedString("ai.select.suggestion.type", comment: "Select Suggestion Type"))
                                 .font(.headline)
                                 .padding(.horizontal)
                             
@@ -94,7 +94,7 @@ struct AISuggestionsView: View {
                                         }
                                         
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text(type.rawValue)
+                                            Text(NSLocalizedString(type.rawValue, comment: type.rawValue))
                                                 .font(.headline)
                                                 .foregroundColor(.primary)
                                             
@@ -134,7 +134,7 @@ struct AISuggestionsView: View {
                                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                     } else {
                                         Image(systemName: "sparkles")
-                                        Text("AI Önerisi Al")
+                                        Text(NSLocalizedString("ai.get.suggestion", comment: "Get AI Suggestion"))
                                             .fontWeight(.semibold)
                                     }
                                 }
@@ -232,20 +232,20 @@ struct AISuggestionsView: View {
                         
                         // Stats Card
                         VStack(alignment: .leading, spacing: 16) {
-                            Text("Finansal Durum Özeti")
+                            Text(NSLocalizedString("ai.financial.status.summary", comment: "Financial Status Summary"))
                                 .font(.headline)
                                 .padding(.horizontal)
                             
                             HStack(spacing: 12) {
                                 FinancialStatCard(
-                                    title: "Gelir",
+                                    title: NSLocalizedString("dashboard.income", comment: "Income"),
                                     value: formatCurrency(transactionsViewModel.totalIncome),
                                     icon: "arrow.down.circle.fill",
                                     color: .green
                                 )
                                 
                                 FinancialStatCard(
-                                    title: "Gider",
+                                    title: NSLocalizedString("dashboard.expense", comment: "Expense"),
                                     value: formatCurrency(transactionsViewModel.totalExpense),
                                     icon: "arrow.up.circle.fill",
                                     color: .red
@@ -255,14 +255,14 @@ struct AISuggestionsView: View {
                             
                             HStack(spacing: 12) {
                                 FinancialStatCard(
-                                    title: "Bakiye",
+                                    title: NSLocalizedString("dashboard.total.balance", comment: "Total Balance"),
                                     value: formatCurrency(transactionsViewModel.currentBalance),
                                     icon: "banknote.fill",
                                     color: .blue
                                 )
                                 
                                 FinancialStatCard(
-                                    title: "Kategori",
+                                    title: NSLocalizedString("categories.title", comment: "Categories"),
                                     value: "\(transactionsViewModel.categories.count)",
                                     icon: "folder.fill",
                                     color: .orange

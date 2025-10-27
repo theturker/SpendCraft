@@ -86,6 +86,30 @@ class CoreDataStack: ObservableObject {
         }
     }
     
+    func migrateLocalizationData() {
+        let context = container.viewContext
+        
+        // Clear existing achievements and categories to force re-seeding with keys
+        let achievementFetch: NSFetchRequest<NSFetchRequestResult> = AchievementEntity.fetchRequest()
+        let achievementDelete = NSBatchDeleteRequest(fetchRequest: achievementFetch)
+        
+        let categoryFetch: NSFetchRequest<NSFetchRequestResult> = CategoryEntity.fetchRequest()
+        let categoryDelete = NSBatchDeleteRequest(fetchRequest: categoryFetch)
+        
+        do {
+            try context.execute(achievementDelete)
+            try context.execute(categoryDelete)
+            try context.save()
+            
+            // Refresh context to reflect changes
+            context.refreshAllObjects()
+            
+            print("✅ Localization data migrated successfully")
+        } catch {
+            print("❌ Failed to migrate localization data: \(error)")
+        }
+    }
+    
     func clearAllUserData() {
         let context = container.viewContext
         
@@ -146,32 +170,32 @@ class CoreDataStack: ObservableObject {
             if count == 0 {
                 // Seed initial categories
                 let categories: [(name: String, color: String, icon: String, type: String)] = [
-                    // Gider Kategorileri
-                    ("Gıda", "#FF6347", "fork.knife", "expense"),
-                    ("Ulaşım", "#4682B4", "car.fill", "expense"),
-                    ("Fatura", "#DAA520", "doc.text.fill", "expense"),
-                    ("Eğlence", "#9370DB", "gamecontroller.fill", "expense"),
-                    ("Alışveriş", "#3CB371", "cart.fill", "expense"),
-                    ("Sağlık", "#FF69B4", "heart.fill", "expense"),
-                    ("Eğitim", "#8B4513", "book.closed.fill", "expense"),
-                    ("Kredi", "#DC143C", "creditcard.fill", "expense"),
-                    ("Diğer Gider", "#808080", "ellipsis.circle.fill", "expense"),
+                    // Expense Categories
+                    ("category.food", "#FF6347", "fork.knife", "expense"),
+                    ("category.transportation", "#4682B4", "car.fill", "expense"),
+                    ("category.bill", "#DAA520", "doc.text.fill", "expense"),
+                    ("category.entertainment", "#9370DB", "gamecontroller.fill", "expense"),
+                    ("category.shopping", "#3CB371", "cart.fill", "expense"),
+                    ("category.health", "#FF69B4", "heart.fill", "expense"),
+                    ("category.education", "#8B4513", "book.closed.fill", "expense"),
+                    ("category.credit", "#DC143C", "creditcard.fill", "expense"),
+                    ("category.other.expense", "#808080", "ellipsis.circle.fill", "expense"),
                     
-                    // Gelir Kategorileri
-                    ("Maaş", "#008000", "banknote.fill", "income"),
-                    ("Kira", "#32CD32", "house.fill", "income"),
-                    ("Prim", "#FFD700", "star.fill", "income"),
-                    ("Yatırım", "#4169E1", "chart.line.uptrend.xyaxis", "income"),
-                    ("İkramiye", "#FFA500", "gift.fill", "income"),
-                    ("Serbest Çalışma", "#9370DB", "briefcase.fill", "income"),
-                    ("Kira Geliri", "#20B2AA", "building.2.fill", "income"),
-                    ("Diğer Gelir", "#808080", "ellipsis.circle.fill", "income")
+                    // Income Categories
+                    ("category.salary", "#008000", "banknote.fill", "income"),
+                    ("category.rent", "#32CD32", "house.fill", "income"),
+                    ("category.bonus", "#FFD700", "star.fill", "income"),
+                    ("category.investment", "#4169E1", "chart.line.uptrend.xyaxis", "income"),
+                    ("category.gift", "#FFA500", "gift.fill", "income"),
+                    ("category.freelance", "#9370DB", "briefcase.fill", "income"),
+                    ("category.rental.income", "#20B2AA", "building.2.fill", "income"),
+                    ("category.other.income", "#808080", "ellipsis.circle.fill", "income")
                 ]
 
                 for category in categories {
                     let categoryEntity = CategoryEntity(context: context)
                     categoryEntity.id = Int64.random(in: 1...10000)
-                    categoryEntity.name = category.name
+                    categoryEntity.name = category.name // Store the key instead of localized string
                     categoryEntity.color = category.color
                     categoryEntity.icon = category.icon
                     categoryEntity.type = category.type

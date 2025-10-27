@@ -49,7 +49,7 @@ class AuthViewModel: ObservableObject {
                 let model = UserModel(
                     id: user.uid,
                     email: user.email ?? "",
-                    displayName: user.displayName ?? (user.email?.components(separatedBy: "@").first ?? "Kullanıcı"),
+                    displayName: user.displayName ?? (user.email?.components(separatedBy: "@").first ?? NSLocalizedString("user.default", comment: "User")),
                     isEmailVerified: user.isEmailVerified
                 )
                 self.currentUser = model
@@ -73,13 +73,13 @@ class AuthViewModel: ObservableObject {
         
         guard emailValidation.isValid else {
             isLoading = false
-            errorMessage = emailValidation.errorMessage ?? "Geçerli bir e-posta adresi girin"
+            errorMessage = emailValidation.errorMessage ?? NSLocalizedString("error.valid.email.required", comment: "Please enter a valid email address")
             throw AuthError.invalidEmail
         }
         
         guard passwordValidation.isValid else {
             isLoading = false
-            errorMessage = passwordValidation.errorMessage ?? "Şifre en az 6 karakter olmalı"
+            errorMessage = passwordValidation.errorMessage ?? NSLocalizedString("error.password.min.6.chars", comment: "Password must be at least 6 characters")
             throw AuthError.weakPassword
         }
         
@@ -102,19 +102,19 @@ class AuthViewModel: ObservableObject {
         // Basit validation
         guard !name.isEmpty, !email.isEmpty, !password.isEmpty else {
             isLoading = false
-            errorMessage = "Tüm alanlar gerekli"
+            errorMessage = NSLocalizedString("error.all.fields.required", comment: "All fields are required")
             throw AuthError.invalidInput
         }
         
         guard email.contains("@") else {
             isLoading = false
-            errorMessage = "Geçerli bir e-posta adresi girin"
+            errorMessage = NSLocalizedString("error.valid.email.required", comment: "Please enter a valid email address")
             throw AuthError.invalidEmail
         }
         
         guard password.count >= 6 else {
             isLoading = false
-            errorMessage = "Şifre en az 6 karakter olmalı"
+            errorMessage = NSLocalizedString("error.password.min.6.chars", comment: "Password must be at least 6 characters")
             throw AuthError.weakPassword
         }
         
@@ -144,7 +144,7 @@ class AuthViewModel: ObservableObject {
         
         guard !email.isEmpty, email.contains("@") else {
             isLoading = false
-            errorMessage = "Geçerli bir e-posta adresi girin"
+            errorMessage = NSLocalizedString("error.valid.email.required", comment: "Please enter a valid email address")
             throw AuthError.invalidEmail
         }
         
@@ -174,7 +174,7 @@ class AuthViewModel: ObservableObject {
     // MARK: - User Info
     
     var userDisplayName: String {
-        return currentUser?.displayName ?? "Kullanıcı"
+        return currentUser?.displayName ?? NSLocalizedString("user.default", comment: "User")
     }
     
     var userEmail: String {
@@ -200,17 +200,17 @@ class AuthViewModel: ObservableObject {
             case .weakPassword:
                 return AuthError.weakPassword
             case .emailAlreadyInUse:
-                return LocalMappedError("Bu e-posta adresi zaten kullanımda")
+                return LocalMappedError(NSLocalizedString("error.email.already.in.use", comment: "This email address is already in use"))
             case .userNotFound:
                 return AuthError.userNotFound
             case .wrongPassword:
-                return LocalMappedError("E-posta veya şifre hatalı")
+                return LocalMappedError(NSLocalizedString("error.wrong.password", comment: "Email or password is incorrect"))
             case .networkError:
                 return AuthError.networkError
             case .tooManyRequests:
-                return LocalMappedError("Çok fazla deneme yapıldı. Lütfen sonra tekrar deneyin.")
+                return LocalMappedError(NSLocalizedString("error.too.many.requests", comment: "Too many attempts. Please try again later."))
             case .userDisabled:
-                return LocalMappedError("Bu kullanıcı devre dışı bırakılmış.")
+                return LocalMappedError(NSLocalizedString("error.user.disabled", comment: "This user has been disabled."))
             default:
                 return LocalMappedError(err.localizedDescription)
             }
@@ -238,17 +238,17 @@ enum AuthError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidInput:
-            return "Geçersiz giriş bilgileri"
+            return NSLocalizedString("error.invalid.input", comment: "Invalid input information")
         case .invalidEmail:
-            return "Geçersiz e-posta adresi"
+            return NSLocalizedString("error.invalid.email", comment: "Invalid email address")
         case .weakPassword:
-            return "Şifre çok zayıf"
+            return NSLocalizedString("error.weak.password", comment: "Password is too weak")
         case .passwordMismatch:
-            return "Şifreler eşleşmiyor"
+            return NSLocalizedString("error.password.mismatch", comment: "Passwords do not match")
         case .userNotFound:
-            return "Kullanıcı bulunamadı"
+            return NSLocalizedString("error.user.not.found", comment: "User not found")
         case .networkError:
-            return "Ağ hatası"
+            return NSLocalizedString("error.network.error", comment: "Network error")
         }
     }
 }
@@ -275,38 +275,38 @@ struct OnboardingView: View {
     
     let pages = [
         OnboardingPage(
-            title: "Paratik'e Hoş Geldiniz",
-            description: "Kişisel finans yönetiminizi kolaylaştıran akıllı asistanınız. Harcamalarınızı takip edin, bütçe oluşturun ve finansal hedeflerinize ulaşın.",
+            title: NSLocalizedString("onboarding.welcome.title", comment: "Welcome to Paratik"),
+            description: NSLocalizedString("onboarding.welcome.description", comment: "Welcome description"),
             systemImage: "chart.line.uptrend.xyaxis",
             gradientColors: [Color.blue, Color.purple]
         ),
         OnboardingPage(
-            title: "Akıllı Kategorilendirme",
-            description: "İşlemlerinizi otomatik olarak kategorilere ayırın. Harcama alışkanlıklarınızı analiz edin ve nerede tasarruf edebileceğinizi keşfedin.",
+            title: NSLocalizedString("onboarding.smart.categorization.title", comment: "Smart Categorization"),
+            description: NSLocalizedString("onboarding.smart.categorization.description", comment: "Smart categorization description"),
             systemImage: "square.grid.2x2",
             gradientColors: [Color.green, Color.mint]
         ),
         OnboardingPage(
-            title: "Bütçe Yönetimi",
-            description: "Kategoriler için bütçe belirleyin ve harcamalarınızı kontrol altında tutun. Bütçe aşımlarında anında bildirim alın.",
+            title: NSLocalizedString("onboarding.budget.management.title", comment: "Budget Management"),
+            description: NSLocalizedString("onboarding.budget.management.description", comment: "Budget management description"),
             systemImage: "chart.pie.fill",
             gradientColors: [Color.orange, Color.yellow]
         ),
         OnboardingPage(
-            title: "AI Destekli Öneriler",
-            description: "Yapay zeka teknolojisi ile kişiselleştirilmiş finansal öneriler alın. Harcama alışkanlıklarınızı optimize edin.",
+            title: NSLocalizedString("onboarding.ai.recommendations.title", comment: "AI-Powered Recommendations"),
+            description: NSLocalizedString("onboarding.ai.recommendations.description", comment: "AI recommendations description"),
             systemImage: "sparkles",
             gradientColors: [Color.purple, Color.pink]
         ),
         OnboardingPage(
-            title: "Detaylı Raporlar",
-            description: "Gelir-gider analizleri, kategori bazında harcama dağılımları ve trend analizleri ile finansal durumunuzu takip edin.",
+            title: NSLocalizedString("onboarding.detailed.reports.title", comment: "Detailed Reports"),
+            description: NSLocalizedString("onboarding.detailed.reports.description", comment: "Detailed reports description"),
             systemImage: "chart.bar.fill",
             gradientColors: [Color.red, Color.orange]
         ),
         OnboardingPage(
-            title: "Hemen Başlayın",
-            description: "Tüm özellikler sizin için hazır! Finansal özgürlük yolculuğunuza şimdi başlayın.",
+            title: NSLocalizedString("onboarding.get.started.title", comment: "Get Started Now"),
+            description: NSLocalizedString("onboarding.get.started.description", comment: "Get started description"),
             systemImage: "checkmark.circle.fill",
             gradientColors: [Color.cyan, Color.blue]
         )
@@ -331,7 +331,7 @@ struct OnboardingView: View {
                         Button {
                             completeOnboarding()
                         } label: {
-                            Text("Atla")
+                            Text(NSLocalizedString("onboarding.skip", comment: "Skip"))
                                 .foregroundColor(.white.opacity(0.8))
                                 .padding()
                         }
@@ -391,7 +391,7 @@ struct OnboardingView: View {
                         }
                     } label: {
                         HStack {
-                            Text(currentPage == pages.count - 1 ? "Başla" : "İleri")
+                            Text(currentPage == pages.count - 1 ? NSLocalizedString("onboarding.start", comment: "Start") : NSLocalizedString("onboarding.next", comment: "Next"))
                                 .fontWeight(.semibold)
                             Image(systemName: currentPage == pages.count - 1 ? "checkmark" : "chevron.right")
                         }
@@ -482,7 +482,7 @@ struct RootView: View {
                 SplashView()
                     .onAppear {
                         // Uygulama açıldığında seçili dili ayarla
-                        let currentLang = selectedLanguage.isEmpty ? "tr" : selectedLanguage
+                        let currentLang = LanguageHelper.shared.getCurrentLanguage()
                         LanguageHelper.shared.setLanguage(currentLang)
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -689,11 +689,11 @@ struct LoginView: View {
                             .opacity(animateContent ? 1.0 : 0.0)
                             
                             VStack(spacing: 8) {
-                                Text("Tekrar Hoş Geldiniz")
+                                Text(NSLocalizedString("auth.welcome.back", comment: "Welcome Back"))
                                     .font(.system(size: 32, weight: .bold))
                                     .foregroundColor(.primary)
                                 
-                                Text("Finansal yolculuğunuza devam edin")
+                                Text(NSLocalizedString("auth.continue.journey", comment: "Continue your financial journey"))
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -711,7 +711,7 @@ struct LoginView: View {
                                     Image(systemName: "envelope.fill")
                                         .font(.system(size: 14))
                                         .foregroundColor(isEmailFocused ? .blue : .secondary)
-                                    Text("E-posta")
+                                    Text(NSLocalizedString("auth.email", comment: "Email"))
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(isEmailFocused ? .blue : .primary)
@@ -749,7 +749,7 @@ struct LoginView: View {
                                     Image(systemName: "lock.fill")
                                         .font(.system(size: 14))
                                         .foregroundColor(isPasswordFocused ? .blue : .secondary)
-                                    Text("Şifre")
+                                    Text(NSLocalizedString("auth.password", comment: "Password"))
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(isPasswordFocused ? .blue : .primary)
@@ -800,7 +800,7 @@ struct LoginView: View {
                             HStack {
                                 Spacer()
                                 Button(action: onNavigateToForgotPassword) {
-                                    Text("Şifremi Unuttum")
+                                    Text(NSLocalizedString("auth.forgot.password", comment: "Forgot Password"))
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundStyle(
@@ -822,7 +822,7 @@ struct LoginView: View {
                                         ProgressView()
                                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                     } else {
-                                        Text("Giriş Yap")
+                                        Text(NSLocalizedString("auth.sign.in", comment: "Sign In"))
                                             .fontWeight(.bold)
                                             .font(.system(size: 17))
                                         Image(systemName: "arrow.right")
@@ -884,10 +884,10 @@ struct LoginView: View {
                             
                             Button(action: onNavigateToRegister) {
                                 HStack {
-                                    Text("Hesabınız yok mu?")
+                                    Text(NSLocalizedString("auth.no.account", comment: "Don't have an account?"))
                                         .foregroundColor(.secondary)
                                         .fontWeight(.medium)
-                                    Text("Kayıt Ol")
+                                    Text(NSLocalizedString("auth.register", comment: "Register"))
                                         .fontWeight(.bold)
                                         .foregroundStyle(
                                             LinearGradient(
@@ -1019,11 +1019,11 @@ struct RegisterView: View {
                             .opacity(animateContent ? 1.0 : 0.0)
                             
                             VStack(spacing: 8) {
-                                Text("Hesap Oluştur")
+                                Text(NSLocalizedString("auth.create.account", comment: "Create Account"))
                                     .font(.system(size: 32, weight: .bold))
                                     .foregroundColor(.primary)
                                 
-                                Text("Finansal özgürlük yolculuğunuza başlayın")
+                                Text(NSLocalizedString("auth.start.journey", comment: "Start your journey to financial freedom"))
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
@@ -1042,7 +1042,7 @@ struct RegisterView: View {
                                     Image(systemName: "person.fill")
                                         .font(.system(size: 14))
                                         .foregroundColor(.secondary)
-                                    Text("Ad Soyad")
+                                    Text(NSLocalizedString("auth.full.name", comment: "Full Name"))
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.primary)
@@ -1053,7 +1053,7 @@ struct RegisterView: View {
                                         .foregroundColor(.secondary)
                                         .frame(width: 20)
                                     
-                                    TextField("Adınız ve Soyadınız", text: $name)
+                                    TextField(NSLocalizedString("auth.full.name", comment: "Full Name"), text: $name)
                                         .textFieldStyle(PlainTextFieldStyle())
                                         .autocapitalization(.words)
                                 }
@@ -1074,7 +1074,7 @@ struct RegisterView: View {
                                     Image(systemName: "envelope.fill")
                                         .font(.system(size: 14))
                                         .foregroundColor(.secondary)
-                                    Text("E-posta")
+                                    Text(NSLocalizedString("auth.email", comment: "Email"))
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.primary)
@@ -1108,7 +1108,7 @@ struct RegisterView: View {
                                     Image(systemName: "lock.fill")
                                         .font(.system(size: 14))
                                         .foregroundColor(.secondary)
-                                    Text("Şifre")
+                                    Text(NSLocalizedString("auth.password", comment: "Password"))
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.primary)
@@ -1156,7 +1156,7 @@ struct RegisterView: View {
                                     Image(systemName: "lock.shield.fill")
                                         .font(.system(size: 14))
                                         .foregroundColor(.secondary)
-                                    Text("Şifre Tekrar")
+                                    Text(NSLocalizedString("auth.password.repeat", comment: "Repeat Password"))
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.primary)
@@ -1167,7 +1167,7 @@ struct RegisterView: View {
                                         .foregroundColor(passwordsMatch ? .green : .secondary)
                                         .frame(width: 20)
                                     
-                                    SecureField("Şifrenizi tekrar girin", text: $confirmPassword)
+                                    SecureField(NSLocalizedString("auth.password.repeat.placeholder", comment: "Re-enter your password"), text: $confirmPassword)
                                         .textFieldStyle(PlainTextFieldStyle())
                                 }
                                 .padding()
@@ -1210,7 +1210,7 @@ struct RegisterView: View {
                                         ProgressView()
                                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                     } else {
-                                        Text("Hesap Oluştur")
+                                        Text(NSLocalizedString("auth.create.account", comment: "Create Account"))
                                             .fontWeight(.bold)
                                             .font(.system(size: 17))
                                         Image(systemName: "checkmark.circle.fill")
@@ -1272,10 +1272,10 @@ struct RegisterView: View {
                             
                             Button(action: onNavigateToLogin) {
                                 HStack {
-                                    Text("Zaten hesabınız var mı?")
+                                    Text(NSLocalizedString("auth.already.have.account", comment: "Already have an account?"))
                                         .foregroundColor(.secondary)
                                         .fontWeight(.medium)
-                                    Text("Giriş Yap")
+                                    Text(NSLocalizedString("auth.sign.in.link", comment: "Sign In"))
                                         .fontWeight(.bold)
                                         .foregroundStyle(
                                             LinearGradient(
@@ -1346,9 +1346,9 @@ struct RegisterView: View {
     
     private var strengthText: String {
         switch passwordStrength {
-        case 0, 1: return "Zayıf"
-        case 2: return "Orta"
-        case 3: return "Güçlü"
+        case 0, 1: return NSLocalizedString("error.password.strength.weak", comment: "Weak")
+        case 2: return NSLocalizedString("error.password.strength.medium", comment: "Medium")
+        case 3: return NSLocalizedString("error.password.strength.strong", comment: "Strong")
         default: return ""
         }
     }
@@ -1454,11 +1454,11 @@ struct ForgotPasswordView: View {
                                 .opacity(animateContent ? 1.0 : 0.0)
                                 
                                 VStack(spacing: 16) {
-                                    Text("E-posta Gönderildi")
+                                    Text(NSLocalizedString("auth.email.sent", comment: "Email Sent"))
                                         .font(.system(size: 28, weight: .bold))
                                         .foregroundColor(.primary)
                                     
-                                    Text("E-posta adresinize şifre sıfırlama bağlantısı gönderildi. Lütfen gelen kutunuzu kontrol edin.")
+                                    Text(NSLocalizedString("auth.email.sent.description", comment: "Email sent description"))
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                         .multilineTextAlignment(.center)
@@ -1471,7 +1471,7 @@ struct ForgotPasswordView: View {
                                 VStack(spacing: 16) {
                                     Button(action: onNavigateToLogin) {
                                         HStack(spacing: 12) {
-                                            Text("Giriş Sayfasına Dön")
+                                            Text(NSLocalizedString("auth.back.to.login", comment: "Back to Login"))
                                                 .fontWeight(.bold)
                                                 .font(.system(size: 17))
                                             Image(systemName: "arrow.right")
@@ -1491,7 +1491,7 @@ struct ForgotPasswordView: View {
                                         .shadow(color: Color.green.opacity(0.4), radius: 15, x: 0, y: 8)
                                     }
                                     
-                                    Text("E-posta gelmediyse spam klasörünü kontrol edin")
+                                    Text(NSLocalizedString("auth.check.spam", comment: "If you don't receive the email, check your spam folder"))
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                         .multilineTextAlignment(.center)
@@ -1542,11 +1542,11 @@ struct ForgotPasswordView: View {
                                     .opacity(animateContent ? 1.0 : 0.0)
                                     
                                     VStack(spacing: 12) {
-                                        Text("Şifrenizi mi Unuttunuz?")
+                                        Text(NSLocalizedString("auth.forgot.password.title", comment: "Forgot Your Password?"))
                                             .font(.system(size: 32, weight: .bold))
                                             .foregroundColor(.primary)
                                         
-                                        Text("E-posta adresinizi girin, size şifre sıfırlama bağlantısı gönderelim")
+                                        Text(NSLocalizedString("auth.forgot.password.description", comment: "Enter your email address, we'll send you a password reset link"))
                                             .font(.subheadline)
                                             .foregroundColor(.secondary)
                                             .multilineTextAlignment(.center)
@@ -1567,7 +1567,7 @@ struct ForgotPasswordView: View {
                                             Image(systemName: "envelope.fill")
                                                 .font(.system(size: 14))
                                                 .foregroundColor(.secondary)
-                                            Text("E-posta Adresi")
+                                            Text(NSLocalizedString("auth.email", comment: "Email Address"))
                                                 .font(.subheadline)
                                                 .fontWeight(.semibold)
                                                 .foregroundColor(.primary)
@@ -1618,11 +1618,11 @@ struct ForgotPasswordView: View {
                                         Image(systemName: "info.circle.fill")
                                             .foregroundColor(.blue)
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text("Kayıtlı e-posta adresinizi kullanın")
+                                            Text(NSLocalizedString("auth.use.registered.email", comment: "Use your registered email address"))
                                                 .font(.caption)
                                                 .fontWeight(.medium)
                                                 .foregroundColor(.primary)
-                                            Text("Bağlantı 24 saat geçerli olacaktır")
+                                            Text(NSLocalizedString("auth.link.valid.24h", comment: "The link will be valid for 24 hours"))
                                                 .font(.caption2)
                                                 .foregroundColor(.secondary)
                                         }
@@ -1643,7 +1643,7 @@ struct ForgotPasswordView: View {
                                                 ProgressView()
                                                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                             } else {
-                                                Text("Sıfırlama Bağlantısı Gönder")
+                                                Text(NSLocalizedString("auth.send.reset.link", comment: "Send Reset Link"))
                                                     .fontWeight(.bold)
                                                     .font(.system(size: 17))
                                                 Image(systemName: "paperplane.fill")
@@ -1692,7 +1692,7 @@ struct ForgotPasswordView: View {
                                     HStack(spacing: 8) {
                                         Image(systemName: "arrow.left.circle.fill")
                                             .font(.system(size: 20))
-                                        Text("Giriş Sayfasına Dön")
+                                        Text(NSLocalizedString("auth.back.to.login", comment: "Back to Login"))
                                             .fontWeight(.semibold)
                                     }
                                     .font(.subheadline)

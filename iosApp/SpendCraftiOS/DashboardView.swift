@@ -393,7 +393,7 @@ struct AchievementCard: View {
                     .font(.system(size: 32))
                     .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
                 
-                Text(achievement.name ?? "")
+                Text(NSLocalizedString(achievement.name ?? "", comment: achievement.name ?? ""))
                     .font(.caption)
                     .fontWeight(.semibold)
                     .lineLimit(2)
@@ -441,7 +441,7 @@ struct TransactionRow: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(transaction.category?.name ?? NSLocalizedString("common.other", comment: "Other"))
+                Text(transaction.category?.name.isEmpty == false ? NSLocalizedString(transaction.category?.name ?? "", comment: transaction.category?.name ?? "") : NSLocalizedString("common.other", comment: "Other"))
                     .font(.subheadline)
                     .fontWeight(.medium)
                 

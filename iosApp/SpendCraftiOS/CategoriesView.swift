@@ -117,7 +117,7 @@ struct CategoryRow: View {
                         .cornerRadius(12)
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(category.name ?? "")
+                        Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
                             .font(.subheadline)
                             .fontWeight(.medium)
                         
@@ -195,7 +195,7 @@ struct AddBudgetView: View {
                     HStack {
                         Image(systemName: category.icon ?? "circle.fill")
                             .foregroundColor(category.uiColor)
-                        Text(category.name ?? "")
+                        Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
                             .fontWeight(.medium)
                     }
                 }

@@ -19,7 +19,11 @@
 "settings.version" = "Version";
 "settings.total.transactions" = "Total Transactions";
 "settings.total.categories" = "Total Categories";
-"settings.biometric.help" = "You will be required to authenticate with %@ every time you access the app.";
+"settings.biometric.error.message" = "Biometric authentication could not be enabled";
+
+/* Notification Settings - Extra Keys */
+"notification.month.days" = "Month days";
+"notification.days" = "days";
 
 /* Language Selection */
 "language.turkish" = "Turkish";
@@ -553,3 +557,162 @@
 "day.thu" = "Thu";
 "day.fri" = "Fri";
 "day.sat" = "Sat";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Welcome to Paratik";
+"onboarding.welcome.description" = "Your smart assistant for personal finance management. Track your expenses, create budgets, and achieve your financial goals.";
+"onboarding.smart.categorization.title" = "Smart Categorization";
+"onboarding.smart.categorization.description" = "Automatically categorize your transactions. Analyze your spending habits and discover where you can save.";
+"onboarding.budget.management.title" = "Budget Management";
+"onboarding.budget.management.description" = "Set budgets for categories and keep your expenses under control. Get instant notifications for budget overruns.";
+"onboarding.ai.recommendations.title" = "AI-Powered Recommendations";
+"onboarding.ai.recommendations.description" = "Get personalized financial recommendations with artificial intelligence technology. Optimize your spending habits.";
+"onboarding.detailed.reports.title" = "Detailed Reports";
+"onboarding.detailed.reports.description" = "Track your financial status with income-expense analyses, category-based spending distributions, and trend analyses.";
+"onboarding.get.started.title" = "Get Started Now";
+"onboarding.get.started.description" = "All features are ready for you! Start your journey to financial freedom now.";
+"onboarding.skip" = "Skip";
+"onboarding.next" = "Next";
+"onboarding.start" = "Start";
+
+/* Auth */
+"auth.welcome.back" = "Welcome Back";
+"auth.continue.journey" = "Continue your financial journey";
+"auth.email" = "Email";
+"auth.password" = "Password";
+"auth.forgot.password" = "Forgot Password";
+"auth.sign.in" = "Sign In";
+"auth.no.account" = "Don't have an account?";
+"auth.register" = "Register";
+"auth.create.account" = "Create Account";
+"auth.start.journey" = "Start your journey to financial freedom";
+"auth.full.name" = "Full Name";
+"auth.password.repeat" = "Repeat Password";
+"auth.password.repeat.placeholder" = "Re-enter your password";
+"auth.already.have.account" = "Already have an account?";
+"auth.sign.in.link" = "Sign In";
+"auth.forgot.password.title" = "Forgot Your Password?";
+"auth.forgot.password.description" = "Enter your email address, we'll send you a password reset link";
+"auth.email.sent" = "Email Sent";
+"auth.email.sent.description" = "A password reset link has been sent to your email address. Please check your inbox.";
+"auth.back.to.login" = "Back to Login";
+"auth.check.spam" = "If you don't receive the email, check your spam folder";
+"auth.send.reset.link" = "Send Reset Link";
+"auth.use.registered.email" = "Use your registered email address";
+"auth.link.valid.24h" = "The link will be valid for 24 hours";
+
+/* Error Messages */
+"error.invalid.input" = "Invalid input information";
+"error.invalid.email" = "Invalid email address";
+"error.weak.password" = "Password is too weak";
+"error.password.mismatch" = "Passwords do not match";
+"error.user.not.found" = "User not found";
+"error.network.error" = "Network error";
+"error.email.already.in.use" = "This email address is already in use";
+"error.wrong.password" = "Email or password is incorrect";
+"error.too.many.requests" = "Too many attempts. Please try again later.";
+"error.user.disabled" = "This user has been disabled.";
+"error.all.fields.required" = "All fields are required";
+"error.valid.email.required" = "Please enter a valid email address";
+"error.password.min.6.chars" = "Password must be at least 6 characters";
+"error.password.strength.weak" = "Weak";
+"error.password.strength.medium" = "Medium";
+"error.password.strength.strong" = "Strong";
+
+/* Common User */
+"user.default" = "User";
+
+"achievement.default.title" = "Achievement";
+
+/* Achievement Names */
+"achievement.expert" = "Expert";
+"achievement.category.master" = "Category Master";
+"achievement.budget.conscious" = "Budget Conscious";
+"achievement.thrifty" = "Thrifty";
+"achievement.investor" = "Investor";
+"achievement.income.machine" = "Income Machine";
+"achievement.regular" = "Regular";
+"achievement.beginner" = "Beginner";
+
+/* Achievement Descriptions */
+"achievement.expert.description" = "Save 50 transactions";
+"achievement.category.master.description" = "Use 5 different categories";
+"achievement.budget.conscious.description" = "Stick to your monthly budget";
+"achievement.thrifty.description" = "Save money consistently";
+"achievement.investor.description" = "Make your first investment";
+"achievement.income.machine.description" = "Increase your income";
+"achievement.regular.description" = "Save 10 transactions";
+"achievement.beginner.description" = "Complete your first transaction";
+
+/* Category Names */
+"category.shopping" = "Shopping";
+"category.other.income" = "Other Income";
+"category.other.expense" = "Other Expense";
+"category.education" = "Education";
+"category.entertainment" = "Entertainment";
+"category.bill" = "Bill";
+"category.food" = "Food";
+"category.salary" = "Salary";
+"category.transportation" = "Transportation";
+"category.health" = "Health";
+"category.clothing" = "Clothing";
+"category.travel" = "Travel";
+"category.credit" = "Credit";
+"category.rent" = "Rent";
+"category.bonus" = "Bonus";
+"category.investment" = "Investment";
+"category.gift" = "Gift";
+"category.freelance" = "Freelance";
+"category.rental.income" = "Rental Income";
+
+/* Notification Template Names */
+"notification.evening" = "Evening";
+"notification.monthly" = "Monthly";
+"notification.weekly" = "Weekly";
+"notification.motivation" = "Motivation";
+"notification.morning" = "Morning";
+"notification.special" = "Special";
+"notification.noon" = "Noon";
+
+/* Notification Template Titles and Bodies */
+"notification.morning.title.1" = "Good Morning! ☀️";
+"notification.morning.body.1" = "New day, new beginning! Ready to track your expenses?";
+"notification.morning.title.2" = "Coffee Break ☕️";
+"notification.morning.body.2" = "Check today's budget while drinking your coffee!";
+"notification.noon.title.1" = "Lunch Break 🍽️";
+"notification.noon.body.1" = "Don't forget to record your meal expense!";
+"notification.noon.title.2" = "Expense Check 💰";
+"notification.noon.body.2" = "How much have you spent today? Check it out!";
+"notification.evening.title.1" = "Daily Summary 🌙";
+"notification.evening.body.1" = "Time to review today's expenses!";
+"notification.evening.title.2" = "Daily Goal 🎯";
+"notification.evening.body.2" = "Did you reach today's budget goal?";
+"notification.weekly.title.1" = "Weekly Report 📊";
+"notification.weekly.body.1" = "Review this week's expenses!";
+"notification.weekly.title.2" = "Weekend Plan 🎉";
+"notification.weekly.body.2" = "Plan your weekend expenses!";
+"notification.monthly.title.1" = "Payday 💸";
+"notification.monthly.body.1" = "Don't forget to record your income!";
+"notification.monthly.title.2" = "Bill Payments 🧾";
+"notification.monthly.body.2" = "End of month is approaching, check your bills!";
+"notification.motivation.title.1" = "Savings Goal 🎯";
+"notification.motivation.body.1" = "Small savings lead to big results! Keep going!";
+"notification.motivation.title.2" = "Financial Freedom 🚀";
+"notification.motivation.body.2" = "Every transaction you record brings you one step closer to your goal!";
+"notification.special.title.1" = "Weekend Started! 🎊";
+"notification.special.body.1" = "Don't forget to track your weekend expenses!";
+"notification.special.title.2" = "Sunday 🏡";
+"notification.special.body.2" = "Evaluate the week and plan the new week!";
+
+/* AI Suggestions */
+"ai.financial.advisor" = "AI Financial Advisor";
+"ai.powered.suggestions" = "AI-powered personalized financial suggestions";
+"ai.select.suggestion.type" = "Select Suggestion Type";
+"ai.expense.analysis" = "Expense Analysis";
+"ai.expense.analysis.description" = "Analyzes your spending habits in detail based on categories";
+"ai.budget.optimization" = "Budget Optimization";
+"ai.budget.optimization.description" = "Provides suggestions to optimize your income-expense balance";
+"ai.savings.suggestions" = "Savings Suggestions";
+"ai.savings.suggestions.description" = "Offers practical suggestions to save more";
+"ai.get.suggestion" = "Get AI Suggestion";
+"ai.financial.status.summary" = "Financial Status Summary";

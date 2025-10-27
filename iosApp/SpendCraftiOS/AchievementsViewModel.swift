@@ -31,6 +31,19 @@ class AchievementsViewModel: ObservableObject {
             if achievements.isEmpty {
                 seedAchievements()
                 achievements = try context.fetch(fetchRequest)
+            } else {
+                // Check if achievements need migration (if they contain localized strings instead of keys)
+                let needsMigration = achievements.contains { achievement in
+                    let name = achievement.name ?? ""
+                    return name.contains("Uzman") || name.contains("Başlangıç") || name.contains("Düzenli")
+                }
+                
+                if needsMigration {
+                    print("🔄 Migrating achievements to use localization keys...")
+                    CoreDataStack.shared.migrateLocalizationData()
+                    seedAchievements()
+                    achievements = try context.fetch(fetchRequest)
+                }
             }
         } catch {
             print("Error fetching achievements: \(error)")
@@ -39,21 +52,21 @@ class AchievementsViewModel: ObservableObject {
     
     private func seedAchievements() {
         let achievementsData: [(String, String, String, Int64, String, Int64)] = [
-            ("İlk Adım", "İlk işleminizi kaydedin", "checkmark.circle.fill", 10, "TRANSACTIONS", 1),
-            ("Başlangıç", "5 işlem kaydedin", "flame.fill", 25, "TRANSACTIONS", 5),
-            ("Düzenli", "10 işlem kaydedin", "star.fill", 50, "TRANSACTIONS", 10),
-            ("Uzman", "50 işlem kaydedin", "crown.fill", 100, "TRANSACTIONS", 50),
-            ("Kategori Ustası", "5 farklı kategori kullanın", "folder.badge.plus", 30, "CATEGORIES", 5),
-            ("Bütçe Bilinci", "İlk bütçenizi oluşturun", "chart.bar.fill", 20, "BUDGET", 1),
-            ("Tutumlu", "Aylık bütçenize uyun", "shield.fill", 75, "BUDGET", 1),
-            ("Yatırımcı", "İlk gelirinizi kaydedin", "banknote.fill", 15, "INCOME", 1),
+            ("achievement.beginner", "achievement.beginner.description", "checkmark.circle.fill", 10, "TRANSACTIONS", 1),
+            ("achievement.beginner", "achievement.beginner.description", "flame.fill", 25, "TRANSACTIONS", 5),
+            ("achievement.regular", "achievement.regular.description", "star.fill", 50, "TRANSACTIONS", 10),
+            ("achievement.expert", "achievement.expert.description", "crown.fill", 100, "TRANSACTIONS", 50),
+            ("achievement.category.master", "achievement.category.master.description", "folder.badge.plus", 30, "CATEGORIES", 5),
+            ("achievement.budget.conscious", "achievement.budget.conscious.description", "chart.bar.fill", 20, "BUDGET", 1),
+            ("achievement.thrifty", "achievement.thrifty.description", "shield.fill", 75, "BUDGET", 1),
+            ("achievement.investor", "achievement.investor.description", "banknote.fill", 15, "INCOME", 1),
         ]
         
-        for (name, description, icon, points, category, maxProgress) in achievementsData {
+        for (nameKey, descriptionKey, icon, points, category, maxProgress) in achievementsData {
             let achievement = AchievementEntity(context: context)
             achievement.id = Int64.random(in: 1...1000000)
-            achievement.name = name
-            achievement.achievementDescription = description
+            achievement.name = nameKey // Store the key instead of localized string
+            achievement.achievementDescription = descriptionKey // Store the key instead of localized string
             achievement.icon = icon
             achievement.points = points
             achievement.category = category
@@ -121,8 +134,8 @@ class AchievementsViewModel: ObservableObject {
         
         // Send notification
         notificationsViewModel?.celebrateAchievement(
-            title: achievement.name ?? "Başarım",
-            description: achievement.achievementDescription ?? ""
+            title: NSLocalizedString(achievement.name ?? "", comment: achievement.name ?? ""),
+            description: NSLocalizedString(achievement.achievementDescription ?? "", comment: achievement.achievementDescription ?? "")
         )
     }
     

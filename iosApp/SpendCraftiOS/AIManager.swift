@@ -8,9 +8,9 @@
 import Foundation
 
 enum AdviceType: String, CaseIterable, Identifiable {
-    case spendingAnalysis = "Harcama Analizi"
-    case budgetOptimization = "Bütçe Optimizasyonu"
-    case savingsAdvice = "Tasarruf Önerileri"
+    case spendingAnalysis = "ai.expense.analysis"
+    case budgetOptimization = "ai.budget.optimization"
+    case savingsAdvice = "ai.savings.suggestions"
     
     var id: String { self.rawValue }
     
@@ -25,11 +25,11 @@ enum AdviceType: String, CaseIterable, Identifiable {
     var description: String {
         switch self {
         case .spendingAnalysis:
-            return "Kategori bazında harcama alışkanlıklarınızı detaylı analiz eder"
+            return NSLocalizedString("ai.expense.analysis.description", comment: "Analyzes your spending habits in detail based on categories")
         case .budgetOptimization:
-            return "Gelir-gider dengesini optimize etmek için öneriler verir"
+            return NSLocalizedString("ai.budget.optimization.description", comment: "Provides suggestions to optimize your income-expense balance")
         case .savingsAdvice:
-            return "Daha fazla tasarruf yapmak için pratik öneriler sunar"
+            return NSLocalizedString("ai.savings.suggestions.description", comment: "Offers practical suggestions to save more")
         }
     }
 }

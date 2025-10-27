@@ -380,7 +380,7 @@ struct CategoryButton: View {
                             .fill(isSelected ? category.uiColor : category.uiColor.opacity(0.2))
                     )
                 
-                Text(category.name ?? "")
+                Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
                     .font(.caption)
                     .fontWeight(isSelected ? .semibold : .regular)
                     .foregroundColor(isSelected ? .primary : .secondary)

@@ -104,6 +104,19 @@ class TransactionsViewModel: ObservableObject {
         do {
             categories = try context.fetch(fetchRequest)
             
+            // Check if categories need migration (if they contain localized strings instead of keys)
+            let needsMigration = categories.contains { category in
+                let name = category.name ?? ""
+                return name.contains("Gıda") || name.contains("Ulaşım") || name.contains("Maaş")
+            }
+            
+            if needsMigration {
+                print("🔄 Migrating categories to use localization keys...")
+                CoreDataStack.shared.migrateLocalizationData()
+                CoreDataStack.shared.seedInitialData()
+                categories = try context.fetch(fetchRequest)
+            }
+            
             // Debug: Kategorileri ve type'larını yazdır
             print("📂 Loaded \(categories.count) categories:")
             for cat in categories {

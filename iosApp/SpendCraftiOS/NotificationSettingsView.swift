@@ -142,26 +142,26 @@ struct NotificationSettingsView: View {
     
     private func categoryIcon(for category: String) -> String {
         switch category {
-        case "Sabah": return "sun.max.fill"
-        case "Öğlen": return "sun.min.fill"
-        case "Akşam": return "moon.stars.fill"
-        case "Haftalık": return "calendar"
-        case "Aylık": return "calendar.badge.clock"
-        case "Motivasyon": return "star.fill"
-        case "Özel": return "gift.fill"
+        case NSLocalizedString("notification.morning", comment: "Morning"): return "sun.max.fill"
+        case NSLocalizedString("notification.noon", comment: "Noon"): return "sun.min.fill"
+        case NSLocalizedString("notification.evening", comment: "Evening"): return "moon.stars.fill"
+        case NSLocalizedString("notification.weekly", comment: "Weekly"): return "calendar"
+        case NSLocalizedString("notification.monthly", comment: "Monthly"): return "calendar.badge.clock"
+        case NSLocalizedString("notification.motivation", comment: "Motivation"): return "star.fill"
+        case NSLocalizedString("notification.special", comment: "Special"): return "gift.fill"
         default: return "bell.fill"
         }
     }
     
     private func categoryColor(for category: String) -> Color {
         switch category {
-        case "Sabah": return .orange
-        case "Öğlen": return .yellow
-        case "Akşam": return .indigo
-        case "Haftalık": return .blue
-        case "Aylık": return .green
-        case "Motivasyon": return .purple
-        case "Özel": return .pink
+        case NSLocalizedString("notification.morning", comment: "Morning"): return .orange
+        case NSLocalizedString("notification.noon", comment: "Noon"): return .yellow
+        case NSLocalizedString("notification.evening", comment: "Evening"): return .indigo
+        case NSLocalizedString("notification.weekly", comment: "Weekly"): return .blue
+        case NSLocalizedString("notification.monthly", comment: "Monthly"): return .green
+        case NSLocalizedString("notification.motivation", comment: "Motivation"): return .purple
+        case NSLocalizedString("notification.special", comment: "Special"): return .pink
         default: return .gray
         }
     }
@@ -199,7 +199,7 @@ struct NotificationTemplateRow: View {
                             .foregroundColor(.blue)
                         
                         if let monthDays = template.daysOfMonth {
-                            Text("• Ayın \(monthDaysText(monthDays))")
+                            Text("• \(NSLocalizedString("notification.month.days", comment: "Month days")) \(monthDaysText(monthDays))")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         } else if let weekDays = template.daysOfWeek {
@@ -207,7 +207,7 @@ struct NotificationTemplateRow: View {
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         } else {
-                            Text("• Her gün")
+                            Text("• \(NSLocalizedString("notification.every.day", comment: "Every day"))")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
@@ -225,15 +225,23 @@ struct NotificationTemplateRow: View {
     }
     
     private func daysText(_ days: [Int]) -> String {
-        let dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"]
+        let dayNames = [
+            NSLocalizedString("day.sun", comment: "Sun"),
+            NSLocalizedString("day.mon", comment: "Mon"),
+            NSLocalizedString("day.tue", comment: "Tue"),
+            NSLocalizedString("day.wed", comment: "Wed"),
+            NSLocalizedString("day.thu", comment: "Thu"),
+            NSLocalizedString("day.fri", comment: "Fri"),
+            NSLocalizedString("day.sat", comment: "Sat")
+        ]
         return days.map { dayNames[$0 - 1] }.joined(separator: ", ")
     }
     
     private func monthDaysText(_ days: [Int]) -> String {
         if days.count > 4 {
-            return "\(days.first ?? 1)-\(days.last ?? 1). günleri"
+            return "\(days.first ?? 1)-\(days.last ?? 1). \(NSLocalizedString("notification.days", comment: "days"))"
         } else {
-            return days.map { "\($0)." }.joined(separator: ", ") + " günleri"
+            return days.map { "\($0)." }.joined(separator: ", ") + " \(NSLocalizedString("notification.days", comment: "days"))"
         }
     }
 }
@@ -268,7 +276,7 @@ struct CustomNotificationRow: View {
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         } else {
-                            Text("• Her gün")
+                            Text("• \(NSLocalizedString("notification.every.day", comment: "Every day"))")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
@@ -370,7 +378,7 @@ struct EditTemplateView: View {
                                     Button {
                                         selectedMonthDays = Set(1...31)
                                     } label: {
-                                        Text("Her Gün")
+                                        Text(NSLocalizedString("notification.every.day", comment: "Every Day"))
                                             .font(.caption)
                                             .padding(.horizontal, 12)
                                             .padding(.vertical, 6)
@@ -451,15 +459,23 @@ struct EditTemplateView: View {
     }
     
     private func daysText(_ days: [Int]) -> String {
-        let dayNames = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
+        let dayNames = [
+            NSLocalizedString("day.sun", comment: "Sunday"),
+            NSLocalizedString("day.mon", comment: "Monday"),
+            NSLocalizedString("day.tue", comment: "Tuesday"),
+            NSLocalizedString("day.wed", comment: "Wednesday"),
+            NSLocalizedString("day.thu", comment: "Thursday"),
+            NSLocalizedString("day.fri", comment: "Friday"),
+            NSLocalizedString("day.sat", comment: "Saturday")
+        ]
         return days.map { dayNames[$0 - 1] }.joined(separator: ", ")
     }
     
     private func monthDaysText(_ days: [Int]) -> String {
         if days.count > 4 {
-            return "\(days.first ?? 1)-\(days.last ?? 1). günleri"
+            return "\(days.first ?? 1)-\(days.last ?? 1). \(NSLocalizedString("notification.days", comment: "days"))"
         } else {
-            return days.map { "\($0)." }.joined(separator: ", ") + " günleri"
+            return days.map { "\($0)." }.joined(separator: ", ") + " \(NSLocalizedString("notification.days", comment: "days"))"
         }
     }
 }
@@ -579,7 +595,15 @@ struct AddCustomNotificationView: View {
     }
     
     private func selectedDaysText() -> String {
-        let dayNames = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
+        let dayNames = [
+            NSLocalizedString("day.sun", comment: "Sunday"),
+            NSLocalizedString("day.mon", comment: "Monday"),
+            NSLocalizedString("day.tue", comment: "Tuesday"),
+            NSLocalizedString("day.wed", comment: "Wednesday"),
+            NSLocalizedString("day.thu", comment: "Thursday"),
+            NSLocalizedString("day.fri", comment: "Friday"),
+            NSLocalizedString("day.sat", comment: "Saturday")
+        ]
         return Array(selectedDays).sorted().map { dayNames[$0 - 1] }.joined(separator: ", ")
     }
 }
@@ -710,7 +734,15 @@ struct EditCustomNotificationView: View {
     }
     
     private func selectedDaysText() -> String {
-        let dayNames = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
+        let dayNames = [
+            NSLocalizedString("day.sun", comment: "Sunday"),
+            NSLocalizedString("day.mon", comment: "Monday"),
+            NSLocalizedString("day.tue", comment: "Tuesday"),
+            NSLocalizedString("day.wed", comment: "Wednesday"),
+            NSLocalizedString("day.thu", comment: "Thursday"),
+            NSLocalizedString("day.fri", comment: "Friday"),
+            NSLocalizedString("day.sat", comment: "Saturday")
+        ]
         return Array(selectedDays).sorted().map { dayNames[$0 - 1] }.joined(separator: ", ")
     }
 }

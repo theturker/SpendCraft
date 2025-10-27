@@ -24,33 +24,33 @@ struct NotificationTemplate: Identifiable, Codable {
     var daysOfMonth: [Int]? // nil = her gün, [1-31] = ayın günleri
     
     static let templates: [NotificationTemplate] = [
-        // Sabah Motivasyonu
-        NotificationTemplate(id: "morning_1", title: "Günaydın! ☀️", body: "Yeni bir gün, yeni bir başlangıç! Harcamalarınızı takip etmeye hazır mısınız?", icon: "sun.max.fill", category: "Sabah", hour: 8, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
-        NotificationTemplate(id: "morning_2", title: "Kahve Molası ☕️", body: "Kahvenizi içerken bugünkü bütçenizi kontrol edin!", icon: "cup.and.saucer.fill", category: "Sabah", hour: 9, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        // Morning Motivation
+        NotificationTemplate(id: "morning_1", title: NSLocalizedString("notification.morning.title.1", comment: "Good Morning! ☀️"), body: NSLocalizedString("notification.morning.body.1", comment: "New day, new beginning! Ready to track your expenses?"), icon: "sun.max.fill", category: NSLocalizedString("notification.morning", comment: "Morning"), hour: 8, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "morning_2", title: NSLocalizedString("notification.morning.title.2", comment: "Coffee Break ☕️"), body: NSLocalizedString("notification.morning.body.2", comment: "Check today's budget while drinking your coffee!"), icon: "cup.and.saucer.fill", category: NSLocalizedString("notification.morning", comment: "Morning"), hour: 9, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
-        // Öğlen Hatırlatmaları
-        NotificationTemplate(id: "noon_1", title: "Öğle Arası 🍽️", body: "Yemek harcamanızı kaydetmeyi unutmayın!", icon: "fork.knife", category: "Öğlen", hour: 12, minute: 30, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
-        NotificationTemplate(id: "noon_2", title: "Harcama Kontrolü 💰", body: "Bugüne kadar ne kadar harcadınız? Kontrol edin!", icon: "chart.bar.fill", category: "Öğlen", hour: 14, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        // Noon Reminders
+        NotificationTemplate(id: "noon_1", title: NSLocalizedString("notification.noon.title.1", comment: "Lunch Break 🍽️"), body: NSLocalizedString("notification.noon.body.1", comment: "Don't forget to record your meal expense!"), icon: "fork.knife", category: NSLocalizedString("notification.noon", comment: "Noon"), hour: 12, minute: 30, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "noon_2", title: NSLocalizedString("notification.noon.title.2", comment: "Expense Check 💰"), body: NSLocalizedString("notification.noon.body.2", comment: "How much have you spent today? Check it out!"), icon: "chart.bar.fill", category: NSLocalizedString("notification.noon", comment: "Noon"), hour: 14, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
-        // Akşam Özetleri
-        NotificationTemplate(id: "evening_1", title: "Günün Özeti 🌙", body: "Bugünkü harcamalarınızı gözden geçirme zamanı!", icon: "moon.stars.fill", category: "Akşam", hour: 20, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
-        NotificationTemplate(id: "evening_2", title: "Günlük Hedef 🎯", body: "Bugünkü bütçe hedefinize ulaştınız mı?", icon: "target", category: "Akşam", hour: 21, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        // Evening Summaries
+        NotificationTemplate(id: "evening_1", title: NSLocalizedString("notification.evening.title.1", comment: "Daily Summary 🌙"), body: NSLocalizedString("notification.evening.body.1", comment: "Time to review today's expenses!"), icon: "moon.stars.fill", category: NSLocalizedString("notification.evening", comment: "Evening"), hour: 20, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "evening_2", title: NSLocalizedString("notification.evening.title.2", comment: "Daily Goal 🎯"), body: NSLocalizedString("notification.evening.body.2", comment: "Did you reach today's budget goal?"), icon: "target", category: NSLocalizedString("notification.evening", comment: "Evening"), hour: 21, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
-        // Haftalık Özetler
-        NotificationTemplate(id: "weekly_1", title: "Haftalık Rapor 📊", body: "Bu haftaki harcamalarınızı inceleyin!", icon: "calendar", category: "Haftalık", hour: 10, minute: 0, isEnabled: false, daysOfWeek: [1], daysOfMonth: nil), // Pazartesi
-        NotificationTemplate(id: "weekly_2", title: "Hafta Sonu Planı 🎉", body: "Hafta sonu harcamalarınızı planlayın!", icon: "party.popper.fill", category: "Haftalık", hour: 18, minute: 0, isEnabled: false, daysOfWeek: [6], daysOfMonth: nil), // Cumartesi
+        // Weekly Summaries
+        NotificationTemplate(id: "weekly_1", title: NSLocalizedString("notification.weekly.title.1", comment: "Weekly Report 📊"), body: NSLocalizedString("notification.weekly.body.1", comment: "Review this week's expenses!"), icon: "calendar", category: NSLocalizedString("notification.weekly", comment: "Weekly"), hour: 10, minute: 0, isEnabled: false, daysOfWeek: [1], daysOfMonth: nil), // Monday
+        NotificationTemplate(id: "weekly_2", title: NSLocalizedString("notification.weekly.title.2", comment: "Weekend Plan 🎉"), body: NSLocalizedString("notification.weekly.body.2", comment: "Plan your weekend expenses!"), icon: "party.popper.fill", category: NSLocalizedString("notification.weekly", comment: "Weekly"), hour: 18, minute: 0, isEnabled: false, daysOfWeek: [6], daysOfMonth: nil), // Saturday
         
-        // Aylık Hatırlatmalar
-        NotificationTemplate(id: "monthly_1", title: "Maaş Günü 💸", body: "Gelirinizi kaydetmeyi unutmayın!", icon: "banknote.fill", category: "Aylık", hour: 10, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: [1, 2, 3, 4, 5]),
-        NotificationTemplate(id: "monthly_2", title: "Fatura Ödemeleri 🧾", body: "Ay sonuna yaklaştık, faturalarınızı kontrol edin!", icon: "doc.text.fill", category: "Aylık", hour: 19, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: [25, 26, 27, 28, 29, 30]),
+        // Monthly Reminders
+        NotificationTemplate(id: "monthly_1", title: NSLocalizedString("notification.monthly.title.1", comment: "Payday 💸"), body: NSLocalizedString("notification.monthly.body.1", comment: "Don't forget to record your income!"), icon: "banknote.fill", category: NSLocalizedString("notification.monthly", comment: "Monthly"), hour: 10, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: [1, 2, 3, 4, 5]),
+        NotificationTemplate(id: "monthly_2", title: NSLocalizedString("notification.monthly.title.2", comment: "Bill Payments 🧾"), body: NSLocalizedString("notification.monthly.body.2", comment: "End of month is approaching, check your bills!"), icon: "doc.text.fill", category: NSLocalizedString("notification.monthly", comment: "Monthly"), hour: 19, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: [25, 26, 27, 28, 29, 30]),
         
-        // Motivasyon
-        NotificationTemplate(id: "motivation_1", title: "Tasarruf Hedefi 🎯", body: "Küçük tasarruflar büyük sonuçlar doğurur! Devam edin!", icon: "star.fill", category: "Motivasyon", hour: 16, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
-        NotificationTemplate(id: "motivation_2", title: "Finansal Özgürlük 🚀", body: "Her kaydettiğiniz işlem sizi hedefinize bir adım yaklaştırıyor!", icon: "rocket.fill", category: "Motivasyon", hour: 15, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        // Motivation
+        NotificationTemplate(id: "motivation_1", title: NSLocalizedString("notification.motivation.title.1", comment: "Savings Goal 🎯"), body: NSLocalizedString("notification.motivation.body.1", comment: "Small savings lead to big results! Keep going!"), icon: "star.fill", category: NSLocalizedString("notification.motivation", comment: "Motivation"), hour: 16, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "motivation_2", title: NSLocalizedString("notification.motivation.title.2", comment: "Financial Freedom 🚀"), body: NSLocalizedString("notification.motivation.body.2", comment: "Every transaction you record brings you one step closer to your goal!"), icon: "rocket.fill", category: NSLocalizedString("notification.motivation", comment: "Motivation"), hour: 15, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
-        // Özel Günler
-        NotificationTemplate(id: "weekend_1", title: "Hafta Sonu Başladı! 🎊", body: "Hafta sonu harcamalarınızı takip etmeyi unutmayın!", icon: "gift.fill", category: "Özel", hour: 11, minute: 0, isEnabled: false, daysOfWeek: [6, 7], daysOfMonth: nil),
-        NotificationTemplate(id: "weekend_2", title: "Pazar Günü 🏡", body: "Haftayı değerlendirin ve yeni haftayı planlayın!", icon: "house.fill", category: "Özel", hour: 19, minute: 0, isEnabled: false, daysOfWeek: [7], daysOfMonth: nil)
+        // Special Days
+        NotificationTemplate(id: "weekend_1", title: NSLocalizedString("notification.special.title.1", comment: "Weekend Started! 🎊"), body: NSLocalizedString("notification.special.body.1", comment: "Don't forget to track your weekend expenses!"), icon: "gift.fill", category: NSLocalizedString("notification.special", comment: "Special"), hour: 11, minute: 0, isEnabled: false, daysOfWeek: [6, 7], daysOfMonth: nil),
+        NotificationTemplate(id: "weekend_2", title: NSLocalizedString("notification.special.title.2", comment: "Sunday 🏡"), body: NSLocalizedString("notification.special.body.2", comment: "Evaluate the week and plan the new week!"), icon: "house.fill", category: NSLocalizedString("notification.special", comment: "Special"), hour: 19, minute: 0, isEnabled: false, daysOfWeek: [7], daysOfMonth: nil)
     ]
 }
 

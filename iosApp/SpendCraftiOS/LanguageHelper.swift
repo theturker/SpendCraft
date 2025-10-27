@@ -24,7 +24,21 @@ class LanguageHelper {
     
     // Mevcut dili al
     func getCurrentLanguage() -> String {
-        return UserDefaults.standard.stringArray(forKey: "AppleLanguages")?.first ?? "tr"
+        // Önce kullanıcının seçtiği dili kontrol et
+        if let selectedLanguage = UserDefaults.standard.string(forKey: "selectedLanguage"), !selectedLanguage.isEmpty {
+            return selectedLanguage
+        }
+        
+        // Sonra sistem dilini kontrol et
+        let systemLanguage = Locale.preferredLanguages.first?.prefix(2) ?? "tr"
+        let languageCode = String(systemLanguage)
+        
+        // Desteklenen dilleri kontrol et
+        if languageCode == "en" {
+            return "en"
+        } else {
+            return "tr" // Varsayılan Türkçe
+        }
     }
 }
 

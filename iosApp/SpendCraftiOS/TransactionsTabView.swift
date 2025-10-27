@@ -266,7 +266,7 @@ struct TransactionListRow: View {
             
             // Transaction Info
             VStack(alignment: .leading, spacing: 4) {
-                Text(transaction.category?.name ?? "Diğer")
+                Text(transaction.category?.name.isEmpty == false ? NSLocalizedString(transaction.category?.name ?? "", comment: transaction.category?.name ?? "") : NSLocalizedString("common.other", comment: "Other"))
                     .font(.subheadline)
                     .fontWeight(.medium)
                 

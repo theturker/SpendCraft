@@ -236,7 +236,7 @@ struct SettingsView: View {
                                     }
                                 } catch {
                                     biometricEnabled = false
-                                    biometricError = "Biometric etkinleştirilemedi"
+                                    biometricError = NSLocalizedString("settings.biometric.error.message", comment: "Biometric authentication could not be enabled")
                                     showBiometricError = true
                                 }
                             }
@@ -358,11 +358,11 @@ struct SettingsView: View {
         
         switch systemLanguage {
         case "tr":
-            return "Türkçe"
+            return NSLocalizedString("language.turkish", comment: "Turkish")
         case "en":
-            return "English"
+            return NSLocalizedString("language.english", comment: "English")
         default:
-            return "Türkçe"
+            return NSLocalizedString("language.turkish", comment: "Turkish")
         }
     }
 }
@@ -654,13 +654,13 @@ struct AccountsListView: View {
                     .font(.system(size: 40))
                     .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
                 
-                Text(achievement.name ?? "")
+                Text(NSLocalizedString(achievement.name ?? "", comment: achievement.name ?? ""))
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                 
-                Text(achievement.achievementDescription ?? "")
+                Text(NSLocalizedString(achievement.achievementDescription ?? "", comment: achievement.achievementDescription ?? ""))
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -890,13 +890,13 @@ struct AccountsListView: View {
                             .padding(.top, 40)
                             
                             // Achievement Name
-                            Text(achievement.name ?? "")
+                            Text(NSLocalizedString(achievement.name ?? "", comment: achievement.name ?? ""))
                                 .font(.title)
                                 .fontWeight(.bold)
                                 .multilineTextAlignment(.center)
                             
                             // Description
-                            Text(achievement.achievementDescription ?? "")
+                            Text(NSLocalizedString(achievement.achievementDescription ?? "", comment: achievement.achievementDescription ?? ""))
                                 .font(.body)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
