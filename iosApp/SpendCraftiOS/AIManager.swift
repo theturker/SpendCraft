@@ -64,28 +64,30 @@ class AIManager: ObservableObject {
     private func buildProfilingContext() -> String? {
         guard let profileData = getUserProfilingData() else { return nil }
         
-        var context = "\n\nKullanıcı Profili:"
+        let isEnglish = LanguageHelper.shared.getCurrentLanguage() == "en"
+        
+        var context = isEnglish ? "\n\nUser Profile:" : "\n\nKullanıcı Profili:"
         
         if let incomeFreq = profileData["income_frequency"] {
-            context += "\n- Gelir Sıklığı: \(incomeFreq)"
+            context += isEnglish ? "\n- Income Frequency: \(incomeFreq)" : "\n- Gelir Sıklığı: \(incomeFreq)"
         }
         if let spendingHabit = profileData["spending_habit"] {
-            context += "\n- Harcama Alışkanlığı: \(spendingHabit)"
+            context += isEnglish ? "\n- Spending Habit: \(spendingHabit)" : "\n- Harcama Alışkanlığı: \(spendingHabit)"
         }
         if let savingsGoal = profileData["savings_goal"] {
-            context += "\n- Tasarruf Hedefi: \(savingsGoal)"
+            context += isEnglish ? "\n- Savings Goal: \(savingsGoal)" : "\n- Tasarruf Hedefi: \(savingsGoal)"
         }
         if let biggestExpense = profileData["biggest_expense"] {
-            context += "\n- En Çok Harcama Yapılan Alan: \(biggestExpense)"
+            context += isEnglish ? "\n- Biggest Expense Area: \(biggestExpense)" : "\n- En Çok Harcama Yapılan Alan: \(biggestExpense)"
         }
         if let budgetMgmt = profileData["budget_management"] {
-            context += "\n- Bütçe Yönetimi Seviyesi: \(budgetMgmt)"
+            context += isEnglish ? "\n- Budget Management Level: \(budgetMgmt)" : "\n- Bütçe Yönetimi Seviyesi: \(budgetMgmt)"
         }
         if let financialGoal = profileData["financial_goal"] {
-            context += "\n- Ana Finansal Hedef: \(financialGoal)"
+            context += isEnglish ? "\n- Main Financial Goal: \(financialGoal)" : "\n- Ana Finansal Hedef: \(financialGoal)"
         }
         if let debtStatus = profileData["debt_status"] {
-            context += "\n- Borç Durumu: \(debtStatus)"
+            context += isEnglish ? "\n- Debt Status: \(debtStatus)" : "\n- Borç Durumu: \(debtStatus)"
         }
         
         return context
@@ -119,7 +121,8 @@ class AIManager: ObservableObject {
             }
         } catch {
             await MainActor.run {
-                errorMessage = "AI önerisi oluşturulamadı: \(error.localizedDescription)"
+                let isEnglish = LanguageHelper.shared.getCurrentLanguage() == "en"
+                errorMessage = isEnglish ? "Could not generate AI advice: \(error.localizedDescription)" : "AI önerisi oluşturulamadı: \(error.localizedDescription)"
                 isLoading = false
             }
         }
@@ -134,66 +137,128 @@ class AIManager: ObservableObject {
         categoryBreakdown: [(category: String, amount: Double)]
     ) -> String {
         let savings = income - expenses
-        let categoryText = categoryBreakdown.map { "\($0.category): ₺\($0.amount)" }.joined(separator: ", ")
+        let isEnglish = LanguageHelper.shared.getCurrentLanguage() == "en"
+        let currencySymbol = isEnglish ? "$" : "₺"
+        let categoryText = categoryBreakdown.map { "\($0.category): \(currencySymbol)\($0.amount)" }.joined(separator: ", ")
         let profilingContext = buildProfilingContext() ?? ""
         
         switch type {
         case .spendingAnalysis:
-            return """
-            Sen bir finansal danışmansın. Aşağıdaki harcama verilerini analiz et ve Türkçe olarak detaylı bir analiz sun:
-            
-            Gelir: ₺\(income)
-            Gider: ₺\(expenses)
-            Tasarruf: ₺\(savings)
-            
-            Kategori Bazlı Harcamalar:
-            \(categoryText)\(profilingContext)
-            
-            Lütfen:
-            1. En çok harcama yapılan kategorileri belirt
-            2. Hangi kategorilerde dikkat edilmeli
-            3. Harcama dengesi hakkında yorum yap
-            4. Kullanıcı profili varsa ona göre özel öneriler ver
-            5. Kısa ve öz, madde madde yaz (maksimum 200 kelime)
-            """
+            if isEnglish {
+                return """
+                You are a financial advisor. Analyze the following spending data and provide a detailed analysis in English:
+                
+                Income: \(currencySymbol)\(income)
+                Expenses: \(currencySymbol)\(expenses)
+                Savings: \(currencySymbol)\(savings)
+                
+                Category-based Expenses:
+                \(categoryText)\(profilingContext)
+                
+                Please:
+                1. Identify the categories with highest spending
+                2. Suggest which categories need attention
+                3. Comment on spending balance
+                4. Provide personalized recommendations based on user profile if available
+                5. Write concisely, bullet points (maximum 200 words)
+                """
+            } else {
+                return """
+                Sen bir finansal danışmansın. Aşağıdaki harcama verilerini analiz et ve Türkçe olarak detaylı bir analiz sun:
+                
+                Gelir: \(currencySymbol)\(income)
+                Gider: \(currencySymbol)\(expenses)
+                Tasarruf: \(currencySymbol)\(savings)
+                
+                Kategori Bazlı Harcamalar:
+                \(categoryText)\(profilingContext)
+                
+                Lütfen:
+                1. En çok harcama yapılan kategorileri belirt
+                2. Hangi kategorilerde dikkat edilmeli
+                3. Harcama dengesi hakkında yorum yap
+                4. Kullanıcı profili varsa ona göre özel öneriler ver
+                5. Kısa ve öz, madde madde yaz (maksimum 200 kelime)
+                """
+            }
             
         case .budgetOptimization:
-            return """
-            Sen bir bütçe uzmanısın. Aşağıdaki finansal durumu incele ve Türkçe olarak bütçe optimizasyon önerileri sun:
-            
-            Aylık Gelir: ₺\(income)
-            Aylık Gider: ₺\(expenses)
-            Net Bakiye: ₺\(savings)
-            
-            Kategori Dağılımı:
-            \(categoryText)\(profilingContext)
-            
-            Lütfen:
-            1. Gelir-gider dengesini değerlendir
-            2. Hangi kategorilerde bütçe azaltılabilir
-            3. Tasarruf hedefi öner
-            4. Kullanıcının finansal hedef ve durumuna göre özelleştirilmiş öneriler ver
-            5. Uygulanabilir 3-4 öneri sun (maksimum 200 kelime)
-            """
+            if isEnglish {
+                return """
+                You are a budget expert. Analyze the following financial situation and provide budget optimization recommendations in English:
+                
+                Monthly Income: \(currencySymbol)\(income)
+                Monthly Expenses: \(currencySymbol)\(expenses)
+                Net Balance: \(currencySymbol)\(savings)
+                
+                Category Distribution:
+                \(categoryText)\(profilingContext)
+                
+                Please:
+                1. Evaluate income-expense balance
+                2. Suggest which categories can reduce budget
+                3. Recommend savings target
+                4. Provide customized recommendations based on user's financial goals and situation
+                5. Provide 3-4 actionable recommendations (maximum 200 words)
+                """
+            } else {
+                return """
+                Sen bir bütçe uzmanısın. Aşağıdaki finansal durumu incele ve Türkçe olarak bütçe optimizasyon önerileri sun:
+                
+                Aylık Gelir: \(currencySymbol)\(income)
+                Aylık Gider: \(currencySymbol)\(expenses)
+                Net Bakiye: \(currencySymbol)\(savings)
+                
+                Kategori Dağılımı:
+                \(categoryText)\(profilingContext)
+                
+                Lütfen:
+                1. Gelir-gider dengesini değerlendir
+                2. Hangi kategorilerde bütçe azaltılabilir
+                3. Tasarruf hedefi öner
+                4. Kullanıcının finansal hedef ve durumuna göre özelleştirilmiş öneriler ver
+                5. Uygulanabilir 3-4 öneri sun (maksimum 200 kelime)
+                """
+            }
             
         case .savingsAdvice:
-            return """
-            Sen bir tasarruf danışmanısın. Aşağıdaki finansal duruma göre Türkçe olarak pratik tasarruf önerileri sun:
-            
-            Gelir: ₺\(income)
-            Gider: ₺\(expenses)
-            Mevcut Tasarruf: ₺\(savings)
-            
-            Harcama Kategorileri:
-            \(categoryText)\(profilingContext)
-            
-            Lütfen:
-            1. Kısa vadeli tasarruf teknikleri
-            2. Günlük hayatta uygulanabilir öneriler
-            3. Hangi kategorilerde kesinti yapılabilir
-            4. Kullanıcının tasarruf hedefi ve borç durumunu göz önünde bulundur
-            5. Madde madde, pratik öneriler (maksimum 200 kelime)
-            """
+            if isEnglish {
+                return """
+                You are a savings consultant. Based on the following financial situation, provide practical savings advice in English:
+                
+                Income: \(currencySymbol)\(income)
+                Expenses: \(currencySymbol)\(expenses)
+                Current Savings: \(currencySymbol)\(savings)
+                
+                Expense Categories:
+                \(categoryText)\(profilingContext)
+                
+                Please:
+                1. Short-term savings techniques
+                2. Practical recommendations for daily life
+                3. Which categories can be reduced
+                4. Consider user's savings goals and debt status
+                5. Bullet points, practical recommendations (maximum 200 words)
+                """
+            } else {
+                return """
+                Sen bir tasarruf danışmanısın. Aşağıdaki finansal duruma göre Türkçe olarak pratik tasarruf önerileri sun:
+                
+                Gelir: \(currencySymbol)\(income)
+                Gider: \(currencySymbol)\(expenses)
+                Mevcut Tasarruf: \(currencySymbol)\(savings)
+                
+                Harcama Kategorileri:
+                \(categoryText)\(profilingContext)
+                
+                Lütfen:
+                1. Kısa vadeli tasarruf teknikleri
+                2. Günlük hayatta uygulanabilir öneriler
+                3. Hangi kategorilerde kesinti yapılabilir
+                4. Kullanıcının tasarruf hedefi ve borç durumunu göz önünde bulundur
+                5. Madde madde, pratik öneriler (maksimum 200 kelime)
+                """
+            }
         }
     }
     
@@ -254,15 +319,17 @@ enum AIError: LocalizedError {
     case parseError
     
     var errorDescription: String? {
+        let isEnglish = LanguageHelper.shared.getCurrentLanguage() == "en"
+        
         switch self {
         case .invalidURL:
-            return "Geçersiz API URL"
+            return isEnglish ? "Invalid API URL" : "Geçersiz API URL"
         case .invalidResponse:
-            return "Geçersiz yanıt"
+            return isEnglish ? "Invalid response" : "Geçersiz yanıt"
         case .apiError(let code):
-            return "API hatası (Kod: \(code))"
+            return isEnglish ? "API error (Code: \(code))" : "API hatası (Kod: \(code))"
         case .parseError:
-            return "Yanıt ayrıştırılamadı"
+            return isEnglish ? "Response could not be parsed" : "Yanıt ayrıştırılamadı"
         }
     }
 }

@@ -69,7 +69,7 @@ struct NotificationSettingsView: View {
                             HStack {
                                 Image(systemName: categoryIcon(for: category))
                                     .foregroundColor(categoryColor(for: category))
-                                Text(category)
+                                Text(NSLocalizedString(category, comment: category))
                                     .fontWeight(.medium)
                                 Spacer()
                                 Text("\(groupedTemplates()[category]?.filter { $0.isEnabled }.count ?? 0)/\(groupedTemplates()[category]?.count ?? 0)")

@@ -778,7 +778,7 @@ struct AccountsListView: View {
                             HStack {
                                 Image(systemName: category.icon ?? "circle.fill")
                                     .foregroundColor(category.uiColor)
-                                Text(category.name ?? "")
+                                Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
                                 
                                 Spacer()
                                 
@@ -793,7 +793,7 @@ struct AccountsListView: View {
                                 ForEach(transactionsViewModel.categories, id: \.id) { category in
                                     HStack {
                                         Image(systemName: category.icon ?? "circle.fill")
-                                        Text(category.name ?? "")
+                                        Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
                                     }
                                     .tag(category as CategoryEntity?)
                                 }

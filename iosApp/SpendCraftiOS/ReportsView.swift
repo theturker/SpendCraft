@@ -253,7 +253,7 @@ struct CategorySpendingRow: View {
                 Image(systemName: category.icon ?? "circle.fill")
                     .foregroundColor(category.uiColor)
                 
-                Text(category.name ?? "")
+                Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
                     .font(.subheadline)
                 
                 Spacer()
@@ -299,7 +299,7 @@ struct BudgetStatusRow: View {
                 Image(systemName: category.icon ?? "circle.fill")
                     .foregroundColor(category.uiColor)
                 
-                Text(category.name ?? "")
+                Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
                     .font(.subheadline)
                 
                 Spacer()
@@ -347,7 +347,7 @@ struct TopCategoryRow: View {
                 .background(category.uiColor.opacity(0.2))
                 .cornerRadius(10)
             
-            Text(category.name ?? "")
+            Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
                 .font(.subheadline)
             
             Spacer()
@@ -547,7 +547,7 @@ struct CategoryPieChartView: View {
                                 .foregroundColor(item.0.uiColor)
                                 .frame(width: 24)
                             
-                            Text(item.0.name ?? "")
+                            Text(NSLocalizedString(item.0.name ?? "", comment: item.0.name ?? ""))
                                 .font(.subheadline)
                             
                             Spacer()
