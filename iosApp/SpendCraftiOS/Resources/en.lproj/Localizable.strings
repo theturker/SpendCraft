@@ -391,3 +391,165 @@
 "colors.cyan" = "Cyan";
 "colors.mint" = "Mint";
 "colors.teal" = "Teal";
+
+/* Dashboard Hardcoded Strings */
+"dashboard.total.balance" = "Total Balance";
+"dashboard.income" = "Income";
+"dashboard.expense" = "Expense";
+"dashboard.ai.profiling" = "AI Profiling Survey";
+"dashboard.ai.profiling.description" = "Answer 7 questions for better recommendations";
+"dashboard.add.income" = "Add Income";
+"dashboard.add.expense" = "Add Expense";
+"dashboard.streak.title" = "Daily Streak";
+"dashboard.streak.current" = "Current";
+"dashboard.streak.longest" = "Longest";
+"dashboard.budget.status" = "Budget Status";
+"dashboard.achievements" = "Achievements";
+"dashboard.recent.transactions.title" = "Recent Transactions";
+
+/* Categories Hardcoded Strings */
+"categories.this.month.spent" = "Spent This Month";
+"categories.salary" = "Salary";
+"categories.this.month.spent.detail" = "This Month Spent";
+
+/* Accounts Hardcoded Strings */
+"accounts.title" = "Accounts";
+"accounts.add.new" = "New Account";
+"accounts.account.info" = "Account Information";
+"accounts.account.name" = "Account Name";
+"accounts.account.type" = "Account Type";
+"accounts.currency" = "Currency";
+"accounts.cash" = "Cash";
+"accounts.bank" = "Bank";
+"accounts.credit.card" = "Credit Card";
+"accounts.savings" = "Savings";
+"accounts.default" = "Default";
+"accounts.delete" = "Delete";
+"accounts.set.default" = "Set Default";
+
+/* Recurring Transactions Hardcoded Strings */
+"recurring.no.transactions" = "No recurring transactions yet";
+"recurring.no.transactions.hint" = "Press + button in top right to add";
+"recurring.add.transaction" = "Add Recurring Transaction";
+"recurring.transaction.info" = "Transaction Information";
+"recurring.transaction.name" = "Transaction Name";
+"recurring.amount" = "Amount";
+"recurring.type" = "Type";
+"recurring.expense" = "Expense";
+"recurring.income" = "Income";
+"recurring.category" = "Category";
+"recurring.select.category" = "Select Category";
+"recurring.select" = "Select";
+"recurring.change" = "Change";
+"recurring.frequency" = "Recurrence Frequency";
+"recurring.start.date" = "Start Date";
+"recurring.status" = "Status";
+"recurring.active" = "Active";
+"recurring.inactive" = "Inactive";
+"recurring.pause" = "Pause";
+"recurring.activate" = "Activate";
+"recurring.daily" = "Daily";
+"recurring.weekly" = "Weekly";
+"recurring.monthly" = "Monthly";
+"recurring.yearly" = "Yearly";
+
+/* Achievements Hardcoded Strings */
+"achievements.total.points" = "%d Points";
+"achievements.unlocked.count" = "%d / %d Achievement";
+"achievements.points" = "Points";
+"achievements.unlocked" = "Unlocked";
+"achievements.locked" = "Locked";
+"achievements.progress" = "Progress";
+"achievements.remaining" = "Remaining";
+"achievements.earned" = "Earned";
+"achievements.motivational.unlocked" = "Congratulations! You earned this achievement! 🎉";
+"achievements.motivational.locked" = "Keep going! You're very close to this achievement! 💪";
+
+/* Notification Settings Hardcoded Strings */
+"notification.status" = "Notification Status";
+"notification.active" = "Active";
+"notification.inactive" = "Inactive";
+"notification.open.settings" = "Open Notifications in Settings";
+"notification.templates" = "Ready Notifications (%d)";
+"notification.templates.description" = "You can activate ready notification scenarios and adjust their times.";
+"notification.custom" = "My Custom Notifications (%d)";
+"notification.custom.description" = "Create your own custom reminders.";
+"notification.add.custom" = "Add Custom Notification";
+"notification.edit" = "Edit Notification";
+"notification.settings" = "Settings";
+"notification.hour" = "Hour";
+"notification.minute" = "Minute";
+"notification.days.of.month" = "Which Days of the Month?";
+"notification.days.of.week" = "Days of Week";
+"notification.every.day" = "Every Day";
+"notification.content" = "Notification Content";
+"notification.title" = "Title";
+"notification.message" = "Message";
+"notification.recurrence" = "Recurrence";
+"notification.create" = "Create";
+"notification.close" = "Close";
+"notification.morning" = "Morning";
+"notification.noon" = "Noon";
+"notification.evening" = "Evening";
+"notification.weekly" = "Weekly";
+"notification.monthly" = "Monthly";
+"notification.motivation" = "Motivation";
+"notification.special" = "Special";
+
+/* AI Settings Hardcoded Strings */
+"ai.settings.title" = "AI Settings";
+"ai.enable.suggestions" = "Enable AI Suggestions";
+"ai.status" = "Status";
+"ai.status.active" = "AI-powered financial suggestions are active.";
+"ai.status.inactive" = "AI features are disabled.";
+"ai.model" = "AI Model";
+"ai.model.current" = "Current Model";
+"ai.model.description" = "Different models provide different speed and quality results. Llama 3.1 8B offers balanced performance.";
+"ai.advanced.settings" = "Advanced Settings";
+"ai.creativity.level" = "Creativity Level";
+"ai.creativity.low" = "Low: More consistent, High: More creative";
+"ai.max.length" = "Maximum Length";
+"ai.max.length.description" = "Maximum length of suggestion text";
+"ai.features" = "Features";
+"ai.show.badges" = "Show AI Badges";
+"ai.show.badges.description" = "Highlight AI-powered features";
+"ai.auto.suggest" = "Auto Suggestions";
+"ai.auto.suggest.description" = "Get automatic AI suggestions at certain intervals";
+"ai.api.info" = "API Information";
+"ai.api.provider" = "API Provider";
+"ai.api.status" = "Connection Status";
+"ai.api.secure" = "API connection is secure and encrypted.";
+"ai.reset.defaults" = "Reset to Defaults";
+"ai.features.title" = "AI Features";
+"ai.analyze.spending" = "Analyze your spending with AI support";
+"ai.personalized.suggestions" = "Get personalized financial suggestions";
+"ai.discover.savings" = "Discover saving opportunities";
+
+/* Settings Hardcoded Strings */
+"settings.features" = "Features";
+"settings.security" = "Security";
+"settings.data.management" = "Data Management";
+"settings.export.import" = "Export/Import";
+"settings.app" = "App";
+"settings.version" = "Version";
+"settings.total.transactions" = "Total Transactions";
+"settings.total.categories" = "Total Categories";
+"settings.biometric.error" = "Biometric Error";
+"settings.biometric.enable.message" = "Authenticate to enable Face ID / Touch ID";
+/* Additional Notification Settings */
+"notification.time" = "Time";
+"notification.content" = "Notification Content";
+"notification.title" = "Title";
+"notification.message" = "Message";
+"notification.recurrence" = "Recurrence";
+"notification.custom" = "Custom Notification";
+"notification.create" = "Create";
+
+/* Day Names */
+"day.sun" = "Sun";
+"day.mon" = "Mon";
+"day.tue" = "Tue";
+"day.wed" = "Wed";
+"day.thu" = "Thu";
+"day.fri" = "Fri";
+"day.sat" = "Sat";

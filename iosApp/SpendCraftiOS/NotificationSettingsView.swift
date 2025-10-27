@@ -21,10 +21,10 @@ struct NotificationSettingsView: View {
                 Section {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Bildirim Durumu")
+                            Text(NSLocalizedString("notification.status", comment: "Notification Status"))
                                 .font(.subheadline)
                                 .fontWeight(.medium)
-                            Text(notificationManager.isAuthorized ? "Aktif" : "Kapalı")
+                            Text(notificationManager.isAuthorized ? NSLocalizedString("notification.active", comment: "Active") : NSLocalizedString("notification.inactive", comment: "Inactive"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -46,14 +46,14 @@ struct NotificationSettingsView: View {
                         } label: {
                             HStack {
                                 Image(systemName: "gear")
-                                Text("Ayarlarda Bildirimleri Aç")
+                                Text(NSLocalizedString("notification.open.settings", comment: "Open Notifications in Settings"))
                                 Spacer()
                                 Image(systemName: "arrow.right")
                             }
                         }
                     }
                 } header: {
-                    Text("Durum")
+                    Text(NSLocalizedString("notification.status", comment: "Status"))
                 }
                 
                 // Template Notifications
@@ -79,9 +79,9 @@ struct NotificationSettingsView: View {
                         }
                     }
                 } header: {
-                    Text("Hazır Bildirimler (\(notificationManager.templates.count))")
+                    Text(String(format: NSLocalizedString("notification.templates", comment: "Ready Notifications (%d)"), notificationManager.templates.count))
                 } footer: {
-                    Text("Hazır bildirim senaryolarını aktifleştirip saatlerini düzenleyebilirsiniz.")
+                    Text(NSLocalizedString("notification.templates.description", comment: "You can activate ready notification scenarios and adjust their times."))
                 }
                 
                 // Custom Notifications
@@ -94,7 +94,7 @@ struct NotificationSettingsView: View {
                             Button(role: .destructive) {
                                 notificationManager.deleteCustomNotification(notification)
                             } label: {
-                                Label("Sil", systemImage: "trash")
+                                Label(NSLocalizedString("accounts.delete", comment: "Delete"), systemImage: "trash")
                             }
                         }
                     }
@@ -105,21 +105,21 @@ struct NotificationSettingsView: View {
                         HStack {
                             Image(systemName: "plus.circle.fill")
                                 .foregroundColor(.blue)
-                            Text("Özel Bildirim Ekle")
+                            Text(NSLocalizedString("notification.add.custom", comment: "Add Custom Notification"))
                                 .foregroundColor(.blue)
                         }
                     }
                 } header: {
-                    Text("Özel Bildirimlerim (\(notificationManager.customNotifications.count))")
+                    Text(String(format: NSLocalizedString("notification.custom", comment: "My Custom Notifications (%d)"), notificationManager.customNotifications.count))
                 } footer: {
-                    Text("Kendi özel hatırlatmalarınızı oluşturun.")
+                    Text(NSLocalizedString("notification.custom.description", comment: "Create your own custom reminders."))
                 }
             }
             .navigationTitle(NSLocalizedString("notification.settings.title", comment: "Notification Settings"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Kapat") {
+                    Button(NSLocalizedString("notification.close", comment: "Close")) {
                         dismiss()
                     }
                 }
@@ -327,13 +327,13 @@ struct EditTemplateView: View {
                         .foregroundColor(.secondary)
                 }
                 
-                Section("Ayarlar") {
-                    Toggle("Aktif", isOn: $isEnabled)
+                Section(NSLocalizedString("notification.settings", comment: "Settings")) {
+                    Toggle(NSLocalizedString("recurring.active", comment: "Active"), isOn: $isEnabled)
                     
                     HStack {
-                        Text("Saat")
+                        Text(NSLocalizedString("notification.hour", comment: "Hour"))
                         Spacer()
-                        Picker("Saat", selection: $hour) {
+                        Picker(NSLocalizedString("notification.hour", comment: "Hour"), selection: $hour) {
                             ForEach(0..<24, id: \.self) { h in
                                 Text(String(format: "%02d", h)).tag(h)
                             }
@@ -343,7 +343,7 @@ struct EditTemplateView: View {
                         
                         Text(":")
                         
-                        Picker("Dakika", selection: $minute) {
+                        Picker(NSLocalizedString("notification.minute", comment: "Minute"), selection: $minute) {
                             ForEach(0..<60, id: \.self) { m in
                                 Text(String(format: "%02d", m)).tag(m)
                             }
@@ -355,7 +355,7 @@ struct EditTemplateView: View {
                     // Aylık bildirimler için gün seçimi
                     if template.daysOfMonth != nil {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Ayın Hangi Günlerinde?")
+                            Text(NSLocalizedString("notification.days.of.month", comment: "Which Days of the Month?"))
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                             
@@ -405,7 +405,7 @@ struct EditTemplateView: View {
                         .padding(.vertical, 4)
                     } else if let weekDays = template.daysOfWeek {
                         HStack {
-                            Text("Haftanın Günleri")
+                            Text(NSLocalizedString("notification.days.of.week", comment: "Days of Week"))
                             Spacer()
                             Text(daysText(weekDays))
                                 .foregroundColor(.secondary)
@@ -417,17 +417,17 @@ struct EditTemplateView: View {
                     Button {
                         saveChanges()
                     } label: {
-                        Text("Kaydet")
+                            Text(NSLocalizedString("common.save", comment: "Save"))
                             .frame(maxWidth: .infinity)
                             .fontWeight(.semibold)
                     }
                 }
             }
-            .navigationTitle("Bildirimi Düzenle")
+            .navigationTitle(NSLocalizedString("notification.edit", comment: "Edit Notification"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
+                        Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                         dismiss()
                     }
                 }
@@ -479,17 +479,17 @@ struct AddCustomNotificationView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Bildirim İçeriği") {
-                    TextField("Başlık", text: $title)
-                    TextField("Mesaj", text: $messageBody, axis: .vertical)
+                Section(NSLocalizedString("notification.content", comment: "Notification Content")) {
+                    TextField(NSLocalizedString("notification.title", comment: "Title"), text: $title)
+                    TextField(NSLocalizedString("notification.message", comment: "Message"), text: $messageBody, axis: .vertical)
                         .lineLimit(3...5)
                 }
                 
-                Section("Zaman") {
+                Section(NSLocalizedString("notification.time", comment: "Time")) {
                     HStack {
-                        Text("Saat")
+                        Text(NSLocalizedString("notification.hour", comment: "Hour"))
                         Spacer()
-                        Picker("Saat", selection: $hour) {
+                        Picker(NSLocalizedString("notification.hour", comment: "Hour"), selection: $hour) {
                             ForEach(0..<24, id: \.self) { h in
                                 Text(String(format: "%02d", h)).tag(h)
                             }
@@ -499,7 +499,7 @@ struct AddCustomNotificationView: View {
                         
                         Text(":")
                         
-                        Picker("Dakika", selection: $minute) {
+                        Picker(NSLocalizedString("notification.minute", comment: "Minute"), selection: $minute) {
                             ForEach(0..<60, id: \.self) { m in
                                 Text(String(format: "%02d", m)).tag(m)
                             }
@@ -509,9 +509,9 @@ struct AddCustomNotificationView: View {
                     }
                 }
                 
-                Section("Tekrarlama") {
+                Section(NSLocalizedString("notification.recurrence", comment: "Recurrence")) {
                     if selectedDays.isEmpty {
-                        Text("Her gün")
+                        Text(NSLocalizedString("notification.every.day", comment: "Every Day"))
                             .foregroundColor(.secondary)
                     } else {
                         Text(selectedDaysText())
@@ -519,7 +519,7 @@ struct AddCustomNotificationView: View {
                     }
                     
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        ForEach([(1, "Paz"), (2, "Pzt"), (3, "Sal"), (4, "Çar"), (5, "Per"), (6, "Cum"), (7, "Cmt")], id: \.0) { day in
+                        ForEach([(1, NSLocalizedString("day.sun", comment: "Sun")), (2, NSLocalizedString("day.mon", comment: "Mon")), (3, NSLocalizedString("day.tue", comment: "Tue")), (4, NSLocalizedString("day.wed", comment: "Wed")), (5, NSLocalizedString("day.thu", comment: "Thu")), (6, NSLocalizedString("day.fri", comment: "Fri")), (7, NSLocalizedString("day.sat", comment: "Sat"))], id: \.0) { day in
                             Button {
                                 if selectedDays.contains(day.0) {
                                     selectedDays.remove(day.0)
@@ -545,18 +545,18 @@ struct AddCustomNotificationView: View {
                     Button {
                         saveNotification()
                     } label: {
-                        Text("Oluştur")
+                            Text(NSLocalizedString("notification.create", comment: "Create"))
                             .frame(maxWidth: .infinity)
                             .fontWeight(.semibold)
                     }
                     .disabled(title.isEmpty || messageBody.isEmpty)
                 }
             }
-            .navigationTitle("Özel Bildirim")
+            .navigationTitle(NSLocalizedString("notification.custom", comment: "Custom Notification"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
+                        Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                         dismiss()
                     }
                 }
@@ -609,19 +609,19 @@ struct EditCustomNotificationView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Bildirim İçeriği") {
-                    TextField("Başlık", text: $title)
-                    TextField("Mesaj", text: $messageBody, axis: .vertical)
+                Section(NSLocalizedString("notification.content", comment: "Notification Content")) {
+                    TextField(NSLocalizedString("notification.title", comment: "Title"), text: $title)
+                    TextField(NSLocalizedString("notification.message", comment: "Message"), text: $messageBody, axis: .vertical)
                         .lineLimit(3...5)
                 }
                 
-                Section("Ayarlar") {
-                    Toggle("Aktif", isOn: $isEnabled)
+                Section(NSLocalizedString("notification.settings", comment: "Settings")) {
+                    Toggle(NSLocalizedString("recurring.active", comment: "Active"), isOn: $isEnabled)
                     
                     HStack {
-                        Text("Saat")
+                        Text(NSLocalizedString("notification.hour", comment: "Hour"))
                         Spacer()
-                        Picker("Saat", selection: $hour) {
+                        Picker(NSLocalizedString("notification.hour", comment: "Hour"), selection: $hour) {
                             ForEach(0..<24, id: \.self) { h in
                                 Text(String(format: "%02d", h)).tag(h)
                             }
@@ -631,7 +631,7 @@ struct EditCustomNotificationView: View {
                         
                         Text(":")
                         
-                        Picker("Dakika", selection: $minute) {
+                        Picker(NSLocalizedString("notification.minute", comment: "Minute"), selection: $minute) {
                             ForEach(0..<60, id: \.self) { m in
                                 Text(String(format: "%02d", m)).tag(m)
                             }
@@ -641,9 +641,9 @@ struct EditCustomNotificationView: View {
                     }
                 }
                 
-                Section("Tekrarlama") {
+                Section(NSLocalizedString("notification.recurrence", comment: "Recurrence")) {
                     if selectedDays.isEmpty {
-                        Text("Her gün")
+                        Text(NSLocalizedString("notification.every.day", comment: "Every Day"))
                             .foregroundColor(.secondary)
                     } else {
                         Text(selectedDaysText())
@@ -651,7 +651,7 @@ struct EditCustomNotificationView: View {
                     }
                     
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        ForEach([(1, "Paz"), (2, "Pzt"), (3, "Sal"), (4, "Çar"), (5, "Per"), (6, "Cum"), (7, "Cmt")], id: \.0) { day in
+                        ForEach([(1, NSLocalizedString("day.sun", comment: "Sun")), (2, NSLocalizedString("day.mon", comment: "Mon")), (3, NSLocalizedString("day.tue", comment: "Tue")), (4, NSLocalizedString("day.wed", comment: "Wed")), (5, NSLocalizedString("day.thu", comment: "Thu")), (6, NSLocalizedString("day.fri", comment: "Fri")), (7, NSLocalizedString("day.sat", comment: "Sat"))], id: \.0) { day in
                             Button {
                                 if selectedDays.contains(day.0) {
                                     selectedDays.remove(day.0)
@@ -677,18 +677,18 @@ struct EditCustomNotificationView: View {
                     Button {
                         saveChanges()
                     } label: {
-                        Text("Kaydet")
+                            Text(NSLocalizedString("common.save", comment: "Save"))
                             .frame(maxWidth: .infinity)
                             .fontWeight(.semibold)
                     }
                     .disabled(title.isEmpty || messageBody.isEmpty)
                 }
             }
-            .navigationTitle("Bildirimi Düzenle")
+            .navigationTitle(NSLocalizedString("notification.edit", comment: "Edit Notification"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
+                        Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                         dismiss()
                     }
                 }

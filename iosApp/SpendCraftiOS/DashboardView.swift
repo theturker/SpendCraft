@@ -118,10 +118,10 @@ struct DashboardView: View {
                                 .foregroundColor(.purple)
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(NSLocalizedString("dashboard.ai.profiling", comment: "AI Profiling"))
+                                Text(NSLocalizedString("dashboard.ai.profiling", comment: "AI Profiling Survey"))
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(NSLocalizedString("dashboard.ai.profiling.description", comment: "AI Profiling Description"))
+                                Text(NSLocalizedString("dashboard.ai.profiling.description", comment: "Answer 7 questions for better recommendations"))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -242,7 +242,7 @@ struct DashboardView: View {
                         Text(NSLocalizedString("dashboard.achievements", comment: "Achievements"))
                             .font(.headline)
                         Spacer()
-                        Text(String(format: NSLocalizedString("dashboard.achievements.points", comment: "Points"), achievementsViewModel.totalPoints))
+                        Text(String(format: NSLocalizedString("achievements.total.points", comment: "%d Points"), achievementsViewModel.totalPoints))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -262,8 +262,8 @@ struct DashboardView: View {
                 
                 // Recent Transactions
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(NSLocalizedString("dashboard.recent.transactions.title", comment: "Recent Transactions"))
-                        .font(.headline)
+                        Text(NSLocalizedString("dashboard.recent.transactions.title", comment: "Recent Transactions"))
+                            .font(.headline)
                         .padding(.horizontal, 16)
                     
                     ForEach(transactionsViewModel.transactions.prefix(5), id: \.id) { transaction in
@@ -393,14 +393,14 @@ struct AchievementCard: View {
                     .font(.system(size: 32))
                     .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
                 
-                Text(NSLocalizedString(achievement.name ?? "", comment: ""))
+                Text(achievement.name ?? "")
                     .font(.caption)
                     .fontWeight(.semibold)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
                 
                 if achievement.isUnlocked {
-                    Text(String(format: NSLocalizedString("achievements.points.format", comment: "%d Points"), achievement.points))
+                    Text(String(format: NSLocalizedString("achievements.points", comment: "Points"), achievement.points))
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 } else {

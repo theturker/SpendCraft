@@ -212,7 +212,7 @@ struct SettingsView: View {
                 }
                 .foregroundColor(.primary)
             } header: {
-                Text(NSLocalizedString("features.section.header", comment: "Features"))
+                Text(NSLocalizedString("settings.features", comment: "Features"))
             }
             
             // Security Section - Face ID / Touch ID
@@ -246,7 +246,7 @@ struct SettingsView: View {
                     Text(NSLocalizedString("settings.security", comment: "Security"))
                 } footer: {
                     if biometricEnabled {
-                        Text(String(format: NSLocalizedString("settings.biometric.help", comment: "Biometric help"), biometricManager.getBiometricTypeName()))
+                        Text(NSLocalizedString("settings.biometric.help.message", comment: "You will be required to authenticate with %@ every time you access the app.").replacingOccurrences(of: "%@", with: biometricManager.getBiometricTypeName()))
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -343,7 +343,7 @@ struct SettingsView: View {
             NotificationSettingsView()
                 .environmentObject(transactionsViewModel)
         }
-        .alert(NSLocalizedString("error.biometric", comment: "Biometric Error"), isPresented: $showBiometricError) {
+        .alert(NSLocalizedString("settings.biometric.error", comment: "Biometric Error"), isPresented: $showBiometricError) {
             Button(NSLocalizedString("common.ok", comment: "OK"), role: .cancel) {}
         } message: {
             if let error = biometricError {
@@ -389,7 +389,7 @@ struct AccountsListView: View {
                         Spacer()
                         
                         if account.isDefault {
-                            Text("Varsayılan")
+                            Text(NSLocalizedString("accounts.default", comment: "Default"))
                                 .font(.caption)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 4)
@@ -402,19 +402,19 @@ struct AccountsListView: View {
                         Button(role: .destructive) {
                             accountsViewModel.deleteAccount(account)
                         } label: {
-                            Label("Sil", systemImage: "trash")
+                            Label(NSLocalizedString("accounts.delete", comment: "Delete"), systemImage: "trash")
                         }
                         
                         Button {
                             accountsViewModel.setDefaultAccount(account)
                         } label: {
-                            Label("Varsayılan", systemImage: "star")
+                            Label(NSLocalizedString("accounts.set.default", comment: "Set Default"), systemImage: "star")
                         }
                         .tint(.blue)
                     }
                 }
             }
-            .navigationTitle("Hesaplar")
+            .navigationTitle(NSLocalizedString("accounts.title", comment: "Accounts"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -446,17 +446,17 @@ struct AccountsListView: View {
         var body: some View {
             NavigationStack {
                 Form {
-                    Section("Hesap Bilgileri") {
-                        TextField("Hesap Adı", text: $name)
+                    Section(NSLocalizedString("accounts.account.info", comment: "Account Information")) {
+                        TextField(NSLocalizedString("accounts.account.name", comment: "Account Name"), text: $name)
                         
-                        Picker("Hesap Tipi", selection: $type) {
-                            Text("Nakit").tag("CASH")
-                            Text("Banka").tag("BANK")
-                            Text("Kredi Kartı").tag("CREDIT_CARD")
-                            Text("Tasarruf").tag("SAVINGS")
+                        Picker(NSLocalizedString("accounts.account.type", comment: "Account Type"), selection: $type) {
+                            Text(NSLocalizedString("accounts.cash", comment: "Cash")).tag("CASH")
+                            Text(NSLocalizedString("accounts.bank", comment: "Bank")).tag("BANK")
+                            Text(NSLocalizedString("accounts.credit.card", comment: "Credit Card")).tag("CREDIT_CARD")
+                            Text(NSLocalizedString("accounts.savings", comment: "Savings")).tag("SAVINGS")
                         }
                         
-                        Picker("Para Birimi", selection: $currency) {
+                        Picker(NSLocalizedString("accounts.currency", comment: "Currency"), selection: $currency) {
                             ForEach(currencies, id: \.self) { curr in
                                 Text(curr).tag(curr)
                             }
@@ -467,18 +467,18 @@ struct AccountsListView: View {
                         Button {
                             saveAccount()
                         } label: {
-                            Text("Kaydet")
+                            Text(NSLocalizedString("common.save", comment: "Save"))
                                 .frame(maxWidth: .infinity)
                                 .font(.subheadline)
                         }
                         .disabled(name.isEmpty)
                     }
                 }
-                .navigationTitle("Yeni Hesap")
+                .navigationTitle(NSLocalizedString("accounts.add.new", comment: "New Account"))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        Button("İptal") {
+                        Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                             dismiss()
                         }
                     }
@@ -504,10 +504,10 @@ struct AccountsListView: View {
                         Image(systemName: "repeat.circle")
                             .font(.system(size: 60))
                             .foregroundColor(.gray)
-                        Text("Henüz tekrarlayan işlem yok")
+                        Text(NSLocalizedString("recurring.no.transactions", comment: "No recurring transactions yet"))
                             .font(.headline)
                             .foregroundColor(.secondary)
-                        Text("Sağ üst köşedeki + butonuna basarak ekleyin")
+                        Text(NSLocalizedString("recurring.no.transactions.hint", comment: "Press + button in top right to add"))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
@@ -521,13 +521,13 @@ struct AccountsListView: View {
                                 Button(role: .destructive) {
                                     recurringViewModel.deleteRecurringTransaction(recurring)
                                 } label: {
-                                    Label("Sil", systemImage: "trash")
+                                    Label(NSLocalizedString("accounts.delete", comment: "Delete"), systemImage: "trash")
                                 }
                                 
                                 Button {
                                     recurringViewModel.toggleRecurringTransaction(recurring)
                                 } label: {
-                                    Label(recurring.isActive ? "Duraklat" : "Aktifleştir",
+                                    Label(recurring.isActive ? NSLocalizedString("recurring.pause", comment: "Pause") : NSLocalizedString("recurring.activate", comment: "Activate"),
                                           systemImage: recurring.isActive ? "pause" : "play")
                                 }
                                 .tint(.orange)
@@ -535,7 +535,7 @@ struct AccountsListView: View {
                     }
                 }
             }
-            .navigationTitle("Tekrarlayan İşlemler")
+            .navigationTitle(NSLocalizedString("recurring.title", comment: "Recurring Transactions"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -578,11 +578,11 @@ struct AccountsListView: View {
                         .foregroundColor(recurring.isIncome ? .green : .red)
                     
                     if recurring.isActive {
-                        Text("Aktif")
+                        Text(NSLocalizedString("recurring.active", comment: "Active"))
                             .font(.caption)
                             .foregroundColor(.green)
                     } else {
-                        Text("Pasif")
+                        Text(NSLocalizedString("recurring.inactive", comment: "Inactive"))
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
@@ -605,11 +605,11 @@ struct AccountsListView: View {
                             .font(.system(size: 50))
                             .foregroundColor(.yellow)
                         
-                        Text("\(achievementsViewModel.totalPoints) Puan")
+                        Text(String(format: NSLocalizedString("achievements.total.points", comment: "%d Points"), achievementsViewModel.totalPoints))
                             .font(.title)
                             .fontWeight(.bold)
                         
-                        Text("\(achievementsViewModel.achievements.filter { $0.isUnlocked }.count) / \(achievementsViewModel.achievements.count) Başarı")
+                        Text(String(format: NSLocalizedString("achievements.unlocked.count", comment: "%d / %d Achievement"), achievementsViewModel.achievements.filter { $0.isUnlocked }.count, achievementsViewModel.achievements.count))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -635,7 +635,7 @@ struct AccountsListView: View {
                 }
                 .padding(.vertical)
             }
-            .navigationTitle("Başarılar")
+            .navigationTitle(NSLocalizedString("achievements.title", comment: "Achievements"))
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showAchievementDetail) {
                 if let achievement = selectedAchievement {
@@ -654,13 +654,13 @@ struct AccountsListView: View {
                     .font(.system(size: 40))
                     .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
                 
-                Text(NSLocalizedString(achievement.name ?? "", comment: ""))
+                Text(achievement.name ?? "")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                 
-                Text(NSLocalizedString(achievement.achievementDescription ?? "", comment: ""))
+                Text(achievement.achievementDescription ?? "")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -671,7 +671,7 @@ struct AccountsListView: View {
                         Image(systemName: "star.fill")
                             .font(.caption2)
                             .foregroundColor(.yellow)
-                        Text("\(achievement.points) \(NSLocalizedString("achievements.points.single", comment: "Points"))")
+                        Text(String(format: NSLocalizedString("achievements.points", comment: "Points"), achievement.points))
                             .font(.caption)
                             .fontWeight(.medium)
                     }
@@ -747,17 +747,17 @@ struct AccountsListView: View {
         @State private var isActive: Bool = true
         
         let frequencies = [
-            ("Günlük", "DAILY"),
-            ("Haftalık", "WEEKLY"),
-            ("Aylık", "MONTHLY"),
-            ("Yıllık", "YEARLY")
+            (NSLocalizedString("recurring.daily", comment: "Daily"), "DAILY"),
+            (NSLocalizedString("recurring.weekly", comment: "Weekly"), "WEEKLY"),
+            (NSLocalizedString("recurring.monthly", comment: "Monthly"), "MONTHLY"),
+            (NSLocalizedString("recurring.yearly", comment: "Yearly"), "YEARLY")
         ]
         
         var body: some View {
             NavigationStack {
                 Form {
-                    Section("İşlem Bilgileri") {
-                        TextField("İşlem Adı", text: $name)
+                    Section(NSLocalizedString("recurring.transaction.info", comment: "Transaction Information")) {
+                        TextField(NSLocalizedString("recurring.transaction.name", comment: "Transaction Name"), text: $name)
                         
                         HStack {
                             TextField("0.00", text: $amount)
@@ -766,14 +766,14 @@ struct AccountsListView: View {
                                 .foregroundColor(.secondary)
                         }
                         
-                        Picker("Tip", selection: $isIncome) {
-                            Text("Gider").tag(false)
-                            Text("Gelir").tag(true)
+                        Picker(NSLocalizedString("recurring.type", comment: "Type"), selection: $isIncome) {
+                            Text(NSLocalizedString("recurring.expense", comment: "Expense")).tag(false)
+                            Text(NSLocalizedString("recurring.income", comment: "Income")).tag(true)
                         }
                         .pickerStyle(.segmented)
                     }
                     
-                    Section("Kategori") {
+                    Section(NSLocalizedString("recurring.category", comment: "Category")) {
                         if let category = selectedCategory {
                             HStack {
                                 Image(systemName: category.icon ?? "circle.fill")
@@ -782,14 +782,14 @@ struct AccountsListView: View {
                                 
                                 Spacer()
                                 
-                                Button("Değiştir") {
+                                Button(NSLocalizedString("recurring.change", comment: "Change")) {
                                     selectedCategory = nil
                                 }
                                 .font(.caption)
                             }
                         } else {
-                            Picker("Kategori Seç", selection: $selectedCategory) {
-                                Text("Seçiniz").tag(nil as CategoryEntity?)
+                            Picker(NSLocalizedString("recurring.select.category", comment: "Select Category"), selection: $selectedCategory) {
+                                Text(NSLocalizedString("recurring.select", comment: "Select")).tag(nil as CategoryEntity?)
                                 ForEach(transactionsViewModel.categories, id: \.id) { category in
                                     HStack {
                                         Image(systemName: category.icon ?? "circle.fill")
@@ -801,27 +801,27 @@ struct AccountsListView: View {
                         }
                     }
                     
-                    Section("Tekrar Sıklığı") {
-                        Picker("Sıklık", selection: $frequency) {
+                    Section(NSLocalizedString("recurring.frequency", comment: "Recurrence Frequency")) {
+                        Picker(NSLocalizedString("recurring.frequency", comment: "Frequency"), selection: $frequency) {
                             ForEach(frequencies, id: \.1) { freq in
                                 Text(freq.0).tag(freq.1)
                             }
                         }
                         
-                        DatePicker("Başlangıç Tarihi",
+                        DatePicker(NSLocalizedString("recurring.start.date", comment: "Start Date"),
                                    selection: $startDate,
                                    displayedComponents: .date)
                     }
                     
-                    Section("Durum") {
-                        Toggle("Aktif", isOn: $isActive)
+                    Section(NSLocalizedString("recurring.status", comment: "Status")) {
+                        Toggle(NSLocalizedString("recurring.active", comment: "Active"), isOn: $isActive)
                     }
                     
                     Section {
                         Button {
                             saveRecurringTransaction()
                         } label: {
-                            Text("Kaydet")
+                            Text(NSLocalizedString("common.save", comment: "Save"))
                                 .frame(maxWidth: .infinity)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
@@ -829,11 +829,11 @@ struct AccountsListView: View {
                         .disabled(name.isEmpty || amount.isEmpty || Double(amount) == nil || selectedCategory == nil)
                     }
                 }
-                .navigationTitle("Tekrarlayan İşlem Ekle")
+                .navigationTitle(NSLocalizedString("recurring.add.transaction", comment: "Add Recurring Transaction"))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        Button("İptal") {
+                        Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                             dismiss()
                         }
                     }
@@ -910,7 +910,7 @@ struct AccountsListView: View {
                                         HStack {
                                             Image(systemName: "star.fill")
                                                 .foregroundColor(.yellow)
-                                            Text("Puan")
+                                            Text(NSLocalizedString("achievements.points", comment: "Points"))
                                                 .foregroundColor(.secondary)
                                             Spacer()
                                             Text("\(achievement.points)")
@@ -922,7 +922,7 @@ struct AccountsListView: View {
                                         HStack {
                                             Image(systemName: "calendar")
                                                 .foregroundColor(.blue)
-                                            Text("Kazanıldı")
+                                            Text(NSLocalizedString("achievements.earned", comment: "Earned"))
                                                 .foregroundColor(.secondary)
                                             Spacer()
                                             if achievement.unlockedAt > 0 {
@@ -939,7 +939,7 @@ struct AccountsListView: View {
                                     // Progress Info
                                     VStack(spacing: 12) {
                                         HStack {
-                                            Text("İlerleme")
+                                            Text(NSLocalizedString("achievements.progress", comment: "Progress"))
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
                                             Spacer()
@@ -953,7 +953,7 @@ struct AccountsListView: View {
                                             .scaleEffect(y: 2)
                                         
                                         HStack {
-                                            Text("Kalan")
+                                            Text(NSLocalizedString("achievements.remaining", comment: "Remaining"))
                                                 .foregroundColor(.secondary)
                                             Spacer()
                                             Text("\(achievement.maxProgress - achievement.progress)")
@@ -971,7 +971,7 @@ struct AccountsListView: View {
                             
                             // Motivational Text
                             if !achievement.isUnlocked {
-                                Text("Devam et! Bu başarıya çok yakınsın! 💪")
+                                Text(NSLocalizedString("achievements.motivational.locked", comment: "Keep going! You're very close to this achievement! 💪"))
                                     .font(.subheadline)
                                     .foregroundColor(.blue)
                                     .padding()
@@ -979,7 +979,7 @@ struct AccountsListView: View {
                                     .cornerRadius(12)
                                     .padding(.horizontal)
                             } else {
-                                Text("Tebrikler! Bu başarıyı kazandın! 🎉")
+                                Text(NSLocalizedString("achievements.motivational.unlocked", comment: "Congratulations! You earned this achievement! 🎉"))
                                     .font(.subheadline)
                                     .foregroundColor(.yellow)
                                     .padding()

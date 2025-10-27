@@ -201,7 +201,7 @@ struct AddBudgetView: View {
                 }
                 
                 // Current Spending
-                Section("Bu Ay Harcanan") {
+                Section(NSLocalizedString("categories.this.month.spent", comment: "Spent This Month")) {
                     HStack {
                         Text(formatCurrency(currentSpent))
                             .font(.title2)

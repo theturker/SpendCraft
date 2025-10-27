@@ -18,9 +18,9 @@ struct AISettingsView: View {
     @Environment(\.dismiss) private var dismiss
     
     let availableModels = [
-        ("llama-3.1-8b-instant", "Llama 3.1 8B (Hızlı)"),
-        ("llama-3.2-3b-preview", "Llama 3.2 3B (Hafif)"),
-        ("mixtral-8x7b-32768", "Mixtral 8x7B (Güçlü)")
+        ("llama-3.1-8b-instant", "Llama 3.1 8B (Fast)"),
+        ("llama-3.2-3b-preview", "Llama 3.2 3B (Light)"),
+        ("mixtral-8x7b-32768", "Mixtral 8x7B (Powerful)")
     ]
     
     var body: some View {
@@ -32,21 +32,21 @@ struct AISettingsView: View {
                         HStack {
                             Image(systemName: "sparkles")
                                 .foregroundColor(.purple)
-                            Text("AI Önerilerini Etkinleştir")
+                            Text(NSLocalizedString("ai.enable.suggestions", comment: "Enable AI Suggestions"))
                         }
                     }
                 } header: {
-                    Text("Durum")
+                    Text(NSLocalizedString("ai.status", comment: "Status"))
                 } footer: {
                     Text(aiEnabled ?
-                         "AI destekli finansal öneriler aktif." :
-                         "AI özellikleri devre dışı.")
+                         NSLocalizedString("ai.status.active", comment: "AI-powered financial suggestions are active.") :
+                         NSLocalizedString("ai.status.inactive", comment: "AI features are disabled."))
                 }
                 
                 if aiEnabled {
                     // Model Selection
                     Section {
-                        Picker("Model", selection: $selectedModel) {
+                        Picker(NSLocalizedString("ai.model", comment: "Model"), selection: $selectedModel) {
                             ForEach(availableModels, id: \.0) { model in
                                 Text(model.1).tag(model.0)
                             }
@@ -54,23 +54,23 @@ struct AISettingsView: View {
                         .pickerStyle(.menu)
                         
                         HStack {
-                            Text("Mevcut Model")
+                            Text(NSLocalizedString("ai.model.current", comment: "Current Model"))
                                 .foregroundColor(.secondary)
                             Spacer()
                             Text(getModelName(selectedModel))
                                 .foregroundColor(.blue)
                         }
                     } header: {
-                        Text("AI Modeli")
+                        Text(NSLocalizedString("ai.model", comment: "AI Model"))
                     } footer: {
-                        Text("Farklı modeller farklı hızda ve kalitede sonuç verir. Llama 3.1 8B dengeli performans sunar.")
+                        Text(NSLocalizedString("ai.model.description", comment: "Different models provide different speed and quality results. Llama 3.1 8B offers balanced performance."))
                     }
                     
                     // Advanced Settings
                     Section {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("Yaratıcılık Seviyesi")
+                                Text(NSLocalizedString("ai.creativity.level", comment: "Creativity Level"))
                                 Spacer()
                                 Text(String(format: "%.1f", temperature))
                                     .foregroundColor(.secondary)
@@ -79,14 +79,14 @@ struct AISettingsView: View {
                             Slider(value: $temperature, in: 0.1...1.0, step: 0.1)
                                 .accentColor(.purple)
                             
-                            Text("Düşük: Daha tutarlı, Yüksek: Daha yaratıcı")
+                            Text(NSLocalizedString("ai.creativity.low", comment: "Low: More consistent, High: More creative"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("Maksimum Uzunluk")
+                                Text(NSLocalizedString("ai.max.length", comment: "Maximum Length"))
                                 Spacer()
                                 Text("\(Int(maxTokens))")
                                     .foregroundColor(.secondary)
@@ -95,14 +95,14 @@ struct AISettingsView: View {
                             Slider(value: $maxTokens, in: 200...1000, step: 100)
                                 .accentColor(.purple)
                             
-                            Text("Öneri metninin maksimum uzunluğu")
+                            Text(NSLocalizedString("ai.max.length.description", comment: "Maximum length of suggestion text"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     } header: {
-                        Text("Gelişmiş Ayarlar")
+                        Text(NSLocalizedString("ai.advanced.settings", comment: "Advanced Settings"))
                     } footer: {
-                        Text("Bu ayarlar AI'ın davranışını etkiler. Varsayılan değerler çoğu kullanım için uygundur.")
+                        Text(NSLocalizedString("ai.advanced.settings", comment: "This settings affect AI behavior. Default values are suitable for most usage."))
                     }
                     
                     // Features
@@ -112,8 +112,8 @@ struct AISettingsView: View {
                                 Image(systemName: "sparkles.square.filled.on.square")
                                     .foregroundColor(.blue)
                                 VStack(alignment: .leading) {
-                                    Text("AI Rozetlerini Göster")
-                                    Text("AI destekli özellikleri vurgula")
+                                    Text(NSLocalizedString("ai.show.badges", comment: "Show AI Badges"))
+                                    Text(NSLocalizedString("ai.show.badges.description", comment: "Highlight AI-powered features"))
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
@@ -125,22 +125,22 @@ struct AISettingsView: View {
                                 Image(systemName: "wand.and.stars")
                                     .foregroundColor(.purple)
                                 VStack(alignment: .leading) {
-                                    Text("Otomatik Öneriler")
-                                    Text("Belirli aralıklarla otomatik AI önerisi al")
+                                    Text(NSLocalizedString("ai.auto.suggest", comment: "Auto Suggestions"))
+                                    Text(NSLocalizedString("ai.auto.suggest.description", comment: "Get automatic AI suggestions at certain intervals"))
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
                             }
                         }
                     } header: {
-                        Text("Özellikler")
+                        Text(NSLocalizedString("ai.features", comment: "Features"))
                     }
                     
                     // API Info
                     Section {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("API Sağlayıcısı")
+                                Text(NSLocalizedString("ai.api.provider", comment: "API Provider"))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Text("Groq")
@@ -154,7 +154,7 @@ struct AISettingsView: View {
                         
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Bağlantı Durumu")
+                                Text(NSLocalizedString("ai.api.status", comment: "Connection Status"))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Text("Aktif")
@@ -167,9 +167,9 @@ struct AISettingsView: View {
                                 .frame(width: 12, height: 12)
                         }
                     } header: {
-                        Text("API Bilgileri")
+                        Text(NSLocalizedString("ai.api.info", comment: "API Information"))
                     } footer: {
-                        Text("API bağlantısı güvenli ve şifrelenmiş.")
+                        Text(NSLocalizedString("ai.api.secure", comment: "API connection is secure and encrypted."))
                     }
                     
                     // Reset
@@ -179,7 +179,7 @@ struct AISettingsView: View {
                         } label: {
                             HStack {
                                 Spacer()
-                                Text("Varsayılanlara Sıfırla")
+                                Text(NSLocalizedString("ai.reset.defaults", comment: "Reset to Defaults"))
                                     .foregroundColor(.red)
                                 Spacer()
                             }
@@ -191,21 +191,21 @@ struct AISettingsView: View {
                 Section {
                     VStack(alignment: .leading, spacing: 12) {
                         Label {
-                            Text("Yapay zeka desteği ile harcamalarınızı analiz edin")
+                            Text(NSLocalizedString("ai.analyze.spending", comment: "Analyze your spending with AI support"))
                         } icon: {
                             Image(systemName: "chart.line.uptrend.xyaxis")
                                 .foregroundColor(.blue)
                         }
                         
                         Label {
-                            Text("Kişiselleştirilmiş finansal öneriler alın")
+                            Text(NSLocalizedString("ai.personalized.suggestions", comment: "Get personalized financial suggestions"))
                         } icon: {
                             Image(systemName: "lightbulb.fill")
                                 .foregroundColor(.yellow)
                         }
                         
                         Label {
-                            Text("Tasarruf fırsatlarını keşfedin")
+                            Text(NSLocalizedString("ai.discover.savings", comment: "Discover saving opportunities"))
                         } icon: {
                             Image(systemName: "banknote")
                                 .foregroundColor(.green)
@@ -213,10 +213,10 @@ struct AISettingsView: View {
                     }
                     .font(.caption)
                 } header: {
-                    Text("AI Özellikleri")
+                    Text(NSLocalizedString("ai.features.title", comment: "AI Features"))
                 }
             }
-            .navigationTitle("AI Ayarları")
+            .navigationTitle(NSLocalizedString("ai.settings.title", comment: "AI Settings"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -229,7 +229,7 @@ struct AISettingsView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Tamam") {
+                    Button(NSLocalizedString("common.ok", comment: "OK")) {
                         dismiss()
                     }
                 }
