@@ -3,7 +3,6 @@ package com.alperen.spendcraft
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.alperen.spendcraft.LocaleHelper
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -29,6 +28,6 @@ class SpendCraftApplication : Application() {
     }
     
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleHelper.setLocale(base, LocaleHelper.getLanguage(base)))
+        super.attachBaseContext(com.alperen.spendcraft.core.ui.LocaleHelper.setLocale(base, com.alperen.spendcraft.core.ui.LocaleHelper.getLanguage(base)))
     }
 }

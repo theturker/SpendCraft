@@ -1,4 +1,4 @@
-package com.alperen.spendcraft
+package com.alperen.spendcraft.core.ui
 
 import android.content.Context
 import android.content.res.Configuration

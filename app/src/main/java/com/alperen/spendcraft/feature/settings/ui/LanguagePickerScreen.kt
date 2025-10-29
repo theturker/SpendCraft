@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.alperen.spendcraft.LocaleHelper
+import com.alperen.spendcraft.core.ui.LocaleHelper
 import com.alperen.spendcraft.core.ui.R as CoreR
 
 data class Language(

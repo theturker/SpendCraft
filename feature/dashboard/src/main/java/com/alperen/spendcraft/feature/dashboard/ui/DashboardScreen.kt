@@ -31,8 +31,11 @@ import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.CurrencyFormatter
+import com.alperen.spendcraft.core.ui.LocaleHelper
 // import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module, use tokens directly
 import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.*
 
 /**
@@ -107,7 +110,7 @@ fun DashboardScreen(
                         Box {
                             Icon(
                                 painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_outline),
-                                contentDescription = "Bildirimler",
+                                contentDescription = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_notifications),
                                 modifier = Modifier.size(24.dp)
                             )
                             
@@ -148,7 +151,7 @@ fun DashboardScreen(
                     }
                 ) {
                     Text(
-                        text = "Ana Sayfa",
+                        text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_home),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -274,7 +277,7 @@ private fun BalanceCard(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Toplam Bakiye",
+                text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_total_balance),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -300,6 +303,7 @@ private fun QuickActionButtons(
     onAddExpense: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val extendedColors = MaterialTheme.extendedColors
     
     Row(
@@ -327,7 +331,7 @@ private fun QuickActionButtons(
                     tint = Color.White
                 )
                 Text(
-                    text = "Gelir",
+                    text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_income),
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -355,7 +359,7 @@ private fun QuickActionButtons(
                     tint = Color.White
                 )
                 Text(
-                    text = "Gider",
+                    text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_expense),
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -382,7 +386,7 @@ private fun IncomeExpenseSummary(
     ) {
         // Income Card
         SummaryCard(
-            title = "Gelir",
+            title = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_income),
             amount = CurrencyFormatter.format(context, (totalIncome * 100).toLong()),
             icon = com.alperen.spendcraft.core.ui.R.drawable.ic_arrow_down_circle_fill,
             backgroundColor = extendedColors.income.copy(alpha = 0.1f),
@@ -392,7 +396,7 @@ private fun IncomeExpenseSummary(
         
         // Expense Card
         SummaryCard(
-            title = "Gider",
+            title = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_expense),
             amount = CurrencyFormatter.format(context, (totalExpense * 100).toLong()),
             icon = com.alperen.spendcraft.core.ui.R.drawable.ic_arrow_up_circle_fill,
             backgroundColor = extendedColors.expense.copy(alpha = 0.1f),
@@ -454,6 +458,7 @@ private fun StreakCard(
     longestStreak: Int,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val extendedColors = MaterialTheme.extendedColors
     
     Box(
@@ -478,7 +483,7 @@ private fun StreakCard(
                     modifier = Modifier.size(32.dp)
                 )
                 Text(
-                    text = "Günlük Seri",
+                    text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_daily_streak),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -499,7 +504,7 @@ private fun StreakCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Güncel",
+                        text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_current),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -523,7 +528,7 @@ private fun StreakCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "En Uzun",
+                        text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_longest),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -545,6 +550,7 @@ private fun AchievementsSection(
     onAchievements: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -556,12 +562,12 @@ private fun AchievementsSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Başarılar",
+                text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_achievements),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "$totalPoints Puan",
+                text = "$totalPoints ${context.getString(com.alperen.spendcraft.feature.dashboard.R.string.points)}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -591,18 +597,18 @@ private fun AchievementsSection(
                 items((1..5).toList()) { index ->
                     AchievementCard(
                         achievementName = when (index) {
-                            1 -> "İlk Adım"
-                            2 -> "Başlangıç"
-                            3 -> "Bütçe Bilinci"
-                            4 -> "Kategori Ustası"
-                            else -> "Uzman"
+                            1 -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_level_first_step)
+                            2 -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_level_beginner)
+                            3 -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_level_budget_aware)
+                            4 -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_level_category_master)
+                            else -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_level_expert)
                         },
                         achievementDescription = when (index) {
-                            1 -> "İlk işleminizi kaydedin"
-                            2 -> "5 işlem kaydedin"
-                            3 -> "İlk bütçenizi oluşturun"
-                            4 -> "5 farklı kategori kullanın"
-                            else -> "50 işlem kaydedin"
+                            1 -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_desc_first_transaction)
+                            2 -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_desc_5_transactions)
+                            3 -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_desc_first_budget)
+                            4 -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_desc_5_categories)
+                            else -> context.getString(com.alperen.spendcraft.feature.dashboard.R.string.achievement_desc_50_transactions)
                         },
                         achievementIcon = when (index) {
                             1 -> com.alperen.spendcraft.core.ui.R.drawable.ic_checkmark_circle_fill
@@ -640,6 +646,7 @@ private fun AchievementCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     var showDetailSheet by remember { mutableStateOf(false) }
     
     // iOS'taki AchievementCard ile birebir aynı yapı
@@ -691,7 +698,7 @@ private fun AchievementCard(
             // Progress or Points - iOS'taki .caption2
             if (isUnlocked) {
                 Text(
-                    text = "$points Puan",
+                    text = "$points ${context.getString(com.alperen.spendcraft.feature.dashboard.R.string.points)}",
                     style = MaterialTheme.typography.labelSmall, // iOS .caption2 karşılığı
                     color = MaterialTheme.colorScheme.onSurfaceVariant // iOS .secondary
                 )
@@ -735,6 +742,7 @@ private fun DashboardAchievementDetailSheet(
     maxProgress: Int,
     onDismiss: () -> Unit
 ) {
+    val context = LocalContext.current
     val progressPercentage = if (maxProgress > 0) {
         progress.toFloat() / maxProgress.toFloat()
     } else {
@@ -762,7 +770,7 @@ private fun DashboardAchievementDetailSheet(
                 IconButton(onClick = onDismiss) {
                     Icon(
                         painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_xmark_circle_fill),
-                        contentDescription = "Kapat",
+                        contentDescription = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_close),
                         tint = Color.Gray,
                         modifier = Modifier.size(28.dp)
                     )
@@ -836,7 +844,7 @@ private fun DashboardAchievementDetailSheet(
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Text(
-                                    text = "Tamamlandı!",
+                                    text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_achievement_completed),
                                     style = MaterialTheme.typography.headlineSmall,
                                     fontWeight = FontWeight.SemiBold,
                                     color = Color(0xFF34C759)
@@ -891,7 +899,7 @@ private fun DashboardAchievementDetailSheet(
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Text(
-                                    text = "$points Puan Kazandınız!",
+                                    text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_achievement_reward_unlocked, points),
                                     style = MaterialTheme.typography.headlineSmall,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -920,7 +928,7 @@ private fun DashboardAchievementDetailSheet(
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            text = "İlerleme",
+                                            text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_achievement_progress),
                                             style = MaterialTheme.typography.titleSmall,
                                             fontWeight = FontWeight.Medium
                                         )
@@ -962,12 +970,12 @@ private fun DashboardAchievementDetailSheet(
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            text = "${(progressPercentage * 100).toInt()}% Tamamlandı",
+                                            text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_achievement_completed_percent, (progressPercentage * 100).toInt()),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         Text(
-                                            text = "Kalan: ${maxProgress - progress}",
+                                            text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_achievement_remaining, maxProgress - progress),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = Color(0xFFFF9500), // iOS orange
                                             fontWeight = FontWeight.Medium
@@ -996,7 +1004,7 @@ private fun DashboardAchievementDetailSheet(
                                         modifier = Modifier.size(24.dp)
                                     )
                                     Text(
-                                        text = "Kazanacağınız: $points Puan",
+                                        text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_achievement_reward, points),
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.Medium
                                     )
@@ -1055,12 +1063,13 @@ private fun RecentTransactionsSection(
     onTransactionClick: (Transaction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Son İşlemler",
+            text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_recent_transactions),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -1073,7 +1082,7 @@ private fun RecentTransactionsSection(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Henüz işlem yok",
+                    text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_no_transactions),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1110,8 +1119,12 @@ private fun TransactionRow(
         extendedColors.expense
     }
     
-    val dateFormat = remember { SimpleDateFormat("d MMM yyyy, HH:mm", Locale("tr")) }
-    val formattedDate = remember(transaction.timestampUtcMillis) {
+    val currentLocale = remember {
+        val language = LocaleHelper.getLanguage(context)
+        Locale.forLanguageTag(language)
+    }
+    val dateFormat = remember(currentLocale) { SimpleDateFormat("d MMM yyyy, HH:mm", currentLocale) }
+    val formattedDate = remember(transaction.timestampUtcMillis, dateFormat) {
         dateFormat.format(Date(transaction.timestampUtcMillis))
     }
     
@@ -1174,7 +1187,7 @@ private fun TransactionRow(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = category?.name ?: "Kategori Yok",
+                text = category?.name ?: context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_category_unknown),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
@@ -1233,6 +1246,7 @@ private fun UserProfilingCard(
     onProfilingClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Card(
         onClick = onProfilingClick,
         modifier = modifier.fillMaxWidth(),
@@ -1260,13 +1274,13 @@ private fun UserProfilingCard(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = "AI Profilleme Anketi",
+                    text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_ai_profiling_survey),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Daha iyi öneriler için 7 soruyu cevaplayın",
+                    text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_ai_profiling_desc),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.lerp
-import com.alperen.spendcraft.LocaleHelper
+import com.alperen.spendcraft.core.ui.LocaleHelper
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.ui.iosTheme.*
@@ -399,6 +399,21 @@ fun IOSSettingsScreen(
                     title = "Versiyon",
                     value = "1.0.3",
                     position = ListItemPosition.First
+                )
+            }
+            
+            item {
+                IOSListItemDivider()
+            }
+            
+            item {
+                SettingsListItem(
+                    icon = CoreR.drawable.ic_gearshape_fill,
+                    iconColor = IOSColors.Blue,
+                    title = if (LocaleHelper.getLanguage(context) == "tr") "Dil" else "Language",
+                    subtitle = if (LocaleHelper.getLanguage(context) == "tr") "Türkçe" else "English",
+                    position = ListItemPosition.Middle,
+                    onClick = onNavigateToLanguageSettings
                 )
             }
             

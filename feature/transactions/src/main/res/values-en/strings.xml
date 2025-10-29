@@ -2,4 +2,14 @@
 <resources>
     <!-- Quick Add -->
     <string name="quick_add_title">Quick Add</string>
+    
+    <!-- Transaction Filter -->
+    <string name="transaction_filter_all">All</string>
+    <string name="transaction_filter_income">Income</string>
+    <string name="transaction_filter_expense">Expense</string>
+    <string name="transaction_category_unknown">No Category</string>
+    
+    <!-- Transaction Screen -->
+    <string name="transactions_title">Transactions</string>
+    <string name="add_transaction">Add Transaction</string>
 </resources>

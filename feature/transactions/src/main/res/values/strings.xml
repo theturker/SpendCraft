@@ -2,4 +2,14 @@
 <resources>
     <!-- Quick Add -->
     <string name="quick_add_title">Hızlı Ekle</string>
+    
+    <!-- Transaction Filter -->
+    <string name="transaction_filter_all">Tümü</string>
+    <string name="transaction_filter_income">Gelir</string>
+    <string name="transaction_filter_expense">Gider</string>
+    <string name="transaction_category_unknown">Kategori Yok</string>
+    
+    <!-- Transaction Screen -->
+    <string name="transactions_title">İşlemler</string>
+    <string name="add_transaction">İşlem Ekle</string>
 </resources>

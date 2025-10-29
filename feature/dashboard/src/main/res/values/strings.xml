@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dashboard Screen -->
+    <string name="dashboard_home">Ana Sayfa</string>
+    <string name="dashboard_total_balance">Toplam Bakiye</string>
+    <string name="dashboard_income">Gelir</string>
+    <string name="dashboard_expense">Gider</string>
+    <string name="dashboard_daily_streak">Günlük Seri</string>
+    <string name="dashboard_current">Güncel</string>
+    <string name="dashboard_longest">En Uzun</string>
+    <string name="dashboard_achievements">Başarılar</string>
+    <string name="dashboard_recent_transactions">Son İşlemler</string>
+    <string name="dashboard_no_transactions">Henüz işlem yok</string>
+    <string name="dashboard_ai_profiling_survey">AI Profilleme Anketi</string>
+    <string name="dashboard_ai_profiling_desc">Daha iyi öneriler için 7 soruyu cevaplayın</string>
+    <string name="dashboard_notifications">Bildirimler</string>
+    <string name="dashboard_category_unknown">Kategori Yok</string>
+    <string name="dashboard_achievement_completed">Tamamlandı!</string>
+    <string name="dashboard_achievement_progress">İlerleme</string>
+    <string name="dashboard_achievement_remaining">Kalan: %1$d</string>
+    <string name="dashboard_achievement_reward">Kazanacağınız: %1$d Puan</string>
+    <string name="dashboard_achievement_reward_unlocked">%1$d Puan Kazandınız!</string>
+    <string name="dashboard_achievement_completed_percent">%1$d%% Tamamlandı</string>
+    <string name="dashboard_close">Kapat</string>
+    
+    <!-- Achievement Levels -->
+    <string name="achievement_level_beginner">Başlangıç</string>
+    <string name="achievement_level_first_step">İlk Adım</string>
+    <string name="achievement_level_budget_aware">Bütçe Bilinci</string>
+    <string name="achievement_level_category_master">Kategori Ustası</string>
+    <string name="achievement_level_expert">Uzman</string>
+    <string name="achievement_desc_first_transaction">İlk işleminizi kaydedin</string>
+    <string name="achievement_desc_first_budget">İlk bütçenizi oluşturun</string>
+    <string name="achievement_desc_5_transactions">5 işlem kaydedin</string>
+    <string name="achievement_desc_5_categories">5 farklı kategori kullanın</string>
+    <string name="achievement_desc_50_transactions">50 işlem kaydedin</string>
+    <string name="points">Puan</string>
+</resources>

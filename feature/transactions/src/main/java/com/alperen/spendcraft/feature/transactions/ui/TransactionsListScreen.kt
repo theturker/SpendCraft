@@ -31,8 +31,11 @@ import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.CurrencyFormatter
+import com.alperen.spendcraft.core.ui.LocaleHelper
 // import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module, tokens used directly
 import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.*
 
 /**
@@ -45,10 +48,10 @@ import java.util.*
  * - + butonu toolbar'da
  */
 
-enum class TransactionFilter(val label: String) {
-    ALL("Tümü"),
-    INCOME("Gelir"),
-    EXPENSE("Gider")
+enum class TransactionFilter(val labelRes: Int) {
+    ALL(com.alperen.spendcraft.feature.transactions.R.string.transaction_filter_all),
+    INCOME(com.alperen.spendcraft.feature.transactions.R.string.transaction_filter_income),
+    EXPENSE(com.alperen.spendcraft.feature.transactions.R.string.transaction_filter_expense)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -129,9 +132,10 @@ fun TransactionsListScreen(
                     
                     // + butonu
                     IconButton(onClick = onAddTransaction) {
+                        val context = LocalContext.current
                         Icon(
                             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_plus_circle_fill),
-                            contentDescription = "İşlem Ekle",
+                            contentDescription = context.getString(com.alperen.spendcraft.feature.transactions.R.string.add_transaction),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -154,8 +158,9 @@ fun TransactionsListScreen(
                         Alignment.BottomStart
                     }
                 ) {
+                    val context = LocalContext.current
                     Text(
-                        text = "İşlemler",
+                        text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.transactions_title),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -234,6 +239,7 @@ private fun FilterPillsRow(
     onFilterSelected: (TransactionFilter) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -241,7 +247,7 @@ private fun FilterPillsRow(
     ) {
         items(TransactionFilter.values()) { filter ->
             FilterPill(
-                label = filter.label,
+                label = context.getString(filter.labelRes),
                 isSelected = selectedFilter == filter,
                 onClick = { onFilterSelected(filter) }
             )
@@ -309,8 +315,12 @@ private fun TransactionListRow(
         extendedColors.expense
     }
     
-    val timeFormat = remember { SimpleDateFormat("HH:mm", Locale("tr")) }
-    val formattedTime = remember(transaction.timestampUtcMillis) {
+    val currentLocale = remember {
+        val language = LocaleHelper.getLanguage(context)
+        Locale.forLanguageTag(language)
+    }
+    val timeFormat = remember(currentLocale) { SimpleDateFormat("HH:mm", currentLocale) }
+    val formattedTime = remember(transaction.timestampUtcMillis, timeFormat) {
         timeFormat.format(Date(transaction.timestampUtcMillis))
     }
     
@@ -374,7 +384,7 @@ private fun TransactionListRow(
         ) {
             // Category name - iOS: .subheadline, .medium
             Text(
-                text = category?.name ?: "Kategori Yok",
+                text = category?.name ?: context.getString(com.alperen.spendcraft.feature.transactions.R.string.transaction_category_unknown),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )

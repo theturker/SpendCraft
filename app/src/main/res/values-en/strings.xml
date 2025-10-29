@@ -157,8 +157,43 @@
     <string name="edit_account_name">Edit Account Name</string>
     <string name="account_name">Account Name</string>
     
-    <!-- Widget -->
-    <string name="widget_description">Quick access to your financial overview and add transactions</string>
+    <!-- Dashboard Screen -->
+    <string name="dashboard_home">Home</string>
+    <string name="dashboard_total_balance">Total Balance</string>
+    <string name="dashboard_income">Income</string>
+    <string name="dashboard_expense">Expense</string>
+    <string name="dashboard_daily_streak">Daily Streak</string>
+    <string name="dashboard_current">Current</string>
+    <string name="dashboard_longest">Longest</string>
+    <string name="dashboard_achievements">Achievements</string>
+    <string name="dashboard_recent_transactions">Recent Transactions</string>
+    <string name="dashboard_no_transactions">No transactions yet</string>
+    <string name="dashboard_ai_profiling_survey">AI Profiling Survey</string>
+    <string name="dashboard_ai_profiling_desc">Answer 7 questions for better recommendations</string>
+    <string name="dashboard_notifications">Notifications</string>
+    <string name="dashboard_category_unknown">No Category</string>
+    <string name="dashboard_achievement_completed">Completed!</string>
+    <string name="dashboard_achievement_progress">Progress</string>
+    <string name="dashboard_achievement_remaining">Remaining: %1$d</string>
+    <string name="dashboard_achievement_reward">You will earn: %1$d Points</string>
+    <string name="dashboard_achievement_reward_unlocked">You earned %1$d Points!</string>
+    <string name="dashboard_achievement_completed_percent">%1$d%% Completed</string>
+    
+    <!-- Achievement Levels -->
+    <string name="achievement_level_beginner">Beginner</string>
+    <string name="achievement_level_first_step">First Step</string>
+    <string name="achievement_level_budget_aware">Budget Aware</string>
+    <string name="achievement_level_category_master">Category Master</string>
+    <string name="achievement_level_expert">Expert</string>
+    <string name="achievement_desc_first_transaction">Record your first transaction</string>
+    <string name="achievement_desc_first_budget">Create your first budget</string>
+    <string name="achievement_desc_5_transactions">Record 5 transactions</string>
+    <string name="achievement_desc_5_categories">Use 5 different categories</string>
+    <string name="achievement_desc_50_transactions">Record 50 transactions</string>
+    <string name="points">Points</string>
+    
+    <!-- Transaction Filter -->
+    <string name="transaction_filter_all">All</string>
     
     <!-- Import/Export -->
     <string name="import_export">Import/Export</string>

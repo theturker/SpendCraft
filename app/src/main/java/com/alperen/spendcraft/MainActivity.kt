@@ -52,6 +52,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(com.alperen.spendcraft.core.ui.LocaleHelper.setLocale(newBase!!, com.alperen.spendcraft.core.ui.LocaleHelper.getLanguage(newBase)))
+    }
+    
     @Inject
     lateinit var firstLaunchHelper: FirstLaunchHelper
     
