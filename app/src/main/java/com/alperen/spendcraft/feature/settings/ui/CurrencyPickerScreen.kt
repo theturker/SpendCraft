@@ -88,12 +88,12 @@ fun CurrencyPickerScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Para Birimi") },
+                title = { Text(context.getString(com.alperen.spendcraft.R.string.currency_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(id = CoreR.drawable.ic_chevron_left),
-                            contentDescription = "Geri"
+                            contentDescription = context.getString(com.alperen.spendcraft.R.string.back)
                         )
                     }
                 },
@@ -112,11 +112,11 @@ fun CurrencyPickerScreen(
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
-                placeholder = { Text("Para birimi ara...") },
+                placeholder = { Text(context.getString(com.alperen.spendcraft.R.string.currency_search_placeholder)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Search,
-                        contentDescription = "Ara"
+                        contentDescription = context.getString(com.alperen.spendcraft.R.string.currency_search)
                     )
                 },
                 trailingIcon = {
@@ -124,7 +124,7 @@ fun CurrencyPickerScreen(
                         IconButton(onClick = { searchText = "" }) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
-                                contentDescription = "Temizle"
+                                contentDescription = context.getString(com.alperen.spendcraft.R.string.currency_clear)
                             )
                         }
                     }
@@ -144,7 +144,7 @@ fun CurrencyPickerScreen(
                 // Section Header - iOS: header { }
                 item {
                     Text(
-                        text = "Kullanılabilir Para Birimleri",
+                        text = context.getString(com.alperen.spendcraft.R.string.currency_available_title),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,

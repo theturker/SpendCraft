@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_suggestions_title">AI Suggestions</string>
+    <string name="ai_financial_advisor">AI Financial Advisor</string>
+    <string name="ai_subtitle">Get personalized financial advice</string>
+    <string name="ai_select_advice_type">Select advice type</string>
+    <string name="ai_generating">Generating...</string>
+    <string name="ai_get_advice">Get Advice</string>
+    <string name="ai_advice_title">AI Advice</string>
+    <string name="ai_financial_summary">Financial Summary</string>
+    <string name="ai_income">Income</string>
+    <string name="ai_expense">Expense</string>
+    <string name="ai_balance">Balance</string>
+    <string name="ai_categories">Categories</string>
+    <string name="ai_advice_type_spending_analysis">Spending Analysis</string>
+    <string name="ai_advice_type_spending_analysis_desc">Analyze your spending habits</string>
+    <string name="ai_advice_type_budget_optimization">Budget Optimization</string>
+    <string name="ai_advice_type_budget_optimization_desc">Optimize your budget</string>
+    <string name="ai_advice_type_savings_advice">Savings Advice</string>
+    <string name="ai_advice_type_savings_advice_desc">Learn ways to save money</string>
+    <string name="back">Back</string>
+</resources>

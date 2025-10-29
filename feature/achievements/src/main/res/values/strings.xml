@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="achievements_title">Başarılar</string>
+    <string name="achievements_close">Kapat</string>
+    <string name="achievements_progress">İlerleme</string>
+    <string name="back">Geri</string>
+    <string name="achievement_first_step">İlk Adım</string>
+    <string name="achievement_first_step_desc">İlk işleminizi kaydettiniz</string>
+    <string name="achievement_transaction_master">İşlem Ustası</string>
+    <string name="achievement_transaction_master_desc">100 işlem kaydettiniz</string>
+    <string name="achievement_record_champion">Kayıt Şampiyonu</string>
+    <string name="achievement_record_champion_desc">1000 işlem kaydettiniz</string>
+    <string name="achievement_week_warrior">Hafta Savaşçısı</string>
+    <string name="achievement_week_warrior_desc">7 gün üst üste işlem kaydettiniz</string>
+    <string name="achievement_month_king">Ay Kralı</string>
+    <string name="achievement_month_king_desc">30 gün üst üste işlem kaydettiniz</string>
+    <string name="achievement_budget_planner">Bütçe Planlayıcısı</string>
+    <string name="achievement_budget_planner_desc">İlk bütçenizi oluşturdunuz</string>
+    <string name="achievement_budget_guardian">Bütçe Koruyucusu</string>
+    <string name="achievement_budget_guardian_desc">3 ay üst üste bütçenizi aşmadınız</string>
+    <string name="achievement_savings_beginner">Tasarruf Başlangıcı</string>
+    <string name="achievement_savings_beginner_desc">İlk defa aylık gelir > gider</string>
+    <string name="achievement_savings_master">Tasarruf Ustası</string>
+    <string name="achievement_savings_master_desc">6 ay üst üste tasarruf yaptınız</string>
+    <string name="achievement_premium_member">Premium Üye</string>
+    <string name="achievement_premium_member_desc">Premium üyeliğe geçtiniz</string>
+    <string name="achievement_ai_explorer">AI Keşifçisi</string>
+    <string name="achievement_ai_explorer_desc">AI önerilerini 10 kez kullandınız</string>
+    <string name="achievements_count">%1$d / %2$d Başarı</string>
+    <string name="achievement_completed">Tamamlandı!</string>
+    <string name="achievement_earned_points">%1$s Kazandınız!</string>
+    <string name="achievement_progress_percent">%1$d%% Tamamlandı</string>
+    <string name="achievement_will_earn">Kazanacağınız: %1$s</string>
+    <string name="points">Puan</string>
+    <string name="achievement_remaining">Kalan: %1$d</string>
+</resources>

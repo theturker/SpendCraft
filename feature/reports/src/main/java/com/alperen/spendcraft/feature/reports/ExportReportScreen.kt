@@ -33,18 +33,18 @@ import com.alperen.spendcraft.core.model.TransactionType
 import java.text.SimpleDateFormat
 import java.util.*
 
-enum class DateRange(val displayName: String) {
-    LAST_WEEK("Son Hafta"),
-    LAST_MONTH("Son Ay"),
-    LAST_3_MONTHS("Son 3 Ay"),
-    LAST_YEAR("Son Yıl"),
-    CUSTOM("Özel Tarih Aralığı")
+enum class DateRange(val labelResId: Int) {
+    LAST_WEEK(com.alperen.spendcraft.feature.reports.R.string.export_date_range_last_week),
+    LAST_MONTH(com.alperen.spendcraft.feature.reports.R.string.export_date_range_last_month),
+    LAST_3_MONTHS(com.alperen.spendcraft.feature.reports.R.string.export_date_range_last_3_months),
+    LAST_YEAR(com.alperen.spendcraft.feature.reports.R.string.export_date_range_last_year),
+    CUSTOM(com.alperen.spendcraft.feature.reports.R.string.export_date_range_custom)
 }
 
-enum class ExportFormat(val displayName: String, val icon: ImageVector, val description: String) {
-    CSV("CSV", CsvIcon, "Virgülle ayrılmış değerler"),
-    PDF("PDF", PdfIcon, "Taşınabilir belge formatı"),
-    EXCEL("Excel", ExcelIcon, "Microsoft Excel formatı")
+enum class ExportFormat(val displayName: String, val icon: ImageVector, val descriptionResId: Int) {
+    CSV("CSV", CsvIcon, com.alperen.spendcraft.feature.reports.R.string.export_format_csv_description),
+    PDF("PDF", PdfIcon, com.alperen.spendcraft.feature.reports.R.string.export_format_pdf_description),
+    EXCEL("Excel", ExcelIcon, com.alperen.spendcraft.feature.reports.R.string.export_format_excel_description)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +79,7 @@ fun ExportReportScreen(
                         IconButton(onClick = onNavigateBack) {
                             Icon(
                                 painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
-                                contentDescription = "Geri"
+                                contentDescription = context.getString(com.alperen.spendcraft.feature.reports.R.string.back)
                             )
                         }
                     },
@@ -102,7 +102,7 @@ fun ExportReportScreen(
                     }
                 ) {
                     Text(
-                        text = "Dışa Aktar",
+                        text = context.getString(com.alperen.spendcraft.feature.reports.R.string.export_title),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -130,7 +130,7 @@ fun ExportReportScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "İndirme Formatı",
+                            text = context.getString(com.alperen.spendcraft.feature.reports.R.string.export_format_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -165,7 +165,7 @@ fun ExportReportScreen(
                                         fontWeight = FontWeight.Medium
                                     )
                                     Text(
-                                        text = format.description,
+                                        text = context.getString(format.descriptionResId),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -183,7 +183,7 @@ fun ExportReportScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Tarih Aralığı",
+                            text = context.getString(com.alperen.spendcraft.feature.reports.R.string.export_date_range_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -206,7 +206,7 @@ fun ExportReportScreen(
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Text(
-                                    text = range.displayName,
+                                    text = context.getString(range.labelResId),
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                             }
@@ -250,18 +250,18 @@ fun ExportReportScreen(
                                     try {
                                         val notifier = com.alperen.spendcraft.core.notifications.NotificationManager(context)
                                         notifier.showFileNotification(
-                                            title = "Rapor hazır",
-                                            message = if (selectedFormat == ExportFormat.PDF) "PDF rapor oluşturuldu" else "Rapor oluşturuldu",
+                                            title = context.getString(com.alperen.spendcraft.feature.reports.R.string.export_notification_title),
+                                            message = if (selectedFormat == ExportFormat.PDF) context.getString(com.alperen.spendcraft.feature.reports.R.string.export_notification_pdf_created) else context.getString(com.alperen.spendcraft.feature.reports.R.string.export_notification_created),
                                             uri = uri,
                                             mimeType = mime
                                         )
                                     } catch (_: Exception) {}
-                                    exportMessage = "Rapor başarıyla oluşturuldu! Paylaşım menüsünden dosyayı Downloads klasörüne kaydedebilir veya başka uygulamalarla paylaşabilirsiniz."
+                                    exportMessage = context.getString(com.alperen.spendcraft.feature.reports.R.string.export_success_message)
                                 } else {
-                                    exportMessage = "Bu format henüz desteklenmiyor. CSV formatını kullanın."
+                                    exportMessage = context.getString(com.alperen.spendcraft.feature.reports.R.string.export_format_not_supported)
                                 }
                             } catch (e: Exception) {
-                                exportMessage = "Rapor oluşturulurken hata: ${e.message}"
+                                exportMessage = context.getString(com.alperen.spendcraft.feature.reports.R.string.export_error_message, e.message ?: context.getString(com.alperen.spendcraft.feature.reports.R.string.unknown_error))
                             } finally {
                                 isExporting = false
                             }
@@ -276,14 +276,14 @@ fun ExportReportScreen(
                             strokeWidth = 2.dp
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Oluşturuluyor...")
+                        Text(context.getString(com.alperen.spendcraft.feature.reports.R.string.export_creating))
                     } else {
                         Icon(
                             imageVector = DownloadIcon,
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Raporu İndir")
+                        Text(context.getString(com.alperen.spendcraft.feature.reports.R.string.export_download))
                     }
                 }
             }
@@ -294,7 +294,7 @@ fun ExportReportScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (message.contains("başarıyla")) 
+                            containerColor = if (message == context.getString(com.alperen.spendcraft.feature.reports.R.string.export_success_message)) 
                                 MaterialTheme.colorScheme.primaryContainer 
                             else 
                                 MaterialTheme.colorScheme.errorContainer
@@ -303,7 +303,7 @@ fun ExportReportScreen(
                         Text(
                             text = message,
                             modifier = Modifier.padding(16.dp),
-                            color = if (message.contains("başarıyla")) 
+                            color = if (message == context.getString(com.alperen.spendcraft.feature.reports.R.string.export_success_message)) 
                                 MaterialTheme.colorScheme.onPrimaryContainer 
                             else 
                                 MaterialTheme.colorScheme.onErrorContainer

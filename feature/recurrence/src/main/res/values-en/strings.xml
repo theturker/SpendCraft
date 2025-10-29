@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recurring_title">Recurring Transactions</string>
+    <string name="recurring_add">Add New Recurring Transaction</string>
+    <string name="recurring_empty_title">No recurring transactions yet</string>
+    <string name="recurring_empty_description">Tap the + button in the top right to add one</string>
+    <string name="recurring_edit">Edit</string>
+    <string name="recurring_delete">Delete</string>
+    <string name="recurring_next_run">Next run:</string>
+    <string name="recurring_active">Active</string>
+    <string name="recurring_paused">Paused</string>
+    <string name="recurring_delete_confirm_title">Delete Recurring Transaction</string>
+    <string name="recurring_delete_confirm_message">Are you sure you want to delete this recurring transaction?</string>
+    <string name="recurring_delete_confirm_button">Delete</string>
+    <string name="recurring_delete_cancel_button">Cancel</string>
+    <string name="recurring_frequency_daily">Daily</string>
+    <string name="recurring_frequency_weekly">Weekly</string>
+    <string name="recurring_frequency_monthly">Monthly</string>
+    <string name="recurring_frequency_yearly">Yearly</string>
+    <string name="recurring_next_execution">Next run:</string>
+    <string name="recurring_end_date">End date:</string>
+    <string name="recurring_delete_title">Delete Recurring Transaction</string>
+    <string name="recurring_delete_message">Are you sure you want to delete this recurring transaction?</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+</resources>

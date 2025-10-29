@@ -73,6 +73,7 @@ fun AchievementsScreen(
     onBack: () -> Unit = {},
     viewModel: AchievementsViewModel? = null
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     // Gerçek veri - ViewModel'den gelecek
     val achievements by (viewModel?.achievements ?: remember { 
         kotlinx.coroutines.flow.MutableStateFlow(emptyList<com.alperen.spendcraft.data.db.entities.AchievementEntity>()) 
@@ -96,8 +97,8 @@ fun AchievementsScreen(
         // Tracking Achievements
         Achievement(
             id = "first_transaction",
-            title = "İlk Adım",
-            description = "İlk işleminizi kaydettiniz",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_first_step),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_first_step_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_play_arrow_vector),
             category = AchievementCategory.TRACKING,
             isUnlocked = true,
@@ -109,8 +110,8 @@ fun AchievementsScreen(
         ),
         Achievement(
             id = "transaction_100",
-            title = "İşlem Ustası",
-            description = "100 işlem kaydettiniz",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_transaction_master),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_transaction_master_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_assignment_vector),
             category = AchievementCategory.TRACKING,
             isUnlocked = true,
@@ -122,8 +123,8 @@ fun AchievementsScreen(
         ),
         Achievement(
             id = "transaction_1000",
-            title = "Kayıt Şampiyonu",
-            description = "1000 işlem kaydettiniz",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_record_champion),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_record_champion_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_emoji_events_vector),
             category = AchievementCategory.TRACKING,
             isUnlocked = false,
@@ -137,8 +138,8 @@ fun AchievementsScreen(
         // Streak Achievements
         Achievement(
             id = "streak_7",
-            title = "Hafta Savaşçısı",
-            description = "7 gün üst üste işlem kaydettiniz",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_week_warrior),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_week_warrior_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_local_fire_department_vector),
             category = AchievementCategory.STREAK,
             isUnlocked = true,
@@ -150,8 +151,8 @@ fun AchievementsScreen(
         ),
         Achievement(
             id = "streak_30",
-            title = "Ay Kralı",
-            description = "30 gün üst üste işlem kaydettiniz",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_month_king),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_month_king_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_whatshot_vector),
             category = AchievementCategory.STREAK,
             isUnlocked = false,
@@ -165,8 +166,8 @@ fun AchievementsScreen(
         // Budget Achievements
         Achievement(
             id = "first_budget",
-            title = "Bütçe Planlayıcısı",
-            description = "İlk bütçenizi oluşturdunuz",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_budget_planner),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_budget_planner_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector),
             category = AchievementCategory.BUDGETING,
             isUnlocked = true,
@@ -178,8 +179,8 @@ fun AchievementsScreen(
         ),
         Achievement(
             id = "budget_keeper",
-            title = "Bütçe Koruyucusu",
-            description = "3 ay üst üste bütçenizi aşmadınız",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_budget_guardian),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_budget_guardian_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_shield_vector),
             category = AchievementCategory.BUDGETING,
             isUnlocked = false,
@@ -193,8 +194,8 @@ fun AchievementsScreen(
         // Saving Achievements
         Achievement(
             id = "first_saving",
-            title = "Tasarruf Başlangıcı",
-            description = "İlk defa aylık gelir > gider",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_savings_beginner),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_savings_beginner_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_savings_vector),
             category = AchievementCategory.SAVING,
             isUnlocked = false,
@@ -206,8 +207,8 @@ fun AchievementsScreen(
         ),
         Achievement(
             id = "saving_master",
-            title = "Tasarruf Ustası",
-            description = "10.000 TL tasarruf ettiniz",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_savings_master),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_savings_master_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_monetization_on_vector),
             category = AchievementCategory.SAVING,
             isUnlocked = false,
@@ -221,8 +222,8 @@ fun AchievementsScreen(
         // Premium Achievements
         Achievement(
             id = "premium_user",
-            title = "Premium Üye",
-            description = "Premium üyeliğe geçtiniz",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_premium_member),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_premium_member_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_workspace_premium_vector),
             category = AchievementCategory.PREMIUM,
             isUnlocked = false,
@@ -234,8 +235,8 @@ fun AchievementsScreen(
         ),
         Achievement(
             id = "ai_user",
-            title = "AI Keşifçisi",
-            description = "AI önerilerini 10 kez kullandınız",
+            title = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_ai_explorer),
+            description = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_ai_explorer_desc),
             icon = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_star_vector),
             category = AchievementCategory.PREMIUM,
             isUnlocked = false,
@@ -293,7 +294,7 @@ fun AchievementsScreen(
                         IconButton(onClick = onBack) {
                             Icon(
                                 painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
-                                contentDescription = "Geri"
+                                contentDescription = context.getString(com.alperen.spendcraft.feature.achievements.R.string.back)
                             )
                         }
                     },
@@ -316,7 +317,7 @@ fun AchievementsScreen(
                     }
                 ) {
                     Text(
-                        text = "Başarılar",
+                        text = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievements_title),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -366,7 +367,7 @@ fun AchievementsScreen(
                     
                     // Achievement count - iOS'taki .subheadline, .secondary
                     Text(
-                        text = "$unlockedCount / ${displayAchievements.size} Başarı",
+                        text = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievements_count, unlockedCount, displayAchievements.size),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -534,6 +535,7 @@ private fun AchievementDetailSheet(
     achievement: Achievement,
     onDismiss: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val progressPercentage = if (achievement.maxProgress > 0) {
         achievement.progress
     } else {
@@ -561,7 +563,7 @@ private fun AchievementDetailSheet(
                 IconButton(onClick = onDismiss) {
                     Icon(
                         painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_xmark_circle_fill),
-                        contentDescription = "Kapat",
+                        contentDescription = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievements_close),
                         tint = Color.Gray,
                         modifier = Modifier.size(28.dp)
                     )
@@ -635,7 +637,7 @@ private fun AchievementDetailSheet(
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Text(
-                                    text = "Tamamlandı!",
+                                    text = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_completed),
                                     style = MaterialTheme.typography.headlineSmall,
                                     fontWeight = FontWeight.SemiBold,
                                     color = Color(0xFF34C759)
@@ -690,7 +692,7 @@ private fun AchievementDetailSheet(
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Text(
-                                    text = "${achievement.reward ?: "0 Puan"} Kazandınız!",
+                                    text = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_earned_points, achievement.reward ?: "0 ${context.getString(com.alperen.spendcraft.feature.achievements.R.string.points)}"),
                                     style = MaterialTheme.typography.headlineSmall,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -719,7 +721,7 @@ private fun AchievementDetailSheet(
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            text = "İlerleme",
+                                            text = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievements_progress),
                                             style = MaterialTheme.typography.titleSmall,
                                             fontWeight = FontWeight.Medium
                                         )
@@ -761,12 +763,12 @@ private fun AchievementDetailSheet(
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            text = "${(progressPercentage * 100).toInt()}% Tamamlandı",
+                                            text = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_progress_percent, (progressPercentage * 100).toInt()),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         Text(
-                                            text = "Kalan: ${achievement.maxProgress - achievement.currentProgress}",
+                                            text = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_remaining, achievement.maxProgress - achievement.currentProgress),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = Color(0xFFFF9500), // iOS orange
                                             fontWeight = FontWeight.Medium
@@ -795,7 +797,7 @@ private fun AchievementDetailSheet(
                                         modifier = Modifier.size(24.dp)
                                     )
                                     Text(
-                                        text = "Kazanacağınız: ${achievement.reward ?: "0 Puan"}",
+                                        text = context.getString(com.alperen.spendcraft.feature.achievements.R.string.achievement_will_earn, achievement.reward ?: "0 ${context.getString(com.alperen.spendcraft.feature.achievements.R.string.points)}"),
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.Medium
                                     )

@@ -45,6 +45,7 @@ fun EditTemplateSheet(
     onDismiss: () -> Unit,
     onSave: (NotificationTemplate) -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     var hour by remember { mutableIntStateOf(template.hour) }
     var minute by remember { mutableIntStateOf(template.minute) }
     var isEnabled by remember { mutableStateOf(template.isEnabled) }
@@ -98,7 +99,7 @@ fun EditTemplateSheet(
             // Settings Header
             item {
                 Text(
-                    text = "Ayarlar",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_settings_label),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -143,7 +144,7 @@ fun EditTemplateSheet(
             if (template.daysOfMonth != null) {
                 item {
                     Text(
-                        text = "Ayın Hangi Günlerinde?",
+                        text = context.getString(com.alperen.spendcraft.R.string.notification_month_days_question),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -217,7 +218,7 @@ fun EditTemplateSheet(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Kaydet", modifier = Modifier.padding(8.dp))
+                    Text(context.getString(com.alperen.spendcraft.R.string.save), modifier = Modifier.padding(8.dp))
                 }
             }
         }
@@ -232,6 +233,7 @@ fun AddCustomNotificationSheet(
     onDismiss: () -> Unit,
     onAdd: (CustomNotification) -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     var title by remember { mutableStateOf("") }
     var body by remember { mutableStateOf("") }
     var hour by remember { mutableIntStateOf(9) }
@@ -250,7 +252,7 @@ fun AddCustomNotificationSheet(
         ) {
             item {
                 Text(
-                    text = "Özel Bildirim",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_custom_notification),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -262,7 +264,7 @@ fun AddCustomNotificationSheet(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Başlık") },
+                    label = { Text(context.getString(com.alperen.spendcraft.R.string.notification_title_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true
@@ -275,7 +277,7 @@ fun AddCustomNotificationSheet(
                 OutlinedTextField(
                     value = body,
                     onValueChange = { body = it },
-                    label = { Text("Mesaj") },
+                    label = { Text(context.getString(com.alperen.spendcraft.R.string.notification_message_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     minLines = 3,
@@ -287,7 +289,7 @@ fun AddCustomNotificationSheet(
             // Time
             item {
                 Text(
-                    text = "Zaman",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_time),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -308,14 +310,14 @@ fun AddCustomNotificationSheet(
             // Days
             item {
                 Text(
-                    text = "Tekrarlama",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_repeat),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = if (selectedDays.isEmpty()) "Her gün" else daysText(selectedDays.toList()),
+                    text = if (selectedDays.isEmpty()) context.getString(com.alperen.spendcraft.R.string.notification_every_day) else daysText(selectedDays.toList()),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 12.dp)
@@ -354,7 +356,7 @@ fun AddCustomNotificationSheet(
                     enabled = title.isNotEmpty() && body.isNotEmpty(),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Oluştur", modifier = Modifier.padding(8.dp))
+                    Text(context.getString(com.alperen.spendcraft.R.string.notification_create), modifier = Modifier.padding(8.dp))
                 }
             }
         }
@@ -368,6 +370,7 @@ fun EditCustomNotificationSheet(
     onDismiss: () -> Unit,
     onSave: (CustomNotification) -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     var title by remember { mutableStateOf(notification.title) }
     var body by remember { mutableStateOf(notification.body) }
     var hour by remember { mutableIntStateOf(notification.hour) }
@@ -399,7 +402,7 @@ fun EditCustomNotificationSheet(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Başlık") },
+                    label = { Text(context.getString(com.alperen.spendcraft.R.string.notification_title_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true
@@ -412,7 +415,7 @@ fun EditCustomNotificationSheet(
                 OutlinedTextField(
                     value = body,
                     onValueChange = { body = it },
-                    label = { Text("Mesaj") },
+                    label = { Text(context.getString(com.alperen.spendcraft.R.string.notification_message_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     minLines = 3,
@@ -467,14 +470,14 @@ fun EditCustomNotificationSheet(
             // Days
             item {
                 Text(
-                    text = "Tekrarlama",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_repeat),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = if (selectedDays.isEmpty()) "Her gün" else daysText(selectedDays.toList()),
+                    text = if (selectedDays.isEmpty()) context.getString(com.alperen.spendcraft.R.string.notification_every_day) else daysText(selectedDays.toList()),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 12.dp)
@@ -513,7 +516,7 @@ fun EditCustomNotificationSheet(
                     enabled = title.isNotEmpty() && body.isNotEmpty(),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Kaydet", modifier = Modifier.padding(8.dp))
+                    Text(context.getString(com.alperen.spendcraft.R.string.save), modifier = Modifier.padding(8.dp))
                 }
             }
         }
@@ -530,6 +533,7 @@ private fun TimePickerCard(
     onMinuteChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -548,7 +552,7 @@ private fun TimePickerCard(
                 value = hour,
                 onValueChange = onHourChange,
                 range = 0..23,
-                label = "Saat"
+                label = context.getString(com.alperen.spendcraft.R.string.notification_time_hour)
             )
             
             Text(
@@ -562,7 +566,7 @@ private fun TimePickerCard(
                 value = minute,
                 onValueChange = onMinuteChange,
                 range = 0..59,
-                label = "Dakika"
+                label = context.getString(com.alperen.spendcraft.R.string.notification_time_minute)
             )
         }
     }

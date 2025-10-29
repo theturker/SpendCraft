@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reports_category_unknown">Unknown Category</string>
+    <string name="export_title">Export</string>
+    <string name="export_format_title">Download Format</string>
+    <string name="export_date_range_title">Date Range</string>
+    <string name="export_notification_title">Export</string>
+    <string name="export_notification_pdf_created">PDF created</string>
+    <string name="export_notification_created">File created</string>
+    <string name="export_success_message">Export successful</string>
+    <string name="export_format_not_supported">Unsupported format</string>
+    <string name="export_error_message">Error: %s</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="export_creating">Creating...</string>
+    <string name="export_download">Download</string>
+    <string name="reports_time_range_daily">Daily</string>
+    <string name="reports_time_range_weekly">Weekly</string>
+    <string name="reports_time_range_monthly">Monthly</string>
+    <string name="export_date_range_last_week">Last Week</string>
+    <string name="export_date_range_last_month">Last Month</string>
+    <string name="export_date_range_last_3_months">Last 3 Months</string>
+    <string name="export_date_range_last_year">Last Year</string>
+    <string name="export_date_range_custom">Custom</string>
+    <string name="export_format_csv_description">Comma-separated values</string>
+    <string name="export_format_pdf_description">Portable document format</string>
+    <string name="export_format_excel_description">Microsoft Excel format</string>
+    <string name="back">Back</string>
+</resources>

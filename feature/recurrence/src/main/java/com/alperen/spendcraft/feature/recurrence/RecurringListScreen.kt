@@ -47,6 +47,7 @@ fun RecurringListScreen(
     isPremium: Boolean,
     onBack: () -> Unit = {}
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val recurringTransactions by recurringTransactionsFlow.collectAsState(initial = emptyList())
     
     // Scroll behavior ekleyerek iOS gibi collapsible davranış sağlıyoruz
@@ -70,10 +71,10 @@ fun RecurringListScreen(
                     title = { Spacer(modifier = Modifier) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
-                            contentDescription = "Geri"
-                        )
+                            Icon(
+                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
+                                contentDescription = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.back)
+                            )
                     }
                 },
                 actions = {
@@ -81,7 +82,7 @@ fun RecurringListScreen(
                     IconButton(onClick = onAddRule) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Yeni Tekrarlayan İşlem Ekle"
+                            contentDescription = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_add)
                         )
                     }
                 },
@@ -104,7 +105,7 @@ fun RecurringListScreen(
                     }
                 ) {
                     Text(
-                        text = "Tekrarlayan İşlemler",
+                        text = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_title),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -144,14 +145,14 @@ fun RecurringListScreen(
                         )
                         
                         Text(
-                            text = "Henüz tekrarlayan işlem yok",
+                            text = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_empty_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         
                         Text(
-                            text = "Sağ üst köşedeki + butonuna basarak ekleyin",
+                            text = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_empty_description),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -177,6 +178,7 @@ private fun RecurringTransactionItem(
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     var showDeleteDialog by remember { mutableStateOf(false) }
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     
@@ -198,7 +200,7 @@ private fun RecurringTransactionItem(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "${transaction.amount} TL - ${getFrequencyDisplayName(transaction.frequency)}",
+                        text = "${transaction.amount} TL - ${getFrequencyDisplayName(context, transaction.frequency)}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -210,14 +212,14 @@ private fun RecurringTransactionItem(
                     IconButton(onClick = onEdit) {
                         Icon(
                             Icons.Default.Edit,
-                            contentDescription = "Düzenle",
+                            contentDescription = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_edit),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(
                             Icons.Default.Delete,
-                            contentDescription = "Sil",
+                            contentDescription = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_delete),
                             tint = MaterialTheme.colorScheme.error
                         )
                     }
@@ -232,7 +234,7 @@ private fun RecurringTransactionItem(
             ) {
                 Column {
                     Text(
-                        text = "Sonraki çalışma:",
+                        text = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_next_execution),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -246,7 +248,7 @@ private fun RecurringTransactionItem(
                 if (transaction.endDate != null) {
                     Column {
                         Text(
-                            text = "Bitiş:",
+                            text = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_end_date),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -272,7 +274,7 @@ private fun RecurringTransactionItem(
                     tint = if (transaction.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = if (transaction.isActive) "Aktif" else "Duraklatıldı",
+                    text = if (transaction.isActive) context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_active) else context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_paused),
                     style = MaterialTheme.typography.bodySmall,
                     color = if (transaction.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -283,8 +285,8 @@ private fun RecurringTransactionItem(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Tekrarlayan İşlemi Sil") },
-            text = { Text("Bu tekrarlayan işlemi silmek istediğinizden emin misiniz?") },
+            title = { Text(context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_delete_title)) },
+            text = { Text(context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_delete_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -292,26 +294,27 @@ private fun RecurringTransactionItem(
                         showDeleteDialog = false
                     }
                 ) {
-                    Text("Sil")
+                    Text(context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_delete))
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDeleteDialog = false }
                 ) {
-                    Text("İptal")
+                    Text(context.getString(com.alperen.spendcraft.feature.recurrence.R.string.cancel))
                 }
             }
         )
     }
 }
 
-private fun getFrequencyDisplayName(frequency: com.alperen.spendcraft.data.db.entities.RecurringFrequency): String {
+@Composable
+private fun getFrequencyDisplayName(context: android.content.Context, frequency: com.alperen.spendcraft.data.db.entities.RecurringFrequency): String {
     return when (frequency) {
-        com.alperen.spendcraft.data.db.entities.RecurringFrequency.DAILY -> "Günlük"
-        com.alperen.spendcraft.data.db.entities.RecurringFrequency.WEEKLY -> "Haftalık"
-        com.alperen.spendcraft.data.db.entities.RecurringFrequency.MONTHLY -> "Aylık"
-        com.alperen.spendcraft.data.db.entities.RecurringFrequency.YEARLY -> "Yıllık"
+        com.alperen.spendcraft.data.db.entities.RecurringFrequency.DAILY -> context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_frequency_daily)
+        com.alperen.spendcraft.data.db.entities.RecurringFrequency.WEEKLY -> context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_frequency_weekly)
+        com.alperen.spendcraft.data.db.entities.RecurringFrequency.MONTHLY -> context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_frequency_monthly)
+        com.alperen.spendcraft.data.db.entities.RecurringFrequency.YEARLY -> context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_frequency_yearly)
     }
 }
 

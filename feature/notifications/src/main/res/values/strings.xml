@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notifications_title">Bildirimler</string>
+    <string name="notifications_mark_all_read">Tümünü Okundu İşaretle</string>
+    <string name="notifications_no_notifications">Henüz bildirim yok</string>
+    <string name="notifications_no_notifications_description">Yeni bildirimler burada görünecek</string>
+    <string name="notifications_unread">Okunmamış (%d)</string>
+    <string name="notifications_read">Okunmuş</string>
+    <string name="notifications_delete_description">Bildirimi sil</string>
+    <string name="notifications_mark_read">Okundu işaretle</string>
+    <string name="delete">Sil</string>
+    <string name="back">Geri</string>
+</resources>

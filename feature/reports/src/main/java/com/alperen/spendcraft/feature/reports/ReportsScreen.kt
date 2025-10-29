@@ -55,7 +55,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 // Move enum to top-level to avoid compiler issues with local enums
-enum class TimeRange(val label: String) { DAILY("Günlük"), WEEKLY("Haftalık"), MONTHLY("Aylık") }
+enum class TimeRange(val labelResId: Int) { 
+    DAILY(com.alperen.spendcraft.feature.reports.R.string.reports_time_range_daily), 
+    WEEKLY(com.alperen.spendcraft.feature.reports.R.string.reports_time_range_weekly), 
+    MONTHLY(com.alperen.spendcraft.feature.reports.R.string.reports_time_range_monthly) 
+}
 
 @Composable
 fun ReportsScreen(
@@ -93,7 +97,7 @@ fun ReportsScreen(
         .groupBy { it.categoryId }
         .mapValues { (_, transactions) -> transactions.sumOf { it.amount.minorUnits } }
         .map { (categoryId, amount) ->
-            val categoryName = categories.find { it.id == categoryId }?.name ?: "Bilinmeyen Kategori"
+            val categoryName = categories.find { it.id == categoryId }?.name ?: context.getString(com.alperen.spendcraft.feature.reports.R.string.reports_category_unknown)
             Triple(categoryId, categoryName, amount)
         }
         .sortedByDescending { it.third }
@@ -115,7 +119,7 @@ fun ReportsScreen(
             IconButton(onClick = onExport) {
                 Icon(
                     Icons.Default.Share,
-                    contentDescription = "Raporu İndir"
+                    contentDescription = context.getString(com.alperen.spendcraft.feature.reports.R.string.export_title)
                 )
             }
         }
@@ -132,7 +136,7 @@ fun ReportsScreen(
                         FilterChip(
                             selected = range == r,
                             onClick = { range = r },
-                            label = { Text(r.label) }
+                            label = { Text(context.getString(r.labelResId)) }
                         )
                     }
                 }

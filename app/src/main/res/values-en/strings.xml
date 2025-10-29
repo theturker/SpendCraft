@@ -192,6 +192,231 @@
     <string name="achievement_desc_50_transactions">Record 50 transactions</string>
     <string name="points">Points</string>
     
+    <!-- Settings Screen Sections -->
+    <string name="settings_section_finance">Finance</string>
+    <string name="settings_accounts">Accounts</string>
+    <string name="settings_section_ai">🤖 Artificial Intelligence</string>
+    <string name="settings_ai_suggestions">AI Suggestions</string>
+    <string name="settings_section_features">Features</string>
+    <string name="settings_recurring_transactions">Recurring Transactions</string>
+    <string name="settings_achievements">Achievements</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notification_settings">Notification Settings</string>
+    <string name="settings_section_data_management">Data Management</string>
+    <string name="settings_export_import">Export/Import</string>
+    <string name="settings_section_app">App</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_total_transactions">Total Transactions</string>
+    <string name="settings_total_categories">Total Categories</string>
+    <string name="settings_select_theme">Select Theme</string>
+    <string name="language_turkish">Turkish</string>
+    <string name="language_english">English</string>
+    <string name="language_selection_title">Language Selection</string>
+    <string name="language_select_description">Select the language for the app</string>
+    <string name="language_back">Back</string>
+    <string name="settings_default_account">Default: %1$s • %2$s</string>
+    <string name="settings_currency">Currency: %1$s %2$s</string>
+    <string name="settings_currency_selected">Selected: %1$s %2$s</string>
+    <string name="currency_title">Currency</string>
+    <string name="settings_notifications_subtitle">Manage alerts</string>
+    <string name="settings_achievements_subtitle">Your badges</string>
+    <string name="settings_sharing">Sharing</string>
+    <string name="settings_sharing_subtitle">Family budget</string>
+    <string name="settings_ai_suggestions_subtitle">Insights</string>
+    
+    <!-- AI Profiling Survey -->
+    <string name="profiling_question_income_frequency">How often do you receive income?</string>
+    <string name="profiling_option_weekly">Weekly</string>
+    <string name="profiling_option_biweekly">Bi-weekly</string>
+    <string name="profiling_option_monthly">Monthly</string>
+    <string name="profiling_option_irregular">Irregular</string>
+    <string name="profiling_question_spending_habit">How is your spending habit?</string>
+    <string name="profiling_option_planned_spending">I spend planned</string>
+    <string name="profiling_option_impulse_spending">I make impulse decisions</string>
+    <string name="profiling_option_mixed">Mixed</string>
+    <string name="profiling_option_need_based">I spend when needed</string>
+    <string name="profiling_question_savings_goal">Do you have a savings goal?</string>
+    <string name="profiling_option_has_goal">Yes, I have a specific goal</string>
+    <string name="profiling_option_sometimes_save">Sometimes I save</string>
+    <string name="profiling_option_not_started">No, I haven\'t started yet</string>
+    <string name="profiling_option_struggling">I struggle to save</string>
+    <string name="profiling_question_biggest_expense">What do you spend most on?</string>
+    <string name="profiling_option_food_groceries">Food &amp; Groceries</string>
+    <string name="profiling_option_rent_bills">Rent &amp; Bills</string>
+    <string name="profiling_option_entertainment_social">Entertainment &amp; Social</string>
+    <string name="profiling_option_transportation">Transportation</string>
+    <string name="profiling_question_budget_management">How do you rate your budget management?</string>
+    <string name="profiling_option_very_good">Very good</string>
+    <string name="profiling_option_good">Good</string>
+    <string name="profiling_option_average">Average</string>
+    <string name="profiling_option_needs_improvement">Needs improvement</string>
+    <string name="profiling_question_financial_goal">What is your main financial goal?</string>
+    <string name="profiling_option_pay_debt">Pay off debt</string>
+    <string name="profiling_option_save_money">Save money</string>
+    <string name="profiling_option_invest">Invest</string>
+    <string name="profiling_option_balance_income_expense">Balance income and expenses</string>
+    <string name="profiling_question_debt_status">What is your debt situation?</string>
+    <string name="profiling_option_no_debt">No debt</string>
+    <string name="profiling_option_little_debt">Little debt</string>
+    <string name="profiling_option_moderate_debt">Moderate debt</string>
+    <string name="profiling_option_high_debt">High debt</string>
+    <string name="profiling_multiple_selection_hint">* You can select multiple options</string>
+    <string name="profiling_question_number">Question %1$d / %2$d</string>
+    <string name="profiling_next">Next</string>
+    <string name="profiling_finish">Finish</string>
+    <string name="profiling_completed">Profiling Completed!</string>
+    <string name="profiling_completed_description">Your answers will be used to personalize our AI recommendations.</string>
+    <string name="profiling_ok">OK</string>
+    <string name="close">Close</string>
+    
+    <!-- Tab Navigation -->
+    <string name="tab_home">Home</string>
+    <string name="tab_transactions">Transactions</string>
+    <string name="tab_reports">Reports</string>
+    <string name="tab_categories">Categories</string>
+    <string name="tab_settings">Settings</string>
+    
+    <!-- Notification Settings -->
+    <string name="notification_settings_title">Notification Settings</string>
+    <string name="notification_delete_title">Delete Notification</string>
+    <string name="notification_delete_message">Are you sure you want to delete this custom notification?</string>
+    <string name="notification_delete_button">Delete</string>
+    <string name="notification_back">Back</string>
+    <string name="notification_templates_title">Template Notifications (%1$d)</string>
+    <string name="notification_templates_description">You can activate template notification scenarios and adjust their times.</string>
+    <string name="notification_custom_title">My Custom Notifications (%1$d)</string>
+    <string name="notification_create">Create</string>
+    <string name="notification_title_label">Title</string>
+    <string name="notification_message_label">Message</string>
+    <string name="notification_time_hour">Hour</string>
+    <string name="notification_time_minute">Minute</string>
+    <string name="notification_edit_template">Edit Notification</string>
+    <string name="notification_settings_label">Settings</string>
+    <string name="notification_active">Active</string>
+    <string name="notification_custom_notification">Custom Notification</string>
+    <string name="notification_time">Time</string>
+    <string name="notification_repeat">Repeat</string>
+    <string name="notification_every_day">Every day</string>
+    <string name="notification_month_days_question">Which Days of the Month?</string>
+    
+    <!-- Notifications Screen -->
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_no_notifications">No Notifications</string>
+    <string name="notifications_no_notifications_description">You don\'t have any notifications yet</string>
+    <string name="notifications_unread">Unread (%1$d)</string>
+    <string name="notifications_read">Read</string>
+    <string name="notifications_mark_all_read">Mark All as Read</string>
+    <string name="notifications_mark_read">Mark as Read</string>
+    <string name="notifications_delete_description">Delete</string>
+    
+    <!-- Achievements Screen -->
+    <string name="achievements_title">Achievements</string>
+    <string name="achievements_close">Close</string>
+    <string name="achievements_progress">Progress</string>
+    
+    <!-- Reports Screen -->
+    <string name="reports_time_range_daily">Daily</string>
+    <string name="reports_time_range_weekly">Weekly</string>
+    <string name="reports_time_range_monthly">Monthly</string>
+    <string name="reports_category_unknown">Unknown Category</string>
+    <string name="reports_date_range_last_week">Last Week</string>
+    <string name="reports_date_range_last_month">Last Month</string>
+    <string name="reports_date_range_last_3_months">Last 3 Months</string>
+    <string name="reports_date_range_last_year">Last Year</string>
+    <string name="reports_date_range_custom">Custom Date Range</string>
+    
+    <!-- Category Management -->
+    <string name="categories_no_categories">No categories yet</string>
+    <string name="categories_start_adding">Start by adding your first category</string>
+    <string name="categories_add_new">Add New Category</string>
+    <string name="categories_delete_description">Delete</string>
+    
+    <!-- Accounts Screen -->
+    <string name="accounts_title">Accounts</string>
+    <string name="accounts_add">Add Account</string>
+    <string name="accounts_delete_description">Delete</string>
+    <string name="accounts_default">Default</string>
+    <string name="accounts_set_default">Set as Default</string>
+    <string name="accounts_add_new">New Account</string>
+    <string name="accounts_info_title">Account Information</string>
+    <string name="accounts_account_name_placeholder">Account Name</string>
+    <string name="accounts_account_type">Account Type</string>
+    <string name="account_type_cash">Cash</string>
+    <string name="account_type_bank">Bank</string>
+    <string name="account_type_credit_card">Credit Card</string>
+    <string name="account_type_savings">Savings</string>
+    <string name="accounts_currency">Currency</string>
+    
+    <!-- Currency Screen -->
+    <string name="currency_search_placeholder">Search currency...</string>
+    <string name="currency_search">Search</string>
+    <string name="currency_clear">Clear</string>
+    <string name="currency_available_title">Available Currencies</string>
+    
+    <!-- Recurring Transactions -->
+    <string name="recurring_title">Recurring Transactions</string>
+    <string name="recurring_add">Add New Recurring Transaction</string>
+    <string name="recurring_empty_title">No recurring transactions yet</string>
+    <string name="recurring_empty_description">Add a transaction to automate your periodic transactions</string>
+    <string name="recurring_active">Active</string>
+    <string name="recurring_inactive">Inactive</string>
+    <string name="recurring_paused">Paused</string>
+    <string name="recurring_next_execution">Next execution:</string>
+    <string name="recurring_frequency_daily">Daily</string>
+    <string name="recurring_frequency_weekly">Weekly</string>
+    <string name="recurring_frequency_monthly">Monthly</string>
+    <string name="recurring_frequency_yearly">Yearly</string>
+    <string name="recurring_edit">Edit</string>
+    <string name="recurring_delete">Delete</string>
+    <string name="recurring_delete_title">Delete Recurring Transaction</string>
+    <string name="recurring_delete_message">Are you sure you want to delete this recurring transaction?</string>
+    <string name="recurring_end_date">End Date:</string>
+    
+    <!-- Export Screen -->
+    <string name="export_title">Export</string>
+    <string name="export_format_title">Download Format</string>
+    <string name="export_format_csv_description">Comma-separated values</string>
+    <string name="export_format_pdf_description">Portable document format</string>
+    <string name="export_format_excel_description">Microsoft Excel format</string>
+    <string name="export_date_range_title">Date Range</string>
+    <string name="export_date_range_last_week">Last Week</string>
+    <string name="export_date_range_last_month">Last Month</string>
+    <string name="export_date_range_last_3_months">Last 3 Months</string>
+    <string name="export_date_range_last_year">Last Year</string>
+    <string name="export_date_range_custom">Custom Date Range</string>
+    <string name="export_creating">Creating…</string>
+    <string name="export_download">Download Report</string>
+    <string name="export_notification_title">Report Ready</string>
+    <string name="export_notification_pdf_created">PDF report created</string>
+    <string name="export_notification_created">Report created</string>
+    <string name="export_success_message">Report created successfully! You can save the file to the Downloads folder or share it with other apps from the sharing menu.</string>
+    <string name="export_format_not_supported">This format is not yet supported. Please use CSV format.</string>
+    <string name="export_error_message">Error while creating report: %1$s</string>
+    <string name="unknown_error">Unknown error</string>
+    
+    <!-- AI Suggestions -->
+    <string name="ai_suggestions_title">AI Suggestions</string>
+    <string name="ai_financial_advisor">AI Financial Advisor</string>
+    <string name="ai_subtitle">AI-powered personalized financial advice</string>
+    <string name="ai_select_advice_type">Select Advice Type</string>
+    <string name="ai_generating">Generating advice…</string>
+    <string name="ai_get_advice">Get AI Advice</string>
+    <string name="ai_advice_title">AI Advice</string>
+    <string name="ai_financial_summary">Financial Summary</string>
+    <string name="ai_income">Income</string>
+    <string name="ai_expense">Expense</string>
+    <string name="ai_balance">Balance</string>
+    <string name="ai_categories">Categories</string>
+    <string name="ai_advice_type_spending_analysis">Spending Analysis</string>
+    <string name="ai_advice_type_spending_analysis_desc">Analyzes your spending habits by category</string>
+    <string name="ai_advice_type_budget_optimization">Budget Optimization</string>
+    <string name="ai_advice_type_budget_optimization_desc">Provides recommendations to optimize your income-expense balance</string>
+    <string name="ai_advice_type_savings_advice">Savings Advice</string>
+    <string name="ai_advice_type_savings_advice_desc">Offers practical advice to save more money</string>
+    
+    <!-- Add Transaction -->
+    <string name="transaction_receipt_scan">Scan Receipt</string>
+    
     <!-- Transaction Filter -->
     <string name="transaction_filter_all">All</string>
     

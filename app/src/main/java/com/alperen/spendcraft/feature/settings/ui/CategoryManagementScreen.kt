@@ -26,6 +26,7 @@ fun CategoryManagementScreen(
     onDeleteCategory: (Long) -> Unit,
     onBack: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     var showAddDialog by remember { mutableStateOf(false) }
     var newCategoryName by remember { mutableStateOf("") }
     
@@ -90,13 +91,13 @@ fun CategoryManagementScreen(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "Henüz kategori yok",
+                                text = context.getString(com.alperen.spendcraft.R.string.categories_no_categories),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "İlk kategorinizi ekleyerek başlayın",
+                                text = context.getString(com.alperen.spendcraft.R.string.categories_start_adding),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -133,7 +134,7 @@ fun CategoryManagementScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
-                                    contentDescription = "Sil",
+                                    contentDescription = context.getString(com.alperen.spendcraft.R.string.categories_delete_description),
                                     tint = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -149,13 +150,13 @@ fun CategoryManagementScreen(
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
             title = {
-                Text("Yeni Kategori Ekle")
+                Text(context.getString(com.alperen.spendcraft.R.string.categories_add_new))
             },
             text = {
                 OutlinedTextField(
                     value = newCategoryName,
                     onValueChange = { newCategoryName = it },
-                    label = { Text("Kategori Adı") },
+                    label = { Text(context.getString(com.alperen.spendcraft.R.string.category_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     leadingIcon = {
                         Icon(Icons.Filled.AccountBox, contentDescription = null)
@@ -173,12 +174,12 @@ fun CategoryManagementScreen(
                     },
                     enabled = newCategoryName.isNotBlank()
                 ) {
-                    Text("Ekle")
+                    Text(context.getString(com.alperen.spendcraft.R.string.add))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddDialog = false }) {
-                    Text("İptal")
+                    Text(context.getString(com.alperen.spendcraft.R.string.cancel))
                 }
             }
         )

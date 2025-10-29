@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recurring_title">Tekrarlayan İşlemler</string>
+    <string name="recurring_add">Yeni Tekrarlayan İşlem Ekle</string>
+    <string name="recurring_empty_title">Henüz tekrarlayan işlem yok</string>
+    <string name="recurring_empty_description">Sağ üst köşedeki + butonuna basarak ekleyin</string>
+    <string name="recurring_edit">Düzenle</string>
+    <string name="recurring_delete">Sil</string>
+    <string name="recurring_next_run">Sonraki çalışma:</string>
+    <string name="recurring_active">Aktif</string>
+    <string name="recurring_paused">Duraklatıldı</string>
+    <string name="recurring_delete_confirm_title">Tekrarlayan İşlemi Sil</string>
+    <string name="recurring_delete_confirm_message">Bu tekrarlayan işlemi silmek istediğinizden emin misiniz?</string>
+    <string name="recurring_delete_confirm_button">Sil</string>
+    <string name="recurring_delete_cancel_button">İptal</string>
+    <string name="recurring_frequency_daily">Günlük</string>
+    <string name="recurring_frequency_weekly">Haftalık</string>
+    <string name="recurring_frequency_monthly">Aylık</string>
+    <string name="recurring_frequency_yearly">Yıllık</string>
+    <string name="recurring_next_execution">Sonraki çalışma:</string>
+    <string name="recurring_end_date">Bitiş tarihi:</string>
+    <string name="recurring_delete_title">Tekrarlayan İşlemi Sil</string>
+    <string name="recurring_delete_message">Bu tekrarlayan işlemi silmek istediğinizden emin misiniz?</string>
+    <string name="cancel">İptal</string>
+    <string name="back">Geri</string>
+</resources>

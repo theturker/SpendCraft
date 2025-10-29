@@ -62,12 +62,12 @@ fun NotificationSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Bildirim Ayarları") },
+                title = { Text(context.getString(com.alperen.spendcraft.R.string.notification_settings_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(id = CoreR.drawable.ic_chevron_left),
-                            contentDescription = "Geri"
+                            contentDescription = context.getString(com.alperen.spendcraft.R.string.notification_back)
                         )
                     }
                 },
@@ -92,7 +92,7 @@ fun NotificationSettingsScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Hazır Bildirimler (${templates.size})",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_templates_title, templates.size),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -118,7 +118,7 @@ fun NotificationSettingsScreen(
             // Footer for templates
             item {
                 Text(
-                    text = "Hazır bildirim senaryolarını aktifleştirip saatlerini düzenleyebilirsiniz.",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_templates_description),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -129,7 +129,7 @@ fun NotificationSettingsScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Özel Bildirimlerim (${customNotifications.size})",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_custom_title, customNotifications.size),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -394,6 +394,7 @@ private fun CustomNotificationRow(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     var showDeleteConfirm by remember { mutableStateOf(false) }
     
     Surface(
@@ -453,19 +454,19 @@ private fun CustomNotificationRow(
     if (showDeleteConfirm) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
-            title = { Text("Bildirimi Sil") },
-            text = { Text("Bu özel bildirimi silmek istediğinizden emin misiniz?") },
+            title = { Text(context.getString(com.alperen.spendcraft.R.string.notification_delete_title)) },
+            text = { Text(context.getString(com.alperen.spendcraft.R.string.notification_delete_message)) },
             confirmButton = {
                 TextButton(onClick = {
                     onDelete()
                     showDeleteConfirm = false
                 }) {
-                    Text("Sil", color = IOSColors.Red)
+                    Text(context.getString(com.alperen.spendcraft.R.string.notification_delete_button), color = IOSColors.Red)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirm = false }) {
-                    Text("İptal")
+                    Text(context.getString(com.alperen.spendcraft.R.string.cancel))
                 }
             }
         )

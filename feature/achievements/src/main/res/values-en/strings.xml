@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="achievements_title">Achievements</string>
+    <string name="achievements_close">Close</string>
+    <string name="achievements_progress">Progress</string>
+    <string name="back">Back</string>
+    <string name="achievement_first_step">First Step</string>
+    <string name="achievement_first_step_desc">You recorded your first transaction</string>
+    <string name="achievement_transaction_master">Transaction Master</string>
+    <string name="achievement_transaction_master_desc">You recorded 100 transactions</string>
+    <string name="achievement_record_champion">Record Champion</string>
+    <string name="achievement_record_champion_desc">You recorded 1000 transactions</string>
+    <string name="achievement_week_warrior">Week Warrior</string>
+    <string name="achievement_week_warrior_desc">You recorded transactions for 7 consecutive days</string>
+    <string name="achievement_month_king">Month King</string>
+    <string name="achievement_month_king_desc">You recorded transactions for 30 consecutive days</string>
+    <string name="achievement_budget_planner">Budget Planner</string>
+    <string name="achievement_budget_planner_desc">You created your first budget</string>
+    <string name="achievement_budget_guardian">Budget Guardian</string>
+    <string name="achievement_budget_guardian_desc">You didn\'t exceed your budget for 3 consecutive months</string>
+    <string name="achievement_savings_beginner">Savings Beginner</string>
+    <string name="achievement_savings_beginner_desc">For the first time monthly income > expenses</string>
+    <string name="achievement_savings_master">Savings Master</string>
+    <string name="achievement_savings_master_desc">You saved money for 6 consecutive months</string>
+    <string name="achievement_premium_member">Premium Member</string>
+    <string name="achievement_premium_member_desc">You upgraded to premium membership</string>
+    <string name="achievement_ai_explorer">AI Explorer</string>
+    <string name="achievement_ai_explorer_desc">You used AI recommendations 10 times</string>
+    <string name="achievements_count">%1$d / %2$d Achievements</string>
+    <string name="achievement_completed">Completed!</string>
+    <string name="achievement_earned_points">You earned %1$s!</string>
+    <string name="achievement_progress_percent">%1$d%% Completed</string>
+    <string name="achievement_will_earn">You will earn: %1$s</string>
+    <string name="points">Points</string>
+    <string name="achievement_remaining">Remaining: %1$d</string>
+</resources>

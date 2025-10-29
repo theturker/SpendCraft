@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import com.alperen.spendcraft.ui.components.PrimaryButtonIOS
 import com.alperen.spendcraft.ui.icons.SFSymbols
 import com.alperen.spendcraft.ui.iosTheme.*
@@ -80,15 +81,51 @@ fun UserProfilingScreen(
     var currentPage by remember { mutableIntStateOf(0) }
     val answers = remember { mutableStateMapOf<String, List<String>>() }
     
+    val context = LocalContext.current
     val questions = remember {
         listOf(
-            ProfilingQuestion("income_frequency", "Geliriniz ne sıklıkta oluyor?", listOf("Haftalık", "2 Haftada bir", "Aylık", "Düzensiz")),
-            ProfilingQuestion("spending_habit", "Harcama alışkanlığınız nasıl?", listOf("Planlı harcıyorum", "Anlık kararlar alırım", "Karışık", "İhtiyaç olunca harcıyorum")),
-            ProfilingQuestion("savings_goal", "Tasarruf hedefiniz var mı?", listOf("Evet, belirli bir hedefim var", "Bazen tasarruf yaparım", "Hayır, henüz başlamadım", "Tasarruf yapmakta zorlanıyorum")),
-            ProfilingQuestion("biggest_expense", "En çok neye harcama yapıyorsunuz?", listOf("Yemek & Market", "Kira & Faturalar", "Eğlence & Sosyal", "Ulaşım")),
-            ProfilingQuestion("budget_management", "Bütçe yönetiminizi nasıl değerlendirirsiniz?", listOf("Çok iyi", "İyi", "Orta", "Geliştirilmeli")),
-            ProfilingQuestion("financial_goal", "Ana finansal hedefiniz nedir?", listOf("Borç ödemek", "Tasarruf yapmak", "Yatırım yapmak", "Gelir-gider dengesini sağlamak")),
-            ProfilingQuestion("debt_status", "Borç durumunuz nasıl?", listOf("Borcum yok", "Az borcum var", "Orta seviye borcum var", "Yüksek borcum var"))
+            ProfilingQuestion("income_frequency", context.getString(com.alperen.spendcraft.R.string.profiling_question_income_frequency), listOf(
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_weekly),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_biweekly),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_monthly),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_irregular)
+            )),
+            ProfilingQuestion("spending_habit", context.getString(com.alperen.spendcraft.R.string.profiling_question_spending_habit), listOf(
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_planned_spending),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_impulse_spending),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_mixed),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_need_based)
+            )),
+            ProfilingQuestion("savings_goal", context.getString(com.alperen.spendcraft.R.string.profiling_question_savings_goal), listOf(
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_has_goal),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_sometimes_save),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_not_started),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_struggling)
+            )),
+            ProfilingQuestion("biggest_expense", context.getString(com.alperen.spendcraft.R.string.profiling_question_biggest_expense), listOf(
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_food_groceries),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_rent_bills),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_entertainment_social),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_transportation)
+            )),
+            ProfilingQuestion("budget_management", context.getString(com.alperen.spendcraft.R.string.profiling_question_budget_management), listOf(
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_very_good),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_good),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_average),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_needs_improvement)
+            )),
+            ProfilingQuestion("financial_goal", context.getString(com.alperen.spendcraft.R.string.profiling_question_financial_goal), listOf(
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_pay_debt),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_save_money),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_invest),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_balance_income_expense)
+            )),
+            ProfilingQuestion("debt_status", context.getString(com.alperen.spendcraft.R.string.profiling_question_debt_status), listOf(
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_no_debt),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_little_debt),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_moderate_debt),
+                context.getString(com.alperen.spendcraft.R.string.profiling_option_high_debt)
+            ))
         )
     }
     
@@ -104,7 +141,7 @@ fun UserProfilingScreen(
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = "Kapat",
+                            contentDescription = context.getString(com.alperen.spendcraft.R.string.close),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -195,6 +232,7 @@ private fun QuestionView(
     isLastQuestion: Boolean,
     isAnswered: Boolean
 ) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -211,7 +249,7 @@ private fun QuestionView(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Soru ${questionIndex + 1} / $totalQuestions",
+                    text = context.getString(com.alperen.spendcraft.R.string.profiling_question_number, questionIndex + 1, totalQuestions),
                     style = MaterialTheme.typography.labelSmall,  // iOS: .caption
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -277,7 +315,7 @@ private fun QuestionView(
             
             // Multiple selection hint - iOS: .caption, white.opacity(0.7)
             Text(
-                text = "* Birden fazla seçenek işaretleyebilirsiniz",
+                text = context.getString(com.alperen.spendcraft.R.string.profiling_multiple_selection_hint),
                 style = MaterialTheme.typography.labelSmall,  // iOS: .caption
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 modifier = Modifier.padding(top = 4.dp)
@@ -339,7 +377,7 @@ private fun QuestionView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (isLastQuestion) "Bitir" else "İleri",
+                        text = if (isLastQuestion) context.getString(com.alperen.spendcraft.R.string.profiling_finish) else context.getString(com.alperen.spendcraft.R.string.profiling_next),
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.White.copy(alpha = if (isAnswered) 1f else 0.6f)
@@ -383,7 +421,7 @@ private fun OptionCard(
             text = text,
             fontSize = 17.sp,  // iOS: .body
             fontWeight = FontWeight.Medium,
-            color = Color.White
+            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface
         )
         
         // Checkmark icon - iOS: checkmark.circle.fill / circle
@@ -401,6 +439,7 @@ private fun SummaryView(
     onComplete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     // Animated checkmark scale
     var isVisible by remember { mutableStateOf(false) }
     
@@ -439,7 +478,7 @@ private fun SummaryView(
         
         // Title - iOS: .largeTitle, .bold
         Text(
-            text = "Profilleme Tamamlandı!",
+            text = context.getString(com.alperen.spendcraft.R.string.profiling_completed),
             fontSize = 34.sp,  // iOS: .largeTitle
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -450,7 +489,7 @@ private fun SummaryView(
         
         // Description - iOS: .body, .secondary
         Text(
-            text = "Cevaplarınız AI önerilerimizi kişiselleştirmek için kullanılacak.",
+            text = context.getString(com.alperen.spendcraft.R.string.profiling_completed_description),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -460,7 +499,7 @@ private fun SummaryView(
         
         // Complete button - iOS: purple, 12dp corners
         PrimaryButtonIOS(
-            text = "Tamam",
+            text = context.getString(com.alperen.spendcraft.R.string.profiling_ok),
             onClick = onComplete,
             modifier = Modifier.fillMaxWidth()
         )

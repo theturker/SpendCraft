@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +36,7 @@ fun IOSAccountsScreen(
     onSetDefaultAccount: (com.alperen.spendcraft.data.db.entities.AccountEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     var showAddAccountDialog by remember { mutableStateOf(false) }
     
     Scaffold(
@@ -42,7 +44,7 @@ fun IOSAccountsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Hesaplar",
+                        text = context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_title),
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
@@ -50,7 +52,7 @@ fun IOSAccountsScreen(
                     IconButton(onClick = { showAddAccountDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Hesap Ekle"
+                            contentDescription = context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_add)
                         )
                     }
                 },
@@ -96,6 +98,7 @@ private fun AccountRow(
     onSetDefault: () -> Unit,
     onDelete: () -> Unit
 ) {
+    val context = LocalContext.current
     val dismissState = rememberSwipeToDismissBoxState()
     
     SwipeToDismissBox(
@@ -110,7 +113,7 @@ private fun AccountRow(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Sil",
+                    contentDescription = context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_delete_description),
                     tint = Color.White
                 )
             }
@@ -150,7 +153,7 @@ private fun AccountRow(
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
-                                text = "Varsayılan",
+                                text = context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_default),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = IOSColors.Blue,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -168,29 +171,30 @@ private fun AddAccountDialog(
     onDismiss: () -> Unit,
     onSave: (name: String, type: String, currency: String) -> Unit
 ) {
+    val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var selectedType by remember { mutableStateOf("CASH") }
     var selectedCurrency by remember { mutableStateOf("TRY") }
     
     val accountTypes = listOf(
-        "CASH" to "Nakit",
-        "BANK" to "Banka",
-        "CREDIT_CARD" to "Kredi Kartı",
-        "SAVINGS" to "Tasarruf"
+        "CASH" to context.getString(com.alperen.spendcraft.feature.accounts.R.string.account_type_cash),
+        "BANK" to context.getString(com.alperen.spendcraft.feature.accounts.R.string.account_type_bank),
+        "CREDIT_CARD" to context.getString(com.alperen.spendcraft.feature.accounts.R.string.account_type_credit_card),
+        "SAVINGS" to context.getString(com.alperen.spendcraft.feature.accounts.R.string.account_type_savings)
     )
     
     val currencies = listOf("TRY", "USD", "EUR")
     
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Yeni Hesap") },
+        title = { Text(context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_add_new)) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Name Field
                 Text(
-                    text = "Hesap Bilgileri",
+                    text = context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_info_title),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -198,14 +202,14 @@ private fun AddAccountDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    placeholder = { Text("Hesap Adı") },
+                    placeholder = { Text(context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_account_name_placeholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
                 
                 // Account Type
                 Text(
-                    text = "Hesap Tipi",
+                    text = context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_account_type),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
@@ -243,7 +247,7 @@ private fun AddAccountDialog(
                 
                 // Currency
                 Text(
-                    text = "Para Birimi",
+                    text = context.getString(com.alperen.spendcraft.feature.accounts.R.string.accounts_currency),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
@@ -282,14 +286,14 @@ private fun AddAccountDialog(
                 enabled = name.isNotEmpty(),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Kaydet")
+                    Text(context.getString(com.alperen.spendcraft.feature.accounts.R.string.save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(context.getString(com.alperen.spendcraft.feature.accounts.R.string.cancel))
+                }
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("İptal")
-            }
-        }
     )
 }
 

@@ -270,37 +270,41 @@ data class LiquidGlassNavItem(
 
 /**
  * Standard 5-tab setup for Paratik
+ * Note: Titles should be provided dynamically via context.getString() in Composable
  */
-val paratikBottomNavItems = listOf(
-    LiquidGlassNavItem(
-        route = "home",
-        title = "Ana Sayfa",
-        icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.HouseOutline,
-        selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.HouseFill
-    ),
-    LiquidGlassNavItem(
-        route = "transactions",
-        title = "İşlemler",
-        icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.ListBullet,
-        selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.ListBullet
-    ),
-    LiquidGlassNavItem(
-        route = "reports",
-        title = "Raporlar",
-        icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.ChartBarOutline,
-        selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.ChartBarFill
-    ),
-    LiquidGlassNavItem(
-        route = "categories",
-        title = "Kategoriler",
-        icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.FolderFill,
-        selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.FolderFill
-    ),
-    LiquidGlassNavItem(
-        route = "settings",
-        title = "Ayarlar",
-        icon = androidx.compose.material.icons.Icons.Outlined.Settings,
-        selectedIcon = androidx.compose.material.icons.Icons.Filled.Settings
+@Composable
+fun getParatikBottomNavItems(context: android.content.Context): List<LiquidGlassNavItem> {
+    return listOf(
+        LiquidGlassNavItem(
+            route = "home",
+            title = context.getString(com.alperen.spendcraft.R.string.tab_home),
+            icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.HouseOutline,
+            selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.HouseFill
+        ),
+        LiquidGlassNavItem(
+            route = "transactions",
+            title = context.getString(com.alperen.spendcraft.R.string.tab_transactions),
+            icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.ListBullet,
+            selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.ListBullet
+        ),
+        LiquidGlassNavItem(
+            route = "reports",
+            title = context.getString(com.alperen.spendcraft.R.string.tab_reports),
+            icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.ChartBarOutline,
+            selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.ChartBarFill
+        ),
+        LiquidGlassNavItem(
+            route = "categories",
+            title = context.getString(com.alperen.spendcraft.R.string.tab_categories),
+            icon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.FolderFill,
+            selectedIcon = com.alperen.spendcraft.ui.icons.SFSymbolsTabBar.FolderFill
+        ),
+        LiquidGlassNavItem(
+            route = "settings",
+            title = context.getString(com.alperen.spendcraft.R.string.tab_settings),
+            icon = androidx.compose.material.icons.Icons.Outlined.Settings,
+            selectedIcon = androidx.compose.material.icons.Icons.Filled.Settings
+        )
     )
-)
+}
 

@@ -94,13 +94,13 @@ fun IOSAddTransactionScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Yeni İşlem",
+                        text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.add_transaction),
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
                 navigationIcon = {
                     TextButton(onClick = onDismiss) {
-                        Text("İptal")
+                        Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.cancel))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -131,7 +131,7 @@ fun IOSAddTransactionScreen(
             
             // 2. Amount Section
             item {
-                FormSection(title = "Miktar") {
+                FormSection(title = context.getString(com.alperen.spendcraft.feature.transactions.R.string.amount)) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -245,7 +245,7 @@ fun IOSAddTransactionScreen(
                             .padding(horizontal = 16.dp, vertical = 4.dp)
                     ) {
                         OutlinedTextField(
-                            value = selectedAccount?.name ?: "Hesap Seç",
+                            value = selectedAccount?.name ?: context.getString(com.alperen.spendcraft.feature.transactions.R.string.select_account),
                             onValueChange = {},
                             readOnly = true,
                             trailingIcon = {
@@ -293,10 +293,10 @@ fun IOSAddTransactionScreen(
                                                 )
                                                 Text(
                                                     text = when (account.type) {
-                                                        "CASH" -> "Nakit"
-                                                        "BANK" -> "Banka"
-                                                        "CREDIT_CARD" -> "Kredi Kartı"
-                                                        "SAVINGS" -> "Tasarruf"
+                                                        "CASH" -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.account_type_cash)
+                                                        "BANK" -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.account_type_bank)
+                                                        "CREDIT_CARD" -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.account_type_credit_card)
+                                                        "SAVINGS" -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.account_type_savings)
                                                         else -> account.type
                                                     },
                                                     style = MaterialTheme.typography.bodySmall,
@@ -307,7 +307,7 @@ fun IOSAddTransactionScreen(
                                             if (account.isDefault) {
                                                 Icon(
                                                     painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill),
-                                                    contentDescription = "Varsayılan",
+                                                    contentDescription = context.getString(com.alperen.spendcraft.feature.transactions.R.string.default_account),
                                                     tint = Color(0xFFFFD700),
                                                     modifier = Modifier.size(16.dp)
                                                 )
@@ -354,11 +354,11 @@ fun IOSAddTransactionScreen(
             
             // 6. Note Section
             item {
-                FormSection(title = "Not") {
+                FormSection(title = context.getString(com.alperen.spendcraft.feature.transactions.R.string.note)) {
                     OutlinedTextField(
                         value = note,
                         onValueChange = { note = it },
-                        placeholder = { Text("İsteğe bağlı not") },
+                        placeholder = { Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.note_placeholder)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -382,7 +382,7 @@ fun IOSAddTransactionScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Tekrarlayan İşlem",
+                            text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.recurring_transaction),
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Switch(
@@ -406,18 +406,18 @@ fun IOSAddTransactionScreen(
                         ) {
                             OutlinedTextField(
                                 value = when (recurringFrequency) {
-                                    "DAILY" -> "Günlük"
-                                    "WEEKLY" -> "Haftalık"
-                                    "MONTHLY" -> "Aylık"
-                                    "YEARLY" -> "Yıllık"
-                                    else -> "Aylık"
+                                    "DAILY" -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_daily)
+                                    "WEEKLY" -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_weekly)
+                                    "MONTHLY" -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_monthly)
+                                    "YEARLY" -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_yearly)
+                                    else -> context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_monthly)
                                 },
                                 onValueChange = {},
                                 readOnly = true,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .menuAnchor(),
-                                label = { Text("Tekrarlama Sıklığı") },
+                                label = { Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.recurring_frequency)) },
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedFreq) },
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = Color.Transparent,
@@ -430,10 +430,10 @@ fun IOSAddTransactionScreen(
                                 onDismissRequest = { expandedFreq = false }
                             ) {
                                 listOf(
-                                    "DAILY" to "Günlük",
-                                    "WEEKLY" to "Haftalık",
-                                    "MONTHLY" to "Aylık",
-                                    "YEARLY" to "Yıllık"
+                                    "DAILY" to context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_daily),
+                                    "WEEKLY" to context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_weekly),
+                                    "MONTHLY" to context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_monthly),
+                                    "YEARLY" to context.getString(com.alperen.spendcraft.feature.transactions.R.string.frequency_yearly)
                                 ).forEach { (key, label) ->
                                     DropdownMenuItem(
                                         text = { Text(label) },
@@ -517,12 +517,12 @@ fun IOSAddTransactionScreen(
                         }
                         showTimePicker = true  // Move to time picker
                     }) {
-                        Text("İleri")
+                        Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.next))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDatePicker = false }) {
-                        Text("İptal")
+                        Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.cancel))
                     }
                 }
             ) {
@@ -535,7 +535,7 @@ fun IOSAddTransactionScreen(
                     showDatePicker = false
                     showTimePicker = false
                 },
-                title = { Text("Saat Seç") },
+                title = { Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.select_time)) },
                 text = {
                     TimePicker(state = timePickerState)
                 },
@@ -557,7 +557,7 @@ fun IOSAddTransactionScreen(
                         showDatePicker = false
                         showTimePicker = false
                     }) {
-                        Text("İptal")
+                        Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.cancel))
                     }
                 }
             )
@@ -609,6 +609,7 @@ internal fun SegmentedControl(
     onSelectionChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -619,7 +620,7 @@ internal fun SegmentedControl(
     ) {
         // Gider
         SegmentedButton(
-            text = "Gider",
+            text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.transaction_filter_expense),
             isSelected = !selectedIsIncome,
             onClick = { onSelectionChange(false) },
             modifier = Modifier.weight(1f)
@@ -627,7 +628,7 @@ internal fun SegmentedControl(
         
         // Gelir
         SegmentedButton(
-            text = "Gelir",
+            text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.transaction_filter_income),
             isSelected = selectedIsIncome,
             onClick = { onSelectionChange(true) },
             modifier = Modifier.weight(1f)
@@ -817,10 +818,11 @@ private fun getCategoryIconResource(icon: String): Int {
 @Preview(name = "Add Transaction - Expense")
 @Composable
 private fun IOSAddTransactionScreenPreview() {
+    val context = LocalContext.current
     IOSAddTransactionScreen(
         categories = listOf(
             Category(id = 1, name = "Yemek", color = "#FF9500", icon = "fork.knife"),
-            Category(id = 2, name = "Ulaşım", color = "#007AFF", icon = "car.fill")
+            Category(id = 2, name = context.getString(com.alperen.spendcraft.feature.transactions.R.string.category_transport), color = "#007AFF", icon = "car.fill")
         ),
         accounts = listOf(
             AccountEntity(id = 1, name = "Nakit", type = "CASH", currency = "TRY"),

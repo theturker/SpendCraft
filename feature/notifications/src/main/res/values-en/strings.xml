@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_mark_all_read">Mark All as Read</string>
+    <string name="notifications_no_notifications">No notifications yet</string>
+    <string name="notifications_no_notifications_description">New notifications will appear here</string>
+    <string name="notifications_unread">Unread (%d)</string>
+    <string name="notifications_read">Read</string>
+    <string name="notifications_delete_description">Delete notification</string>
+    <string name="notifications_mark_read">Mark as read</string>
+    <string name="delete">Delete</string>
+    <string name="back">Back</string>
+</resources>

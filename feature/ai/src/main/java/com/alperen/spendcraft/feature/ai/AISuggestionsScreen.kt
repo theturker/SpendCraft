@@ -121,7 +121,7 @@ fun AISuggestionsScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
-                            contentDescription = "Geri"
+                            contentDescription = context.getString(com.alperen.spendcraft.feature.ai.R.string.back)
                         )
                     }
                 },
@@ -144,7 +144,7 @@ fun AISuggestionsScreen(
                     }
                 ) {
                     Text(
-                        text = "AI Önerileri",
+                        text = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_suggestions_title),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -196,14 +196,14 @@ fun AISuggestionsScreen(
                         )
                         
                         Text(
-                            text = "AI Finansal Danışman",
+                            text = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_financial_advisor),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center
                         )
                         
                         Text(
-                            text = "Yapay zeka destekli kişiselleştirilmiş finansal öneriler",
+                            text = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
@@ -220,7 +220,7 @@ fun AISuggestionsScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = "Öneri Türü Seçin",
+                            text = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_select_advice_type),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -302,7 +302,7 @@ fun AISuggestionsScreen(
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = if (isLoading) "Öneri oluşturuluyor..." else "AI Önerisi Al",
+                            text = if (isLoading) context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_generating) else context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_get_advice),
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White
                         )
@@ -335,7 +335,7 @@ fun AISuggestionsScreen(
                                         modifier = Modifier.size(24.dp)
                                     )
                                     Text(
-                                        text = "AI Önerisi",
+                                        text = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_advice_title),
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -390,7 +390,7 @@ fun AISuggestionsScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = "Finansal Durum Özeti",
+                            text = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_financial_summary),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -401,7 +401,7 @@ fun AISuggestionsScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             FinancialStatCard(
-                                title = "Gelir",
+                                title = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_income),
                                 value = "₺${income / 100}",
                                 icon = com.alperen.spendcraft.core.ui.R.drawable.ic_arrow_down_circle_fill,
                                 color = IOSColors.Green,
@@ -409,7 +409,7 @@ fun AISuggestionsScreen(
                             )
                             
                             FinancialStatCard(
-                                title = "Gider",
+                                title = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_expense),
                                 value = "₺${expenses / 100}",
                                 icon = com.alperen.spendcraft.core.ui.R.drawable.ic_arrow_up_circle_fill,
                                 color = IOSColors.Red,
@@ -423,7 +423,7 @@ fun AISuggestionsScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             FinancialStatCard(
-                                title = "Bakiye",
+                                title = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_balance),
                                 value = "₺${(income - expenses) / 100}",
                                 icon = com.alperen.spendcraft.core.ui.R.drawable.ic_banknote,
                                 color = IOSColors.Blue,
@@ -431,7 +431,7 @@ fun AISuggestionsScreen(
                             )
                             
                             FinancialStatCard(
-                                title = "Kategori",
+                                title = context.getString(com.alperen.spendcraft.feature.ai.R.string.ai_categories),
                                 value = "${categoryBreakdown.size}",
                                 icon = com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill,
                                 color = IOSColors.Orange,
@@ -453,6 +453,7 @@ private fun IOSAdviceTypeCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val gradientColors = when (adviceType) {
         AdviceType.SPENDING_ANALYSIS -> listOf(IOSColors.Blue, IOSColors.Purple)
         AdviceType.BUDGET_OPTIMIZATION -> listOf(IOSColors.Green, IOSColors.Blue)
@@ -513,13 +514,13 @@ private fun IOSAdviceTypeCard(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = adviceType.title,
+                    text = context.getString(adviceType.titleResId),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 
                 Text(
-                    text = adviceType.description,
+                    text = context.getString(adviceType.descriptionResId),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2
@@ -584,20 +585,20 @@ private fun FinancialStatCard(
 }
 
 enum class AdviceType(
-    val title: String,
-    val description: String
+    val titleResId: Int,
+    val descriptionResId: Int
 ) {
     SPENDING_ANALYSIS(
-        "Harcama Analizi",
-        "Kategori bazında harcama alışkanlıklarınızı analiz eder"
+        com.alperen.spendcraft.feature.ai.R.string.ai_advice_type_spending_analysis,
+        com.alperen.spendcraft.feature.ai.R.string.ai_advice_type_spending_analysis_desc
     ),
     BUDGET_OPTIMIZATION(
-        "Bütçe Optimizasyonu",
-        "Gelir-gider dengesini optimize etmek için öneriler verir"
+        com.alperen.spendcraft.feature.ai.R.string.ai_advice_type_budget_optimization,
+        com.alperen.spendcraft.feature.ai.R.string.ai_advice_type_budget_optimization_desc
     ),
     SAVINGS_ADVICE(
-        "Tasarruf Önerileri",
-        "Daha fazla tasarruf yapmak için pratik öneriler sunar"
+        com.alperen.spendcraft.feature.ai.R.string.ai_advice_type_savings_advice,
+        com.alperen.spendcraft.feature.ai.R.string.ai_advice_type_savings_advice_desc
     )
 }
 

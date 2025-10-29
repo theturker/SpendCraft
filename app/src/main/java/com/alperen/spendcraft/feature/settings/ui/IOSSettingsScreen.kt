@@ -144,7 +144,7 @@ fun IOSSettingsScreen(
                     }
                 ) {
                     Text(
-                        text = "Ayarlar",
+                        text = context.getString(com.alperen.spendcraft.R.string.settings),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -248,14 +248,14 @@ fun IOSSettingsScreen(
             
             // 2. Finans Section - iOS Grouped List Style
             item {
-                SettingsSectionHeader(title = "Finans")
+                SettingsSectionHeader(title = context.getString(com.alperen.spendcraft.R.string.settings_section_finance))
             }
             
             item {
                 SettingsListItem(
                     icon = CoreR.drawable.ic_creditcard_fill,
                     iconColor = IOSColors.Blue,
-                    title = "Hesaplar",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_accounts),
                     position = ListItemPosition.First,
                     onClick = onNavigateToAccounts
                 )
@@ -269,7 +269,7 @@ fun IOSSettingsScreen(
                 SettingsListItem(
                     icon = CoreR.drawable.ic_monetization_on_vector,
                     iconColor = IOSColors.Green,
-                    title = "Para Birimi",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_currency),
                     subtitle = selectedCurrency,
                     position = ListItemPosition.Last,
                     onClick = onNavigateToCurrencySettings
@@ -280,14 +280,14 @@ fun IOSSettingsScreen(
             
             // 3. Yapay Zeka Section
             item {
-                SettingsSectionHeader(title = "🤖 Yapay Zeka")
+                SettingsSectionHeader(title = context.getString(com.alperen.spendcraft.R.string.settings_section_ai))
             }
             
             item {
                 SettingsListItem(
                     icon = CoreR.drawable.ic_sparkles,
                     iconColor = IOSColors.Purple,
-                    title = "AI Önerileri",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_ai_suggestions),
                     onClick = onNavigateToAISuggestions
                 )
             }
@@ -296,14 +296,14 @@ fun IOSSettingsScreen(
             
             // 4. Özellikler Section - iOS Grouped List
             item {
-                SettingsSectionHeader(title = "Özellikler")
+                SettingsSectionHeader(title = context.getString(com.alperen.spendcraft.R.string.settings_section_features))
             }
             
             item {
                 SettingsListItem(
                     icon = CoreR.drawable.ic_repeat_circle_fill,
                     iconColor = IOSColors.Orange,
-                    title = "Tekrarlayan İşlemler",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_recurring_transactions),
                     position = ListItemPosition.First,
                     onClick = onNavigateToRecurring
                 )
@@ -317,7 +317,7 @@ fun IOSSettingsScreen(
                 SettingsListItem(
                     icon = CoreR.drawable.ic_trophy_fill,
                     iconColor = IOSColors.Yellow,
-                    title = "Başarılar",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_achievements),
                     subtitle = "$totalPoints",
                     position = ListItemPosition.Middle,
                     onClick = onNavigateToAchievements
@@ -332,7 +332,7 @@ fun IOSSettingsScreen(
                 SettingsListItem(
                     icon = CoreR.drawable.ic_bell_fill,
                     iconColor = IOSColors.Red,
-                    title = "Bildirimler",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_notifications),
                     badgeCount = if (unreadCount > 0) unreadCount else null,
                     position = ListItemPosition.Middle,
                     onClick = onNavigateToNotifications
@@ -347,7 +347,7 @@ fun IOSSettingsScreen(
                 SettingsListItem(
                     icon = CoreR.drawable.ic_bell,
                     iconColor = IOSColors.Blue,
-                    title = "Bildirim Ayarları",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_notification_settings),
                     position = ListItemPosition.Last,
                     onClick = onNavigateToNotificationSettings
                 )
@@ -357,14 +357,14 @@ fun IOSSettingsScreen(
             
             // 5. Veri Yönetimi Section
             item {
-                SettingsSectionHeader(title = "Veri Yönetimi")
+                SettingsSectionHeader(title = context.getString(com.alperen.spendcraft.R.string.settings_section_data_management))
             }
             
             item {
                 SettingsListItem(
                     icon = CoreR.drawable.ic_square_arrow_up,
                     iconColor = IOSColors.Green,
-                    title = "Dışa/İçe Aktar",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_export_import),
                     onClick = onNavigateToExport
                 )
             }
@@ -391,12 +391,12 @@ fun IOSSettingsScreen(
             
             // 7. Uygulama Section - iOS Grouped List
             item {
-                SettingsSectionHeader(title = "Uygulama")
+                SettingsSectionHeader(title = context.getString(com.alperen.spendcraft.R.string.settings_section_app))
             }
             
             item {
                 SettingsInfoRow(
-                    title = "Versiyon",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_version),
                     value = "1.0.3",
                     position = ListItemPosition.First
                 )
@@ -410,8 +410,8 @@ fun IOSSettingsScreen(
                 SettingsListItem(
                     icon = CoreR.drawable.ic_gearshape_fill,
                     iconColor = IOSColors.Blue,
-                    title = if (LocaleHelper.getLanguage(context) == "tr") "Dil" else "Language",
-                    subtitle = if (LocaleHelper.getLanguage(context) == "tr") "Türkçe" else "English",
+                    title = context.getString(com.alperen.spendcraft.R.string.language),
+                    subtitle = if (LocaleHelper.getLanguage(context) == "tr") context.getString(com.alperen.spendcraft.R.string.language_turkish) else context.getString(com.alperen.spendcraft.R.string.language_english),
                     position = ListItemPosition.Middle,
                     onClick = onNavigateToLanguageSettings
                 )
@@ -423,7 +423,7 @@ fun IOSSettingsScreen(
             
             item {
                 SettingsInfoRow(
-                    title = "Toplam İşlem",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_total_transactions),
                     value = "$totalTransactions",
                     position = ListItemPosition.Middle
                 )
@@ -435,7 +435,7 @@ fun IOSSettingsScreen(
             
             item {
                 SettingsInfoRow(
-                    title = "Toplam Kategori",
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_total_categories),
                     value = "$totalCategories",
                     position = ListItemPosition.Last
                 )
@@ -475,7 +475,7 @@ fun IOSSettingsScreen(
     if (showThemeDialog) {
         AlertDialog(
             onDismissRequest = { showThemeDialog = false },
-            title = { Text("Tema Seçin") },
+            title = { Text(context.getString(com.alperen.spendcraft.R.string.settings_select_theme)) },
             text = {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -525,7 +525,7 @@ fun IOSSettingsScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showThemeDialog = false }) {
-                    Text("Tamam")
+                    Text(context.getString(com.alperen.spendcraft.R.string.ok))
                 }
             }
         )

@@ -35,6 +35,7 @@ fun NotificationsScreen(
     onBack: () -> Unit = {},
     viewModel: NotificationsViewModel? = null
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     // Gerçek veri - ViewModel'den gelecek
     val notifications by (viewModel?.notifications ?: remember { 
         kotlinx.coroutines.flow.MutableStateFlow(emptyList<NotificationItem>()) 
@@ -58,7 +59,7 @@ fun NotificationsScreen(
                         IconButton(onClick = onBack) {
                             Icon(
                                 painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
-                                contentDescription = "Geri"
+                                contentDescription = context.getString(com.alperen.spendcraft.feature.notifications.R.string.back)
                             )
                         }
                     },
@@ -72,7 +73,7 @@ fun NotificationsScreen(
                         }) {
                             Icon(
                                 painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_done_all_vector),
-                                contentDescription = "Tümünü okundu işaretle"
+                                contentDescription = context.getString(com.alperen.spendcraft.feature.notifications.R.string.notifications_mark_all_read)
                             )
                         }
                     },
@@ -95,7 +96,7 @@ fun NotificationsScreen(
                     }
                 ) {
                     Text(
-                        text = "Bildirimler",
+                        text = context.getString(com.alperen.spendcraft.feature.notifications.R.string.notifications_title),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -133,13 +134,13 @@ fun NotificationsScreen(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "Bildirim Yok",
+                                text = context.getString(com.alperen.spendcraft.feature.notifications.R.string.notifications_no_notifications),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = "Henüz hiç bildiriminiz yok",
+                                text = context.getString(com.alperen.spendcraft.feature.notifications.R.string.notifications_no_notifications_description),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -155,7 +156,7 @@ fun NotificationsScreen(
                 if (unreadNotifications.isNotEmpty()) {
                     item {
                         Text(
-                            text = "Okunmamış (${unreadNotifications.size})",
+                            text = context.getString(com.alperen.spendcraft.feature.notifications.R.string.notifications_unread, unreadNotifications.size),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,
@@ -175,7 +176,7 @@ fun NotificationsScreen(
                 if (readNotifications.isNotEmpty()) {
                     item {
                         Text(
-                            text = "Okunmuş",
+                            text = context.getString(com.alperen.spendcraft.feature.notifications.R.string.notifications_read),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -203,6 +204,7 @@ private fun NotificationCard(
     onMarkAsRead: () -> Unit,
     onDelete: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     
     // iOS swipe: .swipeActions(edge: .trailing, allowsFullSwipe: true)
@@ -236,7 +238,7 @@ private fun NotificationCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Sil",
+                    contentDescription = context.getString(com.alperen.spendcraft.feature.notifications.R.string.notifications_delete_description),
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
                 )
@@ -315,7 +317,7 @@ private fun NotificationCard(
                     ) {
                         Icon(
                             Icons.Default.Done,
-                            contentDescription = "Okundu işaretle",
+                            contentDescription = context.getString(com.alperen.spendcraft.feature.notifications.R.string.notifications_mark_read),
                             modifier = Modifier.size(16.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -328,7 +330,7 @@ private fun NotificationCard(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Sil",
+                        contentDescription = context.getString(com.alperen.spendcraft.feature.notifications.R.string.delete),
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.error
                     )

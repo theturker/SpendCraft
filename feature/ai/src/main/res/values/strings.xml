@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_suggestions_title">AI Önerileri</string>
+    <string name="ai_financial_advisor">AI Finansal Danışman</string>
+    <string name="ai_subtitle">Kişiselleştirilmiş finansal öneriler alın</string>
+    <string name="ai_select_advice_type">Öneri türü seçin</string>
+    <string name="ai_generating">Oluşturuluyor...</string>
+    <string name="ai_get_advice">Öneri Al</string>
+    <string name="ai_advice_title">AI Önerisi</string>
+    <string name="ai_financial_summary">Finansal Özet</string>
+    <string name="ai_income">Gelir</string>
+    <string name="ai_expense">Gider</string>
+    <string name="ai_balance">Bakiye</string>
+    <string name="ai_categories">Kategoriler</string>
+    <string name="ai_advice_type_spending_analysis">Harcama Analizi</string>
+    <string name="ai_advice_type_spending_analysis_desc">Harcama alışkanlıklarınızı analiz edin</string>
+    <string name="ai_advice_type_budget_optimization">Bütçe Optimizasyonu</string>
+    <string name="ai_advice_type_budget_optimization_desc">Bütçenizi optimize edin</string>
+    <string name="ai_advice_type_savings_advice">Tasarruf Önerileri</string>
+    <string name="ai_advice_type_savings_advice_desc">Tasarruf yapmanın yollarını öğrenin</string>
+    <string name="back">Geri</string>
+</resources>

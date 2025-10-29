@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Quick Add -->
-    <string name="quick_add_title">Hızlı Ekle</string>
-    
-    <!-- Transaction Filter -->
+    <string name="transaction_receipt_scan">Fiş Tara</string>
     <string name="transaction_filter_all">Tümü</string>
     <string name="transaction_filter_income">Gelir</string>
     <string name="transaction_filter_expense">Gider</string>
-    <string name="transaction_category_unknown">Kategori Yok</string>
-    
-    <!-- Transaction Screen -->
-    <string name="transactions_title">İşlemler</string>
     <string name="add_transaction">İşlem Ekle</string>
+    <string name="transactions_title">İşlemler</string>
+    <string name="transaction_category_unknown">Bilinmeyen Kategori</string>
+    <string name="add_income">Gelir Ekle</string>
+    <string name="add_expense">Gider Ekle</string>
+    <string name="note_optional">Not (İsteğe bağlı)</string>
+    <string name="note_placeholder">İşlem hakkında not ekleyin...</string>
+    <string name="payment_method">Ödeme Yöntemi</string>
+    <string name="payment_cash">Nakit</string>
+    <string name="payment_card">Kredi Kartı</string>
+    <string name="payment_debit_card">Banka Kartı</string>
+    <string name="payment_transfer">Havale/EFT</string>
+    <string name="select">Seç</string>
+    <string name="cancel">İptal</string>
+    <string name="select_time">Saat Seç</string>
+    <string name="amount">Miktar</string>
+    <string name="select_account">Hesap Seç</string>
+    <string name="account_type_credit_card">Kredi Kartı</string>
+    <string name="account_type_savings">Tasarruf</string>
+    <string name="default_account">Varsayılan</string>
+    <string name="note">Not</string>
+    <string name="recurring_transaction">Tekrarlayan İşlem</string>
+    <string name="recurring_frequency">Tekrarlama Sıklığı</string>
+    <string name="frequency_daily">Günlük</string>
+    <string name="frequency_weekly">Haftalık</string>
+    <string name="frequency_monthly">Aylık</string>
+    <string name="frequency_yearly">Yıllık</string>
+    <string name="next">İleri</string>
+    <string name="account_type_cash">Nakit</string>
+    <string name="account_type_bank">Banka</string>
+    <string name="category_transport">Ulaşım</string>
+    <string name="category">Kategori</string>
 </resources>

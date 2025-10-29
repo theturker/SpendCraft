@@ -223,6 +223,231 @@
     <string name="achievement_desc_50_transactions">50 işlem kaydedin</string>
     <string name="points">Puan</string>
     
+    <!-- Settings Screen Sections -->
+    <string name="settings_section_finance">Finans</string>
+    <string name="settings_accounts">Hesaplar</string>
+    <string name="settings_section_ai">🤖 Yapay Zeka</string>
+    <string name="settings_ai_suggestions">AI Önerileri</string>
+    <string name="settings_section_features">Özellikler</string>
+    <string name="settings_recurring_transactions">Tekrarlayan İşlemler</string>
+    <string name="settings_achievements">Başarılar</string>
+    <string name="settings_notifications">Bildirimler</string>
+    <string name="settings_notification_settings">Bildirim Ayarları</string>
+    <string name="settings_section_data_management">Veri Yönetimi</string>
+    <string name="settings_export_import">Dışa/İçe Aktar</string>
+    <string name="settings_section_app">Uygulama</string>
+    <string name="settings_version">Versiyon</string>
+    <string name="settings_total_transactions">Toplam İşlem</string>
+    <string name="settings_total_categories">Toplam Kategori</string>
+    <string name="settings_select_theme">Tema Seçin</string>
+    <string name="language_turkish">Türkçe</string>
+    <string name="language_english">English</string>
+    <string name="language_selection_title">Dil Seçimi</string>
+    <string name="language_select_description">Uygulamada kullanılacak dili seçin</string>
+    <string name="language_back">Geri</string>
+    <string name="settings_default_account">Varsayılan: %1$s • %2$s</string>
+    <string name="settings_currency">Para birimi: %1$s %2$s</string>
+    <string name="settings_currency_selected">Seçili: %1$s %2$s</string>
+    <string name="currency_title">Para Birimi</string>
+    <string name="settings_notifications_subtitle">Uyarıları yönetin</string>
+    <string name="settings_achievements_subtitle">Rozetleriniz</string>
+    <string name="settings_sharing">Paylaşım</string>
+    <string name="settings_sharing_subtitle">Aile bütçesi</string>
+    <string name="settings_ai_suggestions_subtitle">İçgörüler</string>
+    
+    <!-- AI Profiling Survey -->
+    <string name="profiling_question_income_frequency">Geliriniz ne sıklıkta oluyor?</string>
+    <string name="profiling_option_weekly">Haftalık</string>
+    <string name="profiling_option_biweekly">2 Haftada bir</string>
+    <string name="profiling_option_monthly">Aylık</string>
+    <string name="profiling_option_irregular">Düzensiz</string>
+    <string name="profiling_question_spending_habit">Harcama alışkanlığınız nasıl?</string>
+    <string name="profiling_option_planned_spending">Planlı harcıyorum</string>
+    <string name="profiling_option_impulse_spending">Anlık kararlar alırım</string>
+    <string name="profiling_option_mixed">Karışık</string>
+    <string name="profiling_option_need_based">İhtiyaç olunca harcıyorum</string>
+    <string name="profiling_question_savings_goal">Tasarruf hedefiniz var mı?</string>
+    <string name="profiling_option_has_goal">Evet, belirli bir hedefim var</string>
+    <string name="profiling_option_sometimes_save">Bazen tasarruf yaparım</string>
+    <string name="profiling_option_not_started">Hayır, henüz başlamadım</string>
+    <string name="profiling_option_struggling">Tasarruf yapmakta zorlanıyorum</string>
+    <string name="profiling_question_biggest_expense">En çok neye harcama yapıyorsunuz?</string>
+    <string name="profiling_option_food_groceries">Yemek &amp; Market</string>
+    <string name="profiling_option_rent_bills">Kira &amp; Faturalar</string>
+    <string name="profiling_option_entertainment_social">Eğlence &amp; Sosyal</string>
+    <string name="profiling_option_transportation">Ulaşım</string>
+    <string name="profiling_question_budget_management">Bütçe yönetiminizi nasıl değerlendirirsiniz?</string>
+    <string name="profiling_option_very_good">Çok iyi</string>
+    <string name="profiling_option_good">İyi</string>
+    <string name="profiling_option_average">Orta</string>
+    <string name="profiling_option_needs_improvement">Geliştirilmeli</string>
+    <string name="profiling_question_financial_goal">Ana finansal hedefiniz nedir?</string>
+    <string name="profiling_option_pay_debt">Borç ödemek</string>
+    <string name="profiling_option_save_money">Tasarruf yapmak</string>
+    <string name="profiling_option_invest">Yatırım yapmak</string>
+    <string name="profiling_option_balance_income_expense">Gelir-gider dengesini sağlamak</string>
+    <string name="profiling_question_debt_status">Borç durumunuz nasıl?</string>
+    <string name="profiling_option_no_debt">Borcum yok</string>
+    <string name="profiling_option_little_debt">Az borcum var</string>
+    <string name="profiling_option_moderate_debt">Orta seviye borcum var</string>
+    <string name="profiling_option_high_debt">Yüksek borcum var</string>
+    <string name="profiling_multiple_selection_hint">* Birden fazla seçenek işaretleyebilirsiniz</string>
+    <string name="profiling_question_number">Soru %1$d / %2$d</string>
+    <string name="profiling_next">İleri</string>
+    <string name="profiling_finish">Bitir</string>
+    <string name="profiling_completed">Profilleme Tamamlandı!</string>
+    <string name="profiling_completed_description">Cevaplarınız AI önerilerimizi kişiselleştirmek için kullanılacak.</string>
+    <string name="profiling_ok">Tamam</string>
+    <string name="close">Kapat</string>
+    
+    <!-- Tab Navigation -->
+    <string name="tab_home">Ana Sayfa</string>
+    <string name="tab_transactions">İşlemler</string>
+    <string name="tab_reports">Raporlar</string>
+    <string name="tab_categories">Kategoriler</string>
+    <string name="tab_settings">Ayarlar</string>
+    
+    <!-- Notification Settings -->
+    <string name="notification_settings_title">Bildirim Ayarları</string>
+    <string name="notification_delete_title">Bildirimi Sil</string>
+    <string name="notification_delete_message">Bu özel bildirimi silmek istediğinizden emin misiniz?</string>
+    <string name="notification_delete_button">Sil</string>
+    <string name="notification_back">Geri</string>
+    <string name="notification_templates_title">Hazır Bildirimler (%1$d)</string>
+    <string name="notification_templates_description">Hazır bildirim senaryolarını aktifleştirip saatlerini düzenleyebilirsiniz.</string>
+    <string name="notification_custom_title">Özel Bildirimlerim (%1$d)</string>
+    <string name="notification_create">Oluştur</string>
+    <string name="notification_title_label">Başlık</string>
+    <string name="notification_message_label">Mesaj</string>
+    <string name="notification_time_hour">Saat</string>
+    <string name="notification_time_minute">Dakika</string>
+    <string name="notification_edit_template">Bildirimi Düzenle</string>
+    <string name="notification_settings_label">Ayarlar</string>
+    <string name="notification_active">Aktif</string>
+    <string name="notification_custom_notification">Özel Bildirim</string>
+    <string name="notification_time">Zaman</string>
+    <string name="notification_repeat">Tekrarlama</string>
+    <string name="notification_every_day">Her gün</string>
+    <string name="notification_month_days_question">Ayın Hangi Günlerinde?</string>
+    
+    <!-- Notifications Screen -->
+    <string name="notifications_title">Bildirimler</string>
+    <string name="notifications_no_notifications">Bildirim Yok</string>
+    <string name="notifications_no_notifications_description">Henüz hiç bildiriminiz yok</string>
+    <string name="notifications_unread">Okunmamış (%1$d)</string>
+    <string name="notifications_read">Okunmuş</string>
+    <string name="notifications_mark_all_read">Tümünü okundu işaretle</string>
+    <string name="notifications_mark_read">Okundu işaretle</string>
+    <string name="notifications_delete_description">Sil</string>
+    
+    <!-- Achievements Screen -->
+    <string name="achievements_title">Başarılar</string>
+    <string name="achievements_close">Kapat</string>
+    <string name="achievements_progress">İlerleme</string>
+    
+    <!-- Reports Screen -->
+    <string name="reports_time_range_daily">Günlük</string>
+    <string name="reports_time_range_weekly">Haftalık</string>
+    <string name="reports_time_range_monthly">Aylık</string>
+    <string name="reports_category_unknown">Bilinmeyen Kategori</string>
+    <string name="reports_date_range_last_week">Son Hafta</string>
+    <string name="reports_date_range_last_month">Son Ay</string>
+    <string name="reports_date_range_last_3_months">Son 3 Ay</string>
+    <string name="reports_date_range_last_year">Son Yıl</string>
+    <string name="reports_date_range_custom">Özel Tarih Aralığı</string>
+    
+    <!-- Category Management -->
+    <string name="categories_no_categories">Henüz kategori yok</string>
+    <string name="categories_start_adding">İlk kategorinizi ekleyerek başlayın</string>
+    <string name="categories_add_new">Yeni Kategori Ekle</string>
+    <string name="categories_delete_description">Sil</string>
+    
+    <!-- Accounts Screen -->
+    <string name="accounts_title">Hesaplar</string>
+    <string name="accounts_add">Hesap Ekle</string>
+    <string name="accounts_delete_description">Sil</string>
+    <string name="accounts_default">Varsayılan</string>
+    <string name="accounts_set_default">Varsayılan Yap</string>
+    <string name="accounts_add_new">Yeni Hesap</string>
+    <string name="accounts_info_title">Hesap Bilgileri</string>
+    <string name="accounts_account_name_placeholder">Hesap Adı</string>
+    <string name="accounts_account_type">Hesap Tipi</string>
+    <string name="account_type_cash">Nakit</string>
+    <string name="account_type_bank">Banka</string>
+    <string name="account_type_credit_card">Kredi Kartı</string>
+    <string name="account_type_savings">Tasarruf</string>
+    <string name="accounts_currency">Para Birimi</string>
+    
+    <!-- Currency Screen -->
+    <string name="currency_search_placeholder">Para birimi ara...</string>
+    <string name="currency_search">Ara</string>
+    <string name="currency_clear">Temizle</string>
+    <string name="currency_available_title">Kullanılabilir Para Birimleri</string>
+    
+    <!-- Recurring Transactions -->
+    <string name="recurring_title">Tekrarlayan İşlemler</string>
+    <string name="recurring_add">Yeni Tekrarlayan İşlem Ekle</string>
+    <string name="recurring_empty_title">Henüz tekrarlayan işlem yok</string>
+    <string name="recurring_empty_description">Periyodik işlemlerinizi otomatikleştirmek için bir işlem ekleyin</string>
+    <string name="recurring_active">Aktif</string>
+    <string name="recurring_inactive">Pasif</string>
+    <string name="recurring_paused">Duraklatıldı</string>
+    <string name="recurring_next_execution">Sonraki çalışma:</string>
+    <string name="recurring_frequency_daily">Günlük</string>
+    <string name="recurring_frequency_weekly">Haftalık</string>
+    <string name="recurring_frequency_monthly">Aylık</string>
+    <string name="recurring_frequency_yearly">Yıllık</string>
+    <string name="recurring_edit">Düzenle</string>
+    <string name="recurring_delete">Sil</string>
+    <string name="recurring_delete_title">Tekrarlayan İşlemi Sil</string>
+    <string name="recurring_delete_message">Bu tekrarlayan işlemi silmek istediğinizden emin misiniz?</string>
+    <string name="recurring_end_date">Bitiş:</string>
+    
+    <!-- Export Screen -->
+    <string name="export_title">Dışa Aktar</string>
+    <string name="export_format_title">İndirme Formatı</string>
+    <string name="export_format_csv_description">Virgülle ayrılmış değerler</string>
+    <string name="export_format_pdf_description">Taşınabilir belge formatı</string>
+    <string name="export_format_excel_description">Microsoft Excel formatı</string>
+    <string name="export_date_range_title">Tarih Aralığı</string>
+    <string name="export_date_range_last_week">Son Hafta</string>
+    <string name="export_date_range_last_month">Son Ay</string>
+    <string name="export_date_range_last_3_months">Son 3 Ay</string>
+    <string name="export_date_range_last_year">Son Yıl</string>
+    <string name="export_date_range_custom">Özel Tarih Aralığı</string>
+    <string name="export_creating">Oluşturuluyor…</string>
+    <string name="export_download">Raporu İndir</string>
+    <string name="export_notification_title">Rapor hazır</string>
+    <string name="export_notification_pdf_created">PDF rapor oluşturuldu</string>
+    <string name="export_notification_created">Rapor oluşturuldu</string>
+    <string name="export_success_message">Rapor başarıyla oluşturuldu! Paylaşım menüsünden dosyayı Downloads klasörüne kaydedebilir veya başka uygulamalarla paylaşabilirsiniz.</string>
+    <string name="export_format_not_supported">Bu format henüz desteklenmiyor. CSV formatını kullanın.</string>
+    <string name="export_error_message">Rapor oluşturulurken hata: %1$s</string>
+    <string name="unknown_error">Bilinmeyen hata</string>
+    
+    <!-- AI Suggestions -->
+    <string name="ai_suggestions_title">AI Önerileri</string>
+    <string name="ai_financial_advisor">AI Finansal Danışman</string>
+    <string name="ai_subtitle">Yapay zeka destekli kişiselleştirilmiş finansal öneriler</string>
+    <string name="ai_select_advice_type">Öneri Türü Seçin</string>
+    <string name="ai_generating">Öneri oluşturuluyor…</string>
+    <string name="ai_get_advice">AI Önerisi Al</string>
+    <string name="ai_advice_title">AI Önerisi</string>
+    <string name="ai_financial_summary">Finansal Durum Özeti</string>
+    <string name="ai_income">Gelir</string>
+    <string name="ai_expense">Gider</string>
+    <string name="ai_balance">Bakiye</string>
+    <string name="ai_categories">Kategori</string>
+    <string name="ai_advice_type_spending_analysis">Harcama Analizi</string>
+    <string name="ai_advice_type_spending_analysis_desc">Kategori bazında harcama alışkanlıklarınızı analiz eder</string>
+    <string name="ai_advice_type_budget_optimization">Bütçe Optimizasyonu</string>
+    <string name="ai_advice_type_budget_optimization_desc">Gelir-gider dengesini optimize etmek için öneriler verir</string>
+    <string name="ai_advice_type_savings_advice">Tasarruf Önerileri</string>
+    <string name="ai_advice_type_savings_advice_desc">Daha fazla tasarruf yapmak için pratik öneriler sunar</string>
+    
+    <!-- Add Transaction -->
+    <string name="transaction_receipt_scan">Fiş Tara</string>
+    
     <!-- Transaction Filter -->
     <string name="transaction_filter_all">Tümü</string>
     

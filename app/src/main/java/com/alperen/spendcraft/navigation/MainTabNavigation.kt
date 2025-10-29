@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.ui.iosTheme.IOSColors
 import com.alperen.spendcraft.ui.icons.SFSymbolsTabBar
 import com.alperen.spendcraft.ui.components.liquidglass.LiquidGlassBottomBar
-import com.alperen.spendcraft.ui.components.liquidglass.paratikBottomNavItems
+import com.alperen.spendcraft.ui.components.liquidglass.getParatikBottomNavItems
 import com.alperen.spendcraft.ui.components.liquidglass.rememberBottomBarVisibility
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -54,35 +54,35 @@ sealed class TabScreen(
 ) {
     object Dashboard : TabScreen(
         route = "dashboard_tab",
-        title = "Ana Sayfa",
+        title = "", // Will be set dynamically in Composable
         icon = com.alperen.spendcraft.core.ui.R.drawable.ic_house_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_house_fill
     )
     
     object Transactions : TabScreen(
         route = "transactions_tab",
-        title = "İşlemler",
+        title = "", // Will be set dynamically in Composable
         icon = com.alperen.spendcraft.core.ui.R.drawable.ic_list_bullet_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_list_bullet
     )
     
     object Reports : TabScreen(
         route = "reports_tab",
-        title = "Raporlar",
+        title = "", // Will be set dynamically in Composable
         icon = com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_chart_bar_fill
     )
     
     object Categories : TabScreen(
         route = "categories_tab",
-        title = "Kategoriler",
+        title = "", // Will be set dynamically in Composable
         icon = com.alperen.spendcraft.core.ui.R.drawable.ic_folder_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_folder_fill
     )
     
     object Settings : TabScreen(
         route = "settings_tab",
-        title = "Ayarlar",
+        title = "", // Will be set dynamically in Composable
         icon = com.alperen.spendcraft.core.ui.R.drawable.ic_gearshape_outline,
         selectedIcon = com.alperen.spendcraft.core.ui.R.drawable.ic_gearshape_fill
     )
@@ -370,7 +370,7 @@ fun MainTabNavigation(
             // Liquid Glass Bottom Bar - Premium blur effect
             // ✅ floating = false, handleSafeInsets = false (üst Column zaten handle ediyor)
             LiquidGlassBottomBar(
-                items = paratikBottomNavItems,
+                items = getParatikBottomNavItems(context = androidx.compose.ui.platform.LocalContext.current),
                 selectedIndex = selectedTabIndex,
                 onItemSelected = { index ->
                     val route = when (index) {
@@ -407,6 +407,7 @@ private fun IOSStyleTabBar(
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -426,7 +427,7 @@ private fun IOSStyleTabBar(
             // Tab 1: Ana Sayfa
             IOSTabItem(
                 icon = SFSymbolsTabBar.HouseOutline,
-                label = "Ana Sayfa",
+                label = context.getString(com.alperen.spendcraft.R.string.tab_home),
                 isSelected = selectedIndex == 0,
                 onClick = { onTabSelected(0) },
                 modifier = Modifier.weight(1f)
@@ -435,7 +436,7 @@ private fun IOSStyleTabBar(
             // Tab 2: İşlemler
             IOSTabItem(
                 icon = SFSymbolsTabBar.ListBullet,
-                label = "İşlemler",
+                label = context.getString(com.alperen.spendcraft.R.string.tab_transactions),
                 isSelected = selectedIndex == 1,
                 onClick = { onTabSelected(1) },
                 modifier = Modifier.weight(1f)
@@ -444,7 +445,7 @@ private fun IOSStyleTabBar(
             // Tab 3: Raporlar
             IOSTabItem(
                 icon = SFSymbolsTabBar.ChartBarOutline,
-                label = "Raporlar",
+                label = context.getString(com.alperen.spendcraft.R.string.tab_reports),
                 isSelected = selectedIndex == 2,
                 onClick = { onTabSelected(2) },
                 modifier = Modifier.weight(1f)
@@ -453,7 +454,7 @@ private fun IOSStyleTabBar(
             // Tab 4: Kategoriler
             IOSTabItem(
                 icon = SFSymbolsTabBar.FolderFill,
-                label = "Kategoriler",
+                label = context.getString(com.alperen.spendcraft.R.string.tab_categories),
                 isSelected = selectedIndex == 3,
                 onClick = { onTabSelected(3) },
                 modifier = Modifier.weight(1f)
@@ -462,7 +463,7 @@ private fun IOSStyleTabBar(
             // Tab 5: Ayarlar
             IOSTabItem(
                 icon = SFSymbolsTabBar.GearshapeOutline,
-                label = "Ayarlar",
+                label = context.getString(com.alperen.spendcraft.R.string.tab_settings),
                 isSelected = selectedIndex == 4,
                 onClick = { onTabSelected(4) },
                 modifier = Modifier.weight(1f)

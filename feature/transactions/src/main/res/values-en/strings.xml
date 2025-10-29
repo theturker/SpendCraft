@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Quick Add -->
-    <string name="quick_add_title">Quick Add</string>
-    
-    <!-- Transaction Filter -->
+    <string name="transaction_receipt_scan">Scan Receipt</string>
     <string name="transaction_filter_all">All</string>
     <string name="transaction_filter_income">Income</string>
     <string name="transaction_filter_expense">Expense</string>
-    <string name="transaction_category_unknown">No Category</string>
-    
-    <!-- Transaction Screen -->
-    <string name="transactions_title">Transactions</string>
     <string name="add_transaction">Add Transaction</string>
+    <string name="transactions_title">Transactions</string>
+    <string name="transaction_category_unknown">Unknown Category</string>
+    <string name="add_income">Add Income</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="note_optional">Note (Optional)</string>
+    <string name="note_placeholder">Add a note about the transaction...</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="payment_cash">Cash</string>
+    <string name="payment_card">Credit Card</string>
+    <string name="payment_debit_card">Debit Card</string>
+    <string name="payment_transfer">Transfer</string>
+    <string name="select">Select</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_time">Select Time</string>
+    <string name="amount">Amount</string>
+    <string name="select_account">Select Account</string>
+    <string name="account_type_credit_card">Credit Card</string>
+    <string name="account_type_savings">Savings</string>
+    <string name="default_account">Default</string>
+    <string name="note">Note</string>
+    <string name="recurring_transaction">Recurring Transaction</string>
+    <string name="recurring_frequency">Recurring Frequency</string>
+    <string name="frequency_daily">Daily</string>
+    <string name="frequency_weekly">Weekly</string>
+    <string name="frequency_monthly">Monthly</string>
+    <string name="frequency_yearly">Yearly</string>
+    <string name="next">Next</string>
+    <string name="account_type_cash">Cash</string>
+    <string name="account_type_bank">Bank</string>
+    <string name="category_transport">Transport</string>
+    <string name="category">Category</string>
 </resources>

@@ -47,13 +47,13 @@ fun LanguagePickerScreen(
         topBar = {
             TopAppBar(
                 title = { 
-                    Text(if (selectedLanguage == "tr") "Dil Seçimi" else "Language Selection")
+                    Text(context.getString(com.alperen.spendcraft.R.string.language_selection_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = if (selectedLanguage == "tr") "Geri" else "Back"
+                            contentDescription = context.getString(com.alperen.spendcraft.R.string.language_back)
                         )
                     }
                 },
@@ -71,7 +71,7 @@ fun LanguagePickerScreen(
         ) {
             item {
                 Text(
-                    text = if (selectedLanguage == "tr") "Uygulamada kullanılacak dili seçin" else "Select the language for the app",
+                    text = context.getString(com.alperen.spendcraft.R.string.language_select_description),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)

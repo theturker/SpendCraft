@@ -213,7 +213,7 @@ fun AddTransactionScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.AccountBox,
-                                        contentDescription = "Fiş Tara",
+                                        contentDescription = context.getString(com.alperen.spendcraft.feature.transactions.R.string.transaction_receipt_scan),
                                         tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.size(24.dp)
                                     )

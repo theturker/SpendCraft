@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.*
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import com.alperen.spendcraft.feature.transactions.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -109,7 +110,7 @@ fun AddTransactionBottomSheet(
                 item {
                     Column {
                         Text(
-                            text = "Kategori",
+                            text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.category),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -269,7 +270,7 @@ fun AddTransactionBottomSheet(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Not (İsteğe bağlı)",
+                                text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.note_optional),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -292,7 +293,7 @@ fun AddTransactionBottomSheet(
                                     onValueChange = { note = it },
                                     placeholder = {
                                         Text(
-                                            "İşlem hakkında not ekleyin...",
+                                            context.getString(com.alperen.spendcraft.feature.transactions.R.string.note_placeholder),
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     },
@@ -317,7 +318,7 @@ fun AddTransactionBottomSheet(
                 item {
                     Column {
                         Text(
-                            text = "Ödeme Yöntemi",
+                            text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.payment_method),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -332,7 +333,7 @@ fun AddTransactionBottomSheet(
                                 FilterChip(
                                     selected = paymentMethod == method,
                                     onClick = { paymentMethod = if (paymentMethod == method) null else method },
-                                    label = { Text(method.label, maxLines = 1) },
+                                    label = { Text(context.getString(method.labelResId), maxLines = 1) },
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                                         selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -353,7 +354,7 @@ fun AddTransactionBottomSheet(
                         if (!note.isNullOrBlank()) append(note.trim())
                         paymentMethod?.let {
                             if (this.isNotEmpty()) append(" • ")
-                            append(it.label)
+                            append(context.getString(it.labelResId))
                         }
                     }.ifBlank { null }
                     onSave(amountMinor, mergedNote, selectedCategoryId, isIncome)
@@ -377,7 +378,7 @@ fun AddTransactionBottomSheet(
                         modifier = Modifier.size(18.dp)
                     )
                     Text(
-                        text = if (isIncome) "Gelir Ekle" else "Gider Ekle",
+                        text = if (isIncome) context.getString(com.alperen.spendcraft.feature.transactions.R.string.add_income) else context.getString(com.alperen.spendcraft.feature.transactions.R.string.add_expense),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -409,8 +410,11 @@ fun AddTransactionBottomSheet(
     }
 }
 
-private enum class PaymentMethod(val label: String) {
-    CASH("Nakit"), CARD("Kredi Kartı"), DEBIT_CARD("Banka Kartı"), TRANSFER("Havale/EFT")
+private enum class PaymentMethod(val labelResId: Int) {
+    CASH(com.alperen.spendcraft.feature.transactions.R.string.payment_cash),
+    CARD(com.alperen.spendcraft.feature.transactions.R.string.payment_card),
+    DEBIT_CARD(com.alperen.spendcraft.feature.transactions.R.string.payment_debit_card),
+    TRANSFER(com.alperen.spendcraft.feature.transactions.R.string.payment_transfer)
 }
 
 @Composable
@@ -419,6 +423,7 @@ private fun IncomeExpenseSegmented(
     onChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val shape = RoundedCornerShape(12.dp)
     Row(
         modifier = modifier
@@ -431,7 +436,7 @@ private fun IncomeExpenseSegmented(
         verticalAlignment = Alignment.CenterVertically
     ) {
         SegmentedItem(
-            text = "Gelir",
+            text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.transaction_filter_income),
             selected = isIncome,
             onClick = { onChange(true) },
             leading = {
@@ -444,7 +449,7 @@ private fun IncomeExpenseSegmented(
             modifier = Modifier.weight(1f)
         )
         SegmentedItem(
-            text = "Gider",
+            text = context.getString(com.alperen.spendcraft.feature.transactions.R.string.transaction_filter_expense),
             selected = !isIncome,
             onClick = { onChange(false) },
             leading = {
@@ -584,6 +589,7 @@ private fun DatePickerDialog(
     onDateSelected: (Date) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val datePickerState = rememberDatePickerState()
     
     DatePickerDialog(
@@ -597,12 +603,12 @@ private fun DatePickerDialog(
                     onDismiss()
                 }
             ) {
-                Text("Seç")
+                Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.select))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("İptal")
+                Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.cancel))
             }
         }
     ) {
@@ -617,11 +623,12 @@ private fun TimePickerDialog(
     onTimeSelected: (Date) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val timePickerState = rememberTimePickerState()
     
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Saat Seç") },
+        title = { Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.select_time)) },
         text = {
             TimePicker(state = timePickerState)
         },
@@ -635,12 +642,12 @@ private fun TimePickerDialog(
                     onDismiss()
                 }
             ) {
-                Text("Seç")
+                Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.select))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("İptal")
+                Text(context.getString(com.alperen.spendcraft.feature.transactions.R.string.cancel))
             }
         }
     )

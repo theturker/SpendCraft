@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accounts_title">Accounts</string>
+    <string name="accounts_add">Add Account</string>
+    <string name="accounts_delete_description">Delete account</string>
+    <string name="accounts_default">Default</string>
+    <string name="account_type_cash">Cash</string>
+    <string name="account_type_bank">Bank</string>
+    <string name="account_type_credit_card">Credit Card</string>
+    <string name="account_type_savings">Savings</string>
+    <string name="accounts_add_new">New Account</string>
+    <string name="accounts_info_title">Account Information</string>
+    <string name="accounts_account_name_placeholder">Account Name</string>
+    <string name="accounts_account_type">Account Type</string>
+    <string name="accounts_currency">Currency</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accounts_title">Hesaplar</string>
+    <string name="accounts_add">Hesap Ekle</string>
+    <string name="accounts_delete_description">Hesabı sil</string>
+    <string name="accounts_default">Varsayılan</string>
+    <string name="account_type_cash">Nakit</string>
+    <string name="account_type_bank">Banka</string>
+    <string name="account_type_credit_card">Kredi Kartı</string>
+    <string name="account_type_savings">Tasarruf</string>
+    <string name="accounts_add_new">Yeni Hesap</string>
+    <string name="accounts_info_title">Hesap Bilgileri</string>
+    <string name="accounts_account_name_placeholder">Hesap Adı</string>
+    <string name="accounts_account_type">Hesap Tipi</string>
+    <string name="accounts_currency">Para Birimi</string>
+    <string name="save">Kaydet</string>
+    <string name="cancel">İptal</string>
+</resources>

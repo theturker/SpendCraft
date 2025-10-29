@@ -251,7 +251,7 @@ fun SettingsScreen(
                                     if (defaultAccountName != null) {
                                         AssistChip(
                                             onClick = onNavigateToAccounts,
-                                            label = { Text("Varsayılan: ${defaultAccountName} • ${defaultAccountBalance ?: ""}") },
+                                            label = { Text(context.getString(com.alperen.spendcraft.R.string.settings_default_account, defaultAccountName, defaultAccountBalance ?: "")) },
                                             leadingIcon = {
                                                 Icon(
                                                     painter = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_account_balance_vector),
@@ -274,7 +274,7 @@ fun SettingsScreen(
                                         enabled = false,
                                         label = {
                                             val current = currencies.find { it.first == currency }
-                                            Text("Para birimi: ${current?.second ?: ""} ${current?.first ?: currency}")
+                                            Text(context.getString(com.alperen.spendcraft.R.string.settings_currency, current?.second ?: "", current?.first ?: currency))
                                         },
                                         leadingIcon = {
                                     Icon(
@@ -330,15 +330,15 @@ fun SettingsScreen(
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         SettingTile(
-                            title = "Bildirimler",
-                            subtitle = "Uyarıları yönetin",
+                            title = context.getString(com.alperen.spendcraft.R.string.settings_notifications),
+                            subtitle = context.getString(com.alperen.spendcraft.R.string.settings_notifications_subtitle),
                             icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_notifications_vector),
                             onClick = onNavigateToNotifications,
                             modifier = Modifier.weight(1f)
                         )
                         SettingTile(
-                            title = "Başarımlar",
-                            subtitle = "Rozetleriniz",
+                            title = context.getString(com.alperen.spendcraft.R.string.settings_achievements),
+                            subtitle = context.getString(com.alperen.spendcraft.R.string.settings_achievements_subtitle),
                             icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_trophy_vector),
                             onClick = onNavigateToAchievements,
                             modifier = Modifier.weight(1f)
@@ -346,15 +346,15 @@ fun SettingsScreen(
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         SettingTile(
-                            title = "Paylaşım",
-                            subtitle = "Aile bütçesi",
+                            title = context.getString(com.alperen.spendcraft.R.string.settings_sharing),
+                            subtitle = context.getString(com.alperen.spendcraft.R.string.settings_sharing_subtitle),
                             icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_share_vector),
                             onClick = onNavigateToSharing,
                             modifier = Modifier.weight(1f)
                         )
                         SettingTile(
-                            title = "AI Önerileri",
-                            subtitle = "İçgörüler",
+                            title = context.getString(com.alperen.spendcraft.R.string.settings_ai_suggestions),
+                            subtitle = context.getString(com.alperen.spendcraft.R.string.settings_ai_suggestions_subtitle),
                             icon = androidx.compose.ui.res.painterResource(CoreR.drawable.ic_ai_spark),
                             onClick = onNavigateToAISuggestions,
                             modifier = Modifier.weight(1f)
@@ -371,7 +371,7 @@ fun SettingsScreen(
                 ModernCard(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                            text = "Para Birimi",
+                            text = context.getString(com.alperen.spendcraft.R.string.currency_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -379,7 +379,7 @@ fun SettingsScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             val current = currencies.find { it.first == currency }
                             Text(
-                                text = "Seçili: ${current?.second ?: ""} ${current?.first ?: currency}",
+                                text = context.getString(com.alperen.spendcraft.R.string.settings_currency_selected, current?.second ?: "", current?.first ?: currency),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = colorScheme.onSurfaceVariant
                             )
