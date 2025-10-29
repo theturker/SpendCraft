@@ -42,7 +42,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
 import com.alperen.spendcraft.reminder.ReminderScheduler
-import com.alperen.spendcraft.feature.welcome.ui.WelcomeScreen
 import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
 import com.alperen.spendcraft.FirstLaunchHelper
 // Authentication imports removed - auth is disabled

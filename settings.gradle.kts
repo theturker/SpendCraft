@@ -35,8 +35,6 @@ include(":data:repository")
 
 include(":feature:transactions")
 include(":feature:reports")
-include(":feature:paywall")
-include(":feature:premiumdebug")
 include(":feature:ai")
 include(":feature:settings")
 include(":feature:accounts")

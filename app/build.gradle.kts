@@ -78,8 +78,6 @@ dependencies {
     implementation(project(":data:db"))
     implementation(project(":feature:transactions"))
     implementation(project(":feature:reports"))
-    implementation(project(":feature:paywall"))
-    implementation(project(":feature:premiumdebug"))
     implementation(project(":feature:ai"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:accounts"))

@@ -339,16 +339,29 @@ private fun TransactionListRow(
                 .background(categoryColor.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
-            // ✅ Kategori ikonunu SF Symbol'den Material Icon'a çeviriyoruz
-            Icon(
-                imageVector = com.alperen.spendcraft.core.ui.IconMapper.getIconFromSFSymbol(
-                    category?.icon,
-                    transaction.type == TransactionType.INCOME
-                ),
-                contentDescription = null,
-                tint = categoryColor,
-                modifier = Modifier.size(24.dp)
-            )
+            // ✅ Kategori ikonunu göster - emoji veya SF Symbol destekli
+            if (com.alperen.spendcraft.core.ui.IconMapper.isEmoji(category?.icon)) {
+                // Emoji ikonları için Painter kullan
+                Icon(
+                    painter = painterResource(
+                        id = com.alperen.spendcraft.core.ui.IconMapper.getCategoryIconDrawable(category?.icon)
+                    ),
+                    contentDescription = null,
+                    tint = categoryColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            } else {
+                // SF Symbol ikonları için ImageVector kullan
+                Icon(
+                    imageVector = com.alperen.spendcraft.core.ui.IconMapper.getIconFromSFSymbol(
+                        category?.icon,
+                        transaction.type == TransactionType.INCOME
+                    ),
+                    contentDescription = null,
+                    tint = categoryColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
         
         // Transaction Info - iOS: VStack with 4dp spacing

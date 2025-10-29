@@ -94,6 +94,9 @@ class TransactionsViewModel @Inject constructor(
         recurringFrequency: String? = null
     ) {
         viewModelScope.launch {
+            // İlk işlem kontrolü - kaydetmeden önce
+            val isFirstTransaction = items.value.isEmpty()
+            
             val tx = Transaction(
                 id = null,
                 amount = Money(amountMinor),
@@ -104,6 +107,21 @@ class TransactionsViewModel @Inject constructor(
                 type = if (isIncome) TransactionType.INCOME else TransactionType.EXPENSE
             )
             upsert(tx)
+            
+            // İlk işlem kaydedildiğinde bildirim göster
+            if (isFirstTransaction) {
+                notificationEventBus.sendNotificationEvent(
+                    com.alperen.spendcraft.core.notifications.NotificationEvent(
+                        title = "🎉 İlk İşleminiz!",
+                        message = "SpendCraft'e hoş geldiniz! İlk işleminiz başarıyla kaydedildi.",
+                        type = com.alperen.spendcraft.core.notifications.NotificationType.SYSTEM
+                    )
+                )
+                notificationManager.showGeneralNotification(
+                    "🎉 İlk İşleminiz!",
+                    "SpendCraft'e hoş geldiniz! İlk işleminiz başarıyla kaydedildi."
+                )
+            }
             
             // Recurring transaction logic
             if (isRecurring && recurringFrequency != null) {

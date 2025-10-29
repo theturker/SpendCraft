@@ -23,10 +23,6 @@ import com.alperen.spendcraft.feature.reports.ReportsScreen
 import com.alperen.spendcraft.feature.reports.ExportReportScreen
 import com.alperen.spendcraft.feature.settings.ui.SettingsScreen
 import com.alperen.spendcraft.feature.settings.ui.CategoryManagementScreen
-// iOS'ta Paywall yok - kaldırıldı
-// import com.alperen.spendcraft.feature.paywall.PaywallScreen
-// import com.alperen.spendcraft.feature.paywall.navigation.PaywallNavigation
-// import com.alperen.spendcraft.feature.premiumdebug.PremiumDebugScreen
 import com.alperen.spendcraft.feature.ai.AISuggestionsScreen
 import com.alperen.spendcraft.feature.settings.AISettingsScreen
 import com.alperen.spendcraft.feature.accounts.AccountsScreen
@@ -67,8 +63,7 @@ object Routes {
     const val NOTIFICATIONS = "notifications"
     const val ONBOARDING = "onboarding"
     const val ACHIEVEMENTS = "achievements"
-    // TODO: Authentication geçici olarak devre dışı
-    // const val USER_PROFILING = "user_profiling"  // iOS UserProfilingView
+    const val USER_PROFILING = "user_profiling"  // iOS UserProfilingView
     // const val ACCOUNT_INFO = "account_info"  // iOS AccountInfoView
     const val NOTIFICATION_SETTINGS = "notification_settings"  // iOS NotificationSettingsView
     const val CURRENCY_PICKER = "currency_picker"  // iOS CurrencyPickerView
@@ -129,8 +124,7 @@ fun AppNavHost(
                 onNavigateToRecurring = { navController.navigate(Routes.RECURRING) },
                 onNavigateToSharing = { navController.navigate(Routes.SHARING) },
                 onNavigateToExport = { navController.navigate(Routes.EXPORT_REPORT) },
-                // TODO: Authentication geçici olarak devre dışı
-                // onNavigateToUserProfiling = { navController.navigate(Routes.USER_PROFILING) },  // iOS UserProfilingView
+                onNavigateToUserProfiling = { navController.navigate(Routes.USER_PROFILING) },  // iOS UserProfilingView
                 // onNavigateToAccountInfo = { navController.navigate(Routes.ACCOUNT_INFO) },  // iOS AccountInfoView
                 onNavigateToNotificationSettings = { navController.navigate(Routes.NOTIFICATION_SETTINGS) },  // iOS NotificationSettingsView
                 onNavigateToCurrencyPicker = { navController.navigate(Routes.CURRENCY_PICKER) },  // iOS CurrencyPickerView
@@ -499,9 +493,29 @@ fun AppNavHost(
             val recurringViewModel: com.alperen.spendcraft.feature.recurrence.RecurringViewModel = hiltViewModel()
             AddRecurringRuleScreen(
                 categories = vm.categories.collectAsState().value,
-                onSave = { 
-                    println("🔍 DEBUG: onSave callback çağrıldı, navigation geri dönüyor")
-                    navController.popBackStack() 
+                onSave = { ruleData ->
+                    println("🔍 DEBUG: onSave callback çağrıldı, recurring transaction kaydediliyor")
+                    // RecurringViewModel'e kaydet
+                    recurringViewModel.addRecurringTransaction(
+                        name = ruleData.title,
+                        amount = (ruleData.amount * 100).toLong(), // Convert to minor units
+                        categoryId = ruleData.categoryId,
+                        accountId = 1L, // TODO: Get from accounts or use default
+                        type = if (ruleData.type == com.alperen.spendcraft.feature.recurrence.TransactionType.INCOME) 
+                            com.alperen.spendcraft.core.model.TransactionType.INCOME 
+                        else 
+                            com.alperen.spendcraft.core.model.TransactionType.EXPENSE,
+                        frequency = when (ruleData.frequency) {
+                            com.alperen.spendcraft.feature.recurrence.Frequency.DAILY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.DAILY
+                            com.alperen.spendcraft.feature.recurrence.Frequency.WEEKLY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.WEEKLY
+                            com.alperen.spendcraft.feature.recurrence.Frequency.MONTHLY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.MONTHLY
+                            com.alperen.spendcraft.feature.recurrence.Frequency.YEARLY -> com.alperen.spendcraft.data.db.entities.RecurringFrequency.YEARLY
+                        },
+                        startDate = ruleData.startDate,
+                        endDate = ruleData.endDate,
+                        note = ruleData.description
+                    )
+                    navController.popBackStack()
                 },
                 onCancel = { navController.popBackStack() },
                 viewModel = recurringViewModel
@@ -559,20 +573,19 @@ fun AppNavHost(
             )
         }
         
-        // TODO: Authentication geçici olarak devre dışı
         // iOS UserProfilingView - Ana sayfadan açılır
-        // composable(Routes.USER_PROFILING) {
-        //     val ctx = LocalContext.current
-        //     com.alperen.spendcraft.feature.ai.UserProfilingScreen(
-        //         onComplete = {
-        //             // iOS: @AppStorage("userProfilingCompleted") = true
-        //             val prefs = ctx.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
-        //             prefs.edit().putBoolean("userProfilingCompleted", true).apply()
-        //             navController.popBackStack()
-        //         },
-        //         onDismiss = { navController.popBackStack() }
-        //     )
-        // }
+        composable(Routes.USER_PROFILING) {
+            val ctx = LocalContext.current
+            com.alperen.spendcraft.feature.ai.UserProfilingScreen(
+                onComplete = {
+                    // iOS: @AppStorage("userProfilingCompleted") = true
+                    val prefs = ctx.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+                    prefs.edit().putBoolean("profilingCompleted", true).apply()
+                    navController.popBackStack()
+                },
+                onDismiss = { navController.popBackStack() }
+            )
+        }
         
         // iOS AccountInfoView - Settings'den açılır
         // composable(Routes.ACCOUNT_INFO) {

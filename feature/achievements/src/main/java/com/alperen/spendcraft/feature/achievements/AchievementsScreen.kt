@@ -488,7 +488,7 @@ private fun AchievementCardLarge(
                     tint = IOSColors.Yellow
                 )
                 Text(
-                    text = "${achievement.currentProgress} Puan",
+                    text = "${achievement.reward ?: 0} Puan",
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Medium
                 )
