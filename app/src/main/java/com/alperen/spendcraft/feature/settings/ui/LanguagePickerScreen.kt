@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.core.ui.LocaleHelper
 import com.alperen.spendcraft.core.ui.R as CoreR
+import androidx.activity.ComponentActivity
 
 data class Language(
     val code: String,
@@ -82,19 +83,14 @@ fun LanguagePickerScreen(
                     language = language,
                     isSelected = selectedLanguage == language.code,
                     onClick = {
-                        selectedLanguage = language.code
-                        LocaleHelper.setLocale(context, language.code)
+                        if (selectedLanguage != language.code) {
+                            selectedLanguage = language.code
+                            LocaleHelper.setLocale(context, language.code)
+                            
+                            // Activity'yi recreate et - dil değişikliğini anında uygula
+                            (context as? ComponentActivity)?.recreate()
+                        }
                     }
-                )
-            }
-            
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = if (selectedLanguage == "tr") "Uygulama yeniden başlatıldığında değişiklikler uygulanacaktır." else "Changes will be applied after the app restarts.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
         }
