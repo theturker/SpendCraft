@@ -339,22 +339,25 @@ private fun TransactionListRow(
                 .background(categoryColor.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
-            // ✅ Kategori ikonunu göster - emoji veya SF Symbol destekli
-            if (com.alperen.spendcraft.core.ui.IconMapper.isEmoji(category?.icon)) {
-                // Emoji ikonları için Painter kullan
+            // ✅ Kategori ikonunu göster - önce getCategoryIconDrawable dene, sonra SF Symbol
+            val iconString = category?.icon ?: "circle.fill"
+            val drawableId = com.alperen.spendcraft.core.ui.IconMapper.getCategoryIconDrawable(iconString)
+            val isEmoji = com.alperen.spendcraft.core.ui.IconMapper.isEmoji(iconString)
+            val isDefaultIcon = drawableId == com.alperen.spendcraft.core.ui.R.drawable.ic_circle_fill && iconString != "circle.fill"
+            
+            // Eğer drawable bulunduysa veya emoji ise Painter kullan
+            if (!isDefaultIcon || isEmoji) {
                 Icon(
-                    painter = painterResource(
-                        id = com.alperen.spendcraft.core.ui.IconMapper.getCategoryIconDrawable(category?.icon)
-                    ),
+                    painter = painterResource(id = drawableId),
                     contentDescription = null,
                     tint = categoryColor,
                     modifier = Modifier.size(24.dp)
                 )
             } else {
-                // SF Symbol ikonları için ImageVector kullan
+                // Drawable bulunamadıysa ImageVector kullan (fallback)
                 Icon(
                     imageVector = com.alperen.spendcraft.core.ui.IconMapper.getIconFromSFSymbol(
-                        category?.icon,
+                        iconString,
                         transaction.type == TransactionType.INCOME
                     ),
                     contentDescription = null,

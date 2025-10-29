@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
+import com.alperen.spendcraft.domain.repo.StreakRepository
 import com.alperen.spendcraft.domain.achievements.AchievementManager
 import com.alperen.spendcraft.shared.domain.calculator.TransactionAnalyzer as SharedTransactionAnalyzer
 import com.alperen.spendcraft.shared.domain.calculator.StreakCalculator as SharedStreakCalculator
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val transactionsRepository: TransactionsRepository,
+    private val streakRepository: StreakRepository,
     private val achievementManager: AchievementManager
 ) : ViewModel() {
     
@@ -103,9 +105,22 @@ class DashboardViewModel @Inject constructor(
         initialValue = 0.0
     )
 
-    // Streak data - SIMPLIFIED FOR NOW
-    val currentStreak: StateFlow<Int> = MutableStateFlow(0) // Placeholder
-    val longestStreak: StateFlow<Int> = MutableStateFlow(0) // Placeholder
+    // Streak data - gerçek veri ile çalışıyor
+    val currentStreak: StateFlow<Int> = streakRepository.observeStreak()
+        .map { it.current }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0
+        )
+    
+    val longestStreak: StateFlow<Int> = streakRepository.observeStreak()
+        .map { it.best }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0
+        )
 
     // Achievements data - gerçek veri ile çalışıyor (AchievementManager üzerinden)
     val achievements: StateFlow<List<com.alperen.spendcraft.data.db.entities.AchievementEntity>> = 
@@ -146,7 +161,6 @@ class DashboardViewModel @Inject constructor(
             achievementManager.initializeAchievements()
             // Check and update achievements
             achievementManager.checkAchievements()
-            // TODO: Load streak data
         }
     }
 }
