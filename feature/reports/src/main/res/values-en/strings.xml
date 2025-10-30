@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="report_title">SpendCraft - Financial Report</string>
+    <string name="account_statement">Account Statement</string>
+    <string name="date_col">Date</string>
+    <string name="type_col">Type</string>
+    <string name="category_col">Category</string>
+    <string name="amount_col">Amount</string>
+    <string name="description_col">Description</string>
+    <string name="summary_text">Income: %1$s  |  Expense: %2$s  |  Net: %3$s</string>
+    <string name="analysis_fallback">Contains %1$d expenses and %2$d incomes. Top expense category: %3$s. Consider reviewing this category.</string>
+    <string name="recommendation_fallback">Review fixed monthly expenses and set an auto-saving goal. Target 10% cut in the top spending category and track weekly.</string>
+    
     <string name="reports_category_unknown">Unknown Category</string>
     <string name="export_title">Export</string>
     <string name="export_format_title">Download Format</string>

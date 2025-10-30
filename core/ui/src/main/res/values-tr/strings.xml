@@ -50,13 +50,20 @@
     <string name="transactions_count">işlem</string>
     <string name="average">Ortalama</string>
     <string name="recent_transactions">Son İşlemler</string>
+    <string name="all_transactions">Tüm İşlemler</string>
     <string name="view_all">Tümünü Gör</string>
     <string name="no_transactions_yet">Henüz işlem yok</string>
+    <string name="no_transactions">İşlem Yok</string>
+    <string name="no_transactions_desc">İşlem eklemeye başlayın</string>
     <string name="start_adding_transactions">İlk işleminizi ekleyerek başlayın</string>
     <string name="income">💰 Gelir</string>
     <string name="expense">💸 Gider</string>
     <string name="no_description">Açıklama yok</string>
     <string name="delete">Sil</string>
+    <string name="type">Tip</string>
+    <string name="active">Aktif</string>
+    <string name="change">Değiştir</string>
+    <string name="select">Seç</string>
     
     <!-- Add Transaction -->
     <string name="transaction_type">İşlem Türü</string>
@@ -65,6 +72,19 @@
     <string name="note_optional">Not (isteğe bağlı)</string>
     <string name="category">Kategori</string>
     <string name="select_category">Kategori Seçin</string>
+    <string name="select_frequency">Sıklık Seç</string>
+    <string name="frequency">Sıklık</string>
+    <string name="recurring_frequency">Tekrar Sıklığı</string>
+    <string name="start_date">Başlangıç Tarihi</string>
+    <string name="transaction_info">İşlem Bilgileri</string>
+    <string name="transaction_name">İşlem Adı</string>
+    <string name="example_rent_salary">Örn: Kira, Maaş</string>
+    <string name="add_recurring_transaction">Tekrarlayan İşlem Ekle</string>
+    <string name="daily">Günlük</string>
+    <string name="weekly">Haftalık</string>
+    <string name="monthly">Aylık</string>
+    <string name="yearly">Yıllık</string>
+    <string name="currency_symbol_lira">₺</string>
     
     <!-- Settings Screen -->
     <string name="turkish_lira">Türk Lirası</string>
@@ -84,6 +104,13 @@
     <!-- Account Management -->
     <string name="edit_account_name">Hesap Adını Düzenle</string>
     <string name="account_name">Hesap Adı</string>
+    <string name="account">Hesap</string>
+    <string name="select_account">Hesap Seçiniz</string>
+    <string name="date">Tarih</string>
+    <string name="edit_transaction">İşlemi Düzenle</string>
+    <string name="save_changes">Değişiklikleri Kaydet</string>
+    <string name="delete_transaction_title">İşlemi Sil?</string>
+    <string name="delete_transaction_message">Bu işlem kalıcı olarak silinecek.</string>
     
     <!-- Onboarding -->
     <string name="welcome_title">SpendCraft\'a Hoş Geldiniz</string>
@@ -115,8 +142,7 @@
     <string name="widget_description">Finansal özetinize hızlı erişim ve işlem ekleme</string>
     
     <!-- Reminder Notifications -->
-    <string name="reminder_channel_name">Günlük Hatırlatmalar</string>
-    <string name="reminder_channel_description">Günlük harcama takibi hatırlatmaları</string>
+    <!-- duplicate removed: reminder_channel_name/description already defined above -->
     <string name="reminder_title">Bugünün harcamalarını ekle</string>
     <string name="reminder_text">Bugün harcamalarınızı takip etmeyi unutmayın!</string>
     
@@ -138,4 +164,9 @@
     <string name="export">Dışa Aktar</string>
     <string name="import_dialog_text">İçe aktarılacak işlemler için bir CSV dosyası seçin</string>
     <string name="export_dialog_text">Dışa aktarılan işlemlerinizi nereye kaydetmek istediğinizi seçin</string>
+    
+    <!-- (moved notifications strings to core/notifications module) -->
+    
+    <!-- Premium -->
+    <string name="upgrade_to_premium">Premium’a Geç</string>
 </resources>

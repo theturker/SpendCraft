@@ -44,49 +44,49 @@ class NotificationManager @Inject constructor(
             // Budget Alerts Channel
             val budgetChannel = NotificationChannel(
                 CHANNEL_ID_BUDGET,
-                "Bütçe Uyarıları",
+                context.getString(R.string.budget_channel_name),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Bütçe aşımı ve finansal uyarılar"
+                description = context.getString(R.string.budget_channel_description)
                 enableVibration(true)
             }
             
             // Spending Reminders Channel
             val reminderChannel = NotificationChannel(
                 CHANNEL_ID_REMINDERS,
-                "Harcama Hatırlatmaları",
+                context.getString(R.string.reminder_channel_name),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Günlük harcama kayıt hatırlatmaları"
+                description = context.getString(R.string.reminder_channel_description)
                 enableVibration(false)
             }
             
             // Achievements Channel
             val achievementChannel = NotificationChannel(
                 CHANNEL_ID_ACHIEVEMENTS,
-                "Başarımlar",
+                context.getString(R.string.achievements_channel_name),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Başarım ve rozet bildirimleri"
+                description = context.getString(R.string.achievements_channel_description)
                 enableVibration(true)
             }
             
             // General Channel
             val generalChannel = NotificationChannel(
                 CHANNEL_ID_GENERAL,
-                "Genel",
+                context.getString(R.string.general_channel_name),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Genel uygulama bildirimleri"
+                description = context.getString(R.string.general_channel_description)
                 enableVibration(false)
             }
             
             val reportsChannel = NotificationChannel(
                 CHANNEL_ID_REPORTS,
-                "Raporlar",
+                context.getString(R.string.reports_channel_name),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Rapor oluşturma bildirimi"
+                description = context.getString(R.string.reports_channel_description)
                 enableVibration(false)
             }
             notificationManager.createNotificationChannels(
@@ -129,8 +129,8 @@ class NotificationManager @Inject constructor(
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_BUDGET)
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
-            .setContentTitle("⚠️ Bütçe Uyarısı")
-            .setContentText("$budgetName bütçenizi $amount aştınız!")
+            .setContentTitle(context.getString(R.string.budget_alert_title))
+            .setContentText(context.getString(R.string.budget_exceeded_message, budgetName, amount))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -151,8 +151,8 @@ class NotificationManager @Inject constructor(
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_BUDGET)
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
-            .setContentTitle("⚠️ Bütçe Uyarısı")
-            .setContentText("$budgetName bütçenizin %$percentage'ini kullandınız! (₺$spentAmount / ₺$limitAmount)")
+            .setContentTitle(context.getString(R.string.budget_alert_title))
+            .setContentText(context.getString(R.string.budget_usage_message, percentage, budgetName, "₺$spentAmount", "₺$limitAmount"))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -173,8 +173,8 @@ class NotificationManager @Inject constructor(
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_REMINDERS)
             .setSmallIcon(android.R.drawable.ic_menu_edit)
-            .setContentTitle("📝 Günlük Hatırlatma")
-            .setContentText("Bugünkü harcamalarınızı kaydetmeyi unutmayın!")
+            .setContentTitle(context.getString(R.string.daily_reminder_title))
+            .setContentText(context.getString(R.string.daily_reminder_text))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -195,7 +195,7 @@ class NotificationManager @Inject constructor(
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_ACHIEVEMENTS)
             .setSmallIcon(android.R.drawable.ic_menu_myplaces)
-            .setContentTitle("🏆 Yeni Başarım!")
+            .setContentTitle(context.getString(R.string.new_achievement_title))
             .setContentText("$achievementName: $description")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)

@@ -63,7 +63,7 @@ fun QuickAddCard(
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
-                    text = "Hızlı Harcama Ekle",
+                    text = stringResource(R.string.quick_add_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -85,7 +85,7 @@ fun QuickAddCard(
                             amount = newValue
                         }
                     },
-                    label = { Text("Tutar (₺)") },
+                    label = { Text(stringResource(R.string.amount)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
@@ -105,7 +105,7 @@ fun QuickAddCard(
                     enabled = amount.isNotEmpty() && amount.toLongOrNull() != null && amount.toLongOrNull()!! > 0,
                     modifier = Modifier.height(56.dp)
                 ) {
-                    Text("Ekle")
+                    Text(stringResource(R.string.add))
                 }
             }
             

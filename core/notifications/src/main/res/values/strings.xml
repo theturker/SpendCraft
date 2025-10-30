@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notifications / Channels (default TR) -->
+    <string name="budget_channel_name">Bütçe Uyarıları</string>
+    <string name="budget_channel_description">Bütçe aşımı ve finansal uyarılar</string>
+    <string name="reminder_channel_name">Günlük Hatırlatmalar</string>
+    <string name="reminder_channel_description">Günlük harcama takibi hatırlatmaları</string>
+    <string name="achievements_channel_name">Başarımlar</string>
+    <string name="achievements_channel_description">Başarım ve rozet bildirimleri</string>
+    <string name="general_channel_name">Genel</string>
+    <string name="general_channel_description">Genel uygulama bildirimleri</string>
+    <string name="reports_channel_name">Raporlar</string>
+    <string name="reports_channel_description">Rapor oluşturma bildirimi</string>
+
+    <string name="budget_alert_title">⚠️ Bütçe Uyarısı</string>
+    <string name="budget_exceeded_message">%1$s bütçenizi %2$s aştınız!</string>
+    <string name="budget_usage_message">%1$d%% oranında %2$s bütçenizi kullandınız! (%3$s / %4$s)</string>
+    <string name="daily_reminder_title">📝 Günlük Hatırlatma</string>
+    <string name="daily_reminder_text">Bugünkü harcamalarınızı kaydetmeyi unutmayın!</string>
+    <string name="new_achievement_title">🏆 Yeni Başarım!</string>
+</resources>
+
+

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -53,7 +54,7 @@ fun PremiumGate(
             
             Button(
                 onClick = { 
-                    android.util.Log.d("PremiumGate", "Premium'a Geç button clicked")
+                    android.util.Log.d("PremiumGate", "upgrade_to_premium button clicked")
                     onUpgrade() 
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -64,7 +65,7 @@ fun PremiumGate(
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Premium'a Geç")
+                Text(stringResource(R.string.upgrade_to_premium))
             }
         }
     }
@@ -121,7 +122,7 @@ fun PremiumFeatureCard(
                     onClick = onUpgrade,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Premium'a Geç")
+                    Text(stringResource(R.string.upgrade_to_premium))
                 }
             }
         }

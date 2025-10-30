@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notifications / Channels (EN) -->
+    <string name="budget_channel_name">Budget Alerts</string>
+    <string name="budget_channel_description">Budget exceedance and financial alerts</string>
+    <string name="reminder_channel_name">Daily Reminders</string>
+    <string name="reminder_channel_description">Daily expense tracking reminders</string>
+    <string name="achievements_channel_name">Achievements</string>
+    <string name="achievements_channel_description">Achievement and badge notifications</string>
+    <string name="general_channel_name">General</string>
+    <string name="general_channel_description">General app notifications</string>
+    <string name="reports_channel_name">Reports</string>
+    <string name="reports_channel_description">Report generation notifications</string>
+
+    <string name="budget_alert_title">⚠️ Budget Alert</string>
+    <string name="budget_exceeded_message">You exceeded %1$s budget by %2$s!</string>
+    <string name="budget_usage_message">You used %1$d%% of %2$s budget! (%3$s / %4$s)</string>
+    <string name="daily_reminder_title">📝 Daily Reminder</string>
+    <string name="daily_reminder_text">Don\'t forget to record today\'s expenses!</string>
+    <string name="new_achievement_title">🏆 New Achievement!</string>
+</resources>
+
+

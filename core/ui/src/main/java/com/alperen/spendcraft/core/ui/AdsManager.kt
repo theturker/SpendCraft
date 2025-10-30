@@ -33,9 +33,9 @@ class AdsManager private constructor(private val context: Context) {
      * @Published var isPremium: Bool = false
      */
     var isPremium: Boolean
-        get() = prefs.getBoolean("isPremium", false)
-        set(value) {
-            prefs.edit().putBoolean("isPremium", value).apply()
+        get() = false // Premium kaldırıldı
+        set(@Suppress("UNUSED_PARAMETER") value) {
+            // no-op
         }
     
     /**
@@ -59,9 +59,6 @@ class AdsManager private constructor(private val context: Context) {
  * Compose için isPremium state
  */
 @androidx.compose.runtime.Composable
-fun rememberIsPremium(context: Context = androidx.compose.ui.platform.LocalContext.current): Boolean {
-    val adsManager = androidx.compose.runtime.remember { AdsManager.getInstance(context) }
-    return adsManager.isPremium
-}
+fun rememberIsPremium(context: Context = androidx.compose.ui.platform.LocalContext.current): Boolean = false
 
 

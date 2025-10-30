@@ -185,7 +185,7 @@ class ExportService(private val context: Context) {
                         }
                     } catch (_: Exception) {}
 
-                    canvas.drawText("SpendCraft - Finans Raporu", 110f, y.toFloat(), titlePaint)
+                    canvas.drawText(context.getString(com.alperen.spendcraft.feature.reports.R.string.report_title), 110f, y.toFloat(), titlePaint)
                     y += 18 // başlık-tarih arası ekstra boşluk
                     canvas.drawText("${java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault()).format(java.util.Date())}", 110f, y.toFloat(), textPaint)
                     y += 26 // tarih ile özet kutusu arası biraz daha boşluk
@@ -195,7 +195,12 @@ class ExportService(private val context: Context) {
                     val totalIncome = filtered.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.minorUnits }
                     val totalExpense = filtered.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.minorUnits }
                     val net = totalIncome - totalExpense
-                    val summary = "Gelir: ₺${String.format("%.2f", totalIncome / 100.0)}  |  Gider: ₺${String.format("%.2f", totalExpense / 100.0)}  |  Net: ₺${String.format("%.2f", net / 100.0)}"
+                    val summary = context.getString(
+                        com.alperen.spendcraft.feature.reports.R.string.summary_text,
+                        "₺${String.format("%.2f", totalIncome / 100.0)}",
+                        "₺${String.format("%.2f", totalExpense / 100.0)}",
+                        "₺${String.format("%.2f", net / 100.0)}"
+                    )
                     canvas.drawText(summary, 40f, (y + 30).toFloat(), android.graphics.Paint().apply { color = android.graphics.Color.WHITE; textSize = 12f; isFakeBoldText = true })
                     y += 70
 
@@ -206,29 +211,34 @@ class ExportService(private val context: Context) {
                         .groupBy { it.categoryId }
                         .maxByOrNull { (_, list) -> list.sumOf { it.amount.minorUnits } }
                         ?.key
-                    val topCategoryName = categories.find { it.id == topCategory }?.name ?: "Bilinmeyen"
-                    val fallbackAnalysis = "${expenseCount} gider ve ${incomeCount} gelir içeriyor. En çok harcama kategorisi: ${topCategoryName}. Bütçenizi bu kategori özelinde gözden geçirmeniz faydalı olabilir."
+                    val topCategoryName = categories.find { it.id == topCategory }?.name ?: context.getString(com.alperen.spendcraft.core.ui.R.string.unknown_category)
+                    val fallbackAnalysis = context.getString(
+                        com.alperen.spendcraft.feature.reports.R.string.analysis_fallback,
+                        expenseCount,
+                        incomeCount,
+                        topCategoryName
+                    )
                     val analysisText = (aiAnalysis ?: fallbackAnalysis).take(500)
                     drawMultilineText(canvas, analysisText, 30f, y.toFloat(), 535f, textPaint)
                     y += estimateMultilineHeight(analysisText, 535f, textPaint) + 10
 
                     // AI Önerisi (maks 400 karakter)
-                    val fallbackRecommendation = "Aylık sabit giderlerinizi gözden geçirip otomatik tasarruf hedefi belirleyin. En yüksek harcama yaptığınız kategoride %10 kısıntı hedefleyin ve haftalık takip edin."
+                    val fallbackRecommendation = context.getString(com.alperen.spendcraft.feature.reports.R.string.recommendation_fallback)
                     val recommendationText = (aiRecommendation ?: fallbackRecommendation).take(400)
                     drawMultilineText(canvas, recommendationText, 30f, y.toFloat(), 535f, textPaint)
                     y += estimateMultilineHeight(recommendationText, 535f, textPaint) + 16
 
                     // Hesap Ekstresi başlığı – üst/alt ek boşluk
                     y += 4
-                    canvas.drawText("Hesap Ekstresi", 30f, y.toFloat(), titlePaint)
+                    canvas.drawText(context.getString(com.alperen.spendcraft.feature.reports.R.string.account_statement), 30f, y.toFloat(), titlePaint)
                     y += 20
 
                     // Tablo başlıkları
-                    canvas.drawText("Tarih", 30f, y.toFloat(), textPaint)
-                    canvas.drawText("Tür", 120f, y.toFloat(), textPaint)
-                    canvas.drawText("Kategori", 170f, y.toFloat(), textPaint)
-                    canvas.drawText("Tutar", 350f, y.toFloat(), textPaint)
-                    canvas.drawText("Açıklama", 430f, y.toFloat(), textPaint)
+                    canvas.drawText(context.getString(com.alperen.spendcraft.feature.reports.R.string.date_col), 30f, y.toFloat(), textPaint)
+                    canvas.drawText(context.getString(com.alperen.spendcraft.feature.reports.R.string.type_col), 120f, y.toFloat(), textPaint)
+                    canvas.drawText(context.getString(com.alperen.spendcraft.feature.reports.R.string.category_col), 170f, y.toFloat(), textPaint)
+                    canvas.drawText(context.getString(com.alperen.spendcraft.feature.reports.R.string.amount_col), 350f, y.toFloat(), textPaint)
+                    canvas.drawText(context.getString(com.alperen.spendcraft.feature.reports.R.string.description_col), 430f, y.toFloat(), textPaint)
                     y += 12
                     canvas.drawLine(30f, y.toFloat(), 565f, y.toFloat(), android.graphics.Paint().apply { color = android.graphics.Color.LTGRAY })
                     y += 12
@@ -239,7 +249,8 @@ class ExportService(private val context: Context) {
                         val date = sdf.format(java.util.Date(tx.timestampUtcMillis))
                         val type = if (tx.type == TransactionType.INCOME) "+" else "-"
                         val amount = String.format("%.2f", tx.amount.minorUnits / 100.0)
-                        val categoryName = categories.find { it.id == tx.categoryId }?.name ?: "Bilinmeyen"
+                        val rawCategoryName = categories.find { it.id == tx.categoryId }?.name
+                        val categoryName = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, rawCategoryName)
                         val note = (tx.note ?: "").take(28)
 
                         canvas.drawText(date, 30f, y.toFloat(), textPaint)

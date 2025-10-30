@@ -25,11 +25,8 @@ fun PremiumGate(
     premiumContent: @Composable () -> Unit,
     freeContent: @Composable () -> Unit
 ) {
-    if (isPremium) {
-        premiumContent()
-    } else {
-        freeContent()
-    }
+    // Premium yapısı kaldırıldı: her zaman premium içeriği göster
+    premiumContent()
 }
 
 /**

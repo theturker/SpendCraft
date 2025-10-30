@@ -50,13 +50,20 @@
     <string name="transactions_count">transactions</string>
     <string name="average">Average</string>
     <string name="recent_transactions">Recent Transactions</string>
+    <string name="all_transactions">All Transactions</string>
     <string name="view_all">View All</string>
     <string name="no_transactions_yet">No transactions yet</string>
+    <string name="no_transactions">No transactions</string>
+    <string name="no_transactions_desc">Start adding transactions</string>
     <string name="start_adding_transactions">Start by adding your first transaction</string>
     <string name="income">💰 Income</string>
     <string name="expense">💸 Expense</string>
     <string name="no_description">No description</string>
     <string name="delete">Delete</string>
+    <string name="type">Type</string>
+    <string name="active">Active</string>
+    <string name="change">Change</string>
+    <string name="select">Select</string>
     
     <!-- Add Transaction -->
     <string name="add_transaction">Add Transaction</string>
@@ -66,6 +73,19 @@
     <string name="note_optional">Note (optional)</string>
     <string name="category">Category</string>
     <string name="select_category">Select Category</string>
+    <string name="select_frequency">Select Frequency</string>
+    <string name="frequency">Frequency</string>
+    <string name="recurring_frequency">Recurring Frequency</string>
+    <string name="start_date">Start Date</string>
+    <string name="transaction_info">Transaction Info</string>
+    <string name="transaction_name">Transaction Name</string>
+    <string name="example_rent_salary">e.g., Rent, Salary</string>
+    <string name="add_recurring_transaction">Add Recurring Transaction</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+    <string name="currency_symbol_lira">₺</string>
     
     <!-- Settings Screen -->
     <string name="turkish_lira">Turkish Lira</string>
@@ -85,6 +105,13 @@
     <!-- Account Management -->
     <string name="edit_account_name">Edit Account Name</string>
     <string name="account_name">Account Name</string>
+    <string name="account">Account</string>
+    <string name="select_account">Select Account</string>
+    <string name="date">Date</string>
+    <string name="edit_transaction">Edit Transaction</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="delete_transaction_title">Delete Transaction?</string>
+    <string name="delete_transaction_message">This transaction will be permanently deleted.</string>
     
     <!-- Streak -->
     <string name="day_streak">day streak</string>
@@ -94,8 +121,7 @@
     <string name="bronze_badge">🥉 Bronze</string>
     
     <!-- Reminder Notifications -->
-    <string name="reminder_channel_name">Daily Reminders</string>
-    <string name="reminder_channel_description">Daily expense tracking reminders</string>
+    <!-- duplicate removed: reminder_channel_name/description already defined above -->
     <string name="reminder_title">Add today\'s expenses</string>
     <string name="reminder_text">Don\'t forget to track your spending today!</string>
     
@@ -139,4 +165,9 @@
     <string name="export">Export</string>
     <string name="import_dialog_text">Choose a CSV file to import transactions from</string>
     <string name="export_dialog_text">Choose where to save your exported transactions</string>
+    
+    <!-- (moved notifications strings to core/notifications module) -->
+    
+    <!-- Premium -->
+    <string name="upgrade_to_premium">Upgrade to Premium</string>
 </resources>

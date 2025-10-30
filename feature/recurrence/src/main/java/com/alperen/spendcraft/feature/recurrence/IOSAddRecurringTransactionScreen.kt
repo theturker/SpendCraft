@@ -22,6 +22,7 @@ import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.IOSColors
+import androidx.compose.ui.res.stringResource
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -49,21 +50,22 @@ fun IOSAddRecurringTransactionScreen(
     var showDatePicker by remember { mutableStateOf(false) }
     
     val frequencies = listOf(
-        "Günlük" to "DAILY",
-        "Haftalık" to "WEEKLY",
-        "Aylık" to "MONTHLY",
-        "Yıllık" to "YEARLY"
+        stringResource(com.alperen.spendcraft.core.ui.R.string.daily) to "DAILY",
+        stringResource(com.alperen.spendcraft.core.ui.R.string.weekly) to "WEEKLY",
+        stringResource(com.alperen.spendcraft.core.ui.R.string.monthly) to "MONTHLY",
+        stringResource(com.alperen.spendcraft.core.ui.R.string.yearly) to "YEARLY"
     )
     
-    val frequencyDisplay = frequencies.firstOrNull { it.second == frequency }?.first ?: "Aylık"
-    val dateFormat = remember { SimpleDateFormat("d MMMM yyyy", Locale("tr")) }
+    val frequencyDisplay = frequencies.firstOrNull { it.second == frequency }?.first
+        ?: stringResource(com.alperen.spendcraft.core.ui.R.string.monthly)
+    val dateFormat = remember { SimpleDateFormat("d MMMM yyyy", Locale.getDefault()) }
     
     AppScaffold(
-        title = "Tekrarlayan İşlem Ekle",
+        title = stringResource(com.alperen.spendcraft.core.ui.R.string.add_recurring_transaction),
         onBack = onCancel,
         actions = {
             TextButton(onClick = onCancel) {
-                Text("İptal", color = MaterialTheme.colorScheme.primary)
+                Text(stringResource(com.alperen.spendcraft.core.ui.R.string.cancel), color = MaterialTheme.colorScheme.primary)
             }
         }
     ) {
@@ -77,7 +79,7 @@ fun IOSAddRecurringTransactionScreen(
                 ModernCard {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "İşlem Bilgileri",
+                            text = stringResource(com.alperen.spendcraft.core.ui.R.string.transaction_info),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -87,8 +89,8 @@ fun IOSAddRecurringTransactionScreen(
                         OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("İşlem Adı") },
-                            placeholder = { Text("Örn: Kira, Maaş") },
+                            label = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.transaction_name)) },
+                            placeholder = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.example_rent_salary)) },
                             modifier = Modifier.fillMaxWidth()
                         )
                         
@@ -98,9 +100,9 @@ fun IOSAddRecurringTransactionScreen(
                         OutlinedTextField(
                             value = amount,
                             onValueChange = { amount = it },
-                            label = { Text("Tutar") },
+                            label = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.amount)) },
                             placeholder = { Text("0.00") },
-                            trailingIcon = { Text("₺", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                            trailingIcon = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.currency_symbol_lira), color = MaterialTheme.colorScheme.onSurfaceVariant) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -109,7 +111,7 @@ fun IOSAddRecurringTransactionScreen(
                         
                         // Tip (Segmented Control - iOS Style)
                         Text(
-                            text = "Tip",
+                            text = stringResource(com.alperen.spendcraft.core.ui.R.string.type),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -133,7 +135,7 @@ fun IOSAddRecurringTransactionScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    "Gider",
+                                    stringResource(com.alperen.spendcraft.core.ui.R.string.expense),
                                     fontWeight = if (!isIncome) FontWeight.SemiBold else FontWeight.Normal
                                 )
                             }
@@ -149,7 +151,7 @@ fun IOSAddRecurringTransactionScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    "Gelir",
+                                    stringResource(com.alperen.spendcraft.core.ui.R.string.income),
                                     fontWeight = if (isIncome) FontWeight.SemiBold else FontWeight.Normal
                                 )
                             }
@@ -163,7 +165,7 @@ fun IOSAddRecurringTransactionScreen(
                 ModernCard {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Kategori",
+                            text = stringResource(com.alperen.spendcraft.core.ui.R.string.category),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -188,7 +190,7 @@ fun IOSAddRecurringTransactionScreen(
                                     Text(selectedCategory?.name ?: "")
                                 }
                                 TextButton(onClick = { selectedCategory = null }) {
-                                    Text("Değiştir", style = MaterialTheme.typography.labelMedium)
+                                    Text(stringResource(com.alperen.spendcraft.core.ui.R.string.change), style = MaterialTheme.typography.labelMedium)
                                 }
                             }
                         } else {
@@ -196,7 +198,7 @@ fun IOSAddRecurringTransactionScreen(
                             OutlinedTextField(
                                 value = "Seçiniz",
                                 onValueChange = { },
-                                label = { Text("Kategori Seç") },
+                                label = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.select_category)) },
                                 readOnly = true,
                                 trailingIcon = {
                                     Icon(Icons.Default.ArrowDropDown, contentDescription = null)
@@ -215,7 +217,7 @@ fun IOSAddRecurringTransactionScreen(
                 ModernCard {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Tekrar Sıklığı",
+                            text = stringResource(com.alperen.spendcraft.core.ui.R.string.recurring_frequency),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -225,7 +227,7 @@ fun IOSAddRecurringTransactionScreen(
                         OutlinedTextField(
                             value = frequencyDisplay,
                             onValueChange = { },
-                            label = { Text("Sıklık") },
+                            label = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.frequency)) },
                             readOnly = true,
                             trailingIcon = {
                                 Icon(Icons.Default.ArrowDropDown, contentDescription = null)
@@ -241,7 +243,7 @@ fun IOSAddRecurringTransactionScreen(
                         OutlinedTextField(
                             value = dateFormat.format(Date(startDate)),
                             onValueChange = { },
-                            label = { Text("Başlangıç Tarihi") },
+                            label = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.start_date)) },
                             readOnly = true,
                             trailingIcon = {
                                 Icon(Icons.Default.DateRange, contentDescription = null)
@@ -265,7 +267,7 @@ fun IOSAddRecurringTransactionScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Aktif",
+                            text = stringResource(com.alperen.spendcraft.core.ui.R.string.active),
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Switch(
@@ -302,7 +304,7 @@ fun IOSAddRecurringTransactionScreen(
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         Text(
-                            "Kaydet",
+                            stringResource(com.alperen.spendcraft.core.ui.R.string.save),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -316,7 +318,7 @@ fun IOSAddRecurringTransactionScreen(
     if (showCategoryPicker) {
         AlertDialog(
             onDismissRequest = { showCategoryPicker = false },
-            title = { Text("Kategori Seç") },
+            title = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.select_category)) },
             text = {
                 LazyColumn {
                     items(categories.size) { index ->
@@ -344,7 +346,7 @@ fun IOSAddRecurringTransactionScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showCategoryPicker = false }) {
-                    Text("İptal")
+                    Text(stringResource(com.alperen.spendcraft.core.ui.R.string.cancel))
                 }
             }
         )
@@ -354,7 +356,7 @@ fun IOSAddRecurringTransactionScreen(
     if (showFrequencyPicker) {
         AlertDialog(
             onDismissRequest = { showFrequencyPicker = false },
-            title = { Text("Sıklık Seç") },
+            title = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.select_frequency)) },
             text = {
                 Column {
                     frequencies.forEach { (display, value) ->
@@ -374,7 +376,7 @@ fun IOSAddRecurringTransactionScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showFrequencyPicker = false }) {
-                    Text("İptal")
+                    Text(stringResource(com.alperen.spendcraft.core.ui.R.string.cancel))
                 }
             }
         )
@@ -392,12 +394,12 @@ fun IOSAddRecurringTransactionScreen(
                         showDatePicker = false
                     }
                 ) {
-                    Text("Seç")
+                    Text(stringResource(com.alperen.spendcraft.core.ui.R.string.select))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("İptal")
+                    Text(stringResource(com.alperen.spendcraft.core.ui.R.string.cancel))
                 }
             }
         ) {

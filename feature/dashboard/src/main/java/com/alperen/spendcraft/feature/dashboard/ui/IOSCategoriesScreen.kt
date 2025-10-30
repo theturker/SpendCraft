@@ -253,8 +253,8 @@ fun IOSCategoriesScreen(
                 showDeleteDialog = false
                 categoryToDelete = null
             },
-            title = { Text("Kategoriyi Sil?") },
-            text = { Text("${categoryToDelete?.name} kategorisini silmek istediğinizden emin misiniz?") },
+            title = { Text(androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.delete_category)) },
+            text = { Text(categoryToDelete?.name ?: "") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -266,7 +266,7 @@ fun IOSCategoriesScreen(
                         contentColor = IOSColors.Red
                     )
                 ) {
-                    Text("Sil")
+                    Text(androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.delete))
                 }
             },
             dismissButton = {
@@ -276,7 +276,7 @@ fun IOSCategoriesScreen(
                         categoryToDelete = null
                     }
                 ) {
-                    Text("İptal")
+                    Text(androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.cancel))
                 }
             }
         )
@@ -356,7 +356,7 @@ private fun CategoryRow(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = category.name,
+                        text = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(androidx.compose.ui.platform.LocalContext.current, category.name),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
@@ -498,7 +498,7 @@ private fun AddCategoryDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("İptal")
+                        Text(androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.cancel))
                     }
                     
                     Text(
@@ -515,7 +515,7 @@ private fun AddCategoryDialog(
                         },
                         enabled = categoryName.isNotBlank()
                     ) {
-                        Text("Kaydet")
+                        Text(androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.save))
                     }
                 }
                 
@@ -537,7 +537,7 @@ private fun AddCategoryDialog(
                             OutlinedTextField(
                                 value = categoryName,
                                 onValueChange = { categoryName = it },
-                                placeholder = { Text("Kategori Adı") },
+                                placeholder = { Text(androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.category_name)) },
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true
                             )
@@ -840,7 +840,7 @@ private fun AddBudgetDialog(
                         contentDescription = null,
                         tint = categoryColor
                     )
-                    Text(category.name)
+                    Text(com.alperen.spendcraft.core.ui.CategoryLocalization.localize(androidx.compose.ui.platform.LocalContext.current, category.name))
                 }
             }
         },
@@ -939,12 +939,12 @@ private fun AddBudgetDialog(
                 },
                 enabled = budgetAmount.replace(',', '.').toDoubleOrNull() != null
             ) {
-                Text("Kaydet")
+                Text(androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("İptal")
+                Text(androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.cancel))
             }
         }
     )

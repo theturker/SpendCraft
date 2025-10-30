@@ -34,7 +34,7 @@ fun AllTransactionsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Tüm İşlemler") },
+            title = { Text(stringResource(R.string.all_transactions)) },
                 navigationIcon = {
                     TextButton(onClick = onBack) { 
                         Text(stringResource(R.string.back)) 
@@ -71,7 +71,7 @@ fun AllTransactionsScreen(
                             Spacer(modifier = Modifier.height(16.dp))
                             
                             Text(
-                                text = "İşlem Yok",
+                                text = stringResource(R.string.no_transactions),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -80,7 +80,7 @@ fun AllTransactionsScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                             
                             Text(
-                                text = "İşlem eklemeye başlayın",
+                                text = stringResource(R.string.no_transactions_desc),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -154,9 +154,12 @@ private fun TransactionItemCard(
                     ) {
                         Text(
                             text = if (transaction.categoryId != null) {
-                                categories.find { it.id == transaction.categoryId }?.name ?: "Bilinmeyen Kategori"
+                                com.alperen.spendcraft.core.ui.CategoryLocalization.localize(
+                                    LocalContext.current,
+                                    categories.find { it.id == transaction.categoryId }?.name
+                                )
                             } else {
-                                "Kategori Yok"
+                                stringResource(R.string.category)
                             },
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -168,7 +171,7 @@ private fun TransactionItemCard(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Add,
-                                    contentDescription = "Kategori Ekle",
+                                    contentDescription = stringResource(R.string.add_category),
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(16.dp)
                                 )
@@ -200,7 +203,7 @@ private fun TransactionItemCard(
     if (showCategoryDialog) {
         AlertDialog(
             onDismissRequest = { showCategoryDialog = false },
-            title = { Text("Kategori Seç") },
+            title = { Text(stringResource(R.string.select_category)) },
             text = {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -228,7 +231,7 @@ private fun TransactionItemCard(
             },
             confirmButton = {
                 TextButton(onClick = { showCategoryDialog = false }) {
-                    Text("İptal")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

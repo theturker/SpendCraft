@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -90,13 +91,13 @@ fun IOSEditTransactionScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "İşlemi Düzenle",  // iOS: "İşlemi Düzenle"
+                        text = stringResource(com.alperen.spendcraft.core.ui.R.string.edit_transaction),
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
                 navigationIcon = {
                     TextButton(onClick = onDismiss) {
-                        Text("İptal", color = IOSColors.Blue)
+                        Text(stringResource(com.alperen.spendcraft.core.ui.R.string.cancel), color = IOSColors.Blue)
                     }
                 },
                 actions = {
@@ -107,7 +108,7 @@ fun IOSEditTransactionScreen(
                             contentColor = Color.Red
                         )
                     ) {
-                        Text("Sil")
+                        Text(stringResource(com.alperen.spendcraft.core.ui.R.string.delete))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -139,7 +140,7 @@ fun IOSEditTransactionScreen(
             // 2. Amount Section
             // iOS: EditTransactionView.swift:120-128
             item {
-                FormSection(title = "Miktar") {
+                FormSection(title = stringResource(com.alperen.spendcraft.core.ui.R.string.amount)) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -161,7 +162,7 @@ fun IOSEditTransactionScreen(
                         )
                         
                         Text(
-                            text = "₺",
+                            text = stringResource(com.alperen.spendcraft.core.ui.R.string.currency_symbol_lira),
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -172,7 +173,7 @@ fun IOSEditTransactionScreen(
             // 3. Category Section (Horizontal Buttons)
             // iOS: EditTransactionView.swift:130-165
             item {
-                FormSection(title = "Kategori") {
+                FormSection(title = stringResource(com.alperen.spendcraft.core.ui.R.string.category)) {
                     LazyRow(
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -191,7 +192,7 @@ fun IOSEditTransactionScreen(
             // 4. Account Section
             // iOS: EditTransactionView.swift:167-174
             item {
-                FormSection(title = "Hesap") {
+                FormSection(title = stringResource(com.alperen.spendcraft.core.ui.R.string.account)) {
                     var expanded by remember { mutableStateOf(false) }
                     
                     ExposedDropdownMenuBox(
@@ -235,10 +236,10 @@ fun IOSEditTransactionScreen(
             // 5. Date Section
             // iOS: EditTransactionView.swift:176-178
             item {
-                FormSection(title = "Tarih") {
+                FormSection(title = stringResource(com.alperen.spendcraft.core.ui.R.string.date)) {
                     OutlinedTextField(
                         value = remember(selectedDate) { 
-                            val dateFormat = SimpleDateFormat("d MMM yyyy, HH:mm", Locale("tr"))
+                            val dateFormat = SimpleDateFormat("d MMM yyyy, HH:mm", Locale.getDefault())
                             dateFormat.format(selectedDate)
                         },
                         onValueChange = {},
@@ -261,11 +262,11 @@ fun IOSEditTransactionScreen(
             // 6. Note Section
             // iOS: EditTransactionView.swift:180-182
             item {
-                FormSection(title = "Not") {
+                FormSection(title = stringResource(com.alperen.spendcraft.core.ui.R.string.note)) {
                     OutlinedTextField(
                         value = note,
                         onValueChange = { note = it },
-                        placeholder = { Text("İsteğe bağlı not") },
+                        placeholder = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.note_optional)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -310,7 +311,7 @@ fun IOSEditTransactionScreen(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = "Değişiklikleri Kaydet",  // iOS: "Değişiklikleri Kaydet"
+                            text = stringResource(com.alperen.spendcraft.core.ui.R.string.save_changes),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White
@@ -325,8 +326,8 @@ fun IOSEditTransactionScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("İşlemi Sil?") },
-            text = { Text("Bu işlem kalıcı olarak silinecek.") },
+            title = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.delete_transaction_title)) },
+            text = { Text(stringResource(com.alperen.spendcraft.core.ui.R.string.delete_transaction_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -335,12 +336,12 @@ fun IOSEditTransactionScreen(
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
                 ) {
-                    Text("Sil")
+                    Text(stringResource(com.alperen.spendcraft.core.ui.R.string.delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("İptal")
+                    Text(stringResource(com.alperen.spendcraft.core.ui.R.string.cancel))
                 }
             }
         )
