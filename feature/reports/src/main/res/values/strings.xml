@@ -27,6 +27,15 @@
     <string name="reports_time_range_daily">Günlük</string>
     <string name="reports_time_range_weekly">Haftalık</string>
     <string name="reports_time_range_monthly">Aylık</string>
+    <string name="reports_period_week">Hafta</string>
+    <string name="reports_period_month">Ay</string>
+    <string name="reports_period_year">Yıl</string>
+    <string name="reports_chart_trend">Trend</string>
+    <string name="reports_chart_category">Kategori</string>
+    <string name="reports_chart_comparison">Karşılaştırma</string>
+    <string name="reports_ai_suggestions">AI Önerileri</string>
+    <string name="reports_ai_suggestions_desc">Harcama alışkanlıklarınız hakkında öneriler alın</string>
+    <string name="reports_category_spending">Kategoriye Göre Harcamalar</string>
     <string name="export_date_range_last_week">Son Hafta</string>
     <string name="export_date_range_last_month">Son Ay</string>
     <string name="export_date_range_last_3_months">Son 3 Ay</string>

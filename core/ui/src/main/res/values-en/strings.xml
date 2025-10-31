@@ -59,6 +59,8 @@
     <string name="start_adding_transactions">Start by adding your first transaction</string>
     <string name="income">💰 Income</string>
     <string name="expense">💸 Expense</string>
+    <string name="income_label">Income</string>
+    <string name="expense_label">Expense</string>
     <string name="no_description">No description</string>
     <string name="delete">Delete</string>
     <string name="type">Type</string>
@@ -126,6 +128,7 @@
     <string name="chart_category_distribution">Category Distribution</string>
     <string name="chart_category_comparison">Category Comparison</string>
     <string name="no_data">No data yet</string>
+    <string name="notifications">Notifications</string>
     
     <!-- Reminder Notifications -->
     <!-- duplicate removed: reminder_channel_name/description already defined above -->

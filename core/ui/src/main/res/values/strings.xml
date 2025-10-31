@@ -46,6 +46,8 @@
     <string name="total_balance">Toplam Bakiye</string>
     <string name="income">💰Gelir</string>
     <string name="expenses">Giderler</string>
+    <string name="income_label">Gelir</string>
+    <string name="expense_label">Gider</string>
     <string name="add_income_button">Gelir Ekle</string>
     <string name="add_expense_button">Gider Ekle</string>
     <string name="this_month">Bu Ay</string>
@@ -173,4 +175,5 @@
     <string name="chart_category_distribution">Kategori Dağılımı</string>
     <string name="chart_category_comparison">Kategori Karşılaştırması</string>
     <string name="no_data">Henüz veri yok</string>
+    <string name="notifications">Bildirimler</string>
 </resources>

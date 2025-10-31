@@ -42,6 +42,7 @@ fun IOSTrendLineChart(
     expenseData: List<Pair<String, Double>>,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val maxValue = (incomeData.maxOfOrNull { it.second } ?: 0.0)
         .coerceAtLeast(expenseData.maxOfOrNull { it.second } ?: 0.0)
         .coerceAtLeast(1.0)
@@ -163,7 +164,7 @@ fun IOSTrendLineChart(
                         .background(IOSColors.Green)
                 )
                 Text(
-                    text = "Gelir",
+                    text = androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.income_label),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -181,7 +182,7 @@ fun IOSTrendLineChart(
                         .background(IOSColors.Red)
                 )
                 Text(
-                    text = "Gider",
+                    text = androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.expense_label),
                     style = MaterialTheme.typography.bodySmall
                 )
             }

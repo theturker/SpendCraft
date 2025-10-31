@@ -95,7 +95,7 @@ fun TransactionsScreen(
                 val accountBalance = accountIncome - accountExpense
                 AccountData(
                     id = account.id,
-                    name = if (index == 0) "💰 ${account.name}" else "🏠 ${account.name}",
+                    name = if (index == 0) "💰 ${com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, account.name)}" else "🏠 ${com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, account.name)}",
                     balance = CurrencyFormatter.format(context, accountBalance),
                     income = CurrencyFormatter.format(context, accountIncome),
                     expenses = CurrencyFormatter.format(context, accountExpense)
@@ -565,8 +565,9 @@ private fun GradientAccountsSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Sol üstte hesap adı
+            val context = LocalContext.current
             Text(
-                text = account.name,
+                text = com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, account.name),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.ExtraBold,
                 color = Color.White.copy(alpha = 0.95f)

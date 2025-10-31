@@ -49,16 +49,16 @@ import kotlin.collections.groupBy
  * 7. Top Categories
  */
 
-enum class ReportPeriod(val label: String) {
-    WEEK("Hafta"),
-    MONTH("Ay"),
-    YEAR("Yıl")
+enum class ReportPeriod(val labelResId: Int) {
+    WEEK(com.alperen.spendcraft.feature.reports.R.string.reports_period_week),
+    MONTH(com.alperen.spendcraft.feature.reports.R.string.reports_period_month),
+    YEAR(com.alperen.spendcraft.feature.reports.R.string.reports_period_year)
 }
 
-enum class ChartType(val label: String) {
-    TREND("Trend"),
-    CATEGORY("Kategori"),
-    COMPARISON("Karşılaştırma")
+enum class ChartType(val labelResId: Int) {
+    TREND(com.alperen.spendcraft.feature.reports.R.string.reports_chart_trend),
+    CATEGORY(com.alperen.spendcraft.feature.reports.R.string.reports_chart_category),
+    COMPARISON(com.alperen.spendcraft.feature.reports.R.string.reports_chart_comparison)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,7 +105,7 @@ fun IOSReportsScreen(
                         androidx.compose.foundation.layout.Box {
                             androidx.compose.material3.Icon(
                                 painter = androidx.compose.ui.res.painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_outline),
-                                contentDescription = "Bildirimler",
+                                contentDescription = context.getString(com.alperen.spendcraft.core.ui.R.string.notifications),
                                 modifier = androidx.compose.ui.Modifier.size(24.dp)
                             )
                             
@@ -269,7 +269,7 @@ private fun PeriodSegmentedControl(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = period.label,
+                    text = androidx.compose.ui.res.stringResource(period.labelResId),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = if (selectedPeriod == period) FontWeight.SemiBold else FontWeight.Normal,
                     color = if (selectedPeriod == period) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
@@ -305,8 +305,9 @@ private fun ChartTypeSegmentedControl(
                     .padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
+                val context = LocalContext.current
                 Text(
-                    text = type.label,
+                    text = context.getString(type.labelResId),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = if (selectedType == type) FontWeight.SemiBold else FontWeight.Normal,
                     color = if (selectedType == type) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
@@ -477,7 +478,7 @@ private fun prepareChartData(
             ReportPeriod.WEEK, ReportPeriod.MONTH -> "dd/MM"
             ReportPeriod.YEAR -> "MMM"
         },
-        Locale("tr")
+        Locale.getDefault()
     )
     
     val incomeData = mutableListOf<Pair<String, Double>>()
@@ -546,13 +547,14 @@ private fun AIsugggestionsButton(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
+                    val context = LocalContext.current
                     Text(
-                        text = "AI Önerileri",
+                        text = context.getString(com.alperen.spendcraft.feature.reports.R.string.reports_ai_suggestions),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Harcama alışkanlıklarınız hakkında öneriler alın",
+                        text = context.getString(com.alperen.spendcraft.feature.reports.R.string.reports_ai_suggestions_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -602,7 +604,7 @@ private fun CategoryBreakdownSection(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Kategoriye Göre Harcamalar",
+            text = context.getString(com.alperen.spendcraft.feature.reports.R.string.reports_category_spending),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -657,7 +659,7 @@ private fun CategorySpendingRow(
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
-                    text = category.name,
+                    text = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, category.name),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

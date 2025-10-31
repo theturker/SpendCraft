@@ -425,7 +425,7 @@ private fun TransactionListRow(
             // Account name - iOS: .caption2, .secondary
             if (account != null) {
                 Text(
-                    text = account.name,
+                    text = com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, account.name),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

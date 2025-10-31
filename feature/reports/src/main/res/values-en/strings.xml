@@ -27,6 +27,15 @@
     <string name="reports_time_range_daily">Daily</string>
     <string name="reports_time_range_weekly">Weekly</string>
     <string name="reports_time_range_monthly">Monthly</string>
+    <string name="reports_period_week">Week</string>
+    <string name="reports_period_month">Month</string>
+    <string name="reports_period_year">Year</string>
+    <string name="reports_chart_trend">Trend</string>
+    <string name="reports_chart_category">Category</string>
+    <string name="reports_chart_comparison">Comparison</string>
+    <string name="reports_ai_suggestions">AI Suggestions</string>
+    <string name="reports_ai_suggestions_desc">Get recommendations about your spending habits</string>
+    <string name="reports_category_spending">Spending by Category</string>
     <string name="export_date_range_last_week">Last Week</string>
     <string name="export_date_range_last_month">Last Month</string>
     <string name="export_date_range_last_3_months">Last 3 Months</string>

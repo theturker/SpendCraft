@@ -200,8 +200,11 @@ fun IOSEditTransactionScreen(
                         onExpandedChange = { expanded = it },
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        val context = LocalContext.current
                         OutlinedTextField(
-                            value = selectedAccount?.name ?: "Hesap Seçiniz",
+                            value = selectedAccount?.let {
+                                com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, it.name)
+                            } ?: stringResource(com.alperen.spendcraft.core.ui.R.string.select_account),
                             onValueChange = {},
                             readOnly = true,
                             modifier = Modifier
@@ -221,7 +224,12 @@ fun IOSEditTransactionScreen(
                         ) {
                             accounts.forEach { account ->
                                 DropdownMenuItem(
-                                    text = { Text(account.name) },
+                                    text = { 
+                                        Text(com.alperen.spendcraft.core.ui.AccountLocalization.localize(
+                                            LocalContext.current, 
+                                            account.name
+                                        ))
+                                    },
                                     onClick = {
                                         selectedAccount = account
                                         expanded = false
@@ -419,8 +427,9 @@ internal fun CategoryButtonEdit(
             )
         }
         
+        val context = LocalContext.current
         Text(
-            text = category.name,
+            text = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, category.name),
             style = MaterialTheme.typography.labelSmall,
             fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
             color = if (isSelected) {

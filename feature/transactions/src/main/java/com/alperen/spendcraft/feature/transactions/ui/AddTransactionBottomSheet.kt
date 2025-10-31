@@ -135,7 +135,10 @@ fun AddTransactionBottomSheet(
                                 items(cats.size) { index ->
                                     val category = cats[index]
                                     CompactCategoryChip(
-                                        text = category.name,
+                                        text = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(
+                                            context,
+                                            category.name
+                                        ),
                                         isSelected = selectedCategoryId == category.id,
                                         onClick = { selectedCategoryId = category.id }
                                     )

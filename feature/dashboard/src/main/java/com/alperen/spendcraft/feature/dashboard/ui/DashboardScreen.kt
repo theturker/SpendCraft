@@ -1187,7 +1187,9 @@ private fun TransactionRow(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = category?.name ?: context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_category_unknown),
+                text = category?.name?.let { 
+                    com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, it)
+                } ?: context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_category_unknown),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
@@ -1219,7 +1221,7 @@ private fun TransactionRow(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = account.name,
+                        text = com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, account.name),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
