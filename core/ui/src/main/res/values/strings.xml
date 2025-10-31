@@ -127,6 +127,15 @@
     <string name="get_started">Başlayın</string>
     <string name="first_transaction_title">İlk İşleminizi Ekleyin</string>
     <string name="first_transaction_subtitle">İlk harcama veya gelirinizi ekleyerek başlayalım</string>
+    <string name="first_transaction_notification_title">🎉 İlk İşleminiz!</string>
+    <string name="first_transaction_notification_message">SpendCraft\'e hoş geldiniz! İlk işleminiz başarıyla kaydedildi.</string>
+    <string name="budget_alert_title">⚠️ Bütçe Uyarısı</string>
+    <string name="budget_exceeded_message">%1$s bütçenizi 100%% aştınız!</string>
+    <string name="budget_usage_message">%1$s bütçenizin %%2$d\'ini kullandınız!</string>
+    <string name="general_budget_alert_title">⚠️ Genel Bütçe Uyarısı</string>
+    <string name="general_budget_alert_message">Toplam açığınız: %1$s TL</string>
+    <string name="spending_reminder_title">💰 Harcama Hatırlatıcısı</string>
+    <string name="spending_reminder_message">Bugün henüz hiç işlem eklemediniz. Harcamalarınızı takip etmeyi unutmayın!</string>
     
     <!-- Permissions -->
     <string name="add_transaction">İşlem Ekle</string>

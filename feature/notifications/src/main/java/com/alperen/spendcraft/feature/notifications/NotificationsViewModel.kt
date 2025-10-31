@@ -9,6 +9,7 @@ import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import com.alperen.spendcraft.core.notifications.NotificationEventBus
 import com.alperen.spendcraft.core.notifications.NotificationEvent
 import com.alperen.spendcraft.core.notifications.NotificationType
+import com.alperen.spendcraft.core.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -177,8 +178,8 @@ class NotificationsViewModel @Inject constructor(
     // iOS NotificationsViewModel.swift:146-152 - sendSpendingReminder()
     fun sendSpendingReminder() {
         addNotification(
-            title = "💰 Harcama Hatırlatıcısı",
-            message = "Bugün henüz hiç işlem eklemediniz. Harcamalarınızı takip etmeyi unutmayın!",
+            title = context.getString(R.string.spending_reminder_title),
+            message = context.getString(R.string.spending_reminder_message),
             type = NotificationType.SPENDING_REMINDER
         )
     }

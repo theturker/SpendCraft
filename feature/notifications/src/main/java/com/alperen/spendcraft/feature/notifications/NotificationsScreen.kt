@@ -280,7 +280,7 @@ private fun NotificationCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = notification.title,
+                    text = com.alperen.spendcraft.core.ui.NotificationLocalization.localizeTitle(context, notification.title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = if (notification.isRead) FontWeight.Medium else FontWeight.Bold,
                     color = if (notification.isRead) 
@@ -292,7 +292,7 @@ private fun NotificationCard(
                 Spacer(modifier = Modifier.height(4.dp))
                 
                 Text(
-                    text = notification.message,
+                    text = com.alperen.spendcraft.core.ui.NotificationLocalization.localizeMessage(context, notification.message),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

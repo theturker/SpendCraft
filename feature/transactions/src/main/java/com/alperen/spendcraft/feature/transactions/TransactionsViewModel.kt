@@ -24,6 +24,8 @@ import com.alperen.spendcraft.core.notifications.NotificationEventBus
 import com.alperen.spendcraft.core.notifications.NotificationEvent
 import com.alperen.spendcraft.core.notifications.NotificationType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import android.content.Context
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -33,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import com.alperen.spendcraft.core.common.NotificationTester
 import com.alperen.spendcraft.shared.presentation.SharedTransactionBusinessLogic
+import com.alperen.spendcraft.core.ui.R
 // import com.alperen.spendcraft.core.billing.BillingRepository
 
 @HiltViewModel
@@ -54,6 +57,7 @@ class TransactionsViewModel @Inject constructor(
     private val checkBudgetBreachesUseCase: CheckBudgetBreachesUseCase,
     private val notificationManager: NotificationManager,
     private val notificationEventBus: NotificationEventBus,
+    @ApplicationContext private val context: Context,
     // private val billingRepository: BillingRepository
 ) : ViewModel() {
     
@@ -110,17 +114,16 @@ class TransactionsViewModel @Inject constructor(
             
             // İlk işlem kaydedildiğinde bildirim göster
             if (isFirstTransaction) {
+                val title = context.getString(R.string.first_transaction_notification_title)
+                val message = context.getString(R.string.first_transaction_notification_message)
                 notificationEventBus.sendNotificationEvent(
                     com.alperen.spendcraft.core.notifications.NotificationEvent(
-                        title = "🎉 İlk İşleminiz!",
-                        message = "SpendCraft'e hoş geldiniz! İlk işleminiz başarıyla kaydedildi.",
+                        title = title,
+                        message = message,
                         type = com.alperen.spendcraft.core.notifications.NotificationType.SYSTEM
                     )
                 )
-                notificationManager.showGeneralNotification(
-                    "🎉 İlk İşleminiz!",
-                    "SpendCraft'e hoş geldiniz! İlk işleminiz başarıyla kaydedildi."
-                )
+                notificationManager.showGeneralNotification(title, message)
             }
             
             // Recurring transaction logic
@@ -271,10 +274,11 @@ class TransactionsViewModel @Inject constructor(
                         notificationManager.showBudgetAlert("100%", categoryName)
                         
                         // Uygulama içi bildirim ekle
+                        val localizedCategoryName = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, categoryName)
                         notificationEventBus.sendNotificationEvent(
                             NotificationEvent(
-                                title = "⚠️ Bütçe Uyarısı",
-                                message = "$categoryName bütçenizi 100% aştınız!",
+                                title = context.getString(R.string.budget_alert_title),
+                                message = context.getString(R.string.budget_exceeded_message, localizedCategoryName),
                                 type = NotificationType.BUDGET_ALERT
                             )
                         )
@@ -288,10 +292,11 @@ class TransactionsViewModel @Inject constructor(
                         notificationManager.showBudgetWarning(percentage, categoryName, spentAmount, limitAmount)
                         
                         // Uygulama içi bildirim ekle
+                        val localizedCategoryName = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, categoryName)
                         notificationEventBus.sendNotificationEvent(
                             NotificationEvent(
-                                title = "⚠️ Bütçe Uyarısı",
-                                message = "$categoryName bütçenizin %$percentage'ini kullandınız!",
+                                title = context.getString(R.string.budget_alert_title),
+                                message = context.getString(R.string.budget_usage_message, localizedCategoryName, percentage),
                                 type = NotificationType.BUDGET_ALERT
                             )
                         )
@@ -327,13 +332,15 @@ class TransactionsViewModel @Inject constructor(
             if (netAmount < 0) {
                 val deficit = -netAmount
                 val deficitFormatted = String.format("%.2f", deficit / 100.0)
-                notificationManager.showBudgetAlert("Açık", "Toplam açığınız: $deficitFormatted TL")
+                val alertTitle = context.getString(R.string.general_budget_alert_title).replace("⚠️ ", "")
+                val alertMessage = context.getString(R.string.general_budget_alert_message, deficitFormatted)
+                notificationManager.showBudgetAlert(alertTitle, alertMessage)
                 
                 // Uygulama içi bildirim ekle
                 notificationEventBus.sendNotificationEvent(
                     NotificationEvent(
-                        title = "⚠️ Genel Bütçe Uyarısı",
-                        message = "Toplam açığınız: $deficitFormatted TL",
+                        title = context.getString(R.string.general_budget_alert_title),
+                        message = context.getString(R.string.general_budget_alert_message, deficitFormatted),
                         type = NotificationType.BUDGET_ALERT
                     )
                 )

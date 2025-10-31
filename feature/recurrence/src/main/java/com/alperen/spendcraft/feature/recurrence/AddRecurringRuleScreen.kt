@@ -15,7 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -24,6 +26,8 @@ import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.ui.CurrencyTextField
+import com.alperen.spendcraft.core.ui.R as CoreR
+import com.alperen.spendcraft.feature.recurrence.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,22 +54,24 @@ fun AddRecurringRuleScreen(
     var showFrequencyPicker by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     
+    val context = LocalContext.current
     val frequencies = listOf(
-        "Günlük" to "DAILY",
-        "Haftalık" to "WEEKLY",
-        "Aylık" to "MONTHLY",
-        "Yıllık" to "YEARLY"
+        stringResource(R.string.recurring_frequency_daily) to "DAILY",
+        stringResource(R.string.recurring_frequency_weekly) to "WEEKLY",
+        stringResource(R.string.recurring_frequency_monthly) to "MONTHLY",
+        stringResource(R.string.recurring_frequency_yearly) to "YEARLY"
     )
     
-    val frequencyDisplay = frequencies.firstOrNull { it.second == selectedFrequency }?.first ?: "Aylık"
-    val dateFormat = remember { SimpleDateFormat("d MMMM yyyy", Locale("tr")) }
+    val frequencyDisplay = frequencies.firstOrNull { it.second == selectedFrequency }?.first
+        ?: stringResource(R.string.recurring_frequency_monthly)
+    val dateFormat = remember { SimpleDateFormat("d MMMM yyyy", Locale.getDefault()) }
     
     AppScaffold(
-        title = "Tekrarlayan İşlem Ekle",
+        title = stringResource(CoreR.string.add_recurring_transaction),
         onBack = onCancel,
         actions = {
             TextButton(onClick = onCancel) {
-                Text("İptal", color = MaterialTheme.colorScheme.primary)
+                Text(stringResource(CoreR.string.cancel), color = MaterialTheme.colorScheme.primary)
             }
         }
     ) {
@@ -79,7 +85,7 @@ fun AddRecurringRuleScreen(
                 ModernCard {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "İşlem Bilgileri",
+                            text = stringResource(CoreR.string.transaction_info),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -89,8 +95,8 @@ fun AddRecurringRuleScreen(
                         OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("İşlem Adı") },
-                            placeholder = { Text("Örn: Kira, Maaş") },
+                            label = { Text(stringResource(CoreR.string.transaction_name)) },
+                            placeholder = { Text(stringResource(CoreR.string.example_rent_salary)) },
                             modifier = Modifier.fillMaxWidth()
                         )
                         
@@ -120,7 +126,7 @@ fun AddRecurringRuleScreen(
                         
                         // Tip (Segmented Control - iOS Style)
                         Text(
-                            text = "Tip",
+                            text = stringResource(CoreR.string.type),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -144,7 +150,7 @@ fun AddRecurringRuleScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    "Gider",
+                                    stringResource(CoreR.string.expense_label),
                                     fontWeight = if (!isIncome) FontWeight.SemiBold else FontWeight.Normal
                                 )
                             }
@@ -160,7 +166,7 @@ fun AddRecurringRuleScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    "Gelir",
+                                    stringResource(CoreR.string.income_label),
                                     fontWeight = if (isIncome) FontWeight.SemiBold else FontWeight.Normal
                                 )
                             }
@@ -174,7 +180,7 @@ fun AddRecurringRuleScreen(
                 ModernCard {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Kategori",
+                            text = stringResource(CoreR.string.category),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -200,10 +206,10 @@ fun AddRecurringRuleScreen(
                                             IOSColors.Blue 
                                         }
                                     )
-                                    Text(selectedCategory?.name ?: "")
+                                    Text(com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, selectedCategory?.name))
                                 }
                                 TextButton(onClick = { selectedCategory = null }) {
-                                    Text("Değiştir", style = MaterialTheme.typography.labelMedium)
+                                    Text(stringResource(CoreR.string.change), style = MaterialTheme.typography.labelMedium)
                                 }
                             }
                         } else {
@@ -215,9 +221,9 @@ fun AddRecurringRuleScreen(
                                     .clickable { showCategoryPicker = true }
                             ) {
                                 OutlinedTextField(
-                                    value = "Seçiniz",
+                                    value = stringResource(CoreR.string.select),
                                     onValueChange = { },
-                                    label = { Text("Kategori Seç") },
+                                    label = { Text(stringResource(CoreR.string.select_category)) },
                                     readOnly = true,
                                     enabled = false,
                                     trailingIcon = {
@@ -242,7 +248,7 @@ fun AddRecurringRuleScreen(
                 ModernCard {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Tekrar Sıklığı",
+                            text = stringResource(CoreR.string.recurring_frequency),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -258,7 +264,7 @@ fun AddRecurringRuleScreen(
                             OutlinedTextField(
                                 value = frequencyDisplay,
                                 onValueChange = { },
-                                label = { Text("Sıklık") },
+                                label = { Text(stringResource(CoreR.string.frequency)) },
                                 readOnly = true,
                                 enabled = false,
                                 trailingIcon = {
@@ -286,7 +292,7 @@ fun AddRecurringRuleScreen(
                             OutlinedTextField(
                                 value = dateFormat.format(Date(startDate)),
                                 onValueChange = { },
-                                label = { Text("Başlangıç Tarihi") },
+                                label = { Text(stringResource(CoreR.string.start_date)) },
                                 readOnly = true,
                                 enabled = false,
                                 trailingIcon = {
@@ -316,7 +322,7 @@ fun AddRecurringRuleScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Aktif",
+                            text = stringResource(CoreR.string.active),
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Switch(
@@ -363,7 +369,7 @@ fun AddRecurringRuleScreen(
                         .height(48.dp)
                 ) {
                     Text(
-                        "Kaydet",
+                        stringResource(CoreR.string.save),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -376,7 +382,7 @@ fun AddRecurringRuleScreen(
     if (showCategoryPicker) {
         AlertDialog(
             onDismissRequest = { showCategoryPicker = false },
-            title = { Text("Kategori Seç") },
+            title = { Text(stringResource(CoreR.string.select_category)) },
             text = {
                 Column {
                     categories.forEach { category ->
@@ -400,14 +406,14 @@ fun AddRecurringRuleScreen(
                                     IOSColors.Blue 
                                 }
                             )
-                            Text(category.name)
+                            Text(com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, category.name))
                         }
                     }
                 }
             },
             confirmButton = {
                 TextButton(onClick = { showCategoryPicker = false }) {
-                    Text("İptal")
+                    Text(stringResource(CoreR.string.cancel))
                 }
             }
         )
@@ -417,7 +423,7 @@ fun AddRecurringRuleScreen(
     if (showFrequencyPicker) {
         AlertDialog(
             onDismissRequest = { showFrequencyPicker = false },
-            title = { Text("Sıklık Seç") },
+            title = { Text(stringResource(CoreR.string.select_frequency)) },
             text = {
                 Column {
                     frequencies.forEach { (display, value) ->
@@ -437,7 +443,7 @@ fun AddRecurringRuleScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showFrequencyPicker = false }) {
-                    Text("İptal")
+                    Text(stringResource(CoreR.string.cancel))
                 }
             }
         )
@@ -455,12 +461,12 @@ fun AddRecurringRuleScreen(
                         showDatePicker = false
                     }
                 ) {
-                    Text("Seç")
+                    Text(stringResource(CoreR.string.select))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("İptal")
+                    Text(stringResource(CoreR.string.cancel))
                 }
             }
         ) {

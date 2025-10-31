@@ -156,6 +156,15 @@
     <string name="continue_text">Continue</string>
     <string name="first_transaction_title">Add Your First Transaction</string>
     <string name="first_transaction_subtitle">Let\'s start by adding your first expense or income</string>
+    <string name="first_transaction_notification_title">🎉 Your First Transaction!</string>
+    <string name="first_transaction_notification_message">Welcome to SpendCraft! Your first transaction has been successfully recorded.</string>
+    <string name="budget_alert_title">⚠️ Budget Alert</string>
+    <string name="budget_exceeded_message">You have exceeded %1$s budget by 100%%!</string>
+    <string name="budget_usage_message">You have used %2$d%% of your %1$s budget!</string>
+    <string name="general_budget_alert_title">⚠️ General Budget Alert</string>
+    <string name="general_budget_alert_message">Your total deficit: %1$s TL</string>
+    <string name="spending_reminder_title">💰 Spending Reminder</string>
+    <string name="spending_reminder_message">You haven\'t added any transactions today. Don\'t forget to track your expenses!</string>
     
     <!-- Widget -->
     <string name="widget_description">Quick access to your financial overview and add transactions</string>
