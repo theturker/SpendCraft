@@ -253,8 +253,8 @@ fun AchievementsScreen(
         achievements.map { entity ->
             Achievement(
                 id = entity.id.toString(),
-                title = entity.name,
-                description = entity.description,
+                title = com.alperen.spendcraft.core.ui.AchievementLocalization.localizeName(context, entity.name),
+                description = com.alperen.spendcraft.core.ui.AchievementLocalization.localizeDescription(context, entity.description),
                 // iOS: Image(systemName: achievement.icon ?? "star.fill")
                 // Android: Dynamic icon mapping (DashboardScreen.kt gibi)
                 icon = painterResource(getAchievementIconResource(entity.icon)),

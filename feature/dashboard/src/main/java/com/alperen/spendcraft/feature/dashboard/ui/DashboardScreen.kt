@@ -582,8 +582,8 @@ private fun AchievementsSection(
             if (achievements.isNotEmpty()) {
                 items(achievements.take(5)) { achievement ->
                     AchievementCard(
-                        achievementName = achievement.name,
-                        achievementDescription = achievement.description, // iOS: achievementDescription, Android: description
+                        achievementName = com.alperen.spendcraft.core.ui.AchievementLocalization.localizeName(context, achievement.name),
+                        achievementDescription = com.alperen.spendcraft.core.ui.AchievementLocalization.localizeDescription(context, achievement.description), // iOS: achievementDescription, Android: description
                         achievementIcon = getAchievementIconResource(achievement.icon),
                         isUnlocked = achievement.isUnlocked,
                         points = achievement.points,

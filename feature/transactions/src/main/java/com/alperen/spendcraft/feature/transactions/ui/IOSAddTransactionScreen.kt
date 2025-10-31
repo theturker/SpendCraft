@@ -59,11 +59,30 @@ fun IOSAddTransactionScreen(
 ) {
     val context = LocalContext.current
     
+    // Localize categories for display
+    val localizedCategories = remember(categories) {
+        categories.map { category ->
+            category.copy(name = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, category.name))
+        }
+    }
+    
     var amount by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val isIncomeState = remember { mutableStateOf(initialTransactionType ?: false) }
     var isIncome by isIncomeState
-    var selectedCategory by remember { mutableStateOf<Category?>(categories.firstOrNull()) }
+    var selectedCategory by remember { mutableStateOf<Category?>(null) }
+    
+    // Update selectedCategory when localizedCategories change
+    LaunchedEffect(localizedCategories) {
+        if (selectedCategory == null && localizedCategories.isNotEmpty()) {
+            selectedCategory = localizedCategories.firstOrNull()
+        } else if (selectedCategory != null) {
+            // Update selectedCategory with localized name while preserving ID
+            localizedCategories.firstOrNull { it.id == selectedCategory?.id }?.let {
+                selectedCategory = it
+            }
+        }
+    }
     var selectedAccount by remember { mutableStateOf<AccountEntity?>(null) }
     var selectedDate by remember { mutableStateOf(Date()) }
     var showDatePicker by remember { mutableStateOf(false) }
@@ -78,8 +97,8 @@ fun IOSAddTransactionScreen(
     }
     
     // iOS: filteredCategories based on transaction type
-    val filteredCategories = remember(categories, isIncomeState.value) {
-        categories.filter { it.isIncome == isIncomeState.value }
+    val filteredCategories = remember(localizedCategories, isIncomeState.value) {
+        localizedCategories.filter { it.isIncome == isIncomeState.value }
     }
     
     // iOS locale-aware decimal parsing
@@ -164,7 +183,7 @@ fun IOSAddTransactionScreen(
             // 3. Category Section (Horizontal Buttons)
             // iOS: AddTransactionView.swift:146-183
             item {
-                FormSection(title = "Kategori") {
+                FormSection(title = context.getString(com.alperen.spendcraft.core.ui.R.string.category)) {
                     LazyRow(
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -203,14 +222,14 @@ fun IOSAddTransactionScreen(
                                     ) {
                                         Icon(
                                             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_plus_circle_fill),
-                                            contentDescription = "Yeni Kategori",
+                                            contentDescription = context.getString(com.alperen.spendcraft.core.ui.R.string.new_item),
                                             tint = IOSColors.Blue,
                                             modifier = Modifier.size(28.dp)  // iOS: .title2 font size
                                         )
                                     }
                                     // iOS: Text("Yeni").font(.caption).foregroundColor(.blue).fontWeight(.medium)
                                     Text(
-                                        text = "Yeni",
+                                        text = context.getString(com.alperen.spendcraft.core.ui.R.string.new_item),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontWeight = FontWeight.Medium,
                                         color = IOSColors.Blue
@@ -234,7 +253,7 @@ fun IOSAddTransactionScreen(
             // 4. Account Picker - iOS: Picker("Hesap Seç", selection: $selectedAccount)
             // AddTransactionView.swift:186-193
             item {
-                FormSection(title = "Hesap") {
+                FormSection(title = context.getString(com.alperen.spendcraft.core.ui.R.string.account)) {
                     var expanded by remember { mutableStateOf(false) }
                     
                     ExposedDropdownMenuBox(
@@ -245,7 +264,9 @@ fun IOSAddTransactionScreen(
                             .padding(horizontal = 16.dp, vertical = 4.dp)
                     ) {
                         OutlinedTextField(
-                            value = selectedAccount?.name ?: context.getString(com.alperen.spendcraft.feature.transactions.R.string.select_account),
+                            value = selectedAccount?.let { 
+                                com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, it.name)
+                            } ?: context.getString(com.alperen.spendcraft.feature.transactions.R.string.select_account),
                             onValueChange = {},
                             readOnly = true,
                             trailingIcon = {
@@ -287,7 +308,7 @@ fun IOSAddTransactionScreen(
                                             )
                                             Column {
                                                 Text(
-                                                    text = account.name,
+                                                    text = com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, account.name),
                                                     style = MaterialTheme.typography.bodyMedium,
                                                     fontWeight = FontWeight.Medium
                                                 )
@@ -328,7 +349,7 @@ fun IOSAddTransactionScreen(
             // 5. Date Section
             // iOS: DatePicker("Tarih", selection: $date)
             item {
-                FormSection(title = "Tarih") {
+                FormSection(title = context.getString(com.alperen.spendcraft.core.ui.R.string.date)) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -337,7 +358,7 @@ fun IOSAddTransactionScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val dateFormat = remember { SimpleDateFormat("d MMM yyyy, HH:mm", Locale("tr")) }
+                        val dateFormat = remember { SimpleDateFormat("d MMM yyyy, HH:mm", Locale.getDefault()) }
                         Text(
                             text = dateFormat.format(selectedDate),
                             style = MaterialTheme.typography.bodyMedium
@@ -481,7 +502,7 @@ fun IOSAddTransactionScreen(
                     shape = RoundedCornerShape(12.dp)  // IOSRadius.medium
                     ) {
                         Text(
-                            text = "Kaydet",
+                            text = context.getString(com.alperen.spendcraft.core.ui.R.string.save),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White
@@ -549,7 +570,7 @@ fun IOSAddTransactionScreen(
                         showDatePicker = false
                         showTimePicker = false
                     }) {
-                        Text("Tamam")
+                        Text(context.getString(com.alperen.spendcraft.core.ui.R.string.ok))
                     }
                 },
                 dismissButton = {

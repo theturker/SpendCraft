@@ -119,7 +119,7 @@ fun IOSCategoriesScreen(
                     IconButton(onClick = { showAddCategoryDialog = true }) {
                         Icon(
                             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_plus_circle_fill),
-                            contentDescription = "Kategori Ekle",
+                            contentDescription = androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.add_category),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -143,7 +143,7 @@ fun IOSCategoriesScreen(
                     }
                 ) {
                     Text(
-                        text = "Kategoriler",
+                        text = androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.category_management),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,

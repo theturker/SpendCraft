@@ -10,6 +10,7 @@ import java.util.Locale
  */
 object CategoryLocalization {
     private val trToEnMap: Map<String, String> = mapOf(
+        // Expense Categories
         "Ulaşım" to "Transportation",
         "Eğlence" to "Entertainment",
         "Alışveriş" to "Shopping",
@@ -21,7 +22,6 @@ object CategoryLocalization {
         "Fatura" to "Bills",
         "Tasarruf" to "Savings",
         "Gelir" to "Income",
-        "Maaş" to "Salary",
         "Yemek" to "Food",
         "İçecek" to "Beverages",
         "Uçak" to "Flights",
@@ -29,13 +29,24 @@ object CategoryLocalization {
         "Giyim" to "Clothing",
         "Elektronik" to "Electronics",
         "Ev" to "Home",
-        "Kira" to "Rent",
         "Hediye" to "Gifts",
         "Spor" to "Sports",
         "Oyun" to "Gaming",
         "Vergi" to "Taxes",
         "Sigorta" to "Insurance",
-        "Abonelik" to "Subscriptions"
+        "Abonelik" to "Subscriptions",
+        "Kredi" to "Credit",
+        "Diğer Gider" to "Other Expense",
+        
+        // Income Categories
+        "Maaş" to "Salary",
+        "Kira" to "Rent",
+        "Prim" to "Bonus",
+        "Yatırım" to "Investment",
+        "İkramiye" to "Gift",
+        "Serbest Çalışma" to "Freelance",
+        "Kira Geliri" to "Rental Income",
+        "Diğer Gelir" to "Other Income"
     )
 
     fun localize(context: Context, original: String?): String {

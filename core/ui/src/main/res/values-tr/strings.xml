@@ -6,6 +6,7 @@
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
     <string name="ok">Tamam</string>
+    <string name="new_item">Yeni</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     
@@ -169,4 +170,10 @@
     
     <!-- Premium -->
     <string name="upgrade_to_premium">Premium’a Geç</string>
+    
+    <!-- Reports charts -->
+    <string name="chart_trend">Gelir &amp; Gider Trendi</string>
+    <string name="chart_category_distribution">Kategori Dağılımı</string>
+    <string name="chart_category_comparison">Kategori Karşılaştırması</string>
+    <string name="no_data">Henüz veri yok</string>
 </resources>

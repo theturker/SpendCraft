@@ -108,8 +108,8 @@ fun TransactionsListScreen(
                     IconButton(onClick = onNotifications) {
                         Box {
                             Icon(
-                                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_outline),
-                                contentDescription = "Bildirimler",
+                            painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_bell_outline),
+                            contentDescription = null,
                                 modifier = Modifier.size(24.dp)
                             )
                             
@@ -384,7 +384,8 @@ private fun TransactionListRow(
         ) {
             // Category name - iOS: .subheadline, .medium
             Text(
-                text = category?.name ?: context.getString(com.alperen.spendcraft.feature.transactions.R.string.transaction_category_unknown),
+                text = com.alperen.spendcraft.core.ui.CategoryLocalization.localize(context, category?.name)
+                    .ifBlank { context.getString(com.alperen.spendcraft.feature.transactions.R.string.transaction_category_unknown) },
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
@@ -456,7 +457,7 @@ private fun EmptyTransactionsState(
         
         // iOS: .headline, .secondary
         Text(
-            text = "Henüz işlem yok",
+            text = androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.no_transactions_yet),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -465,7 +466,7 @@ private fun EmptyTransactionsState(
         
         // iOS: .subheadline, .secondary, multilineTextAlignment(.center)
         Text(
-            text = "+ butonuna basarak ilk işleminizi ekleyin",
+            text = androidx.compose.ui.res.stringResource(com.alperen.spendcraft.core.ui.R.string.first_transaction_subtitle),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center

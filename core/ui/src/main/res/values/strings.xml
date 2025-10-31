@@ -6,6 +6,7 @@
     <string name="add">Ekle</string>
     <string name="save">Kaydet</string>
     <string name="ok">Tamam</string>
+    <string name="new_item">Yeni</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     
@@ -122,6 +123,8 @@
     <string name="feature_goals">Finansal Hedefler</string>
     <string name="feature_goals_desc">Bütçe belirleyin ve finansal hedeflerinize ulaşın</string>
     <string name="get_started">Başlayın</string>
+    <string name="first_transaction_title">İlk İşleminizi Ekleyin</string>
+    <string name="first_transaction_subtitle">İlk harcama veya gelirinizi ekleyerek başlayalım</string>
     
     <!-- Permissions -->
     <string name="add_transaction">İşlem Ekle</string>
@@ -164,4 +167,10 @@
     
     <!-- Quick Add (default fallback) -->
     <string name="quick_add_title">Hızlı Ekle</string>
+
+    <!-- Reports charts (default fallback) -->
+    <string name="chart_trend">Gelir &amp; Gider Trendi</string>
+    <string name="chart_category_distribution">Kategori Dağılımı</string>
+    <string name="chart_category_comparison">Kategori Karşılaştırması</string>
+    <string name="no_data">Henüz veri yok</string>
 </resources>

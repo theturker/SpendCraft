@@ -145,7 +145,7 @@ fun IOSReportsScreen(
                     }
                 ) {
                     Text(
-                        text = "Raporlar",
+                        text = androidx.compose.ui.res.stringResource(CoreR.string.reports),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -184,7 +184,7 @@ fun IOSReportsScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     SummaryCard(
-                        title = "Toplam Gelir",
+                        title = androidx.compose.ui.res.stringResource(CoreR.string.total_income),
                         amount = CurrencyFormatter.format(context, (totalIncome * 100).toLong()),
                         icon = CoreR.drawable.ic_arrow_down_circle_fill,
                         color = IOSColors.Green,
@@ -192,7 +192,7 @@ fun IOSReportsScreen(
                     )
                     
                     SummaryCard(
-                        title = "Toplam Gider",
+                        title = androidx.compose.ui.res.stringResource(CoreR.string.total_expense),
                         amount = CurrencyFormatter.format(context, (totalExpense * 100).toLong()),
                         icon = CoreR.drawable.ic_arrow_up_circle_fill,
                         color = IOSColors.Red,
@@ -405,9 +405,9 @@ private fun ChartContainer(
         ) {
             Text(
                 text = when (chartType) {
-                    ChartType.TREND -> "Gelir & Gider Trendi"
-                    ChartType.CATEGORY -> "Kategori Dağılımı"
-                    ChartType.COMPARISON -> "Kategori Karşılaştırması"
+                    ChartType.TREND -> androidx.compose.ui.res.stringResource(CoreR.string.chart_trend)
+                    ChartType.CATEGORY -> androidx.compose.ui.res.stringResource(CoreR.string.chart_category_distribution)
+                    ChartType.COMPARISON -> androidx.compose.ui.res.stringResource(CoreR.string.chart_category_comparison)
                 },
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
@@ -454,7 +454,7 @@ private fun EmptyChartState() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Henüz veri yok",
+            text = androidx.compose.ui.res.stringResource(CoreR.string.no_data),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

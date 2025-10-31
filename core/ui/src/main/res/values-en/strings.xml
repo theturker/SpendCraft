@@ -6,6 +6,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="new_item">New</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     
@@ -119,6 +120,12 @@
     <string name="gold_badge">🏆 Gold</string>
     <string name="silver_badge">🥈 Silver</string>
     <string name="bronze_badge">🥉 Bronze</string>
+    
+    <!-- Reports charts -->
+    <string name="chart_trend">Income &amp; Expense Trend</string>
+    <string name="chart_category_distribution">Category Distribution</string>
+    <string name="chart_category_comparison">Category Comparison</string>
+    <string name="no_data">No data yet</string>
     
     <!-- Reminder Notifications -->
     <!-- duplicate removed: reminder_channel_name/description already defined above -->
