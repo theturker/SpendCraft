@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -64,7 +65,7 @@ fun EditTemplateSheet(
             // Header
             item {
                 Text(
-                    text = "Bildirimi Düzenle",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_edit_template),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -81,13 +82,19 @@ fun EditTemplateSheet(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = template.title,
+                            text = com.alperen.spendcraft.core.ui.NotificationTemplateLocalization.localizeTitle(
+                                context,
+                                template.title
+                            ),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = template.body,
+                            text = com.alperen.spendcraft.core.ui.NotificationTemplateLocalization.localizeBody(
+                                context,
+                                template.body
+                            ),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -117,7 +124,7 @@ fun EditTemplateSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Aktif",
+                        text = context.getString(com.alperen.spendcraft.R.string.notification_active),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
@@ -187,7 +194,7 @@ fun EditTemplateSheet(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Haftanın Günleri",
+                            text = context.getString(com.alperen.spendcraft.R.string.notification_repeat),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
@@ -390,7 +397,7 @@ fun EditCustomNotificationSheet(
         ) {
             item {
                 Text(
-                    text = "Bildirimi Düzenle",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_edit_template),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -434,7 +441,7 @@ fun EditCustomNotificationSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Aktif",
+                        text = context.getString(com.alperen.spendcraft.R.string.notification_active),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
@@ -449,7 +456,7 @@ fun EditCustomNotificationSheet(
             // Time
             item {
                 Text(
-                    text = "Saat",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_time),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -580,6 +587,7 @@ private fun NumberPicker(
     label: String,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -599,7 +607,7 @@ private fun NumberPicker(
             ) {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = "Azalt",
+                    contentDescription = "Decrease",
                     tint = IOSColors.Blue
                 )
             }
@@ -617,7 +625,7 @@ private fun NumberPicker(
             ) {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowUp,
-                    contentDescription = "Artır",
+                    contentDescription = "Increase",
                     tint = IOSColors.Blue
                 )
             }
@@ -667,6 +675,7 @@ private fun QuickSelectRow(
     onSelectRange: (Set<Int>) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -677,7 +686,7 @@ private fun QuickSelectRow(
         QuickSelectChip("5-15", (5..15).toSet(), selectedDays, onSelectRange)
         QuickSelectChip("15-20", (15..20).toSet(), selectedDays, onSelectRange)
         QuickSelectChip("20-31", (20..31).toSet(), selectedDays, onSelectRange)
-        QuickSelectChip("Her Gün", (1..31).toSet(), selectedDays, onSelectRange)
+        QuickSelectChip(context.getString(com.alperen.spendcraft.R.string.notification_every_day), (1..31).toSet(), selectedDays, onSelectRange)
     }
 }
 
@@ -702,7 +711,16 @@ private fun WeekDaysSelector(
     onDayToggle: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val dayNames = listOf("Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt")
+    val context = LocalContext.current
+    val dayNames = listOf(
+        context.getString(com.alperen.spendcraft.R.string.notification_day_sun_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_mon_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_tue_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_wed_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_thu_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_fri_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_sat_short)
+    )
     
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
@@ -742,8 +760,18 @@ private fun WeekDaysSelector(
     }
 }
 
+@Composable
 private fun daysText(days: List<Int>): String {
-    val dayNames = listOf("Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi")
+    val context = LocalContext.current
+    val dayNames = listOf(
+        context.getString(com.alperen.spendcraft.R.string.notification_day_sun_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_mon_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_tue_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_wed_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_thu_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_fri_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_sat_short)
+    )
     return days.map { dayNames.getOrNull(it - 1) ?: "" }.joinToString(", ")
 }
 

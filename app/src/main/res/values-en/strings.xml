@@ -216,6 +216,7 @@
     <string name="language_back">Back</string>
     <string name="settings_default_account">Default: %1$s • %2$s</string>
     <string name="settings_currency">Currency: %1$s %2$s</string>
+    <string name="settings_currency_title">Currency</string>
     <string name="settings_currency_selected">Selected: %1$s %2$s</string>
     <string name="currency_title">Currency</string>
     <string name="settings_notifications_subtitle">Manage alerts</string>
@@ -298,6 +299,27 @@
     <string name="notification_repeat">Repeat</string>
     <string name="notification_every_day">Every day</string>
     <string name="notification_month_days_question">Which Days of the Month?</string>
+    <string name="notification_status">Notification Status</string>
+    <string name="notification_status_active">Active</string>
+    <string name="notification_status_inactive">Inactive</string>
+    <string name="notification_add_custom">Add Custom Notification</string>
+    <string name="notification_custom_description">Create your own custom reminders.</string>
+    <string name="notification_category_morning">Morning</string>
+    <string name="notification_category_noon">Noon</string>
+    <string name="notification_category_evening">Evening</string>
+    <string name="notification_category_weekly">Weekly</string>
+    <string name="notification_category_monthly">Monthly</string>
+    <string name="notification_category_motivation">Motivation</string>
+    <string name="notification_category_special">Special</string>
+    <string name="notification_month_days_prefix">On the</string>
+    <string name="notification_month_days_suffix">days</string>
+    <string name="notification_day_sun_short">Sun</string>
+    <string name="notification_day_mon_short">Mon</string>
+    <string name="notification_day_tue_short">Tue</string>
+    <string name="notification_day_wed_short">Wed</string>
+    <string name="notification_day_thu_short">Thu</string>
+    <string name="notification_day_fri_short">Fri</string>
+    <string name="notification_day_sat_short">Sat</string>
     
     <!-- Notifications Screen -->
     <string name="notifications_title">Notifications</string>

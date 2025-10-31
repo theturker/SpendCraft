@@ -154,7 +154,7 @@ fun NotificationSettingsScreen(
             // Footer for custom
             item {
                 Text(
-                    text = "Kendi özel hatırlatmalarınızı oluşturun.",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_custom_description),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -206,6 +206,8 @@ private fun AuthorizationStatusCard(
     isAuthorized: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -222,12 +224,15 @@ private fun AuthorizationStatusCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Bildirim Durumu",
+                    text = context.getString(com.alperen.spendcraft.R.string.notification_status),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    text = if (isAuthorized) "Aktif" else "Kapalı",
+                    text = if (isAuthorized) 
+                        context.getString(com.alperen.spendcraft.R.string.notification_status_active)
+                    else 
+                        context.getString(com.alperen.spendcraft.R.string.notification_status_inactive),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -284,7 +289,10 @@ private fun TemplateCategorySection(
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
-                        text = category,
+                        text = com.alperen.spendcraft.core.ui.NotificationCategoryLocalization.localize(
+                            LocalContext.current,
+                            category
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
@@ -343,7 +351,10 @@ private fun NotificationTemplateRow(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = template.title,
+                    text = com.alperen.spendcraft.core.ui.NotificationTemplateLocalization.localizeTitle(
+                        LocalContext.current,
+                        template.title
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
@@ -366,7 +377,7 @@ private fun NotificationTemplateRow(
                     }
                     template.daysOfMonth?.let { days ->
                         Text(
-                            text = "• Ayın ${monthDaysText(days)}",
+                            text = "• ${monthDaysText(days)}",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -443,7 +454,7 @@ private fun CustomNotificationRow(
             IconButton(onClick = { showDeleteConfirm = true }) {
                 Icon(
                     painter = painterResource(id = CoreR.drawable.ic_trash_fill),
-                    contentDescription = "Sil",
+                    contentDescription = context.getString(com.alperen.spendcraft.R.string.delete),
                     tint = IOSColors.Red,
                     modifier = Modifier.size(20.dp)
                 )
@@ -498,7 +509,7 @@ private fun AddCustomNotificationButton(
                 modifier = Modifier.size(24.dp)
             )
             Text(
-                text = "Özel Bildirim Ekle",
+                text = LocalContext.current.getString(com.alperen.spendcraft.R.string.notification_add_custom),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
                 color = IOSColors.Blue
@@ -531,16 +542,31 @@ private fun categoryColor(category: String): Color = when (category) {
     else -> Color.Gray
 }
 
+@Composable
 private fun daysText(days: List<Int>): String {
-    val dayNames = listOf("Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt")
+    val context = LocalContext.current
+    val dayNames = listOf(
+        context.getString(com.alperen.spendcraft.R.string.notification_day_sun_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_mon_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_tue_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_wed_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_thu_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_fri_short),
+        context.getString(com.alperen.spendcraft.R.string.notification_day_sat_short)
+    )
     return days.map { dayNames.getOrNull(it - 1) ?: "" }.joinToString(", ")
 }
 
+@Composable
 private fun monthDaysText(days: List<Int>): String {
+    val context = LocalContext.current
+    val prefix = context.getString(com.alperen.spendcraft.R.string.notification_month_days_prefix)
+    val suffix = context.getString(com.alperen.spendcraft.R.string.notification_month_days_suffix)
+    
     return if (days.size > 4) {
-        "${days.first()}-${days.last()}. günleri"
+        "$prefix ${days.first()}-${days.last()}. $suffix"
     } else {
-        days.joinToString(", ") { "$it." } + " günleri"
+        "$prefix ${days.joinToString(", ") { "$it." }} $suffix"
     }
 }
 

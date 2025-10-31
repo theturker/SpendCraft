@@ -274,7 +274,9 @@ fun SettingsScreen(
                                         enabled = false,
                                         label = {
                                             val current = currencies.find { it.first == currency }
-                                            Text(context.getString(com.alperen.spendcraft.R.string.settings_currency, current?.second ?: "", current?.first ?: currency))
+                                            val symbol = current?.second ?: CurrencyHelper.getCurrencySymbol(context)
+                                            val code = current?.first ?: currency
+                                            Text(context.getString(com.alperen.spendcraft.R.string.settings_currency, symbol, code))
                                         },
                                         leadingIcon = {
                                     Icon(
@@ -378,8 +380,10 @@ fun SettingsScreen(
                         // Para Birimi
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             val current = currencies.find { it.first == currency }
+                            val symbol = current?.second ?: CurrencyHelper.getCurrencySymbol(context)
+                            val code = current?.first ?: currency
                             Text(
-                                text = context.getString(com.alperen.spendcraft.R.string.settings_currency_selected, current?.second ?: "", current?.first ?: currency),
+                                text = context.getString(com.alperen.spendcraft.R.string.settings_currency_selected, symbol, code),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = colorScheme.onSurfaceVariant
                             )

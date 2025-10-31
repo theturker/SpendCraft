@@ -269,7 +269,7 @@ fun IOSSettingsScreen(
                 SettingsListItem(
                     icon = CoreR.drawable.ic_monetization_on_vector,
                     iconColor = IOSColors.Green,
-                    title = context.getString(com.alperen.spendcraft.R.string.settings_currency),
+                    title = context.getString(com.alperen.spendcraft.R.string.settings_currency_title),
                     subtitle = selectedCurrency,
                     position = ListItemPosition.Last,
                     onClick = onNavigateToCurrencySettings

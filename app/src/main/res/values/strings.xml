@@ -247,6 +247,7 @@
     <string name="language_back">Geri</string>
     <string name="settings_default_account">Varsayılan: %1$s • %2$s</string>
     <string name="settings_currency">Para birimi: %1$s %2$s</string>
+    <string name="settings_currency_title">Para Birimi</string>
     <string name="settings_currency_selected">Seçili: %1$s %2$s</string>
     <string name="currency_title">Para Birimi</string>
     <string name="settings_notifications_subtitle">Uyarıları yönetin</string>
@@ -329,6 +330,27 @@
     <string name="notification_repeat">Tekrarlama</string>
     <string name="notification_every_day">Her gün</string>
     <string name="notification_month_days_question">Ayın Hangi Günlerinde?</string>
+    <string name="notification_status">Bildirim Durumu</string>
+    <string name="notification_status_active">Aktif</string>
+    <string name="notification_status_inactive">Kapalı</string>
+    <string name="notification_add_custom">Özel Bildirim Ekle</string>
+    <string name="notification_custom_description">Kendi özel hatırlatmalarınızı oluşturun.</string>
+    <string name="notification_category_morning">Sabah</string>
+    <string name="notification_category_noon">Öğlen</string>
+    <string name="notification_category_evening">Akşam</string>
+    <string name="notification_category_weekly">Haftalık</string>
+    <string name="notification_category_monthly">Aylık</string>
+    <string name="notification_category_motivation">Motivasyon</string>
+    <string name="notification_category_special">Özel</string>
+    <string name="notification_month_days_prefix">Ayın</string>
+    <string name="notification_month_days_suffix">günleri</string>
+    <string name="notification_day_sun_short">Paz</string>
+    <string name="notification_day_mon_short">Pzt</string>
+    <string name="notification_day_tue_short">Sal</string>
+    <string name="notification_day_wed_short">Çar</string>
+    <string name="notification_day_thu_short">Per</string>
+    <string name="notification_day_fri_short">Cum</string>
+    <string name="notification_day_sat_short">Cmt</string>
     
     <!-- Notifications Screen -->
     <string name="notifications_title">Bildirimler</string>
