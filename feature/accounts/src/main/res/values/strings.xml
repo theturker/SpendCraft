@@ -13,6 +13,22 @@
     <string name="accounts_account_name_placeholder">Hesap Adı</string>
     <string name="accounts_account_type">Hesap Tipi</string>
     <string name="accounts_currency">Para Birimi</string>
+    <string name="accounts_currency_label">Para birimi: %1$s</string>
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
+    <string name="accounts_empty_title">Henüz hesap yok</string>
+    <string name="accounts_empty_subtitle">İlk hesabınızı ekleyerek başlayın</string>
+    <string name="accounts_archived">Arşivlendi</string>
+    <string name="accounts_archive_dialog_title">Hesabı Arşivle</string>
+    <string name="accounts_archive_dialog_message">Bu hesabı arşivlemek istediğinizden emin misiniz? Arşivlenen hesaplar işlemlerde görünmez.</string>
+    <string name="accounts_archive">Arşivle</string>
+    <string name="accounts_edit">Hesap Düzenle</string>
+    <string name="accounts_new">Yeni Hesap</string>
+    <string name="accounts_account_type_label">Hesap Türü</string>
+    <string name="accounts_add_button">Ekle</string>
+    <string name="accounts_update_button">Güncelle</string>
+    <string name="accounts_set_default">Varsayılan yap</string>
+    <string name="accounts_edit_description">Düzenle</string>
+    <string name="accounts_archive_description">Arşivle</string>
+    <string name="accounts_back">Geri</string>
 </resources>

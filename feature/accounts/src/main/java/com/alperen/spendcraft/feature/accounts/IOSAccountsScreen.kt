@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.alperen.spendcraft.core.ui.IOSColors
 // import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
 import com.alperen.spendcraft.core.ui.R as CoreR
+import com.alperen.spendcraft.feature.accounts.R
 
 /**
  * iOS AccountsListView ve AddAccountView'in birebir Android karşılığı
@@ -136,12 +137,12 @@ private fun AccountRow(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = account.name,
+                            text = com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, account.name),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = account.type,
+                            text = getAccountTypeDisplayName(context, account.type),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -297,6 +298,15 @@ private fun AddAccountDialog(
     )
 }
 
+
+@Composable
+private fun getAccountTypeDisplayName(context: android.content.Context, type: String) = when (type) {
+    "CASH" -> context.getString(R.string.account_type_cash)
+    "BANK" -> context.getString(R.string.account_type_bank)
+    "CREDIT_CARD", "CARD" -> context.getString(R.string.account_type_credit_card)
+    "SAVINGS" -> context.getString(R.string.account_type_savings)
+    else -> type
+}
 
 @Preview(name = "Accounts - Light")
 @Composable

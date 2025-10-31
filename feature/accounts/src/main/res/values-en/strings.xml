@@ -13,6 +13,22 @@
     <string name="accounts_account_name_placeholder">Account Name</string>
     <string name="accounts_account_type">Account Type</string>
     <string name="accounts_currency">Currency</string>
+    <string name="accounts_currency_label">Currency: %1$s</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="accounts_empty_title">No accounts yet</string>
+    <string name="accounts_empty_subtitle">Start by adding your first account</string>
+    <string name="accounts_archived">Archived</string>
+    <string name="accounts_archive_dialog_title">Archive Account</string>
+    <string name="accounts_archive_dialog_message">Are you sure you want to archive this account? Archived accounts will not appear in transactions.</string>
+    <string name="accounts_archive">Archive</string>
+    <string name="accounts_edit">Edit Account</string>
+    <string name="accounts_new">New Account</string>
+    <string name="accounts_account_type_label">Account Type</string>
+    <string name="accounts_add_button">Add</string>
+    <string name="accounts_update_button">Update</string>
+    <string name="accounts_set_default">Set as default</string>
+    <string name="accounts_edit_description">Edit</string>
+    <string name="accounts_archive_description">Archive</string>
+    <string name="accounts_back">Back</string>
 </resources>

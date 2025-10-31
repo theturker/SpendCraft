@@ -19,7 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.ui.ModernCard
@@ -61,10 +63,11 @@ fun AccountsScreen(
                 LargeTopAppBar(
                     title = { Spacer(modifier = Modifier) },
                 navigationIcon = {
+                    val context = LocalContext.current
                     IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
-                            contentDescription = "Geri"
+                            contentDescription = stringResource(R.string.accounts_back)
                         )
                     }
                 },
@@ -75,6 +78,7 @@ fun AccountsScreen(
                     )
                 )
                 
+                val context = LocalContext.current
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,7 +91,7 @@ fun AccountsScreen(
                     }
                 ) {
                     Text(
-                        text = "Hesaplar",
+                        text = stringResource(R.string.accounts_title),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -107,9 +111,10 @@ fun AccountsScreen(
                 containerColor = IOSColors.Blue,
                 contentColor = Color.White
             ) {
+                val context = LocalContext.current
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Hesap Ekle"
+                    contentDescription = stringResource(R.string.accounts_add)
                 )
             }
         }
@@ -138,13 +143,14 @@ fun AccountsScreen(
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(16.dp))
+                            val context = LocalContext.current
                             Text(
-                                text = "Henüz hesap yok",
+                                text = stringResource(R.string.accounts_empty_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = "İlk hesabınızı ekleyerek başlayın",
+                                text = stringResource(R.string.accounts_empty_subtitle),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -288,14 +294,15 @@ private fun AccountItem(
                         tint = MaterialTheme.colorScheme.primary
                     )
                     
+                    val context = LocalContext.current
                     Column {
                         Text(
-                            text = account.name,
+                            text = com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, account.name),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = getAccountTypeDisplayName(account.type),
+                            text = getAccountTypeDisplayName(context, account.type),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -306,28 +313,31 @@ private fun AccountItem(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     if (!account.isDefault) {
+                        val context = LocalContext.current
                         IconButton(onClick = onSetDefault) {
                             Icon(
                                 Icons.Default.Star,
-                                contentDescription = "Varsayılan yap",
+                                contentDescription = stringResource(R.string.accounts_set_default),
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
                     
+                    val context = LocalContext.current
                     IconButton(onClick = onEdit) {
                         Icon(
                             Icons.Default.Edit,
-                            contentDescription = "Düzenle",
+                            contentDescription = stringResource(R.string.accounts_edit_description),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
                     
                     if (!account.isDefault) {
+                        val context = LocalContext.current
                         IconButton(onClick = { showArchiveDialog = true }) {
                         Icon(
                             painter = painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_archive_vector),
-                                contentDescription = "Arşivle",
+                                contentDescription = stringResource(R.string.accounts_archive_description),
                                 tint = MaterialTheme.colorScheme.error
                             )
                         }
@@ -337,12 +347,13 @@ private fun AccountItem(
             
             Spacer(modifier = Modifier.height(8.dp))
             
+            val context = LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Para birimi: ${account.currency}",
+                    text = stringResource(R.string.accounts_currency_label, account.currency),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -353,7 +364,7 @@ private fun AccountItem(
                         shape = MaterialTheme.shapes.small
                     ) {
                         Text(
-                            text = "Varsayılan",
+                            text = stringResource(R.string.accounts_default),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -367,7 +378,7 @@ private fun AccountItem(
                         shape = MaterialTheme.shapes.small
                     ) {
                         Text(
-                            text = "Arşivlendi",
+                            text = stringResource(R.string.accounts_archived),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.surface,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -379,10 +390,11 @@ private fun AccountItem(
     }
     
     if (showArchiveDialog) {
+        val context = LocalContext.current
         AlertDialog(
             onDismissRequest = { showArchiveDialog = false },
-            title = { Text("Hesabı Arşivle") },
-            text = { Text("Bu hesabı arşivlemek istediğinizden emin misiniz? Arşivlenen hesaplar işlemlerde görünmez.") },
+            title = { Text(stringResource(R.string.accounts_archive_dialog_title)) },
+            text = { Text(stringResource(R.string.accounts_archive_dialog_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -390,14 +402,14 @@ private fun AccountItem(
                         showArchiveDialog = false
                     }
                 ) {
-                    Text("Arşivle")
+                    Text(stringResource(R.string.accounts_archive))
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showArchiveDialog = false }
                 ) {
-                    Text("İptal")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -419,17 +431,19 @@ fun AccountEditorScreen(
         topBar = {
             LargeTopAppBar(
                 title = {
+                    val context = LocalContext.current
                     Text(
-                        text = if (account == null) "Yeni Hesap" else "Hesap Düzenle",
+                        text = if (account == null) stringResource(R.string.accounts_new) else stringResource(R.string.accounts_edit),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
+                    val context = LocalContext.current
                     IconButton(onClick = onCancel) {
                         Icon(
                             painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_chevron_left),
-                            contentDescription = "Geri"
+                            contentDescription = stringResource(R.string.accounts_back)
                         )
                     }
                 },
@@ -451,8 +465,9 @@ fun AccountEditorScreen(
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
+                    val context = LocalContext.current
                     Text(
-                        text = "Hesap Bilgileri",
+                        text = stringResource(R.string.accounts_info_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -461,14 +476,14 @@ fun AccountEditorScreen(
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
-                        label = { Text("Hesap Adı") },
+                        label = { Text(stringResource(R.string.accounts_account_name_placeholder)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     Text(
-                        text = "Hesap Türü",
+                        text = stringResource(R.string.accounts_account_type_label),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
@@ -476,10 +491,10 @@ fun AccountEditorScreen(
                     
                     // ✅ iOS AddAccountView.swift:382 ile birebir aynı
                     val accountTypes = listOf(
-                        "CASH" to "Nakit",
-                        "BANK" to "Banka",
-                        "CREDIT_CARD" to "Kredi Kartı",
-                        "SAVINGS" to "Tasarruf"
+                        "CASH" to stringResource(R.string.account_type_cash),
+                        "BANK" to stringResource(R.string.account_type_bank),
+                        "CREDIT_CARD" to stringResource(R.string.account_type_credit_card),
+                        "SAVINGS" to stringResource(R.string.account_type_savings)
                     )
                     
                     accountTypes.forEach { (typeValue, typeName) ->
@@ -509,7 +524,7 @@ fun AccountEditorScreen(
                     
                     // ✅ iOS: Currency Picker (AddAccountView.swift:398-402)
                     Text(
-                        text = "Para Birimi",
+                        text = stringResource(R.string.accounts_currency),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
@@ -553,11 +568,12 @@ fun AccountEditorScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                val context = LocalContext.current
                 OutlinedButton(
                     onClick = onCancel,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("İptal")
+                    Text(stringResource(R.string.cancel))
                 }
                 
                 Button(
@@ -572,7 +588,7 @@ fun AccountEditorScreen(
                     enabled = name.isNotBlank(),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(if (account == null) "Ekle" else "Güncelle")
+                    Text(if (account == null) stringResource(R.string.accounts_add_button) else stringResource(R.string.accounts_update_button))
                 }
             }
         }
@@ -588,11 +604,12 @@ private fun getAccountTypeIcon(type: String) = when (type) {
     else -> painterResource(com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector)
 }
 
-private fun getAccountTypeDisplayName(type: String) = when (type) {
-    "CASH" -> "Nakit"
-    "BANK" -> "Banka"
-    "CREDIT_CARD", "CARD" -> "Kredi Kartı"
-    "SAVINGS" -> "Tasarruf"
+@Composable
+private fun getAccountTypeDisplayName(context: android.content.Context, type: String) = when (type) {
+    "CASH" -> context.getString(R.string.account_type_cash)
+    "BANK" -> context.getString(R.string.account_type_bank)
+    "CREDIT_CARD", "CARD" -> context.getString(R.string.account_type_credit_card)
+    "SAVINGS" -> context.getString(R.string.account_type_savings)
     else -> type
 }
 
@@ -612,12 +629,13 @@ private fun IOSAccountDialog(
     
     data class AccountTypeItem(val typeValue: String, val typeName: String, val iconRes: Int)
     
+    val context = LocalContext.current
     // ✅ iOS AddAccountView.swift:382 ile birebir aynı
     val accountTypes = listOf(
-        AccountTypeItem("CASH", "Nakit", com.alperen.spendcraft.core.ui.R.drawable.ic_banknote),
-        AccountTypeItem("BANK", "Banka", com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector),
-        AccountTypeItem("CREDIT_CARD", "Kredi Kartı", com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector),
-        AccountTypeItem("SAVINGS", "Tasarruf", com.alperen.spendcraft.core.ui.R.drawable.ic_savings)
+        AccountTypeItem("CASH", context.getString(R.string.account_type_cash), com.alperen.spendcraft.core.ui.R.drawable.ic_banknote),
+        AccountTypeItem("BANK", context.getString(R.string.account_type_bank), com.alperen.spendcraft.core.ui.R.drawable.ic_account_balance_vector),
+        AccountTypeItem("CREDIT_CARD", context.getString(R.string.account_type_credit_card), com.alperen.spendcraft.core.ui.R.drawable.ic_credit_card_vector),
+        AccountTypeItem("SAVINGS", context.getString(R.string.account_type_savings), com.alperen.spendcraft.core.ui.R.drawable.ic_savings)
     )
     
     AlertDialog(
@@ -636,8 +654,9 @@ private fun IOSAccountDialog(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 // Header
+                val context = LocalContext.current
                 Text(
-                    text = if (account == null) "Yeni Hesap" else "Hesap Düzenle",
+                    text = if (account == null) stringResource(R.string.accounts_new) else stringResource(R.string.accounts_edit),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -646,7 +665,7 @@ private fun IOSAccountDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Hesap Adı") },
+                    label = { Text(stringResource(R.string.accounts_account_name_placeholder)) },
                     placeholder = { Text("Örn: Banka Hesabım") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
@@ -655,7 +674,7 @@ private fun IOSAccountDialog(
                 // Account Type - iOS Card Style
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = "Hesap Türü",
+                        text = stringResource(R.string.accounts_account_type_label),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -709,7 +728,7 @@ private fun IOSAccountDialog(
                 // Currency Picker - iOS AddAccountView.swift:398-402
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = "Para Birimi",
+                        text = stringResource(R.string.accounts_currency),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -759,7 +778,7 @@ private fun IOSAccountDialog(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("İptal")
+                        Text(stringResource(R.string.cancel))
                     }
                     
                     Button(
@@ -774,7 +793,7 @@ private fun IOSAccountDialog(
                             containerColor = IOSColors.Blue
                         )
                     ) {
-                        Text(if (account == null) "Ekle" else "Güncelle")
+                        Text(if (account == null) stringResource(R.string.accounts_add_button) else stringResource(R.string.accounts_update_button))
                     }
                 }
             }
