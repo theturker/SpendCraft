@@ -599,7 +599,7 @@ struct ComparisonBarChartView: View {
                 Chart(categoryData, id: \.0.id) { item in
                     BarMark(
                         x: .value("Tutar", item.1),
-                        y: .value("Kategori", item.0.name ?? "")
+                        y: .value("Kategori", NSLocalizedString(item.0.name ?? "", comment: item.0.name ?? ""))
                     )
                     .foregroundStyle(item.0.uiColor.gradient)
                     .cornerRadius(6)
@@ -627,7 +627,7 @@ struct ComparisonBarChartView: View {
                         AxisValueLabel {
                             if let stringValue = value.as(String.self) {
                                 // Kategori için icon göster
-                                if let category = categoryData.first(where: { $0.0.name == stringValue })?.0 {
+                                if let category = categoryData.first(where: { NSLocalizedString($0.0.name ?? "", comment: $0.0.name ?? "") == stringValue })?.0 {
                                     HStack(spacing: 6) {
                                         Image(systemName: category.icon ?? "circle.fill")
                                             .font(.caption)
