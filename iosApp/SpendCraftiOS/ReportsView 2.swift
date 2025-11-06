@@ -24,7 +24,7 @@ struct ReportsView: View {
         ScrollView {
             VStack(spacing: 12) {
                 // Period Selector
-                Picker("Dönem", selection: $selectedPeriod) {
+                Picker(NSLocalizedString("reports.period", comment: "Period"), selection: $selectedPeriod) {
                     ForEach(Period.allCases, id: \.self) { period in
                         Text(period.rawValue).tag(period)
                     }
@@ -54,7 +54,7 @@ struct ReportsView: View {
                 
                 // Category Breakdown
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Kategoriye Göre Harcamalar")
+                    Text(NSLocalizedString("reports.category.expenses.title", comment: "Expenses by Category"))
                         .font(.headline)
                         .padding(.horizontal)
                     
@@ -74,7 +74,7 @@ struct ReportsView: View {
                 // Budget Status
                 if !budgetViewModel.budgets.isEmpty {
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Bütçe Durumu")
+                        Text(NSLocalizedString("reports.budget.status.title", comment: "Budget Status"))
                             .font(.headline)
                             .padding(.horizontal)
                         
@@ -94,7 +94,7 @@ struct ReportsView: View {
                 
                 // Top Categories
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("En Çok Harcanan Kategoriler")
+                    Text(NSLocalizedString("reports.top.categories.title", comment: "Most Spent Categories"))
                         .font(.headline)
                         .padding(.horizontal)
                     

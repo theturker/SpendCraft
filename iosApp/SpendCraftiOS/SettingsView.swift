@@ -230,7 +230,8 @@ struct SettingsView: View {
                             // Biometric'i test et
                             Task {
                                 do {
-                                    let success = try await biometricManager.authenticate(reason: "Face ID / Touch ID'yi etkinleştirmek için kimlik doğrulaması yapın")
+                                    let reason = NSLocalizedString("biometric.auth.enable.reason", comment: "Authenticate to enable Face ID / Touch ID")
+                                    let success = try await biometricManager.authenticate(reason: reason)
                                     if !success {
                                         biometricEnabled = false
                                     }
@@ -246,7 +247,7 @@ struct SettingsView: View {
                     Text(NSLocalizedString("settings.security", comment: "Security"))
                 } footer: {
                     if biometricEnabled {
-                        Text(NSLocalizedString("settings.biometric.help.message", comment: "You will be required to authenticate with %@ every time you access the app.").replacingOccurrences(of: "%@", with: biometricManager.getBiometricTypeName()))
+                        Text(String(format: NSLocalizedString("settings.biometric.help.message", comment: "You will be required to authenticate with %@ every time you access the app."), biometricManager.getBiometricTypeName()))
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -381,7 +382,7 @@ struct AccountsListView: View {
                             Text(account.name ?? "")
                                 .font(.subheadline)
                                 .fontWeight(.medium)
-                            Text(account.type ?? "")
+                            Text(Self.getAccountTypeLocalized(account.type ?? ""))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -564,7 +565,7 @@ struct AccountsListView: View {
                         .font(.subheadline)
                         .fontWeight(.medium)
                     
-                    Text(recurring.frequency ?? "")
+                    Text(Self.getFrequencyLocalized(recurring.frequency ?? ""))
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -1006,3 +1007,40 @@ struct AccountsListView: View {
             }
         }
     }
+
+
+// MARK: - Helper Extensions
+
+extension AccountsListView {
+    static func getAccountTypeLocalized(_ type: String) -> String {
+        switch type {
+        case "CASH":
+            return NSLocalizedString("accounts.cash", comment: "Cash")
+        case "BANK":
+            return NSLocalizedString("accounts.bank", comment: "Bank")
+        case "CREDIT_CARD":
+            return NSLocalizedString("accounts.credit.card", comment: "Credit Card")
+        case "SAVINGS":
+            return NSLocalizedString("accounts.savings", comment: "Savings")
+        default:
+            return type
+        }
+    }
+}
+
+extension RecurringRow {
+    static func getFrequencyLocalized(_ frequency: String) -> String {
+        switch frequency {
+        case "DAILY":
+            return NSLocalizedString("recurring.daily", comment: "Daily")
+        case "WEEKLY":
+            return NSLocalizedString("recurring.weekly", comment: "Weekly")
+        case "MONTHLY":
+            return NSLocalizedString("recurring.monthly", comment: "Monthly")
+        case "YEARLY":
+            return NSLocalizedString("recurring.yearly", comment: "Yearly")
+        default:
+            return frequency
+        }
+    }
+}

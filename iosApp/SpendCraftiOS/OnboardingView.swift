@@ -532,7 +532,7 @@ struct SplashView: View {
                     .frame(width: 180, height: 180) 
                     .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 6)
 
-                Text("Paratik")
+                Text(NSLocalizedString("onboarding.app.name", comment: "Paratik"))
                     .font(.system(size: 42, weight: .bold))
                     .foregroundColor(.white)
             }
@@ -872,7 +872,7 @@ struct LoginView: View {
                                 Rectangle()
                                     .fill(Color.secondary.opacity(0.3))
                                     .frame(height: 1)
-                                Text("veya")
+                                Text(NSLocalizedString("onboarding.or", comment: "or"))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Rectangle()
@@ -1260,7 +1260,7 @@ struct RegisterView: View {
                                 Rectangle()
                                     .fill(Color.secondary.opacity(0.3))
                                     .frame(height: 1)
-                                Text("veya")
+                                Text(NSLocalizedString("onboarding.or", comment: "or"))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Rectangle()

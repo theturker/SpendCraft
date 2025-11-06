@@ -159,7 +159,7 @@ struct AISuggestionsView: View {
                                     Image(systemName: "hourglass")
                                         .font(.title2)
                                         .foregroundColor(.purple)
-                                    Text("Sonraki Öneri İçin Bekleme Süresi")
+                                    Text(NSLocalizedString("ai.next.suggestion.wait", comment: "Wait Time for Next Suggestion"))
                                         .font(.headline)
                                 }
                                 
@@ -173,7 +173,7 @@ struct AISuggestionsView: View {
                                         )
                                     )
                                 
-                                Text("AI önerileri günde bir kez kullanılabilir. Bir sonraki öneriye erişmek için lütfen bekleyin.")
+                                Text(NSLocalizedString("ai.suggestions.daily.limit", comment: "AI suggestions can be used once per day. Please wait to access the next suggestion."))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
@@ -194,7 +194,7 @@ struct AISuggestionsView: View {
                                 HStack {
                                     Image(systemName: "lightbulb.fill")
                                         .foregroundColor(.yellow)
-                                    Text("AI Önerisi")
+                                    Text(NSLocalizedString("ai.suggestion.title", comment: "AI Suggestion"))
                                         .font(.headline)
                                 }
                                 

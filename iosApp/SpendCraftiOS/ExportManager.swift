@@ -214,7 +214,7 @@ class ExportManager {
             try context.save()
             print("✅ CoreData saved successfully")
             
-            let message = "✅ Yedekleme başarıyla içe aktarıldı!\n\n📊 \(backupData.transactions.count) işlem\n📁 \(backupData.categories.count) kategori\n💳 \(backupData.accounts.count) hesap"
+            let message = String(format: NSLocalizedString("export.success.import", comment: "✅ Backup successfully imported!\n\n📊 %d transactions\n📁 %d categories\n💳 %d accounts"), backupData.transactions.count, backupData.categories.count, backupData.accounts.count)
             return (successCount, failedCount, message)
             
         } catch let error as DecodingError {
@@ -222,24 +222,26 @@ class ExportManager {
             switch error {
             case .dataCorrupted(let context):
                 print("   Data corrupted: \(context)")
-                return (0, 0, "❌ Dosya bozuk veya geçersiz format")
+                return (0, 0, NSLocalizedString("export.error.file.corrupted", comment: "❌ File corrupted or invalid format"))
             case .keyNotFound(let key, let context):
                 print("   Key not found: \(key), \(context)")
-                return (0, 0, "❌ Dosya formatı uyumsuz (eksik alan: \(key.stringValue))")
+                let message = String(format: NSLocalizedString("export.error.file.format.mismatch", comment: "❌ File format mismatch (missing field: %@)"), key.stringValue)
+                return (0, 0, message)
             case .typeMismatch(let type, let context):
                 print("   Type mismatch: \(type), \(context)")
-                return (0, 0, "❌ Dosya formatı hatalı")
+                return (0, 0, NSLocalizedString("export.error.file.format.invalid", comment: "❌ Invalid file format"))
             case .valueNotFound(let type, let context):
                 print("   Value not found: \(type), \(context)")
-                return (0, 0, "❌ Dosya formatı eksik")
+                return (0, 0, NSLocalizedString("export.error.file.format.missing", comment: "❌ Missing file format"))
             @unknown default:
-                return (0, 0, "❌ Bilinmeyen okuma hatası")
+                return (0, 0, NSLocalizedString("export.error.unknown.read", comment: "❌ Unknown read error"))
             }
         } catch {
             print("❌ JSON import failed: \(error)")
             print("   Error type: \(type(of: error))")
             print("   Error description: \(error.localizedDescription)")
-            return (0, 0, "❌ İçe aktarım başarısız: \(error.localizedDescription)")
+            let message = String(format: NSLocalizedString("export.error.import.failed", comment: "❌ Import failed: %@"), error.localizedDescription)
+            return (0, 0, message)
         }
     }
     

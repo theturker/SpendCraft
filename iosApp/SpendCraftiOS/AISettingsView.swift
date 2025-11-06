@@ -157,7 +157,7 @@ struct AISettingsView: View {
                                 Text(NSLocalizedString("ai.api.status", comment: "Connection Status"))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
-                                Text("Aktif")
+                                Text(NSLocalizedString("common.active", comment: "Active"))
                                     .font(.body)
                                     .fontWeight(.medium)
                             }
@@ -240,7 +240,7 @@ struct AISettingsView: View {
     // MARK: - Helpers
     
     private func getModelName(_ model: String) -> String {
-        availableModels.first(where: { $0.0 == model })?.1 ?? "Bilinmeyen"
+        availableModels.first(where: { $0.0 == model })?.1 ?? NSLocalizedString("common.unknown", comment: "Unknown")
     }
     
     private func resetToDefaults() {

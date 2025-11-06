@@ -116,6 +116,7 @@
 /* Settings - Security */
 "settings.security.biometric" = "Biometric Authentication";
 "settings.security.biometric.description" = "Use Face ID/Touch ID to access the app";
+"settings.biometric.help.message" = "You will be required to authenticate with %@ every time you access the app.";
 
 /* Features Section */
 "features.recurring.transactions" = "Recurring Transactions";
@@ -729,3 +730,34 @@
 "ai.savings.suggestions.description" = "Offers practical suggestions to save more";
 "ai.get.suggestion" = "Get AI Suggestion";
 "ai.financial.status.summary" = "Financial Status Summary";
+
+/* Biometric Auth */
+"biometric.auth.enable.reason" = "Authenticate to enable Face ID / Touch ID";
+"common.unknown" = "Unknown";
+"common.active" = "Active";
+"export.error.unknown.read" = "❌ Unknown read error";
+"export.error.file.format.invalid" = "❌ Invalid file format";
+"export.error.file.format.missing" = "❌ Missing file format";
+"export.error.file.corrupted" = "❌ File corrupted or invalid format";
+"export.error.file.format.mismatch" = "❌ File format mismatch (missing field: %@)";
+"export.error.import.failed" = "❌ Import failed: %@";
+"export.success.import" = "✅ Backup successfully imported!\n\n📊 %d transactions\n📁 %d categories\n💳 %d accounts";
+
+/* Notifications */
+"notifications.delete" = "Delete";
+"notifications.mark.read" = "Mark as Read";
+"notifications.accessibility.label" = "Notifications";
+
+/* Reports */
+"reports.category.expenses.title" = "Expenses by Category";
+"reports.budget.status.title" = "Budget Status";
+"reports.top.categories.title" = "Most Spent Categories";
+
+/* AI Suggestions */
+"ai.next.suggestion.wait" = "Wait Time for Next Suggestion";
+"ai.suggestions.daily.limit" = "AI suggestions can be used once per day. Please wait to access the next suggestion.";
+"ai.suggestion.title" = "AI Suggestion";
+
+/* Onboarding */
+"onboarding.app.name" = "Paratik";
+"onboarding.or" = "or";

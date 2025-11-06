@@ -191,14 +191,14 @@ struct NotificationRow: View {
             Button(role: .destructive) {
                 onDelete()
             } label: {
-                Label("Sil", systemImage: "trash")
+                Label(NSLocalizedString("notifications.delete", comment: "Delete"), systemImage: "trash")
             }
             
             if !notification.isRead {
                 Button {
                     onMarkAsRead()
                 } label: {
-                    Label("Okundu", systemImage: "checkmark")
+                    Label(NSLocalizedString("notifications.mark.read", comment: "Mark as Read"), systemImage: "checkmark")
                 }
                 .tint(.blue)
             }

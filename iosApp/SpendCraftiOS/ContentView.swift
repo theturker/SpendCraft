@@ -163,7 +163,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .accessibilityLabel("Bildirimler")
+            .accessibilityLabel(NSLocalizedString("notifications.accessibility.label", comment: "Notifications"))
         }
     }
 }

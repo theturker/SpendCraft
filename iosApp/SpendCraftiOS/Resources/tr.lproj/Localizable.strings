@@ -280,7 +280,9 @@
 "achievements.total.points" = "Puan";
 "achievements.total.points.format" = "%d Puan";
 "achievements.remaining" = "Kalan";
+"achievements.earned" = "Kazanıldı";
 "achievements.motivational.locked" = "Bu başarımı açmak için daha fazla ilerleme kaydedin";
+"achievements.motivational.unlocked" = "Tebrikler! Bu başarımı kazandınız! 🎉";
 "achievements.unlocked.count" = "%d Açıldı";
 "achievements.unlocked.count.format" = "%d / %d Başarım";
 "achievements.points.display" = "%d Puan";
@@ -289,6 +291,7 @@
 /* Settings - Security */
 "settings.security.biometric" = "Biyometrik Kimlik Doğrulama";
 "settings.security.biometric.description" = "Uygulamaya giriş için Face ID/Touch ID kullanın";
+"settings.biometric.help.message" = "Uygulamaya her eriştiğinizde %@ ile kimlik doğrulaması yapmanız gerekecek.";
 
 /* Features Section */
 "settings.features" = "Özellikler";
@@ -517,6 +520,8 @@
 "recurring.start.date" = "Başlangıç Tarihi";
 "recurring.status" = "Durum";
 "recurring.active" = "Aktif";
+"recurring.expense" = "Gider";
+"recurring.income" = "Gelir";
 
 /* Notification Settings */
 "notification.settings.title" = "Bildirim Ayarları";
@@ -597,3 +602,92 @@
 "colors.cyan" = "Cyan";
 "colors.mint" = "Mint";
 "colors.teal" = "Teal";
+
+/* AI Settings */
+"ai.settings.title" = "AI Ayarları";
+"ai.enable.suggestions" = "AI Önerilerini Etkinleştir";
+"ai.status" = "Durum";
+"ai.status.active" = "AI destekli finansal öneriler aktif.";
+"ai.status.inactive" = "AI özellikleri devre dışı.";
+"ai.model" = "AI Modeli";
+"ai.model.current" = "Mevcut Model";
+"ai.model.description" = "Farklı modeller farklı hız ve kalite sonuçları sunar. Llama 3.1 8B dengeli performans sunar.";
+"ai.advanced.settings" = "Gelişmiş Ayarlar";
+"ai.creativity.level" = "Yaratıcılık Seviyesi";
+"ai.creativity.low" = "Düşük: Daha tutarlı, Yüksek: Daha yaratıcı";
+"ai.max.length" = "Maksimum Uzunluk";
+"ai.max.length.description" = "Öneri metninin maksimum uzunluğu";
+"ai.features" = "Özellikler";
+"ai.show.badges" = "AI Rozetlerini Göster";
+"ai.show.badges.description" = "AI destekli özellikleri vurgula";
+"ai.auto.suggest" = "Otomatik Öneriler";
+"ai.auto.suggest.description" = "Belirli aralıklarla otomatik AI önerileri alın";
+"ai.api.info" = "API Bilgileri";
+"ai.api.provider" = "API Sağlayıcı";
+"ai.api.status" = "Bağlantı Durumu";
+"ai.api.secure" = "API bağlantısı güvenli ve şifrelenmiştir.";
+"ai.reset.defaults" = "Varsayılanlara Sıfırla";
+"ai.features.title" = "AI Özellikleri";
+"ai.analyze.spending" = "AI desteği ile harcamalarınızı analiz edin";
+"ai.personalized.suggestions" = "Kişiselleştirilmiş finansal öneriler alın";
+"ai.discover.savings" = "Tasarruf fırsatlarını keşfedin";
+
+/* Recurring Transactions Additional */
+"recurring.inactive" = "Pasif";
+"recurring.pause" = "Duraklat";
+"recurring.activate" = "Etkinleştir";
+"recurring.type" = "Tip";
+
+/* Accounts Additional */
+"accounts.delete" = "Sil";
+"accounts.set.default" = "Varsayılan Yap";
+
+/* Categories Additional */
+"categories.this.month.spent" = "Bu Ay Harcanan";
+"categories.salary" = "Maaş";
+"categories.this.month.spent.detail" = "Bu Ay Harcanan";
+
+/* Notification Settings Additional */
+"notification.edit" = "Bildirimi Düzenle";
+"notification.settings" = "Ayarlar";
+"notification.hour" = "Saat";
+"notification.minute" = "Dakika";
+"notification.days.of.month" = "Ayın Hangi Günleri?";
+"notification.days.of.week" = "Haftanın Günleri";
+"notification.every.day" = "Her Gün";
+"notification.content" = "Bildirim İçeriği";
+"notification.title" = "Başlık";
+"notification.message" = "Mesaj";
+"notification.recurrence" = "Tekrarlama";
+"notification.create" = "Oluştur";
+
+/* Biometric Auth */
+"biometric.auth.enable.reason" = "Face ID / Touch ID'yi etkinleştirmek için kimlik doğrulaması yapın";
+"common.unknown" = "Bilinmeyen";
+"common.active" = "Aktif";
+"export.error.unknown.read" = "❌ Bilinmeyen okuma hatası";
+"export.error.file.format.invalid" = "❌ Dosya formatı hatalı";
+"export.error.file.format.missing" = "❌ Dosya formatı eksik";
+"export.error.file.corrupted" = "❌ Dosya bozuk veya geçersiz format";
+"export.error.file.format.mismatch" = "❌ Dosya formatı uyumsuz (eksik alan: %@)";
+"export.error.import.failed" = "❌ İçe aktarım başarısız: %@";
+"export.success.import" = "✅ Yedekleme başarıyla içe aktarıldı!\n\n📊 %d işlem\n📁 %d kategori\n💳 %d hesap";
+
+/* Notifications */
+"notifications.delete" = "Sil";
+"notifications.mark.read" = "Okundu";
+"notifications.accessibility.label" = "Bildirimler";
+
+/* Reports */
+"reports.category.expenses.title" = "Kategoriye Göre Harcamalar";
+"reports.budget.status.title" = "Bütçe Durumu";
+"reports.top.categories.title" = "En Çok Harcanan Kategoriler";
+
+/* AI Suggestions */
+"ai.next.suggestion.wait" = "Sonraki Öneri İçin Bekleme Süresi";
+"ai.suggestions.daily.limit" = "AI önerileri günde bir kez kullanılabilir. Bir sonraki öneriye erişmek için lütfen bekleyin.";
+"ai.suggestion.title" = "AI Önerisi";
+
+/* Onboarding */
+"onboarding.app.name" = "Paratik";
+"onboarding.or" = "veya";
