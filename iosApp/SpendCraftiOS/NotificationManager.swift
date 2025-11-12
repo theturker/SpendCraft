@@ -13,8 +13,8 @@ import SwiftUI
 
 struct NotificationTemplate: Identifiable, Codable {
     let id: String
-    let title: String
-    let body: String
+    let title: String // Artık localization key olarak saklanıyor
+    let body: String // Artık localization key olarak saklanıyor
     let icon: String
     let category: String
     var hour: Int
@@ -23,34 +23,50 @@ struct NotificationTemplate: Identifiable, Codable {
     var daysOfWeek: [Int]? // nil = her gün, [1-7] = haftanın günleri (1=Pazar)
     var daysOfMonth: [Int]? // nil = her gün, [1-31] = ayın günleri
     
+    var localizedTitle: String {
+        // Eğer title bir localization key ise çevir, değilse direkt döndür (eski veriler için)
+        if title.hasPrefix("notification.") {
+            return NSLocalizedString(title, comment: title)
+        }
+        return title
+    }
+    
+    var localizedBody: String {
+        // Eğer body bir localization key ise çevir, değilse direkt döndür (eski veriler için)
+        if body.hasPrefix("notification.") {
+            return NSLocalizedString(body, comment: body)
+        }
+        return body
+    }
+    
     static let templates: [NotificationTemplate] = [
         // Morning Motivation
-        NotificationTemplate(id: "morning_1", title: NSLocalizedString("notification.morning.title.1", comment: "Good Morning! ☀️"), body: NSLocalizedString("notification.morning.body.1", comment: "New day, new beginning! Ready to track your expenses?"), icon: "sun.max.fill", category: NSLocalizedString("notification.morning", comment: "Morning"), hour: 8, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
-        NotificationTemplate(id: "morning_2", title: NSLocalizedString("notification.morning.title.2", comment: "Coffee Break ☕️"), body: NSLocalizedString("notification.morning.body.2", comment: "Check today's budget while drinking your coffee!"), icon: "cup.and.saucer.fill", category: NSLocalizedString("notification.morning", comment: "Morning"), hour: 9, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "morning_1", title: "notification.morning.title.1", body: "notification.morning.body.1", icon: "sun.max.fill", category: "notification.morning", hour: 8, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "morning_2", title: "notification.morning.title.2", body: "notification.morning.body.2", icon: "cup.and.saucer.fill", category: "notification.morning", hour: 9, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
         // Noon Reminders
-        NotificationTemplate(id: "noon_1", title: NSLocalizedString("notification.noon.title.1", comment: "Lunch Break 🍽️"), body: NSLocalizedString("notification.noon.body.1", comment: "Don't forget to record your meal expense!"), icon: "fork.knife", category: NSLocalizedString("notification.noon", comment: "Noon"), hour: 12, minute: 30, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
-        NotificationTemplate(id: "noon_2", title: NSLocalizedString("notification.noon.title.2", comment: "Expense Check 💰"), body: NSLocalizedString("notification.noon.body.2", comment: "How much have you spent today? Check it out!"), icon: "chart.bar.fill", category: NSLocalizedString("notification.noon", comment: "Noon"), hour: 14, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "noon_1", title: "notification.noon.title.1", body: "notification.noon.body.1", icon: "fork.knife", category: "notification.noon", hour: 12, minute: 30, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "noon_2", title: "notification.noon.title.2", body: "notification.noon.body.2", icon: "chart.bar.fill", category: "notification.noon", hour: 14, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
         // Evening Summaries
-        NotificationTemplate(id: "evening_1", title: NSLocalizedString("notification.evening.title.1", comment: "Daily Summary 🌙"), body: NSLocalizedString("notification.evening.body.1", comment: "Time to review today's expenses!"), icon: "moon.stars.fill", category: NSLocalizedString("notification.evening", comment: "Evening"), hour: 20, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
-        NotificationTemplate(id: "evening_2", title: NSLocalizedString("notification.evening.title.2", comment: "Daily Goal 🎯"), body: NSLocalizedString("notification.evening.body.2", comment: "Did you reach today's budget goal?"), icon: "target", category: NSLocalizedString("notification.evening", comment: "Evening"), hour: 21, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "evening_1", title: "notification.evening.title.1", body: "notification.evening.body.1", icon: "moon.stars.fill", category: "notification.evening", hour: 20, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "evening_2", title: "notification.evening.title.2", body: "notification.evening.body.2", icon: "target", category: "notification.evening", hour: 21, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
         // Weekly Summaries
-        NotificationTemplate(id: "weekly_1", title: NSLocalizedString("notification.weekly.title.1", comment: "Weekly Report 📊"), body: NSLocalizedString("notification.weekly.body.1", comment: "Review this week's expenses!"), icon: "calendar", category: NSLocalizedString("notification.weekly", comment: "Weekly"), hour: 10, minute: 0, isEnabled: false, daysOfWeek: [1], daysOfMonth: nil), // Monday
-        NotificationTemplate(id: "weekly_2", title: NSLocalizedString("notification.weekly.title.2", comment: "Weekend Plan 🎉"), body: NSLocalizedString("notification.weekly.body.2", comment: "Plan your weekend expenses!"), icon: "party.popper.fill", category: NSLocalizedString("notification.weekly", comment: "Weekly"), hour: 18, minute: 0, isEnabled: false, daysOfWeek: [6], daysOfMonth: nil), // Saturday
+        NotificationTemplate(id: "weekly_1", title: "notification.weekly.title.1", body: "notification.weekly.body.1", icon: "calendar", category: "notification.weekly", hour: 10, minute: 0, isEnabled: false, daysOfWeek: [1], daysOfMonth: nil), // Monday
+        NotificationTemplate(id: "weekly_2", title: "notification.weekly.title.2", body: "notification.weekly.body.2", icon: "party.popper.fill", category: "notification.weekly", hour: 18, minute: 0, isEnabled: false, daysOfWeek: [6], daysOfMonth: nil), // Saturday
         
         // Monthly Reminders
-        NotificationTemplate(id: "monthly_1", title: NSLocalizedString("notification.monthly.title.1", comment: "Payday 💸"), body: NSLocalizedString("notification.monthly.body.1", comment: "Don't forget to record your income!"), icon: "banknote.fill", category: NSLocalizedString("notification.monthly", comment: "Monthly"), hour: 10, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: [1, 2, 3, 4, 5]),
-        NotificationTemplate(id: "monthly_2", title: NSLocalizedString("notification.monthly.title.2", comment: "Bill Payments 🧾"), body: NSLocalizedString("notification.monthly.body.2", comment: "End of month is approaching, check your bills!"), icon: "doc.text.fill", category: NSLocalizedString("notification.monthly", comment: "Monthly"), hour: 19, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: [25, 26, 27, 28, 29, 30]),
+        NotificationTemplate(id: "monthly_1", title: "notification.monthly.title.1", body: "notification.monthly.body.1", icon: "banknote.fill", category: "notification.monthly", hour: 10, minute: 0, isEnabled: true, daysOfWeek: nil, daysOfMonth: [1, 2, 3, 4, 5]),
+        NotificationTemplate(id: "monthly_2", title: "notification.monthly.title.2", body: "notification.monthly.body.2", icon: "doc.text.fill", category: "notification.monthly", hour: 19, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: [25, 26, 27, 28, 29, 30]),
         
         // Motivation
-        NotificationTemplate(id: "motivation_1", title: NSLocalizedString("notification.motivation.title.1", comment: "Savings Goal 🎯"), body: NSLocalizedString("notification.motivation.body.1", comment: "Small savings lead to big results! Keep going!"), icon: "star.fill", category: NSLocalizedString("notification.motivation", comment: "Motivation"), hour: 16, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
-        NotificationTemplate(id: "motivation_2", title: NSLocalizedString("notification.motivation.title.2", comment: "Financial Freedom 🚀"), body: NSLocalizedString("notification.motivation.body.2", comment: "Every transaction you record brings you one step closer to your goal!"), icon: "rocket.fill", category: NSLocalizedString("notification.motivation", comment: "Motivation"), hour: 15, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "motivation_1", title: "notification.motivation.title.1", body: "notification.motivation.body.1", icon: "star.fill", category: "notification.motivation", hour: 16, minute: 0, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
+        NotificationTemplate(id: "motivation_2", title: "notification.motivation.title.2", body: "notification.motivation.body.2", icon: "rocket.fill", category: "notification.motivation", hour: 15, minute: 30, isEnabled: false, daysOfWeek: nil, daysOfMonth: nil),
         
         // Special Days
-        NotificationTemplate(id: "weekend_1", title: NSLocalizedString("notification.special.title.1", comment: "Weekend Started! 🎊"), body: NSLocalizedString("notification.special.body.1", comment: "Don't forget to track your weekend expenses!"), icon: "gift.fill", category: NSLocalizedString("notification.special", comment: "Special"), hour: 11, minute: 0, isEnabled: false, daysOfWeek: [6, 7], daysOfMonth: nil),
-        NotificationTemplate(id: "weekend_2", title: NSLocalizedString("notification.special.title.2", comment: "Sunday 🏡"), body: NSLocalizedString("notification.special.body.2", comment: "Evaluate the week and plan the new week!"), icon: "house.fill", category: NSLocalizedString("notification.special", comment: "Special"), hour: 19, minute: 0, isEnabled: false, daysOfWeek: [7], daysOfMonth: nil)
+        NotificationTemplate(id: "weekend_1", title: "notification.special.title.1", body: "notification.special.body.1", icon: "gift.fill", category: "notification.special", hour: 11, minute: 0, isEnabled: false, daysOfWeek: [6, 7], daysOfMonth: nil),
+        NotificationTemplate(id: "weekend_2", title: "notification.special.title.2", body: "notification.special.body.2", icon: "house.fill", category: "notification.special", hour: 19, minute: 0, isEnabled: false, daysOfWeek: [7], daysOfMonth: nil)
     ]
 }
 
@@ -188,8 +204,8 @@ class NotificationManager: ObservableObject {
         for template in templates where template.isEnabled {
             scheduleNotification(
                 id: template.id,
-                title: template.title,
-                body: template.body,
+                title: template.localizedTitle,
+                body: template.localizedBody,
                 hour: template.hour,
                 minute: template.minute,
                 daysOfWeek: template.daysOfWeek,

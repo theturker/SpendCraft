@@ -61,7 +61,7 @@ struct BiometricAuthView: View {
                     HStack {
                         Image(systemName: biometricManager.biometricType == .faceID ? "faceid" : "touchid")
                             .font(.title2)
-                        Text("\(biometricManager.getBiometricTypeName()) ile Giriş Yap")
+                        Text(String(format: NSLocalizedString("biometric.auth.button", comment: "Authenticate button"), biometricManager.getBiometricTypeName()))
                             .fontWeight(.semibold)
                     }
                     .foregroundColor(.black)
@@ -80,11 +80,11 @@ struct BiometricAuthView: View {
             // Otomatik olarak biometric authentication başlat
             authenticate()
         }
-        .alert("Kimlik Doğrulama Hatası", isPresented: $showError) {
-            Button("Tekrar Dene") {
+        .alert(NSLocalizedString("biometric.auth.alert.title", comment: "Authentication error"), isPresented: $showError) {
+            Button(NSLocalizedString("biometric.auth.alert.retry", comment: "Retry")) {
                 authenticate()
             }
-            Button("İptal", role: .cancel) {}
+            Button(NSLocalizedString("common.cancel", comment: "Cancel"), role: .cancel) {}
         } message: {
             Text(errorMessage)
         }
@@ -93,7 +93,7 @@ struct BiometricAuthView: View {
     private func authenticate() {
         Task {
             do {
-                let success = try await biometricManager.authenticate(reason: "Uygulamaya giriş yapın")
+                let success = try await biometricManager.authenticate(reason: NSLocalizedString("biometric.auth.reason", comment: "Biometric auth reason"))
                 if success {
                     onAuthenticated()
                 }

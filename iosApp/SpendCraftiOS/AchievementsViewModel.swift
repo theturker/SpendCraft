@@ -175,29 +175,57 @@ class AchievementsViewModel: ObservableObject {
     }
     
     func updateStreak() {
-        // NOW USING SHARED KMP CALCULATOR! 🎉
-        let lastDate = UserDefaults.standard.object(forKey: "lastStreakDate") as? Date ?? Date.distantPast
-        let today = Date()
-        
-        // Delegate to shared calculator
-        let lastStreakDate = shared.DateTimeFormatter.shared.dateToInstant(date: lastDate)
-        let todayInstant = shared.DateTimeFormatter.shared.dateToInstant(date: today)
-        
-        let streakResult = shared.StreakCalculator.shared.calculateCurrentStreak(
-            dailyEntries: [lastStreakDate],
-            today: todayInstant
-        )
-        
-        currentStreak = Int(streakResult)
-        
-        // Update longest streak
-        if currentStreak > longestStreak {
-            longestStreak = currentStreak
+        let fetchRequest: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest() as! NSFetchRequest<TransactionEntity>
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TransactionEntity.timestampUtcMillis, ascending: false)]
+        do {
+            let transactions = try context.fetch(fetchRequest)
+            let timestamps = transactions.map { $0.timestampUtcMillis }
+            if timestamps.isEmpty {
+                currentStreak = 0
+                longestStreak = max(longestStreak, 0)
+                UserDefaults.standard.set(0, forKey: "currentStreak")
+                UserDefaults.standard.set(0, forKey: "longestStreak")
+                UserDefaults.standard.removeObject(forKey: "lastStreakDate")
+                return
+            }
+            let calendar = Calendar.current
+            let days = timestamps.map { timestamp -> Date in
+                let date = Date(timeIntervalSince1970: TimeInterval(timestamp / 1000))
+                return calendar.startOfDay(for: date)
+            }
+            let uniqueDaysSet = Set(days)
+            let uniqueDays = uniqueDaysSet.sorted()
+            var bestStreak = 0
+            var streak = 0
+            var previousDay: Date?
+            for day in uniqueDays {
+                if let prev = previousDay,
+                   let diff = calendar.dateComponents([.day], from: prev, to: day).day,
+                   diff == 1 {
+                    streak += 1
+                } else {
+                    streak = 1
+                }
+                bestStreak = max(bestStreak, streak)
+                previousDay = day
+            }
+            let today = calendar.startOfDay(for: Date())
+            var current = 0
+            var cursor = today
+            while uniqueDaysSet.contains(cursor) {
+                current += 1
+                guard let previous = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
+                cursor = previous
+            }
+            currentStreak = current
+            longestStreak = max(longestStreak, bestStreak)
+            UserDefaults.standard.set(currentStreak, forKey: "currentStreak")
             UserDefaults.standard.set(longestStreak, forKey: "longestStreak")
+            if let latestDay = uniqueDays.last {
+                UserDefaults.standard.set(latestDay, forKey: "lastStreakDate")
+            }
+        } catch {
+            print("Error updating streak: \(error)")
         }
-        
-        // Save
-        UserDefaults.standard.set(currentStreak, forKey: "currentStreak")
-        UserDefaults.standard.set(Date(), forKey: "lastStreakDate")
     }
 }

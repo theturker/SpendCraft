@@ -106,9 +106,9 @@ struct EditTransactionView: View {
                 Form {
                     // Transaction Type
                     Section {
-                        Picker("İşlem Tipi", selection: $isIncome) {
-                            Text("Gider").tag(false)
-                            Text("Gelir").tag(true)
+                        Picker(NSLocalizedString("add.transaction.type", comment: "Transaction Type"), selection: $isIncome) {
+                            Text(NSLocalizedString("add.transaction.expense", comment: "Expense")).tag(false)
+                            Text(NSLocalizedString("add.transaction.income", comment: "Income")).tag(true)
                         }
                         .pickerStyle(.segmented)
                         .onChange(of: isIncome) { _ in
@@ -118,7 +118,7 @@ struct EditTransactionView: View {
                     }
                     
                     // Amount
-                    Section("Miktar") {
+                    Section(NSLocalizedString("section.amount", comment: "Amount")) {
                         HStack {
                             CurrencyTextField(title: "0.00", value: $amount, isFocused: $isAmountFocused)
                             Text(getCurrentCurrencySymbol())
@@ -128,9 +128,9 @@ struct EditTransactionView: View {
                     }
                     
                     // Category
-                    Section("Kategori") {
+                    Section(NSLocalizedString("section.category", comment: "Category")) {
                         if filteredCategories.isEmpty {
-                            Text("Bu tip için kategori bulunamadı")
+                            Text(NSLocalizedString("categories.no.categories", comment: "No categories yet"))
                                 .foregroundColor(.secondary)
                         } else {
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -150,9 +150,9 @@ struct EditTransactionView: View {
                     }
                     
                     // Account
-                    Section("Hesap") {
-                        Picker("Hesap Seç", selection: $selectedAccount) {
-                            Text("Seçiniz").tag(nil as CategoryEntity?)
+                    Section(NSLocalizedString("section.account", comment: "Account")) {
+                        Picker(NSLocalizedString("select.account", comment: "Select Account"), selection: $selectedAccount) {
+                            Text(NSLocalizedString("recurring.select", comment: "Select")).tag(nil as AccountEntity?)
                             ForEach(transactionsViewModel.accounts, id: \.id) { account in
                                 Text(account.name ?? "").tag(account as AccountEntity?)
                             }
@@ -160,13 +160,13 @@ struct EditTransactionView: View {
                     }
                     
                     // Date
-                    Section("Tarih") {
-                        DatePicker("Tarih", selection: $date, displayedComponents: [.date, .hourAndMinute])
+                    Section(NSLocalizedString("section.date", comment: "Date")) {
+                        DatePicker(NSLocalizedString("section.date", comment: "Date"), selection: $date, displayedComponents: [.date, .hourAndMinute])
                     }
                     
                     // Note
-                    Section("Not") {
-                        TextField("İsteğe bağlı not", text: $note)
+                    Section(NSLocalizedString("section.note", comment: "Note")) {
+                        TextField(NSLocalizedString("optional.note", comment: "Optional note"), text: $note)
                     }
                     
                     // Spacer for floating button
@@ -184,7 +184,7 @@ struct EditTransactionView: View {
                     Button {
                         saveChanges()
                     } label: {
-                        Text("Değişiklikleri Kaydet")
+                        Text(NSLocalizedString("common.save", comment: "Save"))
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -198,11 +198,11 @@ struct EditTransactionView: View {
                     .background(Color(uiColor: .systemBackground))
                 }
             }
-            .navigationTitle("İşlemi Düzenle")
+            .navigationTitle(NSLocalizedString("edit.transaction.title", comment: "Edit Transaction"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
+                    Button(NSLocalizedString("common.cancel", comment: "Cancel")) {
                         dismiss()
                     }
                 }

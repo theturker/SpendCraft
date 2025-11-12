@@ -15,28 +15,11 @@ struct CategoryDebugView: View {
             List {
                 Section("Tüm Kategoriler (\(transactionsViewModel.categories.count))") {
                     ForEach(transactionsViewModel.categories, id: \.id) { category in
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Image(systemName: category.icon ?? "circle.fill")
-                                    .foregroundColor(category.uiColor)
-                                Text(category.name ?? "?")
-                                    .font(.headline)
-                                Spacer()
-                                Text(category.type ?? "NO TYPE")
-                                    .font(.caption)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(category.type == "income" ? Color.green.opacity(0.2) : Color.red.opacity(0.2))
-                                    .cornerRadius(8)
-                            }
-                            
+                        VStack(alignment: .leading) {
+                            Text(category.localizedName)
+                                .font(.headline)
                             Text("ID: \(category.id)")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
-                            
-                            Text("Color: \(category.color ?? "no color")")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
                         }
                         .padding(.vertical, 4)
                     }
@@ -52,7 +35,7 @@ struct CategoryDebugView: View {
                             HStack {
                                 Image(systemName: category.icon ?? "circle.fill")
                                     .foregroundColor(category.uiColor)
-                                Text(category.name ?? "?")
+                                Text(category.localizedName)
                             }
                         }
                     }
@@ -68,7 +51,7 @@ struct CategoryDebugView: View {
                             HStack {
                                 Image(systemName: category.icon ?? "circle.fill")
                                     .foregroundColor(category.uiColor)
-                                Text(category.name ?? "?")
+                                Text(category.localizedName)
                             }
                         }
                     }

@@ -113,7 +113,9 @@ struct ContentView: View {
             recurringViewModel.loadRecurringTransactions()
             accountsViewModel.loadAccounts()
             achievementsViewModel.loadAchievements()
-
+            achievementsViewModel.updateStreak()
+            achievementsViewModel.loadStreak()
+            
             // Check achievements on app launch
             achievementsViewModel.checkAchievements(
                 transactionCount: transactionsViewModel.transactions.count,

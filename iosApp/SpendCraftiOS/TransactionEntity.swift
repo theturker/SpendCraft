@@ -41,10 +41,12 @@ extension TransactionEntity {
     /// NOW USES SHARED KMP FORMATTER! 🎉
     var formattedDate: String {
         // Delegate to shared KMP DateTimeFormatter
+        let currentLanguage = LanguageHelper.shared.getCurrentLanguage()
+        let locale = currentLanguage == "en" ? "en_US" : "tr_TR"
         return shared.DateTimeFormatter.shared.format(
             timestampMillis: timestampUtcMillis,
             format: .medium,
-            locale: "tr_TR"
+            locale: locale
         )
     }
     

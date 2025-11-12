@@ -61,6 +61,13 @@
 /* Biometric Auth */
 "biometric.auth.message" = "To access the app, please";
 "biometric.auth.message.end" = "authenticate with";
+"biometric.auth.button" = "Sign in with %@";
+"biometric.auth.alert.title" = "Authentication Failed";
+"biometric.auth.alert.retry" = "Try Again";
+"biometric.auth.reason" = "Sign in to the app";
+"biometric.type.faceid" = "Face ID";
+"biometric.type.touchid" = "Touch ID";
+"biometric.type.generic" = "Biometric";
 
 /* Achievements */
 "Uzman" = "Expert";
@@ -213,6 +220,7 @@
 
 /* Add Transaction */
 "add.transaction.title" = "New Transaction";
+"edit.transaction.title" = "Edit Transaction";
 "add.transaction.type" = "Transaction Type";
 "add.transaction.amount" = "Amount";
 "add.transaction.category" = "Category";

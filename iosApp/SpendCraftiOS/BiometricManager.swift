@@ -58,15 +58,15 @@ class BiometricManager: ObservableObject {
     func getBiometricTypeName() -> String {
         switch biometricType {
         case .faceID:
-            return "Face ID"
+            return NSLocalizedString("biometric.type.faceid", comment: "Face ID")
         case .touchID:
-            return "Touch ID"
+            return NSLocalizedString("biometric.type.touchid", comment: "Touch ID")
         case .none:
-            return "Biometric"
+            return NSLocalizedString("biometric.type.generic", comment: "Biometric")
         }
     }
     
-    func authenticate(reason: String = "Uygulamaya giriş yapın") async throws -> Bool {
+    func authenticate(reason: String = NSLocalizedString("biometric.auth.reason", comment: "Biometric auth reason")) async throws -> Bool {
         let context = LAContext()
         context.localizedFallbackTitle = "" // Şifre fallback'i gizle
         

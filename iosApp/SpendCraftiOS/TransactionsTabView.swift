@@ -60,12 +60,23 @@ struct TransactionsTabView: View {
     }
     
     // Precompute grouped sections as a simple array to avoid heavy generics in the View builder.
-    private var sections: [(date: String, items: [TransactionEntity])] {
-        let grouped: [String: [TransactionEntity]] = groupedTransactions()
-        let sortedDates: [String] = grouped.keys.sorted(by: >)
-        let result: [(String, [TransactionEntity])] = sortedDates.map { date in
-            let items: [TransactionEntity] = grouped[date] ?? []
-            return (date, items)
+    private var sections: [(date: Date, title: String, items: [TransactionEntity])] {
+        let calendar = Calendar.current
+        let grouped: [Date: [TransactionEntity]] = Dictionary(grouping: filteredTransactions) { transaction -> Date in
+            let transactionDate = Date(timeIntervalSince1970: TimeInterval(transaction.timestampUtcMillis / 1000))
+            return calendar.startOfDay(for: transactionDate)
+        }
+        let sortedDates: [Date] = grouped.keys.sorted(by: >)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM yyyy"
+        let currentLanguage = LanguageHelper.shared.getCurrentLanguage()
+        formatter.locale = Locale(identifier: currentLanguage == "en" ? "en_US" : "tr_TR")
+        let result: [(Date, String, [TransactionEntity])] = sortedDates.map { date in
+            let title = formatter.string(from: date)
+            let items: [TransactionEntity] = (grouped[date] ?? []).sorted { lhs, rhs in
+                lhs.timestampUtcMillis > rhs.timestampUtcMillis
+            }
+            return (date, title, items)
         }
         return result
     }
@@ -88,6 +99,8 @@ struct TransactionsTabView: View {
         .sheet(isPresented: $showAddTransaction, onDismiss: {
             // Reload transactions after adding new transaction
             transactionsViewModel.loadTransactions()
+            achievementsViewModel.updateStreak()
+            achievementsViewModel.loadStreak()
         }) {
             AddTransactionView(initialIsIncome: false)
                 .environmentObject(transactionsViewModel)
@@ -161,7 +174,7 @@ struct TransactionsTabView: View {
     private var transactionsList: some View {
         List {
             ForEach(sections, id: \.date) { section in
-                Section(header: Text(section.date)) {
+                Section(header: Text(section.title)) {
                     ForEach(section.items, id: \.id) { transaction in
                         transactionRow(for: transaction)
                             .id("\(transaction.id)-\(transaction.timestampUtcMillis)-\(transaction.amountMinor)")
@@ -213,18 +226,6 @@ struct TransactionsTabView: View {
                     .font(.title2)
             }
         }
-    }
-    
-    func groupedTransactions() -> [String: [TransactionEntity]] {
-        // Add explicit types for the grouping key and result to reduce inference work.
-        let grouped: [String: [TransactionEntity]] = Dictionary(grouping: filteredTransactions) { transaction -> String in
-            let date = Date(timeIntervalSince1970: TimeInterval(transaction.timestampUtcMillis / 1000))
-            let formatter = DateFormatter()
-            formatter.dateFormat = "d MMMM yyyy"
-            formatter.locale = Locale(identifier: "tr_TR")
-            return formatter.string(from: date)
-        }
-        return grouped
     }
 }
 

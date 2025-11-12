@@ -114,23 +114,25 @@ class NotificationsViewModel: ObservableObject {
             
             let percentage = (spent / limit) * 100.0
             
+            let localizedCategory = budget.category?.localizedName ?? NSLocalizedString("common.other", comment: "Other")
+            
             // Check if we already sent notification for this threshold
             let hasNotified80 = notifications.contains { notification in
                 notification.type == .budgetAlert &&
-                notification.message.contains(budget.category?.name ?? "") &&
+                notification.message.contains(localizedCategory) &&
                 notification.message.contains("80")
             }
             
             let hasNotified100 = notifications.contains { notification in
                 notification.type == .budgetAlert &&
-                notification.message.contains(budget.category?.name ?? "") &&
+                notification.message.contains(localizedCategory) &&
                 notification.message.contains("tamamını")
             }
             
             if percentage >= 100 && !hasNotified100 {
-                checkBudgetAlert(category: budget.category?.name ?? "Kategori", percentage: percentage)
+                checkBudgetAlert(category: localizedCategory, percentage: percentage)
             } else if percentage >= 80 && percentage < 100 && !hasNotified80 {
-                checkBudgetAlert(category: budget.category?.name ?? "Kategori", percentage: percentage)
+                checkBudgetAlert(category: localizedCategory, percentage: percentage)
             }
         }
     }

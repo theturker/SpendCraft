@@ -69,7 +69,7 @@ struct NotificationSettingsView: View {
                             HStack {
                                 Image(systemName: categoryIcon(for: category))
                                     .foregroundColor(categoryColor(for: category))
-                                Text(NSLocalizedString(category, comment: category))
+                                Text(getLocalizedCategory(category))
                                     .fontWeight(.medium)
                                 Spacer()
                                 Text("\(groupedTemplates()[category]?.filter { $0.isEnabled }.count ?? 0)/\(groupedTemplates()[category]?.count ?? 0)")
@@ -140,30 +140,53 @@ struct NotificationSettingsView: View {
         Dictionary(grouping: notificationManager.templates) { $0.category }
     }
     
+    private func getLocalizedCategory(_ category: String) -> String {
+        // Eğer category zaten bir localization key ise (notification.morning gibi), çevir
+        if category.hasPrefix("notification.") {
+            return NSLocalizedString(category, comment: category)
+        }
+        // Eğer çevrilmiş bir değer ise (eski veriler için), direkt döndür
+        return category
+    }
+    
     private func categoryIcon(for category: String) -> String {
-        switch category {
-        case NSLocalizedString("notification.morning", comment: "Morning"): return "sun.max.fill"
-        case NSLocalizedString("notification.noon", comment: "Noon"): return "sun.min.fill"
-        case NSLocalizedString("notification.evening", comment: "Evening"): return "moon.stars.fill"
-        case NSLocalizedString("notification.weekly", comment: "Weekly"): return "calendar"
-        case NSLocalizedString("notification.monthly", comment: "Monthly"): return "calendar.badge.clock"
-        case NSLocalizedString("notification.motivation", comment: "Motivation"): return "star.fill"
-        case NSLocalizedString("notification.special", comment: "Special"): return "gift.fill"
+        let categoryKey = category.hasPrefix("notification.") ? category : getCategoryKey(from: category)
+        switch categoryKey {
+        case "notification.morning": return "sun.max.fill"
+        case "notification.noon": return "sun.min.fill"
+        case "notification.evening": return "moon.stars.fill"
+        case "notification.weekly": return "calendar"
+        case "notification.monthly": return "calendar.badge.clock"
+        case "notification.motivation": return "star.fill"
+        case "notification.special": return "gift.fill"
         default: return "bell.fill"
         }
     }
     
     private func categoryColor(for category: String) -> Color {
-        switch category {
-        case NSLocalizedString("notification.morning", comment: "Morning"): return .orange
-        case NSLocalizedString("notification.noon", comment: "Noon"): return .yellow
-        case NSLocalizedString("notification.evening", comment: "Evening"): return .indigo
-        case NSLocalizedString("notification.weekly", comment: "Weekly"): return .blue
-        case NSLocalizedString("notification.monthly", comment: "Monthly"): return .green
-        case NSLocalizedString("notification.motivation", comment: "Motivation"): return .purple
-        case NSLocalizedString("notification.special", comment: "Special"): return .pink
+        let categoryKey = category.hasPrefix("notification.") ? category : getCategoryKey(from: category)
+        switch categoryKey {
+        case "notification.morning": return .orange
+        case "notification.noon": return .yellow
+        case "notification.evening": return .indigo
+        case "notification.weekly": return .blue
+        case "notification.monthly": return .green
+        case "notification.motivation": return .purple
+        case "notification.special": return .pink
         default: return .gray
         }
+    }
+    
+    private func getCategoryKey(from category: String) -> String {
+        // Eski veriler için: çevrilmiş değeri key'e çevir
+        if category == NSLocalizedString("notification.morning", comment: "Morning") { return "notification.morning" }
+        if category == NSLocalizedString("notification.noon", comment: "Noon") { return "notification.noon" }
+        if category == NSLocalizedString("notification.evening", comment: "Evening") { return "notification.evening" }
+        if category == NSLocalizedString("notification.weekly", comment: "Weekly") { return "notification.weekly" }
+        if category == NSLocalizedString("notification.monthly", comment: "Monthly") { return "notification.monthly" }
+        if category == NSLocalizedString("notification.motivation", comment: "Motivation") { return "notification.motivation" }
+        if category == NSLocalizedString("notification.special", comment: "Special") { return "notification.special" }
+        return category
     }
     
     private func openSettings() {
@@ -187,7 +210,7 @@ struct NotificationTemplateRow: View {
                     .frame(width: 32)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(template.title)
+                    Text(template.localizedTitle)
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(.primary)
@@ -334,11 +357,11 @@ struct EditTemplateView: View {
                     HStack {
                         Image(systemName: template.icon)
                             .foregroundColor(.blue)
-                        Text(template.title)
+                        Text(template.localizedTitle)
                             .fontWeight(.semibold)
                     }
                     
-                    Text(template.body)
+                    Text(template.localizedBody)
                         .font(.callout)
                         .foregroundColor(.secondary)
                 }

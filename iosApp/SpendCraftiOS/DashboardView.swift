@@ -288,6 +288,8 @@ struct DashboardView: View {
                 // Reload data when sheet is dismissed to reflect new transaction
                 transactionsViewModel.loadTransactions()
                 achievementsViewModel.loadAchievements()
+                achievementsViewModel.updateStreak()
+                achievementsViewModel.loadStreak()
                 
                 // Check achievements with updated transaction count
                 achievementsViewModel.checkAchievements(
@@ -353,7 +355,7 @@ struct BudgetProgressRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text(category.name ?? "")
+                Text(category.localizedName)
                     .font(.subheadline)
                 Spacer()
                 Text("\(formatCurrency(spent)) / \(formatCurrency(Double(budget.monthlyLimitMinor) / 100.0))")

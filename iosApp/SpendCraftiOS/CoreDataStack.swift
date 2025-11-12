@@ -228,6 +228,14 @@ extension CategoryEntity {
     var uiColor: Color {
         return Color(UIColor(hex: color ?? "#000000") ?? UIColor.black)
     }
+    
+    var localizedName: String {
+        let rawName = name ?? ""
+        if rawName.hasPrefix("category.") {
+            return NSLocalizedString(rawName, comment: rawName)
+        }
+        return rawName
+    }
 }
 
 extension UIColor {

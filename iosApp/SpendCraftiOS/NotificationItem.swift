@@ -48,7 +48,8 @@ struct NotificationItem: Identifiable, Codable {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
-        formatter.locale = Locale(identifier: "tr_TR")
+        let currentLanguage = LanguageHelper.shared.getCurrentLanguage()
+        formatter.locale = Locale(identifier: currentLanguage == "en" ? "en_US" : "tr_TR")
         return formatter.string(from: date)
     }
 }

@@ -329,6 +329,9 @@ struct AddTransactionView: View {
             notificationsViewModel: notificationsViewModel
         )
         
+        // Streak değerlerini güncelle
+        achievementsViewModel.loadStreak()
+        
         // Eğer tekrarlayan işlem ise, recurring transaction olarak da kaydet
         if isRecurring {
             let transactionName = category.name ?? "Tekrarlayan İşlem"

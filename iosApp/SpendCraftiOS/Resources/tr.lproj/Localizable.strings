@@ -61,6 +61,13 @@
 /* Biometric Auth */
 "biometric.auth.message" = "Uygulamaya giriş yapmak için";
 "biometric.auth.message.end" = "ile kimlik doğrulaması yapın";
+"biometric.auth.button" = "%@ ile giriş yap";
+"biometric.auth.alert.title" = "Kimlik Doğrulama Hatası";
+"biometric.auth.alert.retry" = "Tekrar Dene";
+"biometric.auth.reason" = "Uygulamaya giriş yapın";
+"biometric.type.faceid" = "Face ID";
+"biometric.type.touchid" = "Touch ID";
+"biometric.type.generic" = "Biyometrik";
 
 /* Day Names */
 "day.sun" = "Paz";
@@ -392,6 +399,7 @@
 
 /* Add Transaction */
 "add.transaction.title" = "Yeni İşlem";
+"edit.transaction.title" = "İşlemi Düzenle";
 "add.transaction.type" = "İşlem Tipi";
 "add.transaction.amount" = "Tutar";
 "add.transaction.category" = "Kategori";
