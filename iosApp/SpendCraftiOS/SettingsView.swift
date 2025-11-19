@@ -379,10 +379,10 @@ struct AccountsListView: View {
                 ForEach(accountsViewModel.accounts, id: \.id) { account in
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(account.name ?? "")
+                            Text(account.name)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
-                            Text(Self.getAccountTypeLocalized(account.type ?? ""))
+                            Text(Self.getAccountTypeLocalized(account.type))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }

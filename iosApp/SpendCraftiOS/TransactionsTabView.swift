@@ -293,7 +293,7 @@ struct TransactionListRow: View {
                     .foregroundColor(transaction.isIncome ? .green : .red)
                 
                 if let account = transaction.account {
-                    Text(account.name ?? "")
+                    Text(account.name)
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }

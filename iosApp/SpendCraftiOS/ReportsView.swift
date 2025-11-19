@@ -253,7 +253,7 @@ struct CategorySpendingRow: View {
                 Image(systemName: category.icon ?? "circle.fill")
                     .foregroundColor(category.uiColor)
                 
-                Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
+                Text(NSLocalizedString(category.name, comment: category.name))
                     .font(.subheadline)
                 
                 Spacer()
@@ -299,7 +299,7 @@ struct BudgetStatusRow: View {
                 Image(systemName: category.icon ?? "circle.fill")
                     .foregroundColor(category.uiColor)
                 
-                Text(NSLocalizedString(category.name ?? "", comment: category.name ?? ""))
+                Text(NSLocalizedString(category.name, comment: category.name))
                     .font(.subheadline)
                 
                 Spacer()

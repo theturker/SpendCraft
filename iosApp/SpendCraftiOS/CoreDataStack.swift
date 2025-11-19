@@ -57,7 +57,7 @@ class CoreDataStack: ObservableObject {
                 }
                 
                 // Sadece type'ı olmayan kategoriler için tahmin et
-                let name = category.name.lowercased() ?? ""
+                let name = category.name.lowercased()
                 var newType: String?
                 
                 // Gelir kategorilerini tespit et

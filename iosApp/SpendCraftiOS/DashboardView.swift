@@ -395,7 +395,7 @@ struct AchievementCard: View {
                     .font(.system(size: 32))
                     .foregroundColor(achievement.isUnlocked ? .yellow : .gray)
                 
-                Text(NSLocalizedString(achievement.name ?? "", comment: achievement.name ?? ""))
+                Text(NSLocalizedString(achievement.name, comment: achievement.name))
                     .font(.caption)
                     .fontWeight(.semibold)
                     .lineLimit(2)

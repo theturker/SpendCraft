@@ -134,8 +134,8 @@ class AchievementsViewModel: ObservableObject {
         
         // Send notification
         notificationsViewModel?.celebrateAchievement(
-            title: NSLocalizedString(achievement.name ?? "", comment: achievement.name ?? ""),
-            description: NSLocalizedString(achievement.achievementDescription ?? "", comment: achievement.achievementDescription ?? "")
+            title: NSLocalizedString(achievement.name, comment: achievement.name),
+            description: NSLocalizedString(achievement.achievementDescription, comment: achievement.achievementDescription)
         )
     }
     

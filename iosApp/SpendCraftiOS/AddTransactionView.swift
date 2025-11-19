@@ -187,7 +187,7 @@ struct AddTransactionView: View {
                         Picker(NSLocalizedString("select.account", comment: "Select Account"), selection: $selectedAccount) {
                             Text(NSLocalizedString("select.category", comment: "Select")).tag(nil as CategoryEntity?)
                             ForEach(transactionsViewModel.accounts, id: \.id) { account in
-                                Text(account.name ?? "").tag(account as AccountEntity?)
+                                Text(account.name).tag(account as AccountEntity?)
                             }
                         }
                     }

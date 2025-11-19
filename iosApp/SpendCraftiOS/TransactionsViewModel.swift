@@ -106,7 +106,7 @@ class TransactionsViewModel: ObservableObject {
             
             // Check if categories need migration (if they contain localized strings instead of keys)
             let needsMigration = categories.contains { category in
-                let name = category.name ?? ""
+                let name = category.name
                 return name.contains("Gıda") || name.contains("Ulaşım") || name.contains("Maaş")
             }
             
