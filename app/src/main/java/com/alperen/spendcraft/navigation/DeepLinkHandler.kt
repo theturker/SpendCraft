@@ -3,8 +3,6 @@ package com.alperen.spendcraft.navigation
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.navigation.NavController
-import com.alperen.spendcraft.R
 
 object DeepLinkHandler {
     

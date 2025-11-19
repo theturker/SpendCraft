@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.alperen.spendcraft.domain.repo.BudgetRepository
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import com.alperen.spendcraft.core.notifications.NotificationEventBus
-import com.alperen.spendcraft.core.notifications.NotificationEvent
 import com.alperen.spendcraft.core.notifications.NotificationType
 import com.alperen.spendcraft.core.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,9 +14,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import javax.inject.Inject
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

@@ -7,8 +7,6 @@ import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import com.alperen.spendcraft.domain.repo.StreakRepository
 import com.alperen.spendcraft.domain.achievements.AchievementManager
-import com.alperen.spendcraft.shared.domain.calculator.TransactionAnalyzer as SharedTransactionAnalyzer
-import com.alperen.spendcraft.shared.domain.calculator.StreakCalculator as SharedStreakCalculator
 import com.alperen.spendcraft.shared.presentation.SharedTransactionBusinessLogic
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

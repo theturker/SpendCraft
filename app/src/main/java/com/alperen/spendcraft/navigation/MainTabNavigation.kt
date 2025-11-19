@@ -11,17 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.alperen.spendcraft.ui.iosTheme.IOSColors
 import com.alperen.spendcraft.ui.icons.SFSymbolsTabBar
 import com.alperen.spendcraft.ui.components.liquidglass.LiquidGlassBottomBar
 import com.alperen.spendcraft.ui.components.liquidglass.getParatikBottomNavItems
 import com.alperen.spendcraft.ui.components.liquidglass.rememberBottomBarVisibility
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,10 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.alperen.spendcraft.feature.dashboard.DashboardViewModel
 import com.alperen.spendcraft.feature.dashboard.ui.DashboardScreen
-import com.alperen.spendcraft.feature.transactions.ui.TransactionsScreen
 import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
-import com.alperen.spendcraft.feature.reports.ReportsScreen
-import com.alperen.spendcraft.feature.settings.ui.SettingsScreen
 
 /**
  * iOS-style Tab Navigation

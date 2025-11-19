@@ -331,8 +331,8 @@ fun AddTransactionBottomSheet(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             contentPadding = PaddingValues(horizontal = 2.dp)
                         ) {
-                            items(PaymentMethod.values().size) { idx ->
-                                val method = PaymentMethod.values()[idx]
+                            items(PaymentMethod.entries.size) { idx ->
+                                val method = PaymentMethod.entries[idx]
                                 FilterChip(
                                     selected = paymentMethod == method,
                                     onClick = { paymentMethod = if (paymentMethod == method) null else method },
@@ -354,7 +354,7 @@ fun AddTransactionBottomSheet(
                     val amountValue = amount.replace(",", ".").toDoubleOrNull() ?: 0.0
                     val amountMinor = (amountValue * 100).toLong()
                     val mergedNote = buildString {
-                        if (!note.isNullOrBlank()) append(note.trim())
+                        if (note.isNotBlank()) append(note.trim())
                         paymentMethod?.let {
                             if (this.isNotEmpty()) append(" • ")
                             append(context.getString(it.labelResId))
@@ -531,60 +531,6 @@ private fun CompactCategoryChip(
     )
 }
 
-@Composable
-private fun ModernCategoryChip(
-    text: String,
-    iconResource: Int,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    FilterChip(
-        onClick = onClick,
-        label = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    painter = painterResource(iconResource),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Text(
-                    text = text,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-        },
-        selected = isSelected,
-        modifier = Modifier.height(40.dp),
-        colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-            selectedLabelColor = MaterialTheme.colorScheme.primary,
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
-        ),
-        shape = RoundedCornerShape(8.dp)
-    )
-}
-
-// Kategori ikonlarını döndüren fonksiyon
-private fun getCategoryIconResource(categoryName: String): Int {
-    return when (categoryName.lowercase()) {
-        "food", "yemek", "yiyecek" -> R.drawable.ic_category_food
-        "transport", "ulaşım", "taşıma" -> R.drawable.ic_category_transport
-        "shopping", "alışveriş" -> R.drawable.ic_category_shopping
-        "entertainment", "eğlence" -> R.drawable.ic_category_entertainment
-        "bills", "faturalar", "fatura" -> R.drawable.ic_category_bills
-        "health", "sağlık" -> R.drawable.ic_category_health
-        "education", "eğitim" -> R.drawable.ic_category_education
-        "travel", "seyahat" -> R.drawable.ic_category_travel
-        "income", "gelir" -> R.drawable.ic_category_income
-        else -> R.drawable.ic_category_default
-    }
-}
-
 // Date Picker Dialog
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -654,18 +600,4 @@ private fun TimePickerDialog(
             }
         }
     )
-}
-
-// Para birimi formatlaması fonksiyonları
-private fun formatCurrencyDisplay(amount: Long): String {
-    val major = amount / 100
-    val minor = amount % 100
-    
-    val majorFormatted = major.toString().reversed().chunked(3).joinToString(".").reversed()
-    
-    return if (minor > 0) {
-        "$majorFormatted,${minor.toString().padStart(2, '0')}"
-    } else {
-        majorFormatted
-    }
 }

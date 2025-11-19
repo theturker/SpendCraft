@@ -13,39 +13,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowInsetsCompat
 import androidx.activity.enableEdgeToEdge
 import android.content.res.Configuration
-import androidx.compose.runtime.SideEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.alperen.spendcraft.navigation.AppNavHost
 import com.alperen.spendcraft.core.ui.SpendCraftTheme
 import com.alperen.spendcraft.reminder.ReminderScheduler
 import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
-import com.alperen.spendcraft.FirstLaunchHelper
-// Authentication imports removed - auth is disabled
-// Google Auth imports removed - auth is disabled
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

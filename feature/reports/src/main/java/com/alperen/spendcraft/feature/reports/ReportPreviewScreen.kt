@@ -3,7 +3,6 @@ package com.alperen.spendcraft.feature.reports
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
-import android.os.ParcelFileDescriptor
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,10 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
-import androidx.core.graphics.createBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import com.alperen.spendcraft.core.ui.AppScaffold
 

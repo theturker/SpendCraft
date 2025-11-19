@@ -14,13 +14,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.lerp
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.ui.ModernCard
 // import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module
 import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity

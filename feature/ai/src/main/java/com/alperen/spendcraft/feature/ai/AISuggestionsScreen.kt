@@ -3,8 +3,6 @@ package com.alperen.spendcraft.feature.ai
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,10 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.lerp
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.data.repository.AIRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import android.app.Activity
 import kotlinx.coroutines.delay

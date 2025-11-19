@@ -3,7 +3,6 @@ package com.alperen.spendcraft.feature.achievements
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alperen.spendcraft.domain.achievements.AchievementManager
-import com.alperen.spendcraft.core.achievements.AchievementManagerImpl
 import com.alperen.spendcraft.data.db.entities.AchievementEntity
 import com.alperen.spendcraft.domain.repo.TransactionsRepository
 import com.alperen.spendcraft.domain.repo.BudgetRepository

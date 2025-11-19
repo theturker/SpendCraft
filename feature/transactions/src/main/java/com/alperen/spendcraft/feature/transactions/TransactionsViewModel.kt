@@ -36,7 +36,6 @@ import androidx.compose.runtime.State
 import com.alperen.spendcraft.core.common.NotificationTester
 import com.alperen.spendcraft.shared.presentation.SharedTransactionBusinessLogic
 import com.alperen.spendcraft.core.ui.R
-// import com.alperen.spendcraft.core.billing.BillingRepository
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
@@ -60,7 +59,7 @@ class TransactionsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     // private val billingRepository: BillingRepository
 ) : ViewModel() {
-    
+
     // Shared business logic - NO PLATFORM DEPENDENCIES
     private val sharedBusinessLogic = SharedTransactionBusinessLogic()
 
@@ -76,14 +75,14 @@ class TransactionsViewModel @Inject constructor(
     // Streak - SIMPLIFIED FOR NOW
     val streak: StateFlow<com.alperen.spendcraft.core.model.Streak> = observeStreak()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), com.alperen.spendcraft.core.model.Streak(0, 0))
-    
+
     // val isPremium: StateFlow<Boolean> = billingRepository.isPremium
     //     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     // Quick add state
     private val _lastUsedCategoryId = mutableStateOf<Long?>(null)
     val lastUsedCategoryId: State<Long?> = _lastUsedCategoryId
-    
+
     private val _lastNote = mutableStateOf("")
     val lastNote: State<String> = _lastNote
 

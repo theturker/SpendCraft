@@ -5,19 +5,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.alperen.spendcraft.feature.transactions.ui.AddTransactionScreen
-import com.alperen.spendcraft.feature.transactions.ui.TransactionsScreen
 import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
 import com.alperen.spendcraft.feature.reports.ReportsScreen
 import com.alperen.spendcraft.feature.reports.ExportReportScreen
@@ -32,9 +24,7 @@ import com.alperen.spendcraft.feature.sharing.SharingScreen
 import com.alperen.spendcraft.feature.notifications.NotificationsScreen
 import com.alperen.spendcraft.feature.onboarding.OnboardingScreen
 import com.alperen.spendcraft.feature.achievements.AchievementsScreen
-import com.alperen.spendcraft.navigation.DeepLinkHandler
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.delay
 
 object Routes {
     const val MAIN_TABS = "main_tabs" // iOS-style tab navigation

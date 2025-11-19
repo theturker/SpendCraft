@@ -2,10 +2,7 @@ package com.alperen.spendcraft.feature.reports
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
@@ -19,19 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import com.alperen.spendcraft.core.ui.AppScaffold
 import com.alperen.spendcraft.core.ui.ModernCard
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.Category
-import com.alperen.spendcraft.core.model.TransactionType
-import java.text.SimpleDateFormat
-import java.util.*
 
 enum class DateRange(val labelResId: Int) {
     LAST_WEEK(com.alperen.spendcraft.feature.reports.R.string.export_date_range_last_week),

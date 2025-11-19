@@ -11,7 +11,6 @@ import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.model.TransactionType
 import java.io.File
 import java.io.FileOutputStream
-import java.io.FileWriter
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*

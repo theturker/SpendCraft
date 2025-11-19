@@ -10,8 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.alperen.spendcraft.core.model.Category
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
@@ -203,7 +200,7 @@ fun IOSEditTransactionScreen(
                         val context = LocalContext.current
                         OutlinedTextField(
                             value = selectedAccount?.let {
-                                com.alperen.spendcraft.core.ui.AccountLocalization.localize(context, it.name)
+                                AccountLocalization.localize(context, it.name)
                             } ?: stringResource(com.alperen.spendcraft.core.ui.R.string.select_account),
                             onValueChange = {},
                             readOnly = true,
