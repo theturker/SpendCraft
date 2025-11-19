@@ -18,8 +18,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.alperen.spendcraft.core.ui.IOSColors
 import com.alperen.spendcraft.core.ui.R as CoreR
+import com.alperen.spendcraft.R
 
 /**
  * iOS AddCategoryView'in birebir Android karşılığı
@@ -74,31 +76,36 @@ fun AddCategoryScreen(
         "tram.fill" to CoreR.drawable.ic_tram_fill
     )
     
+    val context = androidx.compose.ui.platform.LocalContext.current
+    
     // iOS: let categoryColors - CategoriesView.swift:303-308
-    val categoryColors = listOf(
-        "Mavi" to IOSColors.Blue,
-        "Yeşil" to IOSColors.Green,
-        "Kırmızı" to IOSColors.Red,
-        "Turuncu" to IOSColors.Orange,
-        "Mor" to IOSColors.Purple,
-        "Pembe" to IOSColors.Pink,
-        "Sarı" to IOSColors.Yellow,
-        "Kahverengi" to Color(0xFF8D6E63),
-        "İndigo" to Color(0xFF5E35B1),
-        "Cyan" to IOSColors.Cyan,
-        "Mint" to IOSColors.Mint,
-        "Teal" to IOSColors.Teal
-    )
+    // Renk isimlerini context'ten almak için mapping
+    val categoryColors = remember(context) {
+        listOf(
+            R.string.color_blue to IOSColors.Blue,
+            R.string.color_green to IOSColors.Green,
+            R.string.color_red to IOSColors.Red,
+            R.string.color_orange to IOSColors.Orange,
+            R.string.color_purple to IOSColors.Purple,
+            R.string.color_pink to IOSColors.Pink,
+            R.string.color_yellow to IOSColors.Yellow,
+            R.string.color_brown to Color(0xFF8D6E63),
+            R.string.color_indigo to Color(0xFF5E35B1),
+            R.string.color_cyan to IOSColors.Cyan,
+            R.string.color_mint to IOSColors.Mint,
+            R.string.color_teal to IOSColors.Teal
+        )
+    }
     
     Scaffold(
         topBar = {
             // iOS: .navigationTitle("Yeni Kategori") - CategoriesView.swift:399
             TopAppBar(
-                title = { Text("Yeni Kategori") },
+                title = { Text(stringResource(R.string.category_new)) },
                 navigationIcon = {
                     // iOS: Button("İptal") - CategoriesView.swift:403-405
                     TextButton(onClick = onDismiss) {
-                        Text("İptal")
+                        Text(stringResource(CoreR.string.cancel))
                     }
                 },
                 actions = {
@@ -121,7 +128,7 @@ fun AddCategoryScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        text = "Kategori Bilgileri",
+                        text = stringResource(R.string.category_info),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -130,7 +137,7 @@ fun AddCategoryScreen(
                     OutlinedTextField(
                         value = categoryName,
                         onValueChange = { categoryName = it },
-                        placeholder = { Text("Kategori Adı") },
+                        placeholder = { Text(stringResource(R.string.category_name)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
@@ -138,7 +145,7 @@ fun AddCategoryScreen(
                     // Kategori Tipi - iOS: Picker("Kategori Tipi", selection: $categoryType)
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
-                            text = "Kategori Tipi",
+                            text = stringResource(R.string.category_type),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
@@ -168,7 +175,7 @@ fun AddCategoryScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "Gider",
+                                    text = stringResource(R.string.category_expense),
                                     color = if (categoryType == "expense") 
                                         Color.White 
                                     else 
@@ -193,7 +200,7 @@ fun AddCategoryScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "Gelir",
+                                    text = stringResource(R.string.category_income),
                                     color = if (categoryType == "income") 
                                         Color.White 
                                     else 
@@ -210,7 +217,7 @@ fun AddCategoryScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        text = "İkon Seç",
+                        text = stringResource(R.string.category_select_icon),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -257,7 +264,7 @@ fun AddCategoryScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        text = "Renk Seç",
+                        text = stringResource(R.string.category_select_color),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -269,7 +276,7 @@ fun AddCategoryScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         maxItemsInEachRow = 6
                     ) {
-                        categoryColors.forEach { (colorName, color) ->
+                        categoryColors.forEach { (colorNameResId, color) ->
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -293,7 +300,7 @@ fun AddCategoryScreen(
                                 )
                                 
                                 Text(
-                                    text = colorName,
+                                    text = stringResource(colorNameResId),
                                     style = MaterialTheme.typography.bodySmall,
                                     maxLines = 1,
                                     fontSize = 10.sp
@@ -308,7 +315,7 @@ fun AddCategoryScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        text = "Önizleme",
+                        text = stringResource(R.string.category_preview),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -341,7 +348,7 @@ fun AddCategoryScreen(
                             }
                             
                             Text(
-                                text = categoryName.ifBlank { "Kategori Adı" },
+                                text = categoryName.ifBlank { stringResource(R.string.category_name) },
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -367,7 +374,7 @@ fun AddCategoryScreen(
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
-                        text = "Kategori Ekle",
+                        text = stringResource(R.string.category_add_button),
                         modifier = Modifier.padding(vertical = 8.dp),
                         fontWeight = FontWeight.SemiBold
                     )

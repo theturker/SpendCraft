@@ -27,11 +27,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.lerp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
 import com.alperen.spendcraft.core.ui.CurrencyFormatter
 import com.alperen.spendcraft.core.ui.LocaleHelper
+import com.alperen.spendcraft.feature.transactions.TransactionsViewModel
+import com.alperen.spendcraft.feature.transactions.ui.AddTransactionBottomSheet
 // import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module, use tokens directly
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -76,6 +79,11 @@ fun DashboardScreen(
 ) {
     val context = LocalContext.current
     val extendedColors = MaterialTheme.extendedColors
+    val transactionsViewModel: TransactionsViewModel = hiltViewModel()
+    
+    // Bottom sheet state - iOS: @State private var transactionTypeToAdd: TransactionType? = nil
+    var showAddTransactionSheet by remember { mutableStateOf(false) }
+    var initialTransactionType by remember { mutableStateOf<Boolean?>(null) }
     
     // Son 5 işlem
     val recentTransactions = remember(transactions) {
@@ -183,8 +191,14 @@ fun DashboardScreen(
             // 2. Quick Action Buttons
             item {
                 QuickActionButtons(
-                    onAddIncome = onAddIncome,
-                    onAddExpense = onAddExpense,
+                    onAddIncome = {
+                        initialTransactionType = true
+                        showAddTransactionSheet = true
+                    },
+                    onAddExpense = {
+                        initialTransactionType = false
+                        showAddTransactionSheet = true
+                    },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
@@ -242,6 +256,28 @@ fun DashboardScreen(
                 )
             }
         }
+    }
+    
+    // Bottom Sheet - iOS: .sheet(item: $transactionTypeToAdd)
+    if (showAddTransactionSheet) {
+        AddTransactionBottomSheet(
+            categories = transactionsViewModel.categories,
+            initialTransactionType = initialTransactionType,
+            onSave = { amountMinor, note, categoryId, isIncome ->
+                transactionsViewModel.saveTransaction(
+                    amountMinor = amountMinor,
+                    note = note,
+                    categoryId = categoryId,
+                    accountId = null,
+                    isIncome = isIncome,
+                    date = System.currentTimeMillis(),
+                    isRecurring = false,
+                    recurringFrequency = null
+                )
+                showAddTransactionSheet = false
+            },
+            onDismiss = { showAddTransactionSheet = false }
+        )
     }
 }
 

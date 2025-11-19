@@ -479,4 +479,29 @@
     <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
     <!-- Production Banner ID (Original) -->
     <!-- <string name="admob_banner_id">ca-app-pub-3199248450820147/4179918859</string> -->
+    
+    <!-- Add Category Screen -->
+    <string name="category_new">Yeni Kategori</string>
+    <string name="category_info">Kategori Bilgileri</string>
+    <string name="category_type">Kategori Tipi</string>
+    <string name="category_expense">Gider</string>
+    <string name="category_income">Gelir</string>
+    <string name="category_select_icon">İkon Seç</string>
+    <string name="category_select_color">Renk Seç</string>
+    <string name="category_preview">Önizleme</string>
+    <string name="category_add_button">Kategori Ekle</string>
+    
+    <!-- Color Names -->
+    <string name="color_blue">Mavi</string>
+    <string name="color_green">Yeşil</string>
+    <string name="color_red">Kırmızı</string>
+    <string name="color_orange">Turuncu</string>
+    <string name="color_purple">Mor</string>
+    <string name="color_pink">Pembe</string>
+    <string name="color_yellow">Sarı</string>
+    <string name="color_brown">Kahverengi</string>
+    <string name="color_indigo">İndigo</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_mint">Mint</string>
+    <string name="color_teal">Teal</string>
 </resources>

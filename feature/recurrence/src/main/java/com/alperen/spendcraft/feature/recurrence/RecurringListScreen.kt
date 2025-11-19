@@ -108,7 +108,7 @@ fun RecurringListScreen(
                         text = context.getString(com.alperen.spendcraft.feature.recurrence.R.string.recurring_title),
                         fontSize = titleFontSize,
                         fontWeight = FontWeight.Bold,
-                        maxLines = 1,
+                        maxLines = 2,
                         modifier = if (collapsedFraction > 0.5f) {
                             Modifier
                         } else {

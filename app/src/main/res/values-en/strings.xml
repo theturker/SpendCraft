@@ -457,4 +457,29 @@
     <string name="export">Export</string>
     <string name="import_dialog_text">Choose a CSV file to import transactions from</string>
     <string name="export_dialog_text">Choose where to save your exported transactions</string>
+    
+    <!-- Add Category Screen -->
+    <string name="category_new">New Category</string>
+    <string name="category_info">Category Information</string>
+    <string name="category_type">Category Type</string>
+    <string name="category_expense">Expense</string>
+    <string name="category_income">Income</string>
+    <string name="category_select_icon">Select Icon</string>
+    <string name="category_select_color">Select Color</string>
+    <string name="category_preview">Preview</string>
+    <string name="category_add_button">Add Category</string>
+    
+    <!-- Color Names -->
+    <string name="color_blue">Blue</string>
+    <string name="color_green">Green</string>
+    <string name="color_red">Red</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_brown">Brown</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_mint">Mint</string>
+    <string name="color_teal">Teal</string>
 </resources>

@@ -34,6 +34,7 @@ dependencies {
     implementation(project(":data:repository"))
     implementation(project(":data:db"))
     implementation(project(":core:achievements"))
+    implementation(project(":feature:transactions"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
