@@ -24,7 +24,6 @@ import com.alperen.spendcraft.feature.reports.ExportReportScreen
 import com.alperen.spendcraft.feature.settings.ui.SettingsScreen
 import com.alperen.spendcraft.feature.settings.ui.CategoryManagementScreen
 import com.alperen.spendcraft.feature.ai.AISuggestionsScreen
-import com.alperen.spendcraft.feature.settings.AISettingsScreen
 import com.alperen.spendcraft.feature.accounts.AccountsScreen
 import com.alperen.spendcraft.feature.recurrence.RecurringListScreen
 import com.alperen.spendcraft.feature.recurrence.AddRecurringRuleScreen

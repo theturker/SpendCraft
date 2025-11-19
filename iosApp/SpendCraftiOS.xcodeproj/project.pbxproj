@@ -11,7 +11,6 @@
 		2152FB062600AC8F00CF470E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB052600AC8F00CF470E /* ContentView.swift */; };
 		7E6DF9951589FE600A33F66F /* Pods_SpendCraftiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFD4B289D948BBA5DC77D2FD /* Pods_SpendCraftiOS.framework */; };
 		900445852E9C6E88003DFAFC /* UserProfilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900445842E9C6E88003DFAFC /* UserProfilingView.swift */; };
-		900445872E9C6F68003DFAFC /* AccountInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900445862E9C6F68003DFAFC /* AccountInfoView.swift */; };
 		9037B6A12E9DCEF20087D68B /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9037B6A02E9DCEF10087D68B /* NotificationSettingsView.swift */; };
 		90417A522E9E5FF600418F07 /* CurrencySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90417A512E9E5FF600418F07 /* CurrencySettingsView.swift */; };
 		904C84332E9DA105008F6F01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 904C84322E9DA105008F6F01 /* GoogleService-Info.plist */; };
@@ -67,7 +66,6 @@
 		7555FF8C242A565900829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		862B86DA885C8818002160DF /* Pods-SpendCraftiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpendCraftiOS.debug.xcconfig"; path = "Target Support Files/Pods-SpendCraftiOS/Pods-SpendCraftiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		900445842E9C6E88003DFAFC /* UserProfilingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilingView.swift; sourceTree = "<group>"; };
-		900445862E9C6F68003DFAFC /* AccountInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInfoView.swift; sourceTree = "<group>"; };
 		9037B6A02E9DCEF10087D68B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
 		90417A512E9E5FF600418F07 /* CurrencySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySettingsView.swift; sourceTree = "<group>"; };
 		904C84322E9DA105008F6F01 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 				9037B6A02E9DCEF10087D68B /* NotificationSettingsView.swift */,
 				90E79A332E9DBE2E008E585C /* EditTransactionView.swift */,
 				90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */,
-				900445862E9C6F68003DFAFC /* AccountInfoView.swift */,
 				900445842E9C6E88003DFAFC /* UserProfilingView.swift */,
 				908773A62E95857B00AB0783 /* CoreDataStack.swift */,
 				2152FB032600AC8F00CF470E /* SpendCraftiOSApp.swift */,
@@ -404,7 +401,6 @@
 				90AB66D12E9599890063F8A7 /* CategoryEntity.swift in Sources */,
 				905613522EAECB7F00B340FF /* LanguageSettingsView.swift in Sources */,
 				9037B6A12E9DCEF20087D68B /* NotificationSettingsView.swift in Sources */,
-				900445872E9C6F68003DFAFC /* AccountInfoView.swift in Sources */,
 				90AB66DF2E95998B0063F8A7 /* TransactionsViewModel.swift in Sources */,
 				90A11BBC2E9666ED005C595F /* OnboardingView.swift in Sources */,
 				90AB66DB2E95998B0063F8A7 /* CategoriesView.swift in Sources */,
