@@ -717,3 +717,4 @@
 "receipt.items" = "Tespit Edilen Ürünler";
 "receipt.confirm" = "Gider Ekle";
 "common.settings" = "Ayarlar";
+"common.loading" = "Yükleniyor...";

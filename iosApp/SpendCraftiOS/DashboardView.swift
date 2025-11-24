@@ -347,6 +347,91 @@ struct DashboardView: View {
                 processReceiptImage(image)
             }
         }
+        .sheet(isPresented: $showReceiptSourceSelection) {
+            VStack(alignment: .leading, spacing: 0) {
+                // Başlık
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(NSLocalizedString("receipt.select.source", comment: "Select Source"))
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
+                    Text(NSLocalizedString("receipt.select.source.message", comment: "Choose how to add receipt"))
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
+                .padding(.bottom, 16)
+                
+                Divider()
+                
+                // Kamera butonu
+                Button {
+                    showReceiptSourceSelection = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        checkCameraPermission { granted in
+                            if granted {
+                                DispatchQueue.main.async {
+                                    showReceiptCamera = true
+                                }
+                            } else {
+                                DispatchQueue.main.async {
+                                    showCameraPermissionAlert = true
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 16) {
+                        Image(systemName: "camera.fill")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                            .frame(width: 30)
+                        Text(NSLocalizedString("receipt.camera", comment: "Camera"))
+                            .font(.body)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
+                }
+                .buttonStyle(.plain)
+                
+                Divider()
+                
+                // Fotoğraf Galerisi butonu
+                Button {
+                    showReceiptSourceSelection = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showReceiptImagePicker = true
+                    }
+                } label: {
+                    HStack(spacing: 16) {
+                        Image(systemName: "photo.fill")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                            .frame(width: 30)
+                        Text(NSLocalizedString("receipt.photo.library", comment: "Photo Library"))
+                            .font(.body)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
+                }
+                .buttonStyle(.plain)
+                
+                Spacer()
+            }
+            .presentationDetents([.height(220)])
+            .presentationDragIndicator(.visible)
+        }
         .sheet(isPresented: $showReceiptAnalysis) {
             if let image = capturedReceiptImage, let result = receiptAnalysisResult {
                 ReceiptAnalysisView(
@@ -362,31 +447,6 @@ struct DashboardView: View {
                     }
                 )
             }
-        }
-        .confirmationDialog(
-            NSLocalizedString("receipt.select.source", comment: "Select Source"),
-            isPresented: $showReceiptSourceSelection,
-            titleVisibility: .visible
-        ) {
-            Button(NSLocalizedString("receipt.camera", comment: "Camera")) {
-                checkCameraPermission { granted in
-                    if granted {
-                        DispatchQueue.main.async {
-                            showReceiptCamera = true
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            showCameraPermissionAlert = true
-                        }
-                    }
-                }
-            }
-            Button(NSLocalizedString("receipt.photo.library", comment: "Photo Library")) {
-                showReceiptImagePicker = true
-            }
-            Button(NSLocalizedString("common.cancel", comment: "Cancel"), role: .cancel) {}
-        } message: {
-            Text(NSLocalizedString("receipt.select.source.message", comment: "Choose how to add receipt"))
         }
         .alert(
             NSLocalizedString("receipt.camera.permission.title", comment: "Camera Permission Required"),

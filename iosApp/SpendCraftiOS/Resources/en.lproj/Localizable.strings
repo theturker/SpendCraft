@@ -787,3 +787,4 @@
 "receipt.items" = "Detected Items";
 "receipt.confirm" = "Add Expense";
 "common.settings" = "Settings";
+"common.loading" = "Loading...";
