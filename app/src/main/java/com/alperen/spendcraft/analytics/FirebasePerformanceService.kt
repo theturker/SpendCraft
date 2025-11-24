@@ -5,6 +5,7 @@ import com.google.firebase.perf.metrics.Trace
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 @Singleton
 class FirebasePerformanceService @Inject constructor() {
     private val performance = FirebasePerformance.getInstance()
