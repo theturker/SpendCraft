@@ -24,7 +24,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5</string>
+	<string>1.6</string>
 	<key>CFBundleVersion</key>
 	<string>2</string>
 	<key>GADApplicationIdentifier</key>
@@ -50,16 +50,16 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Fiş ve fatura eklemek için kameraya erişim gereklidir.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Uygulamanıza güvenli giriş yapmanız için Face ID kullanılacaktır.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>AI önerileri için internet bağlantısı gereklidir.</string>
-	<key>NSUserNotificationsUsageDescription</key>
-	<string>Bütçe aşımları ve tekrarlayan işlemler için bildirim göndermemize izin verin.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Fiş ve fatura eklemek için kameraya erişim gereklidir.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Fiş ve fatura eklemek için fotoğraf galerisine erişim gereklidir.</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Bütçe aşımları ve tekrarlayan işlemler için bildirim göndermemize izin verin.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
