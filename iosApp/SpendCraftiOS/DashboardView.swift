@@ -28,6 +28,7 @@ struct DashboardView: View {
     @State private var isAnalyzing = false
     @State private var showReceiptSourceSelection = false
     @State private var showCameraPermissionAlert = false
+    @State private var pendingReceiptAnalysis = false // Analiz tamamlandı ama sheet henüz açılmadı
     
     enum TransactionType: Identifiable {
         case income
@@ -337,14 +338,80 @@ struct DashboardView: View {
         .sheet(isPresented: $showUserProfiling) {
             UserProfilingView()
         }
-        .sheet(isPresented: $showReceiptCamera) {
+        .sheet(isPresented: $showReceiptCamera, onDismiss: {
+            // Camera kapandığında, eğer analiz tamamlandıysa analiz ekranını aç
+            // Sheet tamamen kapandıktan sonra analiz ekranını aç
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                // State'lerin hazır olduğundan emin ol
+                if pendingReceiptAnalysis {
+                    if receiptAnalysisResult != nil && capturedReceiptImage != nil {
+                        showReceiptAnalysis = true
+                        pendingReceiptAnalysis = false
+                    } else {
+                        // State'ler henüz hazır değil, biraz daha bekle
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            if receiptAnalysisResult != nil && capturedReceiptImage != nil {
+                                showReceiptAnalysis = true
+                                pendingReceiptAnalysis = false
+                            }
+                        }
+                    }
+                }
+            }
+        }) {
             ReceiptCameraView(isPresented: $showReceiptCamera) { image in
-                processReceiptImage(image)
+                // Image çekildiğinde sheet'i kapat ve analizi başlat
+                capturedReceiptImage = image
+                isAnalyzing = true
+                showReceiptCamera = false // Sheet'i kapat
+                
+                // Analiz işlemini başlat
+                ReceiptAnalyzer.shared.analyzeReceipt(image: image) { result in
+                    DispatchQueue.main.async {
+                        isAnalyzing = false
+                        receiptAnalysisResult = result
+                        // Analiz tamamlandı, sheet kapandıktan sonra analiz ekranını açacağız
+                        pendingReceiptAnalysis = true
+                    }
+                }
             }
         }
-        .sheet(isPresented: $showReceiptImagePicker) {
+        .sheet(isPresented: $showReceiptImagePicker, onDismiss: {
+            // Image picker kapandığında, eğer analiz tamamlandıysa analiz ekranını aç
+            // Sheet tamamen kapandıktan sonra analiz ekranını aç
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                // State'lerin hazır olduğundan emin ol
+                if pendingReceiptAnalysis {
+                    if receiptAnalysisResult != nil && capturedReceiptImage != nil {
+                        showReceiptAnalysis = true
+                        pendingReceiptAnalysis = false
+                    } else {
+                        // State'ler henüz hazır değil, biraz daha bekle
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            if receiptAnalysisResult != nil && capturedReceiptImage != nil {
+                                showReceiptAnalysis = true
+                                pendingReceiptAnalysis = false
+                            }
+                        }
+                    }
+                }
+            }
+        }) {
             ReceiptImagePickerView(isPresented: $showReceiptImagePicker) { image in
-                processReceiptImage(image)
+                // Image seçildiğinde sheet'i kapat ve analizi başlat
+                capturedReceiptImage = image
+                isAnalyzing = true
+                showReceiptImagePicker = false // Sheet'i kapat
+                
+                // Analiz işlemini başlat
+                ReceiptAnalyzer.shared.analyzeReceipt(image: image) { result in
+                    DispatchQueue.main.async {
+                        isAnalyzing = false
+                        receiptAnalysisResult = result
+                        // Analiz tamamlandı, sheet kapandıktan sonra analiz ekranını açacağız
+                        pendingReceiptAnalysis = true
+                    }
+                }
             }
         }
         .sheet(isPresented: $showReceiptSourceSelection) {
@@ -433,20 +500,20 @@ struct DashboardView: View {
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showReceiptAnalysis) {
-            if let image = capturedReceiptImage, let result = receiptAnalysisResult {
-                ReceiptAnalysisView(
-                    image: image,
-                    analysisResult: result,
-                    onConfirm: { amount, note, date in
-                        addReceiptTransaction(amount: amount, note: note, date: date)
-                    },
-                    onCancel: {
-                        showReceiptAnalysis = false
-                        capturedReceiptImage = nil
-                        receiptAnalysisResult = nil
-                    }
-                )
-            }
+            ReceiptAnalysisSheetView(
+                capturedReceiptImage: $capturedReceiptImage,
+                receiptAnalysisResult: $receiptAnalysisResult,
+                pendingReceiptAnalysis: $pendingReceiptAnalysis,
+                onConfirm: { amount, note, date in
+                    addReceiptTransaction(amount: amount, note: note, date: date)
+                },
+                onCancel: {
+                    showReceiptAnalysis = false
+                    capturedReceiptImage = nil
+                    receiptAnalysisResult = nil
+                    pendingReceiptAnalysis = false
+                }
+            )
         }
         .alert(
             NSLocalizedString("receipt.camera.permission.title", comment: "Camera Permission Required"),
@@ -511,13 +578,22 @@ struct DashboardView: View {
     }
     
     private func processReceiptImage(_ image: UIImage) {
+        // Bu fonksiyon artık kullanılmıyor, doğrudan sheet callback'lerinde işlem yapılıyor
+        // Ama geriye dönük uyumluluk için tutuyoruz
         capturedReceiptImage = image
         isAnalyzing = true
         
         ReceiptAnalyzer.shared.analyzeReceipt(image: image) { result in
-            isAnalyzing = false
-            receiptAnalysisResult = result
-            showReceiptAnalysis = true
+            DispatchQueue.main.async {
+                isAnalyzing = false
+                receiptAnalysisResult = result
+                // Sheet'lerin kapanmasını bekle
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    if capturedReceiptImage != nil && receiptAnalysisResult != nil {
+                        showReceiptAnalysis = true
+                    }
+                }
+            }
         }
     }
     
@@ -633,6 +709,56 @@ struct AchievementCard: View {
                 .presentationDragIndicator(.visible)
         }
         .id(achievement.objectID) // Force SwiftUI to track changes by CoreData objectID
+    }
+}
+
+// Receipt Analysis Sheet için wrapper view
+struct ReceiptAnalysisSheetView: View {
+    @Binding var capturedReceiptImage: UIImage?
+    @Binding var receiptAnalysisResult: ReceiptAnalysisResult?
+    @Binding var pendingReceiptAnalysis: Bool
+    let onConfirm: (Double, String?, Date) -> Void
+    let onCancel: () -> Void
+    
+    @State private var retryCount = 0
+    private let maxRetries = 10
+    
+    var body: some View {
+        Group {
+            if let image = capturedReceiptImage, let result = receiptAnalysisResult {
+                ReceiptAnalysisView(
+                    image: image,
+                    analysisResult: result,
+                    onConfirm: onConfirm,
+                    onCancel: onCancel
+                )
+            } else {
+                // Fallback view - state'ler henüz hazır değilse loading göster
+                VStack(spacing: 20) {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                    Text(NSLocalizedString("common.loading", comment: "Loading..."))
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(uiColor: .systemBackground))
+                .onAppear {
+                    // State'ler hazır olana kadar bekle ve yeniden dene
+                    checkAndRetry()
+                }
+            }
+        }
+    }
+    
+    private func checkAndRetry() {
+        if capturedReceiptImage == nil || receiptAnalysisResult == nil {
+            if retryCount < maxRetries {
+                retryCount += 1
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    checkAndRetry()
+                }
+            }
+        }
     }
 }
 
