@@ -54,6 +54,9 @@
 		90AB66F62E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */; };
 		90AB66F82E95999A0063F8A7 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */; };
 		90B99D2C2E9D12B800EE7EC6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */; };
+		90C968902ED32D4B00C1DA0D /* ReceiptCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C9688F2ED32D4B00C1DA0D /* ReceiptCameraView.swift */; };
+		90C968912ED32D4B00C1DA0D /* ReceiptAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C9688D2ED32D4B00C1DA0D /* ReceiptAnalysisView.swift */; };
+		90C968922ED32D4B00C1DA0D /* ReceiptAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C9688E2ED32D4B00C1DA0D /* ReceiptAnalyzer.swift */; };
 		90E41C7B2E9E8B87001188EB /* AdsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E41C7A2E9E8B87001188EB /* AdsManager.swift */; };
 		90E41C7D2E9E90FB001188EB /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E41C7C2E9E90FB001188EB /* BannerAdView.swift */; };
 		90E79A342E9DBE2F008E585C /* EditTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E79A332E9DBE2E008E585C /* EditTransactionView.swift */; };
@@ -110,6 +113,9 @@
 		90AB66F72E9599960063F8A7 /* AchievementEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AchievementEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		90AB66F92E95999A0063F8A7 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 		90B99D2B2E9D12B800EE7EC6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		90C9688D2ED32D4B00C1DA0D /* ReceiptAnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptAnalysisView.swift; sourceTree = "<group>"; };
+		90C9688E2ED32D4B00C1DA0D /* ReceiptAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptAnalyzer.swift; sourceTree = "<group>"; };
+		90C9688F2ED32D4B00C1DA0D /* ReceiptCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptCameraView.swift; sourceTree = "<group>"; };
 		90E41C7A2E9E8B87001188EB /* AdsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsManager.swift; sourceTree = "<group>"; };
 		90E41C7C2E9E90FB001188EB /* BannerAdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdView.swift; sourceTree = "<group>"; };
 		90E79A332E9DBE2E008E585C /* EditTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionView.swift; sourceTree = "<group>"; };
@@ -143,6 +149,9 @@
 		2152FB012600AC8F00CF470E /* SpendCraftiOS */ = {
 			isa = PBXGroup;
 			children = (
+				90C9688D2ED32D4B00C1DA0D /* ReceiptAnalysisView.swift */,
+				90C9688E2ED32D4B00C1DA0D /* ReceiptAnalyzer.swift */,
+				90C9688F2ED32D4B00C1DA0D /* ReceiptCameraView.swift */,
 				9056135A2EAF6BFF00B340FF /* LanguageHelper.swift */,
 				905613582EAF6B6800B340FF /* Resources */,
 				905613512EAECB7F00B340FF /* LanguageSettingsView.swift */,
@@ -392,6 +401,9 @@
 				908773C32E95857B00AB0783 /* SpendCraft.xcdatamodeld in Sources */,
 				90A11BCA2E966756005C595F /* NotificationsViewModel.swift in Sources */,
 				90A11BCB2E966756005C595F /* NotificationItem.swift in Sources */,
+				90C968902ED32D4B00C1DA0D /* ReceiptCameraView.swift in Sources */,
+				90C968912ED32D4B00C1DA0D /* ReceiptAnalysisView.swift in Sources */,
+				90C968922ED32D4B00C1DA0D /* ReceiptAnalyzer.swift in Sources */,
 				90A11BCC2E966756005C595F /* NotificationsView.swift in Sources */,
 				908773D02E95857B00AB0783 /* CoreDataStack.swift in Sources */,
 				90AB66D32E95998A0063F8A7 /* TransactionEntity.swift in Sources */,
@@ -439,7 +451,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 3Z8QRS3X4W;
 				ENABLE_PREVIEWS = YES;
@@ -477,7 +489,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 3Z8QRS3X4W;
 				ENABLE_PREVIEWS = YES;

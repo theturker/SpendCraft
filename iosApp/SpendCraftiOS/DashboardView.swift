@@ -7,6 +7,8 @@
 
 import SwiftUI
 import CoreData
+import AVFoundation
+import UIKit
 
 struct DashboardView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
@@ -18,6 +20,14 @@ struct DashboardView: View {
     @State private var transactionTypeToAdd: TransactionType? = nil
     @State private var showUserProfiling = false
     @AppStorage("userProfilingCompleted") private var profilingCompleted = false
+    @State private var showReceiptCamera = false
+    @State private var showReceiptImagePicker = false
+    @State private var capturedReceiptImage: UIImage? = nil
+    @State private var showReceiptAnalysis = false
+    @State private var receiptAnalysisResult: ReceiptAnalysisResult? = nil
+    @State private var isAnalyzing = false
+    @State private var showReceiptSourceSelection = false
+    @State private var showCameraPermissionAlert = false
     
     enum TransactionType: Identifiable {
         case income
@@ -174,6 +184,23 @@ struct DashboardView: View {
                 }
                 .padding(.horizontal, 16)
                 
+                // Fiş/Fatura Ekle Butonu
+                Button {
+                    showReceiptSourceSelection = true
+                } label: {
+                    HStack {
+                        Image(systemName: "camera.fill")
+                            .foregroundColor(.white)
+                        Text(NSLocalizedString("dashboard.add.receipt", comment: "Add Receipt/Invoice"))
+                            .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .cornerRadius(15)
+                }
+                .padding(.horizontal, 16)
+                
                 // Streak Card
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
@@ -310,6 +337,70 @@ struct DashboardView: View {
         .sheet(isPresented: $showUserProfiling) {
             UserProfilingView()
         }
+        .sheet(isPresented: $showReceiptCamera) {
+            ReceiptCameraView(isPresented: $showReceiptCamera) { image in
+                processReceiptImage(image)
+            }
+        }
+        .sheet(isPresented: $showReceiptImagePicker) {
+            ReceiptImagePickerView(isPresented: $showReceiptImagePicker) { image in
+                processReceiptImage(image)
+            }
+        }
+        .sheet(isPresented: $showReceiptAnalysis) {
+            if let image = capturedReceiptImage, let result = receiptAnalysisResult {
+                ReceiptAnalysisView(
+                    image: image,
+                    analysisResult: result,
+                    onConfirm: { amount, note, date in
+                        addReceiptTransaction(amount: amount, note: note, date: date)
+                    },
+                    onCancel: {
+                        showReceiptAnalysis = false
+                        capturedReceiptImage = nil
+                        receiptAnalysisResult = nil
+                    }
+                )
+            }
+        }
+        .confirmationDialog(
+            NSLocalizedString("receipt.select.source", comment: "Select Source"),
+            isPresented: $showReceiptSourceSelection,
+            titleVisibility: .visible
+        ) {
+            Button(NSLocalizedString("receipt.camera", comment: "Camera")) {
+                checkCameraPermission { granted in
+                    if granted {
+                        DispatchQueue.main.async {
+                            showReceiptCamera = true
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            showCameraPermissionAlert = true
+                        }
+                    }
+                }
+            }
+            Button(NSLocalizedString("receipt.photo.library", comment: "Photo Library")) {
+                showReceiptImagePicker = true
+            }
+            Button(NSLocalizedString("common.cancel", comment: "Cancel"), role: .cancel) {}
+        } message: {
+            Text(NSLocalizedString("receipt.select.source.message", comment: "Choose how to add receipt"))
+        }
+        .alert(
+            NSLocalizedString("receipt.camera.permission.title", comment: "Camera Permission Required"),
+            isPresented: $showCameraPermissionAlert
+        ) {
+            Button(NSLocalizedString("common.settings", comment: "Settings")) {
+                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(settingsURL)
+                }
+            }
+            Button(NSLocalizedString("common.cancel", comment: "Cancel"), role: .cancel) {}
+        } message: {
+            Text(NSLocalizedString("receipt.camera.permission.message", comment: "Please enable camera access in Settings"))
+        }
         .onAppear {
             // Load data
             reloadAllData()
@@ -343,6 +434,63 @@ struct DashboardView: View {
         transactionsViewModel.objectWillChange.send()
         
         print("✅ Dashboard: All data reloaded")
+    }
+    
+    private func checkCameraPermission(completion: @escaping (Bool) -> Void) {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        switch status {
+        case .authorized:
+            completion(true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                completion(granted)
+            }
+        default:
+            completion(false)
+        }
+    }
+    
+    private func processReceiptImage(_ image: UIImage) {
+        capturedReceiptImage = image
+        isAnalyzing = true
+        
+        ReceiptAnalyzer.shared.analyzeReceipt(image: image) { result in
+            isAnalyzing = false
+            receiptAnalysisResult = result
+            showReceiptAnalysis = true
+        }
+    }
+    
+    private func addReceiptTransaction(amount: Double, note: String?, date: Date) {
+        // Varsayılan kategoriyi bul (gider kategorilerinden birini seç)
+        let expenseCategories = transactionsViewModel.categoriesForType(false)
+        let defaultCategory = expenseCategories.first { category in
+            category.name.contains("category.other") || 
+            category.name.contains("category.food") ||
+            category.name.contains("category.shopping")
+        } ?? expenseCategories.first
+        
+        // Varsayılan hesabı bul
+        let defaultAccount = transactionsViewModel.accounts.first
+        
+        // Gider olarak ekle
+        transactionsViewModel.addTransaction(
+            amount: amount,
+            note: note,
+            category: defaultCategory,
+            account: defaultAccount,
+            isIncome: false,
+            achievementsViewModel: achievementsViewModel,
+            notificationsViewModel: notificationsViewModel
+        )
+        
+        // Verileri yenile
+        reloadAllData()
+        
+        // Sheet'i kapat
+        showReceiptAnalysis = false
+        capturedReceiptImage = nil
+        receiptAnalysisResult = nil
     }
 }
 

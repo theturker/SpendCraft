@@ -39,7 +39,7 @@ class AIManager: ObservableObject {
     @Published var currentAdvice: String?
     @Published var errorMessage: String?
     
-    private let apiKey = "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" // Groq API key
+    private let apiKey = "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" // Groq API key
     private let apiURL = "https://api.groq.com/openai/v1/chat/completions"
     
     // MARK: - User Profiling Data

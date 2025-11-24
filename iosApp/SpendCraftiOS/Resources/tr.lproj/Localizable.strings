@@ -699,3 +699,21 @@
 /* Onboarding */
 "onboarding.app.name" = "Paratik";
 "onboarding.or" = "veya";
+
+/* Receipt/Invoice */
+"dashboard.add.receipt" = "Fiş/Fatura Ekle";
+"receipt.select.source" = "Kaynak Seç";
+"receipt.select.source.message" = "Fiş eklemek için kaynak seçin";
+"receipt.camera" = "Kamera";
+"receipt.photo.library" = "Fotoğraf Galerisi";
+"receipt.camera.permission.title" = "Kamera İzni Gerekli";
+"receipt.camera.permission.message" = "Lütfen Ayarlar'dan kamera erişimini etkinleştirin";
+"receipt.review" = "Fişi İncele";
+"receipt.amount" = "Tutar";
+"receipt.amount.placeholder" = "Tutarı girin";
+"receipt.merchant" = "İşyeri/Not";
+"receipt.merchant.placeholder" = "İşyeri adı veya not";
+"receipt.date" = "Tarih";
+"receipt.items" = "Tespit Edilen Ürünler";
+"receipt.confirm" = "Gider Ekle";
+"common.settings" = "Ayarlar";

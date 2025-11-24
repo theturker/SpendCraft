@@ -769,3 +769,21 @@
 /* Onboarding */
 "onboarding.app.name" = "Paratik";
 "onboarding.or" = "or";
+
+/* Receipt/Invoice */
+"dashboard.add.receipt" = "Add Receipt/Invoice";
+"receipt.select.source" = "Select Source";
+"receipt.select.source.message" = "Choose how to add receipt";
+"receipt.camera" = "Camera";
+"receipt.photo.library" = "Photo Library";
+"receipt.camera.permission.title" = "Camera Permission Required";
+"receipt.camera.permission.message" = "Please enable camera access in Settings";
+"receipt.review" = "Review Receipt";
+"receipt.amount" = "Amount";
+"receipt.amount.placeholder" = "Enter amount";
+"receipt.merchant" = "Merchant/Note";
+"receipt.merchant.placeholder" = "Merchant name or note";
+"receipt.date" = "Date";
+"receipt.items" = "Detected Items";
+"receipt.confirm" = "Add Expense";
+"common.settings" = "Settings";
