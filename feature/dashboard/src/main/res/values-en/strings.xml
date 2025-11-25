@@ -23,6 +23,29 @@
     <string name="dashboard_achievement_completed_percent">%1$d%% Completed</string>
     <string name="dashboard_close">Close</string>
     
+    <string name="dashboard_add_receipt">Add Receipt/Invoice</string>
+    
+    <!-- Receipt/Invoice -->
+    <string name="receipt_select_source">Select Source</string>
+    <string name="receipt_select_source_message">Choose how you want to add the receipt</string>
+    <string name="receipt_camera">Camera</string>
+    <string name="receipt_photo_library">Photo Library</string>
+    <string name="receipt_camera_permission_title">Camera Permission Required</string>
+    <string name="receipt_camera_permission_message">Please enable camera access from Settings</string>
+    <string name="receipt_camera_capture_error">Unable to capture photo. Please try again.</string>
+    <string name="receipt_gallery_permission_message">You need to allow gallery access.</string>
+    <string name="receipt_gallery_error">The selected image could not be processed. Please try another one.</string>
+    <string name="receipt_review">Review Receipt</string>
+    <string name="receipt_amount">Amount</string>
+    <string name="receipt_amount_placeholder">Enter amount</string>
+    <string name="receipt_merchant">Merchant/Note</string>
+    <string name="receipt_merchant_placeholder">Merchant name or note</string>
+    <string name="receipt_date">Date</string>
+    <string name="receipt_items">Detected Items</string>
+    <string name="receipt_confirm">Add Expense</string>
+    <string name="receipt_confirm_success">Receipt info saved.</string>
+    <string name="common_loading">Loading…</string>
+    
     <!-- Achievement Levels -->
     <string name="achievement_level_beginner">Beginner</string>
     <string name="achievement_level_first_step">First Step</string>

@@ -1,5 +1,19 @@
 package com.alperen.spendcraft.feature.dashboard.ui
 
+import android.Manifest
+import android.app.DatePickerDialog
+import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,24 +22,30 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.lerp
+import androidx.core.content.ContextCompat
 import com.alperen.spendcraft.core.model.Transaction
 import com.alperen.spendcraft.core.model.TransactionType
 import com.alperen.spendcraft.core.ui.*
@@ -33,9 +53,9 @@ import com.alperen.spendcraft.core.ui.CurrencyFormatter
 import com.alperen.spendcraft.core.ui.LocaleHelper
 // import com.alperen.spendcraft.ui.iosTheme.*  // Note: IOSTheme in app module, use tokens directly
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.util.*
 
 /**
  * iOS DashboardView'in birebir Android Compose karşılığı
@@ -75,6 +95,79 @@ fun DashboardScreen(
 ) {
     val context = LocalContext.current
     val extendedColors = MaterialTheme.extendedColors
+    val cameraPermission = Manifest.permission.CAMERA
+    val galleryPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+    
+    var showReceiptSourceSelection by remember { mutableStateOf(false) }
+    var showReceiptAnalysis by remember { mutableStateOf(false) }
+    var capturedReceiptBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var receiptAmount by rememberSaveable { mutableStateOf("") }
+    var receiptNote by rememberSaveable { mutableStateOf("") }
+    var receiptDateMillis by rememberSaveable { mutableStateOf(System.currentTimeMillis()) }
+    
+    val pickMediaRequest = remember { PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly) }
+    
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+        bitmap?.let {
+            capturedReceiptBitmap = it
+            receiptAmount = ""
+            receiptNote = ""
+            receiptDateMillis = System.currentTimeMillis()
+            showReceiptAnalysis = true
+        } ?: Toast.makeText(
+            context,
+            context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_camera_capture_error),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+    
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let {
+            val bitmap = context.decodeBitmapFromUri(it)
+            if (bitmap != null) {
+                capturedReceiptBitmap = bitmap
+                receiptAmount = ""
+                receiptNote = ""
+                receiptDateMillis = System.currentTimeMillis()
+                showReceiptAnalysis = true
+            } else {
+                Toast.makeText(
+                    context,
+                    context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_gallery_error),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+    
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            cameraLauncher.launch(null)
+        } else {
+            Toast.makeText(
+                context,
+                context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_camera_permission_message),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    
+    val galleryPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            galleryLauncher.launch(pickMediaRequest)
+        } else {
+            Toast.makeText(
+                context,
+                context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_gallery_permission_message),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    
     
     // Son 5 işlem
     val recentTransactions = remember(transactions) {
@@ -188,6 +281,14 @@ fun DashboardScreen(
                 )
             }
             
+            // 2.5. Fiş/Fatura Ekle Butonu - iOS DashboardView.swift:188-203
+            item {
+                ReceiptButton(
+                    onClick = { showReceiptSourceSelection = true },
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+            
             // 3. Income & Expense Summary Cards
             item {
                 IncomeExpenseSummary(
@@ -240,6 +341,171 @@ fun DashboardScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
+        }
+    }
+    
+    // Receipt Source Selection Bottom Sheet - iOS'taki sheet(isPresented: $showReceiptSourceSelection)
+    if (showReceiptSourceSelection) {
+        ModalBottomSheet(
+            onDismissRequest = { showReceiptSourceSelection = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
+            dragHandle = { BottomSheetDefaults.DragHandle() },
+            containerColor = MaterialTheme.colorScheme.surface
+        ) {
+            ReceiptSourceSelectionSheet(
+                onCameraClick = {
+                    showReceiptSourceSelection = false
+                    // Kamera izni kontrolü ve açma
+                    if (ContextCompat.checkSelfPermission(context, cameraPermission) == PackageManager.PERMISSION_GRANTED) {
+                        cameraLauncher.launch(null)
+                    } else {
+                        cameraPermissionLauncher.launch(cameraPermission)
+                    }
+                },
+                onGalleryClick = {
+                    showReceiptSourceSelection = false
+                    // Galeri açma - Android 13+ için izin gerekmiyor (PickVisualMedia kullanıyoruz)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        // Android 13+ için PickVisualMedia izin gerektirmez
+                        galleryLauncher.launch(pickMediaRequest)
+                    } else {
+                        // Android 12 ve altı için izin kontrolü
+                        if (ContextCompat.checkSelfPermission(context, galleryPermission) == PackageManager.PERMISSION_GRANTED) {
+                            galleryLauncher.launch(pickMediaRequest)
+                        } else {
+                            galleryPermissionLauncher.launch(galleryPermission)
+                        }
+                    }
+                },
+                onDismiss = { showReceiptSourceSelection = false }
+            )
+        }
+    }
+    
+    if (showReceiptAnalysis && capturedReceiptBitmap != null) {
+        ModalBottomSheet(
+            onDismissRequest = { showReceiptAnalysis = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
+            dragHandle = { BottomSheetDefaults.DragHandle() },
+            containerColor = MaterialTheme.colorScheme.surface
+        ) {
+            ReceiptAnalysisSheet(
+                bitmap = capturedReceiptBitmap!!,
+                amount = receiptAmount,
+                note = receiptNote,
+                dateMillis = receiptDateMillis,
+                onAmountChange = { receiptAmount = it },
+                onNoteChange = { receiptNote = it },
+                onDateChange = { receiptDateMillis = it },
+                onConfirm = {
+                    Toast.makeText(
+                        context,
+                        context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_confirm_success),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    showReceiptAnalysis = false
+                },
+                onCancel = { showReceiptAnalysis = false }
+            )
+        }
+    }
+}
+
+/**
+ * Receipt Source Selection Bottom Sheet Content - iOS DashboardView.swift:417-499
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ReceiptSourceSelectionSheet(
+    onCameraClick: () -> Unit,
+    onGalleryClick: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+    
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(220.dp) // iOS'taki .height(220)
+            .padding(horizontal = 20.dp)
+    ) {
+        // Başlık
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_select_source),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_select_source_message),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        
+        Divider()
+        
+        // Kamera butonu
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onCameraClick)
+                .padding(horizontal = 20.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_camera_fill),
+                contentDescription = null,
+                tint = IOSColors.Blue,
+                modifier = Modifier.size(30.dp)
+            )
+            Text(
+                text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_camera),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+        
+        Divider()
+        
+        // Fotoğraf Galerisi butonu
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onGalleryClick)
+                .padding(horizontal = 20.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_photo_fill),
+                contentDescription = null,
+                tint = IOSColors.Blue,
+                modifier = Modifier.size(30.dp)
+            )
+            Text(
+                text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_photo_library),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(16.dp)
+            )
         }
     }
 }
@@ -363,6 +629,146 @@ private fun QuickActionButtons(
                     fontWeight = FontWeight.SemiBold
                 )
             }
+        }
+    }
+}
+
+/**
+ * Receipt Button - iOS DashboardView.swift:188-203
+ * Mavi buton, kamera ikonu ile
+ */
+@Composable
+private fun ReceiptButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp),  // IOSSpacing.buttonHeight
+        colors = ButtonDefaults.buttonColors(
+            containerColor = IOSColors.Blue
+        ),
+        shape = RoundedCornerShape(15.dp)  // IOSRadius.button
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = com.alperen.spendcraft.core.ui.R.drawable.ic_camera_fill),
+                contentDescription = null,
+                tint = Color.White
+            )
+            Text(
+                text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.dashboard_add_receipt),
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}
+
+@Composable
+private fun ReceiptAnalysisSheet(
+    bitmap: Bitmap,
+    amount: String,
+    note: String,
+    dateMillis: Long,
+    onAmountChange: (String) -> Unit,
+    onNoteChange: (String) -> Unit,
+    onDateChange: (Long) -> Unit,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit
+) {
+    val context = LocalContext.current
+    val dateFormat = remember { SimpleDateFormat("dd MMM yyyy", Locale.getDefault()) }
+    val formattedDate = remember(dateMillis) { dateFormat.format(Date(dateMillis)) }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .imePadding()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_review),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        
+        Image(
+            bitmap = bitmap.asImageBitmap(),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 150.dp, max = 280.dp)
+                .clip(RoundedCornerShape(12.dp))
+        )
+        
+        OutlinedTextField(
+            value = amount,
+            onValueChange = onAmountChange,
+            label = { Text(text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_amount)) },
+            placeholder = { Text(text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_amount_placeholder)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        OutlinedTextField(
+            value = note,
+            onValueChange = onNoteChange,
+            label = { Text(text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_merchant)) },
+            placeholder = { Text(text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_merchant_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_date),
+                style = MaterialTheme.typography.titleMedium
+            )
+            TextButton(
+                onClick = {
+                    val calendar = Calendar.getInstance().apply { timeInMillis = dateMillis }
+                    DatePickerDialog(
+                        context,
+                        { _, year, month, day ->
+                            calendar.set(year, month, day)
+                            onDateChange(calendar.timeInMillis)
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    ).show()
+                }
+            ) {
+                Text(text = formattedDate)
+            }
+        }
+        
+        Button(
+            onClick = onConfirm,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = amount.isNotBlank()
+        ) {
+            Text(text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_confirm))
+        }
+        
+        TextButton(
+            onClick = onCancel,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = context.getString(android.R.string.cancel))
         }
     }
 }
@@ -1048,6 +1454,20 @@ private fun getAchievementIconResource(icon: String): Int {
         "💵", "💸" -> com.alperen.spendcraft.core.ui.R.drawable.ic_banknote
         
         else -> com.alperen.spendcraft.core.ui.R.drawable.ic_star_fill
+    }
+}
+
+private fun Context.decodeBitmapFromUri(uri: Uri): Bitmap? {
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val source = ImageDecoder.createSource(this.contentResolver, uri)
+            ImageDecoder.decodeBitmap(source)
+        } else {
+            @Suppress("DEPRECATION")
+            MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+        }
+    } catch (e: Exception) {
+        null
     }
 }
 

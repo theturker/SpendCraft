@@ -22,6 +22,28 @@
     <string name="dashboard_achievement_reward_unlocked">%1$d Puan Kazandınız!</string>
     <string name="dashboard_achievement_completed_percent">%1$d%% Tamamlandı</string>
     <string name="dashboard_close">Kapat</string>
+    <string name="dashboard_add_receipt">Fiş/Fatura Ekle</string>
+    
+    <!-- Receipt/Invoice -->
+    <string name="receipt_select_source">Kaynak Seç</string>
+    <string name="receipt_select_source_message">Fiş eklemek için kaynak seçin</string>
+    <string name="receipt_camera">Kamera</string>
+    <string name="receipt_photo_library">Fotoğraf Galerisi</string>
+    <string name="receipt_camera_permission_title">Kamera İzni Gerekli</string>
+    <string name="receipt_camera_permission_message">Lütfen Ayarlar\'dan kamera erişimini etkinleştirin</string>
+    <string name="receipt_camera_capture_error">Kamera görüntüsü alınamadı. Lütfen tekrar deneyin.</string>
+    <string name="receipt_gallery_permission_message">Galeriye erişmek için izin vermelisiniz.</string>
+    <string name="receipt_gallery_error">Seçilen görsel okunamadı. Lütfen başka bir görsel deneyin.</string>
+    <string name="receipt_review">Fişi İncele</string>
+    <string name="receipt_amount">Tutar</string>
+    <string name="receipt_amount_placeholder">Tutarı girin</string>
+    <string name="receipt_merchant">İşyeri/Not</string>
+    <string name="receipt_merchant_placeholder">İşyeri adı veya not</string>
+    <string name="receipt_date">Tarih</string>
+    <string name="receipt_items">Tespit Edilen Ürünler</string>
+    <string name="receipt_confirm">Gider Ekle</string>
+    <string name="receipt_confirm_success">Fiş bilgileri kaydedildi.</string>
+    <string name="common_loading">Yükleniyor…</string>
     
     <!-- Achievement Levels -->
     <string name="achievement_level_beginner">Başlangıç</string>
