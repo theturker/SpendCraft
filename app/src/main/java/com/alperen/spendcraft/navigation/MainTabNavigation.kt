@@ -151,6 +151,7 @@ fun MainTabNavigation(
             composable(TabScreen.Dashboard.route) {
                 val context = LocalContext.current
                 val dashboardViewModel: DashboardViewModel = hiltViewModel()
+                val transactionsViewModel: TransactionsViewModel = hiltViewModel()
                 val transactions by dashboardViewModel.transactions.collectAsState()
                 val currentBalance by dashboardViewModel.currentBalance.collectAsState()
                 val totalIncome by dashboardViewModel.totalIncome.collectAsState()
@@ -189,6 +190,31 @@ fun MainTabNavigation(
                     onTransactionClick = { transaction ->
                         // ✅ Use parent callback instead of nested navController
                         transaction.id?.let { onNavigateToEditTransaction(it) }
+                    },
+                    onAddReceiptTransaction = { amount, note, dateMillis ->
+                        // iOS'taki addReceiptTransaction benzeri
+                        // Varsayılan kategoriyi bul (gider kategorilerinden birini seç)
+                        val expenseCategories = categories.filter { !it.isIncome }
+                        val defaultCategory = expenseCategories.firstOrNull { category ->
+                            category.name.contains("category.other", ignoreCase = true) ||
+                            category.name.contains("category.food", ignoreCase = true) ||
+                            category.name.contains("category.shopping", ignoreCase = true)
+                        } ?: expenseCategories.firstOrNull()
+                        
+                        // Varsayılan hesabı bul
+                        val defaultAccount = accounts.firstOrNull()
+                        
+                        // Gider olarak ekle
+                        transactionsViewModel.saveTransaction(
+                            amountMinor = (amount * 100).toLong(),
+                            note = note,
+                            categoryId = defaultCategory?.id ?: 0L,
+                            accountId = defaultAccount?.id ?: 0L,
+                            isIncome = false,
+                            date = dateMillis,
+                            isRecurring = false,
+                            recurringFrequency = null
+                        )
                     }
                 )
             }

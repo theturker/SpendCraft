@@ -43,6 +43,7 @@
     <string name="receipt_items">Tespit Edilen Ürünler</string>
     <string name="receipt_confirm">Gider Ekle</string>
     <string name="receipt_confirm_success">Fiş bilgileri kaydedildi.</string>
+    <string name="receipt_amount_error">Lütfen geçerli bir tutar girin.</string>
     <string name="common_loading">Yükleniyor…</string>
     
     <!-- Achievement Levels -->

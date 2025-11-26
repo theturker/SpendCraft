@@ -10,6 +10,8 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.core.content.FileProvider
+import java.io.File
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -92,6 +94,7 @@ fun DashboardScreen(
     onAchievements: () -> Unit = {},
     onUserProfiling: () -> Unit = {},
     onTransactionClick: (Transaction) -> Unit = {},
+    onAddReceiptTransaction: (amount: Double, note: String?, dateMillis: Long) -> Unit = { _, _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -116,66 +119,75 @@ fun DashboardScreen(
     
     val pickMediaRequest = remember { PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly) }
     
-    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-        bitmap?.let {
-            // Bitmap'i optimize et - OCR için daha yüksek kalite ve doğru config
-            val optimizedBitmap = if (it.config != Bitmap.Config.ARGB_8888) {
-                // Config'i ARGB_8888'e çevir (OCR için gerekli)
-                val converted = it.copy(Bitmap.Config.ARGB_8888, false)
-                if (converted != it) {
-                    it.recycle() // Orijinal bitmap'i temizle
+    // Yüksek çözünürlüklü fotoğraf için geçici dosya URI'si
+    var currentPhotoUri by remember { mutableStateOf<Uri?>(null) }
+    
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success && currentPhotoUri != null) {
+            // Yüksek çözünürlüklü fotoğrafı oku
+            val bitmap = context.decodeBitmapFromUri(currentPhotoUri!!)
+            bitmap?.let {
+                // Görüntüleme için orijinal yüksek çözünürlüklü bitmap'i sakla
+                capturedReceiptBitmap = it
+                
+                // OCR için optimize edilmiş bir kopya oluştur
+                val ocrBitmap = if (it.width > 2048 || it.height > 2048) {
+                    // Çok büyükse OCR için küçült (performans için)
+                    val scale = 2048f / it.width.coerceAtMost(it.height)
+                    val newWidth = (it.width * scale).toInt()
+                    val newHeight = (it.height * scale).toInt()
+                    Bitmap.createScaledBitmap(it, newWidth, newHeight, true)
+                } else {
+                    // Orijinal boyutta kullan
+                    it.copy(it.config ?: Bitmap.Config.ARGB_8888, false)
                 }
-                converted
-            } else {
-                // Bitmap'i kopyala (orijinal bitmap'i korumak için)
-                it.copy(it.config ?: Bitmap.Config.ARGB_8888, false)
-            }
-            
-            // Eğer bitmap çok küçükse büyüt (OCR için minimum 1024px önerilir)
-            val finalBitmap = if (optimizedBitmap.width < 1024 || optimizedBitmap.height < 1024) {
-                val scale = 1024f / optimizedBitmap.width.coerceAtMost(optimizedBitmap.height)
-                val newWidth = (optimizedBitmap.width * scale).toInt()
-                val newHeight = (optimizedBitmap.height * scale).toInt()
-                Bitmap.createScaledBitmap(optimizedBitmap, newWidth, newHeight, true)
-            } else {
-                optimizedBitmap
-            }
-            
-            capturedReceiptBitmap = finalBitmap
-            isAnalyzingReceipt = true
-            receiptAnalysisResult = null
-            receiptAmount = ""
-            receiptNote = ""
-            
-            // Analiz işlemini başlat
-            coroutineScope.launch {
-                try {
-                    android.util.Log.d("DashboardScreen", "Starting receipt analysis for camera capture. Bitmap size: ${finalBitmap.width}x${finalBitmap.height}, Config: ${finalBitmap.config}")
-                    val result = ReceiptAnalyzer.analyzeReceipt(finalBitmap)
-                    android.util.Log.d("DashboardScreen", "Receipt analysis completed. Amount: ${result.amount}, Merchant: ${result.merchant}, RawText length: ${result.rawText.length}")
-                    if (result.rawText.isNotEmpty()) {
-                        android.util.Log.d("DashboardScreen", "Raw text preview: ${result.rawText.take(200)}")
+                
+                isAnalyzingReceipt = true
+                receiptAnalysisResult = null
+                receiptAmount = ""
+                receiptNote = ""
+                
+                // Analiz işlemini başlat (OCR için optimize edilmiş bitmap ile)
+                coroutineScope.launch {
+                    try {
+                        android.util.Log.d("DashboardScreen", "Starting receipt analysis. Display bitmap: ${it.width}x${it.height}, OCR bitmap: ${ocrBitmap.width}x${ocrBitmap.height}")
+                        val result = ReceiptAnalyzer.analyzeReceipt(ocrBitmap)
+                        android.util.Log.d("DashboardScreen", "Receipt analysis completed. Amount: ${result.amount}, Merchant: ${result.merchant}, RawText length: ${result.rawText.length}")
+                        if (result.rawText.isNotEmpty()) {
+                            android.util.Log.d("DashboardScreen", "Raw text preview: ${result.rawText.take(200)}")
+                        }
+                        receiptAnalysisResult = result
+                        receiptAmount = result.amount?.let { String.format("%.2f", it) } ?: ""
+                        receiptNote = result.merchant ?: ""
+                        receiptDateMillis = result.date ?: System.currentTimeMillis()
+                        
+                        // OCR bitmap'ini temizle (görüntüleme için orijinal kullanılıyor)
+                        if (ocrBitmap != it) {
+                            ocrBitmap.recycle()
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("DashboardScreen", "Receipt analysis error: ${e.message}", e)
+                        e.printStackTrace()
+                        receiptAmount = ""
+                        receiptNote = ""
+                        receiptDateMillis = System.currentTimeMillis()
+                    } finally {
+                        isAnalyzingReceipt = false
+                        showReceiptAnalysis = true
                     }
-                    receiptAnalysisResult = result
-                    receiptAmount = result.amount?.let { String.format("%.2f", it) } ?: ""
-                    receiptNote = result.merchant ?: ""
-                    receiptDateMillis = result.date ?: System.currentTimeMillis()
-                } catch (e: Exception) {
-                    android.util.Log.e("DashboardScreen", "Receipt analysis error: ${e.message}", e)
-                    e.printStackTrace()
-                    receiptAmount = ""
-                    receiptNote = ""
-                    receiptDateMillis = System.currentTimeMillis()
-                } finally {
-                    isAnalyzingReceipt = false
-                    showReceiptAnalysis = true
                 }
-            }
-        } ?: Toast.makeText(
-            context,
-            context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_camera_capture_error),
-            Toast.LENGTH_SHORT
-        ).show()
+            } ?: Toast.makeText(
+                context,
+                context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_camera_capture_error),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
+                context,
+                context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_camera_capture_error),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
     
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -216,7 +228,15 @@ fun DashboardScreen(
     
     val cameraPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         if (granted) {
-            cameraLauncher.launch(null)
+            // Her fotoğraf çekiminde yeni bir dosya oluştur
+            val photoFile = File(context.cacheDir, "receipt_photo_${System.currentTimeMillis()}.jpg")
+            val photoUri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                photoFile
+            )
+            currentPhotoUri = photoUri
+            cameraLauncher.launch(photoUri)
         } else {
             Toast.makeText(
                 context,
@@ -427,7 +447,15 @@ fun DashboardScreen(
                     showReceiptSourceSelection = false
                     // Kamera izni kontrolü ve açma
                     if (ContextCompat.checkSelfPermission(context, cameraPermission) == PackageManager.PERMISSION_GRANTED) {
-                        cameraLauncher.launch(null)
+                        // Her fotoğraf çekiminde yeni bir dosya oluştur
+                        val photoFile = File(context.cacheDir, "receipt_photo_${System.currentTimeMillis()}.jpg")
+                        val photoUri = FileProvider.getUriForFile(
+                            context,
+                            "${context.packageName}.fileprovider",
+                            photoFile
+                        )
+                        currentPhotoUri = photoUri
+                        cameraLauncher.launch(photoUri)
                     } else {
                         cameraPermissionLauncher.launch(cameraPermission)
                     }
@@ -491,11 +519,27 @@ fun DashboardScreen(
                 onNoteChange = { receiptNote = it },
                 onDateChange = { receiptDateMillis = it },
                 onConfirm = {
-                    Toast.makeText(
-                        context,
-                        context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_confirm_success),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    // Tutarı parse et ve işlemi kaydet
+                    val amountValue = receiptAmount.replace(",", ".").toDoubleOrNull()
+                    if (amountValue != null && amountValue > 0) {
+                        onAddReceiptTransaction(
+                            amountValue,
+                            receiptNote.ifEmpty { null },
+                            receiptDateMillis
+                        )
+                        Toast.makeText(
+                            context,
+                            context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_confirm_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_amount_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@ReceiptAnalysisSheet
+                    }
                     showReceiptAnalysis = false
                     capturedReceiptBitmap = null
                     receiptAnalysisResult = null

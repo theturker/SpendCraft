@@ -44,6 +44,7 @@
     <string name="receipt_items">Detected Items</string>
     <string name="receipt_confirm">Add Expense</string>
     <string name="receipt_confirm_success">Receipt info saved.</string>
+    <string name="receipt_amount_error">Please enter a valid amount.</string>
     <string name="common_loading">Loading…</string>
     
     <!-- Achievement Levels -->
