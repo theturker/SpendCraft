@@ -10,10 +10,16 @@
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
         android:maxSdkVersion="32" />
-    <!-- Camera permission for receipt scanning -->
+    <!-- Camera permission for receipt scanning - Core functionality -->
+    <!-- This permission is required for the core feature of scanning receipts/finvoices to automatically extract transaction information -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <!-- Media images permission for Android 13+ -->
+    <!-- Media images permission for Android 13+ - Core functionality -->
+    <!-- This permission is required to allow users to select receipt/finvoice images from their gallery for automatic transaction extraction -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    
+    <!-- Camera feature declaration - required for Google Play -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
     
     <!-- Screen size support -->
     <supports-screens 
