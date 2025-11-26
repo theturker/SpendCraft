@@ -51,4 +51,10 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.ui.graphics)
     ksp(libs.hilt.compiler)
+    
+    // ML Kit Text Recognition for receipt scanning
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+    
+    // Kotlinx Coroutines Play Services for Tasks.await
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }

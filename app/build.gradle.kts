@@ -134,6 +134,9 @@ dependencies {
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     
+    // ML Kit Text Recognition for receipt scanning
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+    
     // Core library desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     

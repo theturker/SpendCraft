@@ -29,6 +29,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -105,19 +106,71 @@ fun DashboardScreen(
     var showReceiptSourceSelection by remember { mutableStateOf(false) }
     var showReceiptAnalysis by remember { mutableStateOf(false) }
     var capturedReceiptBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var receiptAnalysisResult by remember { mutableStateOf<ReceiptAnalysisResult?>(null) }
+    var isAnalyzingReceipt by remember { mutableStateOf(false) }
     var receiptAmount by rememberSaveable { mutableStateOf("") }
     var receiptNote by rememberSaveable { mutableStateOf("") }
     var receiptDateMillis by rememberSaveable { mutableStateOf(System.currentTimeMillis()) }
+    
+    val coroutineScope = rememberCoroutineScope()
     
     val pickMediaRequest = remember { PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly) }
     
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
         bitmap?.let {
-            capturedReceiptBitmap = it
+            // Bitmap'i optimize et - OCR için daha yüksek kalite ve doğru config
+            val optimizedBitmap = if (it.config != Bitmap.Config.ARGB_8888) {
+                // Config'i ARGB_8888'e çevir (OCR için gerekli)
+                val converted = it.copy(Bitmap.Config.ARGB_8888, false)
+                if (converted != it) {
+                    it.recycle() // Orijinal bitmap'i temizle
+                }
+                converted
+            } else {
+                // Bitmap'i kopyala (orijinal bitmap'i korumak için)
+                it.copy(it.config ?: Bitmap.Config.ARGB_8888, false)
+            }
+            
+            // Eğer bitmap çok küçükse büyüt (OCR için minimum 1024px önerilir)
+            val finalBitmap = if (optimizedBitmap.width < 1024 || optimizedBitmap.height < 1024) {
+                val scale = 1024f / optimizedBitmap.width.coerceAtMost(optimizedBitmap.height)
+                val newWidth = (optimizedBitmap.width * scale).toInt()
+                val newHeight = (optimizedBitmap.height * scale).toInt()
+                Bitmap.createScaledBitmap(optimizedBitmap, newWidth, newHeight, true)
+            } else {
+                optimizedBitmap
+            }
+            
+            capturedReceiptBitmap = finalBitmap
+            isAnalyzingReceipt = true
+            receiptAnalysisResult = null
             receiptAmount = ""
             receiptNote = ""
-            receiptDateMillis = System.currentTimeMillis()
-            showReceiptAnalysis = true
+            
+            // Analiz işlemini başlat
+            coroutineScope.launch {
+                try {
+                    android.util.Log.d("DashboardScreen", "Starting receipt analysis for camera capture. Bitmap size: ${finalBitmap.width}x${finalBitmap.height}, Config: ${finalBitmap.config}")
+                    val result = ReceiptAnalyzer.analyzeReceipt(finalBitmap)
+                    android.util.Log.d("DashboardScreen", "Receipt analysis completed. Amount: ${result.amount}, Merchant: ${result.merchant}, RawText length: ${result.rawText.length}")
+                    if (result.rawText.isNotEmpty()) {
+                        android.util.Log.d("DashboardScreen", "Raw text preview: ${result.rawText.take(200)}")
+                    }
+                    receiptAnalysisResult = result
+                    receiptAmount = result.amount?.let { String.format("%.2f", it) } ?: ""
+                    receiptNote = result.merchant ?: ""
+                    receiptDateMillis = result.date ?: System.currentTimeMillis()
+                } catch (e: Exception) {
+                    android.util.Log.e("DashboardScreen", "Receipt analysis error: ${e.message}", e)
+                    e.printStackTrace()
+                    receiptAmount = ""
+                    receiptNote = ""
+                    receiptDateMillis = System.currentTimeMillis()
+                } finally {
+                    isAnalyzingReceipt = false
+                    showReceiptAnalysis = true
+                }
+            }
         } ?: Toast.makeText(
             context,
             context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_camera_capture_error),
@@ -130,10 +183,27 @@ fun DashboardScreen(
             val bitmap = context.decodeBitmapFromUri(it)
             if (bitmap != null) {
                 capturedReceiptBitmap = bitmap
-                receiptAmount = ""
-                receiptNote = ""
-                receiptDateMillis = System.currentTimeMillis()
-                showReceiptAnalysis = true
+                isAnalyzingReceipt = true
+                receiptAnalysisResult = null
+                
+                // Analiz işlemini başlat
+                coroutineScope.launch {
+                    try {
+                        val result = ReceiptAnalyzer.analyzeReceipt(bitmap)
+                        receiptAnalysisResult = result
+                        receiptAmount = result.amount?.let { String.format("%.2f", it) } ?: ""
+                        receiptNote = result.merchant ?: ""
+                        receiptDateMillis = result.date ?: System.currentTimeMillis()
+                    } catch (e: Exception) {
+                        android.util.Log.e("DashboardScreen", "Receipt analysis error: ${e.message}", e)
+                        receiptAmount = ""
+                        receiptNote = ""
+                        receiptDateMillis = System.currentTimeMillis()
+                    } finally {
+                        isAnalyzingReceipt = false
+                        showReceiptAnalysis = true
+                    }
+                }
             } else {
                 Toast.makeText(
                     context,
@@ -384,12 +454,35 @@ fun DashboardScreen(
     
     if (showReceiptAnalysis && capturedReceiptBitmap != null) {
         ModalBottomSheet(
-            onDismissRequest = { showReceiptAnalysis = false },
+            onDismissRequest = { 
+                showReceiptAnalysis = false
+                capturedReceiptBitmap = null
+                receiptAnalysisResult = null
+            },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
             dragHandle = { BottomSheetDefaults.DragHandle() },
             containerColor = MaterialTheme.colorScheme.surface
         ) {
-            ReceiptAnalysisSheet(
+            if (isAnalyzingReceipt) {
+                // Loading state - iOS ReceiptAnalysisSheetView benzeri
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(48.dp)
+                    )
+                    Text(
+                        text = context.getString(com.alperen.spendcraft.feature.dashboard.R.string.common_loading),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
+                ReceiptAnalysisSheet(
                 bitmap = capturedReceiptBitmap!!,
                 amount = receiptAmount,
                 note = receiptNote,
@@ -404,9 +497,22 @@ fun DashboardScreen(
                         Toast.LENGTH_SHORT
                     ).show()
                     showReceiptAnalysis = false
+                    capturedReceiptBitmap = null
+                    receiptAnalysisResult = null
+                    receiptAmount = ""
+                    receiptNote = ""
+                    receiptDateMillis = System.currentTimeMillis()
                 },
-                onCancel = { showReceiptAnalysis = false }
-            )
+                onCancel = { 
+                    showReceiptAnalysis = false
+                    capturedReceiptBitmap = null
+                    receiptAnalysisResult = null
+                    receiptAmount = ""
+                    receiptNote = ""
+                    receiptDateMillis = System.currentTimeMillis()
+                }
+                )
+            }
         }
     }
 }
