@@ -26,8 +26,8 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:premium"))
     
-    // Play Billing
-    implementation("com.android.billingclient:billing-ktx:6.2.1")
+    // Play Billing - Google Play requires 7.0.0+ (updated to 8.0.0)
+    implementation(libs.play.billing.ktx)
     
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.1")

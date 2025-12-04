@@ -2,7 +2,6 @@ package com.alperen.spendcraft.feature.recurrence
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alperen.spendcraft.core.billing.BillingRepository
 import com.alperen.spendcraft.data.db.dao.RecurringTransactionDao
 import com.alperen.spendcraft.data.db.entities.RecurringTransactionEntity
 import com.alperen.spendcraft.data.db.entities.RecurringFrequency
@@ -17,7 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecurringViewModel @Inject constructor(
-    val billingRepository: BillingRepository,
     private val recurringTransactionDao: RecurringTransactionDao,
     private val transactionsRepository: TransactionsRepository
 ) : ViewModel() {

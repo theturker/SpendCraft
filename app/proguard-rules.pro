@@ -59,8 +59,7 @@
 -keepclassmembers class com.alperen.spendcraft.feature.settings.SettingsOuterClass$Settings { *; }
 
 # ========== Play Billing ==========
--keep class com.android.billingclient.** { *; }
--dontwarn com.android.billingclient.**
+# Billing removed - no in-app purchases on Android (like iOS)
 
 # ========== Common Android ==========
 # Keep Parcelable

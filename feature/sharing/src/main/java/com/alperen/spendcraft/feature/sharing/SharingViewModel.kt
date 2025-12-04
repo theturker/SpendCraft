@@ -2,7 +2,6 @@ package com.alperen.spendcraft.feature.sharing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alperen.spendcraft.core.billing.BillingRepository
 import com.alperen.spendcraft.data.db.entities.SharingMemberEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,9 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SharingViewModel @Inject constructor(
-    val billingRepository: BillingRepository
-) : ViewModel() {
+class SharingViewModel @Inject constructor() : ViewModel() {
     
     private val _members = MutableStateFlow<List<SharingMemberEntity>>(emptyList())
     val members: StateFlow<List<SharingMemberEntity>> = _members.asStateFlow()

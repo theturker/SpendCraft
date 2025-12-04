@@ -100,10 +100,12 @@ fun DashboardScreen(
     val context = LocalContext.current
     val extendedColors = MaterialTheme.extendedColors
     val cameraPermission = Manifest.permission.CAMERA
-    val galleryPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        Manifest.permission.READ_MEDIA_IMAGES
-    } else {
+    // READ_MEDIA_IMAGES izni kaldırıldı - Google Play politikasına uyum için
+    // Android 12 ve altı için READ_EXTERNAL_STORAGE kullanılabilir (maxSdkVersion 32 ile sınırlı)
+    val galleryPermission = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_EXTERNAL_STORAGE
+    } else {
+        null // Android 13+ için PickVisualMedia izin gerektirmez
     }
     
     var showReceiptSourceSelection by remember { mutableStateOf(false) }
@@ -250,11 +252,16 @@ fun DashboardScreen(
         if (granted) {
             galleryLauncher.launch(pickMediaRequest)
         } else {
-            Toast.makeText(
-                context,
-                context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_gallery_permission_message),
-                Toast.LENGTH_SHORT
-            ).show()
+            // İzin verilmediyse bile Photo Picker'ı dene (Android 12+ için çalışabilir)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                galleryLauncher.launch(pickMediaRequest)
+            } else {
+                Toast.makeText(
+                    context,
+                    context.getString(com.alperen.spendcraft.feature.dashboard.R.string.receipt_gallery_permission_message),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
     
@@ -462,16 +469,25 @@ fun DashboardScreen(
                 },
                 onGalleryClick = {
                     showReceiptSourceSelection = false
-                    // Galeri açma - Android 13+ için izin gerekmiyor (PickVisualMedia kullanıyoruz)
+                    // Android Photo Picker kullan - Google Play politikasına uyum için
+                    // PickVisualMedia Android 12+ (API 32+) için desteklenir ve izin gerektirmez
+                    // Android 11 ve altı için READ_EXTERNAL_STORAGE gerekebilir (maxSdkVersion 32 ile sınırlı)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         // Android 13+ için PickVisualMedia izin gerektirmez
                         galleryLauncher.launch(pickMediaRequest)
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        // Android 12 (API 31) için de PickVisualMedia kullan (izin gerektirmez)
+                        galleryLauncher.launch(pickMediaRequest)
                     } else {
-                        // Android 12 ve altı için izin kontrolü
-                        if (ContextCompat.checkSelfPermission(context, galleryPermission) == PackageManager.PERMISSION_GRANTED) {
+                        // Android 11 ve altı için READ_EXTERNAL_STORAGE kontrolü
+                        // (Bu izin zaten maxSdkVersion 32 ile sınırlı, yani Android 12 ve altı için)
+                        if (galleryPermission != null && ContextCompat.checkSelfPermission(context, galleryPermission) == PackageManager.PERMISSION_GRANTED) {
                             galleryLauncher.launch(pickMediaRequest)
-                        } else {
+                        } else if (galleryPermission != null) {
                             galleryPermissionLauncher.launch(galleryPermission)
+                        } else {
+                            // Fallback: Direkt Photo Picker'ı dene
+                            galleryLauncher.launch(pickMediaRequest)
                         }
                     }
                 },

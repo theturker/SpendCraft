@@ -36,7 +36,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:ui"))
     implementation(project(":core:ai"))
-    implementation(project(":core:billing"))
     implementation(project(":data:repository"))
     
     implementation(libs.androidx.core.ktx)

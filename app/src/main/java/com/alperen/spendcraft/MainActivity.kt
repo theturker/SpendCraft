@@ -43,9 +43,7 @@ class MainActivity : ComponentActivity() {
     lateinit var firstLaunchHelper: FirstLaunchHelper
     
     // GoogleAuthService removed - auth is disabled
-    
-    @Inject
-    lateinit var billingRepository: com.alperen.spendcraft.core.billing.BillingRepository
+    // Billing removed - no in-app purchases on Android (like iOS)
     
     // googleSignInResult removed - auth is disabled
     
@@ -98,16 +96,7 @@ class MainActivity : ComponentActivity() {
             // currentAuthScreen removed - auth is disabled
             
             // Google Auth Service removed - auth is disabled
-            
-            // BillingRepository'yi initialize et
-            LaunchedEffect(Unit) {
-                try {
-                    billingRepository.initialize()
-                    android.util.Log.d("MainActivity", "Billing initialized successfully")
-                } catch (e: Exception) {
-                    android.util.Log.e("MainActivity", "Billing initialization failed", e)
-                }
-            }
+            // Billing removed - no in-app purchases on Android (like iOS)
             
             // Google Sign-In result handling removed - auth is disabled
 

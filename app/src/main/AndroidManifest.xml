@@ -13,9 +13,8 @@
     <!-- Camera permission for receipt scanning - Core functionality -->
     <!-- This permission is required for the core feature of scanning receipts/finvoices to automatically extract transaction information -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <!-- Media images permission for Android 13+ - Core functionality -->
-    <!-- This permission is required to allow users to select receipt/finvoice images from their gallery for automatic transaction extraction -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Note: READ_MEDIA_IMAGES permission removed to comply with Google Play policy -->
+    <!-- We use Android Photo Picker (PickVisualMedia) which doesn't require this permission -->
     
     <!-- Camera feature declaration - required for Google Play -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />

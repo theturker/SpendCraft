@@ -17,8 +17,8 @@ android {
         applicationId = "com.alperen.spendcraft"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = 36
-        versionCode = 15
-        versionName = "1.0.5"
+        versionCode = 17
+        versionName = "1.0.7"
 
         vectorDrawables { useSupportLibrary = true }
     }
@@ -69,7 +69,6 @@ dependencies {
     implementation(project(":core:analytics"))
     implementation(project(":core:model"))
     implementation(project(":core:common"))
-    implementation(project(":core:billing"))
     implementation(project(":core:premium"))
     implementation(project(":core:ai"))
     implementation(project(":core:notifications"))
@@ -127,9 +126,6 @@ dependencies {
     
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-    
-    // Play Billing
-    implementation("com.android.billingclient:billing-ktx:6.2.1")
     
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.9.0")

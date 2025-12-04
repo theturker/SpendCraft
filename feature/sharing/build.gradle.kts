@@ -36,7 +36,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:ui"))
-    implementation(project(":core:billing"))
     implementation(project(":data:db"))
     implementation(project(":data:repository"))
 

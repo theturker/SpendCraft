@@ -24,7 +24,6 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
     implementation(project(":core:ai"))
-    implementation(project(":core:billing"))
     implementation(project(":core:premium"))
     implementation(project(":domain"))
     implementation(project(":data:db"))

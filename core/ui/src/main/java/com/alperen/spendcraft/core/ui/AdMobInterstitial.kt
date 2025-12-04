@@ -42,12 +42,13 @@ class AdMobInterstitialManager private constructor() {
             // Test IDs - Google'ın test ID'leri
             const val INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/1033173712"
             
-            // Production ID - AdMob console'dan alınacak
-            // iOS'taki gibi DEBUG modda test ID kullan
+            // Production ID - iOS ile aynı ID kullanılıyor
+            const val INTERSTITIAL_PRODUCTION = "ca-app-pub-3199248450820147/4092156468"
+            
+            // Production ID kullan - Test için BuildConfig.DEBUG kontrolü eklenebilir
             fun getInterstitialAdUnitId(): String {
-                // iOS pattern: #if DEBUG ... #else ... #endif
-                // Android: Her zaman test ID kullan (Production ID eklendiğinde buraya eklenecek)
-                return INTERSTITIAL_TEST
+                // Production'da gerçek ID kullan
+                return INTERSTITIAL_PRODUCTION
             }
         }
     }

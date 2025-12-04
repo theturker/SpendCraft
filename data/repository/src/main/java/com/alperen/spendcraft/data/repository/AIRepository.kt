@@ -3,7 +3,6 @@ package com.alperen.spendcraft.data.repository
 import com.alperen.spendcraft.core.ai.AIKeyManager
 import com.alperen.spendcraft.core.ai.GroqClient
 import com.alperen.spendcraft.core.ai.GroqMessage
-import com.alperen.spendcraft.core.billing.BillingRepository
 import com.alperen.spendcraft.core.premium.PremiumStateDataStore
 import com.alperen.spendcraft.data.db.dao.AIUsageDao
 import com.alperen.spendcraft.data.db.entities.AIUsageEntity
@@ -17,7 +16,6 @@ import javax.inject.Singleton
 class AIRepository @Inject constructor(
     private val groqClient: GroqClient,
     private val aiUsageDao: AIUsageDao,
-    private val billingRepository: BillingRepository,
     private val premiumStateDataStore: PremiumStateDataStore,
     private val aiKeyManager: AIKeyManager
 ) {
