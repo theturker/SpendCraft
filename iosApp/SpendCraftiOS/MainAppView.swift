@@ -4,21 +4,10 @@ import UserNotifications
 struct MainAppView: View {
     @StateObject private var authViewModel = AuthViewModel()
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
-    @State private var showSplash = true
     
     var body: some View {
         Group {
-            if showSplash {
-                SplashView()
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            withAnimation(.easeInOut(duration: 0.5)) {
-                                showSplash = false
-                            }
-                        }
-                    }
-                    .transition(.opacity)
-            } else if !hasCompletedOnboarding {
+            if !hasCompletedOnboarding {
                 OnboardingView()
                     .transition(.asymmetric(
                         insertion: .move(edge: .bottom),
@@ -44,7 +33,6 @@ struct MainAppView: View {
         }
         .animation(.easeInOut(duration: 0.5), value: authViewModel.isAuthenticated)
         .animation(.easeInOut(duration: 0.5), value: hasCompletedOnboarding)
-        .animation(.easeInOut(duration: 0.5), value: showSplash)
     }
 }
 

@@ -308,7 +308,7 @@ struct DashboardView: View {
             .background(Color(uiColor: .systemBackground))
             .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
         }
-        .navigationTitle(NSLocalizedString("tab.dashboard", comment: "Dashboard"))
+        .navigationTitle(timeBasedGreeting)
         .navigationBarTitleDisplayMode(.large)
         .sheet(item: $transactionTypeToAdd, onDismiss: {
             // Small delay to ensure CoreData changes are committed
@@ -627,6 +627,20 @@ struct DashboardView: View {
         showReceiptAnalysis = false
         capturedReceiptImage = nil
         receiptAnalysisResult = nil
+    }
+    
+    private var timeBasedGreeting: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<12:
+            return NSLocalizedString("greeting.morning", comment: "Good morning")
+        case 12..<18:
+            return NSLocalizedString("greeting.afternoon", comment: "Good afternoon")
+        case 18..<22:
+            return NSLocalizedString("greeting.evening", comment: "Good evening")
+        default:
+            return NSLocalizedString("greeting.night", comment: "Hello")
+        }
     }
 }
 

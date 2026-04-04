@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
     spec.license                  = ''
     spec.summary                  = 'SpendCraft Shared Module'
     spec.vendored_frameworks      = 'build/cocoapods/framework/shared.framework'
-                
+    spec.libraries                = 'c++'
     spec.ios.deployment_target    = '14.0'
                 
                 
@@ -50,5 +50,5 @@ Pod::Spec.new do |spec|
             SCRIPT
         }
     ]
-    spec.libraries = sqlite3
+                
 end

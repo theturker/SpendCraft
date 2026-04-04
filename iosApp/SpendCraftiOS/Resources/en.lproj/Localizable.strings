@@ -581,7 +581,7 @@
 "day.sat" = "Sat";
 
 /* Onboarding */
-"onboarding.welcome.title" = "Welcome to Paratik";
+"onboarding.welcome.title" = "Welcome to Masraf Takip 2026: Gelir Gider";
 "onboarding.welcome.description" = "Your smart assistant for personal finance management. Track your expenses, create budgets, and achieve your financial goals.";
 "onboarding.smart.categorization.title" = "Smart Categorization";
 "onboarding.smart.categorization.description" = "Automatically categorize your transactions. Analyze your spending habits and discover where you can save.";
@@ -767,7 +767,7 @@
 "ai.suggestion.title" = "AI Suggestion";
 
 /* Onboarding */
-"onboarding.app.name" = "Paratik";
+"onboarding.app.name" = "Masraf Takip 2026: Gelir Gider";
 "onboarding.or" = "or";
 
 /* Receipt/Invoice */
@@ -788,3 +788,9 @@
 "receipt.confirm" = "Add Expense";
 "common.settings" = "Settings";
 "common.loading" = "Loading...";
+"notification.time" = "Zaman";
+"notification.time" = "Time";
+"greeting.morning" = "Good Morning";
+"greeting.afternoon" = "Good Afternoon";
+"greeting.evening" = "Good Evening";
+"greeting.night" = "Hello";

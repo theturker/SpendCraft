@@ -301,8 +301,8 @@ class ExportManager {
     ) -> URL? {
         let pdfMetaData = [
             kCGPDFContextTitle: "Finansal Rapor",
-            kCGPDFContextAuthor: "Paratik",
-            kCGPDFContextCreator: "Paratik iOS"
+            kCGPDFContextAuthor: "Masraf Takip 2026: Gelir Gider",
+            kCGPDFContextCreator: "Masraf Takip 2026: Gelir Gider iOS"
         ]
         
         let format = UIGraphicsPDFRendererFormat()

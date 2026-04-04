@@ -275,7 +275,7 @@ struct OnboardingView: View {
     
     let pages = [
         OnboardingPage(
-            title: NSLocalizedString("onboarding.welcome.title", comment: "Welcome to Paratik"),
+            title: NSLocalizedString("onboarding.welcome.title", comment: "Welcome to Masraf Takip 2026: Gelir Gider"),
             description: NSLocalizedString("onboarding.welcome.description", comment: "Welcome description"),
             systemImage: "chart.line.uptrend.xyaxis",
             gradientColors: [Color.blue, Color.purple]
@@ -470,7 +470,6 @@ struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("biometric_enabled") private var biometricEnabled = false
     @AppStorage("selectedLanguage") private var selectedLanguage: String = ""
-    @State private var showSplash = true
     @State private var showBiometricAuth = false
     @State private var biometricAuthenticated = false
     @StateObject private var authViewModel = AuthViewModel()
@@ -478,20 +477,7 @@ struct RootView: View {
     
     var body: some View {
         Group {
-            if showSplash {
-                SplashView()
-                    .onAppear {
-                        // Uygulama açıldığında seçili dili ayarla
-                        let currentLang = LanguageHelper.shared.getCurrentLanguage()
-                        LanguageHelper.shared.setLanguage(currentLang)
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            withAnimation {
-                                showSplash = false
-                            }
-                        }
-                    }
-            } else if !hasCompletedOnboarding {
+            if !hasCompletedOnboarding {
                 OnboardingView()
             } else {
                 // Biometric kontrolü - eğer etkinse
@@ -510,8 +496,12 @@ struct RootView: View {
                 }
             }
         }
+        .onAppear {
+            // Uygulama açıldığında seçili dili ayarla
+            let currentLang = LanguageHelper.shared.getCurrentLanguage()
+            LanguageHelper.shared.setLanguage(currentLang)
+        }
         .animation(.easeInOut(duration: 0.5), value: hasCompletedOnboarding)
-        .animation(.easeInOut(duration: 0.5), value: showSplash)
         .animation(.easeInOut(duration: 0.5), value: biometricAuthenticated)
     }
 }
@@ -532,7 +522,7 @@ struct SplashView: View {
                     .frame(width: 180, height: 180) 
                     .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 6)
 
-                Text(NSLocalizedString("onboarding.app.name", comment: "Paratik"))
+                Text(NSLocalizedString("onboarding.app.name", comment: "Masraf Takip 2026: Gelir Gider"))
                     .font(.system(size: 42, weight: .bold))
                     .foregroundColor(.white)
             }

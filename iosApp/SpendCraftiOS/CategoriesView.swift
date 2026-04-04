@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct CategoriesView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
@@ -57,7 +58,6 @@ struct CategoriesView: View {
                         .contentShape(Rectangle())
                         .onTapGesture {
                             selectedCategory = category
-                            showAddBudget = true
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
@@ -81,11 +81,17 @@ struct CategoriesView: View {
                 }
             }
         }
-        .sheet(isPresented: $showAddBudget) {
+        .sheet(isPresented: Binding<Bool>(
+            get: { selectedCategory != nil },
+            set: { if !$0 { selectedCategory = nil } }
+        )) {
             if let category = selectedCategory {
                 AddBudgetView(category: category)
                     .environmentObject(budgetViewModel)
                     .environmentObject(transactionsViewModel)
+            } else {
+                // Fallback empty view if something goes wrong
+                EmptyView()
             }
         }
         .sheet(isPresented: $showAddCategory) {
@@ -422,3 +428,4 @@ struct AddCategoryView: View {
         dismiss()
     }
 }
+

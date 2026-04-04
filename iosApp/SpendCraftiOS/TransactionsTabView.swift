@@ -91,8 +91,6 @@ struct TransactionsTabView: View {
                 .background(Color(uiColor: .systemBackground))
                 .shadow(color: .black.opacity(0.1), radius: 4, y: -2)
         }
-        .navigationTitle(NSLocalizedString("transactions.title", comment: "Transactions"))
-        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             toolbarContent
         }

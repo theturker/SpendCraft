@@ -438,6 +438,7 @@ struct EditTemplateView: View {
                                             .foregroundColor(selectedMonthDays.contains(day) ? .white : .primary)
                                             .cornerRadius(8)
                                     }
+                                    .buttonStyle(.plain)
                                 }
                             }
                         }
@@ -583,6 +584,7 @@ struct AddCustomNotificationView: View {
                                     .foregroundColor(selectedDays.contains(day.0) ? .white : .primary)
                                     .cornerRadius(8)
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding(.vertical, 8)
@@ -599,7 +601,7 @@ struct AddCustomNotificationView: View {
                     .disabled(title.isEmpty || messageBody.isEmpty)
                 }
             }
-            .navigationTitle(NSLocalizedString("notification.custom", comment: "Custom Notification"))
+            .navigationTitle(NSLocalizedString("notification.add.custom", comment: "Add Custom Notification"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -723,6 +725,7 @@ struct EditCustomNotificationView: View {
                                     .foregroundColor(selectedDays.contains(day.0) ? .white : .primary)
                                     .cornerRadius(8)
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding(.vertical, 8)

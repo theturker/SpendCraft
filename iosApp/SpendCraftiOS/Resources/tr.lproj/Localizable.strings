@@ -79,7 +79,7 @@
 "day.sat" = "Cmt";
 
 /* Onboarding */
-"onboarding.welcome.title" = "Paratik'e Hoş Geldiniz";
+"onboarding.welcome.title" = "Masraf Takip 2026: Gelir Gider'e Hoş Geldiniz";
 "onboarding.welcome.description" = "Kişisel finans yönetiminizi kolaylaştıran akıllı asistanınız. Harcamalarınızı takip edin, bütçe oluşturun ve finansal hedeflerinize ulaşın.";
 "onboarding.smart.categorization.title" = "Akıllı Kategorilendirme";
 "onboarding.smart.categorization.description" = "İşlemlerinizi otomatik olarak kategorilere ayırın. Harcama alışkanlıklarınızı analiz edin ve nerede tasarruf edebileceğinizi keşfedin.";
@@ -697,7 +697,7 @@
 "ai.suggestion.title" = "AI Önerisi";
 
 /* Onboarding */
-"onboarding.app.name" = "Paratik";
+"onboarding.app.name" = "Masraf Takip 2026: Gelir Gider";
 "onboarding.or" = "veya";
 
 /* Receipt/Invoice */
@@ -718,3 +718,8 @@
 "receipt.confirm" = "Gider Ekle";
 "common.settings" = "Ayarlar";
 "common.loading" = "Yükleniyor...";
+"notification.time" = "Zaman";
+"greeting.morning" = "Günaydın";
+"greeting.afternoon" = "İyi Günler";
+"greeting.evening" = "İyi Akşamlar";
+"greeting.night" = "Merhaba";

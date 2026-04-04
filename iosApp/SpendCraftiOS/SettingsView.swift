@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UserNotifications
+import CoreData
 
 struct SettingsView: View {
     @EnvironmentObject var transactionsViewModel: TransactionsViewModel
@@ -299,12 +300,6 @@ struct SettingsView: View {
             
             // App Info
             Section {
-                HStack {
-                    Text(NSLocalizedString("settings.version", comment: "Version"))
-                    Spacer()
-                    Text("1.0.0")
-                        .foregroundColor(.secondary)
-                }
                 
                 HStack {
                     Text(NSLocalizedString("settings.total.transactions", comment: "Total Transactions"))
@@ -628,7 +623,6 @@ struct AccountsListView: View {
                             AchievementCardLarge(achievement: achievement)
                                 .onTapGesture {
                                     selectedAchievement = achievement
-                                    showAchievementDetail = true
                                 }
                         }
                     }
@@ -638,10 +632,8 @@ struct AccountsListView: View {
             }
             .navigationTitle(NSLocalizedString("achievements.title", comment: "Achievements"))
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showAchievementDetail) {
-                if let achievement = selectedAchievement {
-                    AchievementDetailSheet(achievement: achievement)
-                }
+            .sheet(item: $selectedAchievement) { achievement in
+                AchievementDetailSheet(achievement: achievement)
             }
         }
     }

@@ -390,24 +390,12 @@ fun IOSSettingsScreen(
             }
             
             item {
-                SettingsInfoRow(
-                    title = context.getString(com.alperen.spendcraft.R.string.settings_version),
-                    value = "1.0.3",
-                    position = ListItemPosition.First
-                )
-            }
-            
-            item {
-                IOSListItemDivider()
-            }
-            
-            item {
                 SettingsListItem(
                     icon = CoreR.drawable.ic_gearshape_fill,
                     iconColor = IOSColors.Blue,
                     title = context.getString(com.alperen.spendcraft.R.string.language),
                     subtitle = if (LocaleHelper.getLanguage(context) == "tr") context.getString(com.alperen.spendcraft.R.string.language_turkish) else context.getString(com.alperen.spendcraft.R.string.language_english),
-                    position = ListItemPosition.Middle,
+                    position = ListItemPosition.First,
                     onClick = onNavigateToLanguageSettings
                 )
             }

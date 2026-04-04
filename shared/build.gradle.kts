@@ -37,8 +37,6 @@ kotlin {
             isStatic = true
         }
         
-        // SQLite linking için
-        extraSpecAttributes["libraries"] = "sqlite3"
     }
 
     sourceSets {
@@ -117,4 +115,3 @@ sqldelight {
         }
     }
 }
-
